@@ -14,7 +14,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 const AGENT_VERSION = process.env['DESKTOP_AGENT_VERSION'] ?? '1.0.0'
-const GITHUB_REPO   = process.env['DESKTOP_AGENT_GITHUB_REPO'] ?? 'kenuxa/desktop-agent'
+const GITHUB_REPO   = process.env['DESKTOP_AGENT_GITHUB_REPO'] ?? 'LosharHammond/KENUXA-OPS'
 const RELEASES_BASE = `https://github.com/${GITHUB_REPO}/releases/download/desktop-v${AGENT_VERSION}`
 
 const PLATFORM_ASSETS: Record<string, { file: string; mime: string }> = {

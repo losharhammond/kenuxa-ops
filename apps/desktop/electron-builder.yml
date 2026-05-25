@@ -52,6 +52,6 @@ linux:
 # ── Auto-update via GitHub Releases ───────────────────────────────────────────────
 publish:
   provider: github
-  owner:    kenuxa
-  repo:     desktop-agent
+  owner:    LosharHammond
+  repo:     KENUXA-OPS
   releaseType: release
