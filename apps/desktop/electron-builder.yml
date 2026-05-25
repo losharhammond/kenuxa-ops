@@ -1,0 +1,57 @@
+appId:       com.kenuxa.desktop-agent
+productName: KENUXA Desktop Agent
+copyright:   "Copyright © 2025 KENUXA"
+
+# Where built installers go
+directories:
+  output:         release
+  buildResources: assets
+
+# Files bundled into the app
+files:
+  - dist/**/*
+  - assets/**/*
+  - package.json
+  - "!node_modules/**/{test,tests,spec,__tests__}/**"
+  - "!node_modules/**/*.{md,ts,map}"
+
+# ── Windows (.exe NSIS installer) ────────────────────────────────────────────────
+win:
+  target:
+    - target: nsis
+      arch:   [x64]
+  icon: assets/icon.ico
+
+nsis:
+  oneClick:                       false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut:          true
+  createStartMenuShortcut:        true
+  shortcutName:                   "KENUXA Desktop Agent"
+
+# ── macOS (.dmg) ──────────────────────────────────────────────────────────────────
+mac:
+  target:
+    - target: dmg
+      arch:   [x64, arm64]
+  icon:     assets/icon.icns
+  category: public.app-category.productivity
+
+dmg:
+  title: "KENUXA Desktop Agent"
+
+# ── Linux (.AppImage) ─────────────────────────────────────────────────────────────
+linux:
+  target:
+    - target: AppImage
+      arch:   [x64]
+  icon:     assets/icon.png
+  category: Utility
+  synopsis: "KENUXA AI Desktop Agent"
+
+# ── Auto-update via GitHub Releases ───────────────────────────────────────────────
+publish:
+  provider: github
+  owner:    kenuxa
+  repo:     desktop-agent
+  releaseType: release

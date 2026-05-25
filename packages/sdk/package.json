@@ -1,0 +1,24 @@
+﻿{
+  "name": "@kenuxa/sdk",
+  "version": "2.0.0",
+  "description": "KENUXA Ecosystem SDK — shared client for all KENUXA products",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "import": "./dist/index.mjs", "require": "./dist/index.js", "types": "./dist/index.d.ts" },
+    "./auth":   { "import": "./dist/auth.mjs",   "require": "./dist/auth.js",   "types": "./dist/auth.d.ts"   },
+    "./wallet": { "import": "./dist/wallet.mjs", "require": "./dist/wallet.js", "types": "./dist/wallet.d.ts" },
+    "./ai":     { "import": "./dist/ai.mjs",     "require": "./dist/ai.js",     "types": "./dist/ai.d.ts"     },
+    "./events": { "import": "./dist/events.mjs", "require": "./dist/events.js", "types": "./dist/events.d.ts" },
+    "./memory": { "import": "./dist/memory.mjs", "require": "./dist/memory.js", "types": "./dist/memory.d.ts" }
+  },
+  "scripts": {
+    "build": "tsup src/index.ts src/auth.ts src/wallet.ts src/ai.ts src/events.ts src/memory.ts --format esm,cjs --dts",
+    "dev": "tsup src/index.ts --format esm,cjs --dts --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": { "zod": "^3.24.1" },
+  "devDependencies": { "@types/node": "^22.10.2", "tsup": "^8.0.0", "typescript": "^5.7.2" },
+  "sideEffects": false
+}

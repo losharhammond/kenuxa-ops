@@ -1,0 +1,77 @@
+version: '3.9'
+
+# KENUXA Ecosystem — Local Development Stack
+# Services: Redis (queue/cache), Core, Reach
+# Run: docker-compose up -d
+
+services:
+
+  # ─── Redis (BullMQ queue + cache) ────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: kenuxa-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ─── KENUXA CORE ─────────────────────────────────────────────
+  core:
+    build:
+      context: ../../apps/core
+      dockerfile: Dockerfile
+    container_name: kenuxa-core
+    ports:
+      - "3000:3000"
+    environment:
+      - REDIS_URL=redis://redis:6379
+    env_file:
+      - ../../apps/core/.env.local
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ─── KENUXA REACH ────────────────────────────────────────────
+  reach:
+    build:
+      context: ../../kenuxa-reach
+      dockerfile: Dockerfile
+    container_name: kenuxa-reach
+    ports:
+      - "3001:3001"
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - KENUXA_CORE_URL=http://core:3000
+    env_file:
+      - ../../kenuxa-reach/.env.local
+    depends_on:
+      - core
+      - redis
+    restart: unless-stopped
+
+  # ─── Queue Workers ───────────────────────────────────────────
+  workers:
+    build:
+      context: ../workers
+      dockerfile: Dockerfile
+    container_name: kenuxa-workers
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - KENUXA_CORE_URL=http://core:3000
+    env_file:
+      - ../../apps/core/.env.local
+    depends_on:
+      - redis
+      - core
+    restart: unless-stopped
+
+volumes:
+  redis_data:

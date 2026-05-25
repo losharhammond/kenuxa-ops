@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KENUXA Desktop Agent</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #09090b;
+      color: #e4e4e7;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      -webkit-app-region: drag;
+      user-select: none;
+    }
+
+    .card {
+      width: 360px;
+      padding: 32px 28px;
+      background: #111113;
+      border: 1px solid #27272a;
+      border-radius: 16px;
+      -webkit-app-region: no-drag;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .logo-text {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.3px;
+    }
+
+    .logo-sub {
+      font-size: 11px;
+      color: #71717a;
+      margin-top: 1px;
+    }
+
+    h1 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    p.sub {
+      font-size: 13px;
+      color: #71717a;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      color: #a1a1aa;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px 12px;
+      background: #18181b;
+      border: 1px solid #3f3f46;
+      border-radius: 8px;
+      color: #e4e4e7;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    input:focus {
+      border-color: #6366f1;
+    }
+
+    input::placeholder {
+      color: #52525b;
+    }
+
+    button#loginBtn {
+      width: 100%;
+      padding: 11px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 6px;
+      transition: opacity 0.15s;
+    }
+
+    button#loginBtn:hover   { opacity: 0.9; }
+    button#loginBtn:active  { opacity: 0.8; }
+    button#loginBtn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .error {
+      margin-top: 12px;
+      padding: 10px 12px;
+      background: #2d1515;
+      border: 1px solid #7f1d1d;
+      border-radius: 8px;
+      color: #fca5a5;
+      font-size: 12px;
+      display: none;
+    }
+
+    .success {
+      margin-top: 12px;
+      padding: 10px 12px;
+      background: #052e16;
+      border: 1px solid #14532d;
+      border-radius: 8px;
+      color: #86efac;
+      font-size: 12px;
+      display: none;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: middle;
+      margin-right: 6px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .version {
+      text-align: center;
+      font-size: 11px;
+      color: #3f3f46;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">
+      <div class="logo-icon">⚡</div>
+      <div>
+        <div class="logo-text">KENUXA</div>
+        <div class="logo-sub">Desktop Agent</div>
+      </div>
+    </div>
+
+    <h1>Sign in to OPS</h1>
+    <p class="sub">Use your KENUXA CORE credentials. The agent will auto-pair with OPS on login.</p>
+
+    <div class="field">
+      <label for="email">Email</label>
+      <input id="email" type="email" placeholder="you@company.com" autocomplete="email" />
+    </div>
+
+    <div class="field">
+      <label for="password">Password</label>
+      <input id="password" type="password" placeholder="••••••••" autocomplete="current-password" />
+    </div>
+
+    <button id="loginBtn">Sign in &amp; Connect</button>
+
+    <div class="error"  id="errorMsg"></div>
+    <div class="success" id="successMsg">✅ Connected! The agent is now running in your system tray.</div>
+
+    <div class="version" id="versionLabel">KENUXA Desktop Agent</div>
+  </div>
+
+  <script>
+    const emailInput   = document.getElementById('email')
+    const passwordInput = document.getElementById('password')
+    const loginBtn     = document.getElementById('loginBtn')
+    const errorMsg     = document.getElementById('errorMsg')
+    const successMsg   = document.getElementById('successMsg')
+    const versionLabel = document.getElementById('versionLabel')
+
+    // Show version
+    window.kenuxa.status().then(s => {
+      if (s?.version) versionLabel.textContent = `v${s.version}`
+    }).catch(() => {})
+
+    // Allow Enter key to submit
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !loginBtn.disabled) loginBtn.click()
+    })
+
+    loginBtn.addEventListener('click', async () => {
+      const email    = emailInput.value.trim()
+      const password = passwordInput.value
+
+      errorMsg.style.display   = 'none'
+      successMsg.style.display = 'none'
+
+      if (!email || !password) {
+        errorMsg.textContent    = 'Please enter your email and password.'
+        errorMsg.style.display  = 'block'
+        return
+      }
+
+      loginBtn.disabled   = true
+      loginBtn.innerHTML  = '<span class="spinner"></span> Connecting…'
+
+      try {
+        const result = await window.kenuxa.login(email, password)
+
+        if (result.success) {
+          successMsg.style.display = 'block'
+          loginBtn.textContent     = '✅ Connected'
+          setTimeout(() => window.close(), 1800)
+        } else {
+          errorMsg.textContent   = result.error ?? 'Login failed. Check your credentials.'
+          errorMsg.style.display = 'block'
+          loginBtn.disabled      = false
+          loginBtn.textContent   = 'Sign in & Connect'
+        }
+      } catch (err) {
+        errorMsg.textContent   = String(err)
+        errorMsg.style.display = 'block'
+        loginBtn.disabled      = false
+        loginBtn.textContent   = 'Sign in & Connect'
+      }
+    })
+  </script>
+</body>
+</html>

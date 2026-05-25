@@ -1,0 +1,29 @@
+{
+  "name": "kenuxa-desktop-agent",
+  "version": "1.0.0",
+  "description": "KENUXA Desktop Agent — bridges OPS voice commands with your local machine",
+  "main": "dist/main.js",
+  "author": "KENUXA",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "build":      "tsc --project tsconfig.json",
+    "watch":      "tsc --project tsconfig.json --watch",
+    "start":      "npm run build && electron .",
+    "dist:win":   "npm run build && electron-builder --win --x64",
+    "dist:mac":   "npm run build && electron-builder --mac --x64 --arm64",
+    "dist:linux": "npm run build && electron-builder --linux --x64",
+    "dist:all":   "npm run build && electron-builder --win --mac --linux"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.4",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/ws":   "^8.5.14",
+    "electron":         "^35.2.1",
+    "electron-builder": "^25.1.8",
+    "typescript":       "^5.8.3"
+  }
+}
