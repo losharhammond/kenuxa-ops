@@ -1,18 +1,13 @@
 name: Build Desktop Agent Installers
 
-# Triggers:
-#   1. Push a version tag (v1.0.0, v1.2.3, …) → builds ALL 3 platforms + creates GitHub Release
-#   2. Manual trigger from the Actions tab (workflow_dispatch)
 on:
   push:
     tags:
       - 'desktop-v*'
   workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version to build (e.g. 1.0.0)'
-        required: true
-        default:  '1.0.0'
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   build:
@@ -23,84 +18,62 @@ jobs:
         include:
           - os:       windows-latest
             platform: win
-            artifact: "*.exe"
           - os:       macos-latest
             platform: mac
-            artifact: "*.dmg"
           - os:       ubuntu-latest
             platform: linux
-            artifact: "*.AppImage"
 
     runs-on: ${{ matrix.os }}
 
     steps:
-      # ── Checkout ──────────────────────────────────────────────────────────────
       - name: Checkout
         uses: actions/checkout@v4
 
-      # ── Node.js ───────────────────────────────────────────────────────────────
-      - name: Setup Node.js
+      - name: Setup Node.js 24
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: apps/desktop/package-lock.json
+          node-version: '24'
 
-      # ── Install ───────────────────────────────────────────────────────────────
       - name: Install dependencies
         working-directory: apps/desktop
-        run: npm ci
+        run: npm install
 
-      # ── TypeScript compile ────────────────────────────────────────────────────
       - name: Compile TypeScript
         working-directory: apps/desktop
         run: npm run build
 
-      # ── Windows icon (create a placeholder if not present) ───────────────────
-      - name: Ensure icon files exist (Windows)
-        if: matrix.os == 'windows-latest'
-        working-directory: apps/desktop
-        shell: pwsh
-        run: |
-          if (-not (Test-Path assets/icon.ico)) {
-            Write-Host "No icon.ico found — electron-builder will use default"
-          }
+      # ── Linux: install required native deps for electron-builder ─────────────
+      - name: Install Linux build deps
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get install -y rpm fakeroot
 
-      # ── macOS: code-sign (set secrets in repo settings) ──────────────────────
-      # If you have an Apple Developer certificate, set these repo secrets:
-      #   APPLE_CERTIFICATE      — base64-encoded .p12 file
-      #   APPLE_CERTIFICATE_PWD  — .p12 password
-      #   APPLE_ID               — your Apple ID email
-      #   APPLE_APP_PASSWORD     — app-specific password
-      #   APPLE_TEAM_ID          — your Apple team ID
-
-      # ── Build Windows installer ───────────────────────────────────────────────
-      - name: Build Windows (.exe)
+      # ── Build Windows (.exe) ──────────────────────────────────────────────────
+      - name: Build Windows
         if: matrix.os == 'windows-latest'
         working-directory: apps/desktop
         run: npm run dist:win
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # ── Build macOS DMG ───────────────────────────────────────────────────────
-      - name: Build macOS (.dmg)
+      # ── Build macOS (.dmg) ────────────────────────────────────────────────────
+      - name: Build macOS
         if: matrix.os == 'macos-latest'
         working-directory: apps/desktop
         run: npm run dist:mac
         env:
-          GH_TOKEN:             ${{ secrets.GITHUB_TOKEN }}
-          CSC_IDENTITY_AUTO_DISCOVERY: false  # Set to true + add certs to sign
+          GH_TOKEN:                    ${{ secrets.GITHUB_TOKEN }}
+          CSC_IDENTITY_AUTO_DISCOVERY: false
 
-      # ── Build Linux AppImage ──────────────────────────────────────────────────
-      - name: Build Linux (.AppImage)
+      # ── Build Linux (.AppImage) ───────────────────────────────────────────────
+      - name: Build Linux
         if: matrix.os == 'ubuntu-latest'
         working-directory: apps/desktop
         run: npm run dist:linux
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # ── Upload artifacts to this GitHub Actions run ───────────────────────────
-      - name: Upload installer artifacts
+      # ── Upload build artifacts ────────────────────────────────────────────────
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: installer-${{ matrix.platform }}
@@ -111,7 +84,7 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
 
-  # ── After all 3 platforms build: create a GitHub Release ───────────────────────
+  # ── Publish GitHub Release once all 3 builds succeed ─────────────────────────
   release:
     name: Publish GitHub Release
     needs: build
@@ -126,7 +99,7 @@ jobs:
         with:
           path: installers
 
-      - name: List installers
+      - name: List downloaded files
         run: find installers -type f | sort
 
       - name: Create GitHub Release
@@ -140,16 +113,15 @@ jobs:
 
             | Platform | File |
             |----------|------|
-            | Windows  | `KENUXA-Desktop-Agent-Setup-*.exe` |
-            | macOS    | `KENUXA-Desktop-Agent-*.dmg` |
-            | Linux    | `KENUXA-Desktop-Agent-*.AppImage` |
+            | Windows 10/11 | `KENUXA-Desktop-Agent-Setup-*.exe` |
+            | macOS 13+     | `KENUXA-Desktop-Agent-*.dmg` |
+            | Linux (x64)   | `KENUXA-Desktop-Agent-*.AppImage` |
 
-            ### Install
+            ### How to install
             1. Download the installer for your OS
             2. Run it and follow the prompts
             3. Sign in with your KENUXA CORE credentials
-            4. The agent auto-pairs with OPS — no QR code needed
-
+            4. The agent auto-pairs with OPS instantly — no QR code needed
           files: |
             installers/**/*.exe
             installers/**/*.dmg
