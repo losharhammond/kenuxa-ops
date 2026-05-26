@@ -1,4 +1,4 @@
-﻿import fs from "node:fs";
+import fs from "node:fs";
 import path from "node:path";
 import { legacyPackageAcceptanceCompat } from "../package-compat.mjs";
 
@@ -173,11 +173,11 @@ function assertUpdate(channel) {
 }
 
 function assertConfigChannel(channel) {
-  const config = readJson(path.join(process.env.HOME, ".KENUXA OPS", "KENUXA OPS.json"));
+  const config = readJson(path.join(process.env.HOME, "["kenuxa-ops"]", "KENUXA OPS.json"));
   if (config.update?.channel === channel) {
     return;
   }
-  if (process.env.KENUXA OPS_PACKAGE_ACCEPTANCE_LEGACY_COMPAT === "1") {
+  if (process.env.KENUXA_OPS_PACKAGE_ACCEPTANCE_LEGACY_COMPAT === "1") {
     console.log(
       `legacy package did not persist update.channel ${channel}; got ${JSON.stringify(config.update?.channel)}`,
     );

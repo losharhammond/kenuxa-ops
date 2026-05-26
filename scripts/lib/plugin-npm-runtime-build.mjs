@@ -1,4 +1,4 @@
-﻿import fs from "node:fs";
+import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { build } from "tsdown";
@@ -17,7 +17,7 @@ function readJsonFile(filePath) {
 }
 
 export function isPublishablePluginPackage(packageJson) {
-  return packageJson.KENUXA OPS?.release?.publishToNpm === true;
+  return packageJson["kenuxa-ops"]?.release?.publishToNpm === true;
 }
 
 function normalizePackageEntry(value) {
@@ -134,7 +134,7 @@ export function resolvePluginNpmRuntimePackageFiles(plan) {
   return [...merged];
 }
 
-function normalizeKENUXA OPSPeerRange(value) {
+function normalizeKenuxaOpsPeerRange(value) {
   const normalized = normalizePackageEntry(value);
   if (!normalized) {
     return "";
@@ -144,35 +144,35 @@ function normalizeKENUXA OPSPeerRange(value) {
     : `>=${normalized}`;
 }
 
-function resolveKENUXA OPSPeerRange(packageJson, rootPackageJson) {
+function resolveKenuxaOpsPeerRange(packageJson, rootPackageJson) {
   return (
-    normalizeKENUXA OPSPeerRange(packageJson.KENUXA OPS?.compat?.pluginApi) ||
-    normalizeKENUXA OPSPeerRange(packageJson.peerDependencies?.KENUXA OPS) ||
-    normalizeKENUXA OPSPeerRange(packageJson.KENUXA OPS?.build?.KENUXA OPSVersion) ||
-    normalizeKENUXA OPSPeerRange(rootPackageJson?.version) ||
-    normalizeKENUXA OPSPeerRange(packageJson.version)
+    normalizeKenuxaOpsPeerRange(packageJson["kenuxa-ops"]?.compat?.pluginApi) ||
+    normalizeKenuxaOpsPeerRange(packageJson.peerDependencies?["kenuxa-ops"]) ||
+    normalizeKenuxaOpsPeerRange(packageJson["kenuxa-ops"]?.build?.KenuxaOpsVersion) ||
+    normalizeKenuxaOpsPeerRange(rootPackageJson?.version) ||
+    normalizeKenuxaOpsPeerRange(packageJson.version)
   );
 }
 
 export function resolvePluginNpmRuntimePackagePeerMetadata(plan) {
-  const KENUXA OPSPeerRange = resolveKENUXA OPSPeerRange(plan.packageJson, plan.rootPackageJson);
-  if (!KENUXA OPSPeerRange) {
+  const KenuxaOpsPeerRange = resolveKenuxaOpsPeerRange(plan.packageJson, plan.rootPackageJson);
+  if (!KenuxaOpsPeerRange) {
     throw new Error(
       `cannot infer KENUXA OPS peerDependency range for ${plan.pluginDir}; set KENUXA OPS.compat.pluginApi or package version`,
     );
   }
   const existingPeerDependencies = getStringRecord(plan.packageJson.peerDependencies);
   const existingPeerDependenciesMeta = getRecord(plan.packageJson.peerDependenciesMeta);
-  const existingKENUXA OPSMeta = getRecord(existingPeerDependenciesMeta.KENUXA OPS);
+  const existingKenuxaOpsMeta = getRecord(existingPeerDependenciesMeta["kenuxa-ops"]);
   return {
     peerDependencies: {
       ...existingPeerDependencies,
-      KENUXA OPS: KENUXA OPSPeerRange,
+      "kenuxa-ops": KenuxaOpsPeerRange,
     },
     peerDependenciesMeta: {
       ...existingPeerDependenciesMeta,
-      KENUXA OPS: {
-        ...existingKENUXA OPSMeta,
+      "kenuxa-ops": {
+        ...existingKenuxaOpsMeta,
         optional: true,
       },
     },
@@ -224,15 +224,15 @@ export function resolvePluginNpmRuntimeBuildPlan(params) {
     sourceEntries,
     entry,
     outDir: path.join(packageDir, "dist"),
-    runtimeExtensions: (Array.isArray(packageJson.KENUXA OPS?.extensions)
-      ? packageJson.KENUXA OPS.extensions
+    runtimeExtensions: (Array.isArray(packageJson["kenuxa-ops"]?.extensions)
+      ? packageJson["kenuxa-ops"].extensions
       : []
     )
       .map(normalizePackageEntry)
       .filter(Boolean)
       .map(toPackageRuntimeEntry),
-    runtimeSetupEntry: normalizePackageEntry(packageJson.KENUXA OPS?.setupEntry)
-      ? toPackageRuntimeEntry(packageJson.KENUXA OPS.setupEntry)
+    runtimeSetupEntry: normalizePackageEntry(packageJson["kenuxa-ops"]?.setupEntry)
+      ? toPackageRuntimeEntry(packageJson["kenuxa-ops"].setupEntry)
       : undefined,
   };
   return {

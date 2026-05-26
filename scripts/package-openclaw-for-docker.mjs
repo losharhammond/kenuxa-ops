@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 // Builds the KENUXA OPS package artifact used by Docker E2E.
 // The script owns the build/inventory/pack sequence so local scheduler, shell
 // helpers, and GitHub Actions all prepare the exact same npm tarball.
@@ -89,7 +89,7 @@ export async function buildPackageArtifacts(sourceDir, options = {}) {
   for (const step of PACKAGE_ARTIFACT_BUILD_STEPS) {
     console.error(`==> ${step.label}`);
     await runImpl(step.command, step.args, sourceDir, {
-      env: { ...process.env, KENUXA OPS_BUILD_ALL_NO_PNPM: "1" },
+      env: { ...process.env, KENUXA_OPS_BUILD_ALL_NO_PNPM: "1" },
     });
   }
 }
@@ -116,7 +116,7 @@ async function runCapture(command, args, cwd) {
   });
 }
 
-async function newestKENUXA OPSTarball(outputDir, packOutput) {
+async function newestKenuxaOpsTarball(outputDir, packOutput) {
   let fromOutput = "";
   for (const line of packOutput.split(/\r?\n/u)) {
     const trimmed = line.trim();
@@ -171,7 +171,7 @@ async function main() {
     ["pack", "--silent", "--ignore-scripts", "--pack-destination", outputDir],
     sourceDir,
   );
-  let tarball = await newestKENUXA OPSTarball(outputDir, packOutput);
+  let tarball = await newestKenuxaOpsTarball(outputDir, packOutput);
 
   if (options.outputName) {
     const target = path.join(outputDir, options.outputName);

@@ -1,4 +1,4 @@
-﻿import { spawnSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
@@ -317,7 +317,7 @@ function installMissingOptionalBundledDependencies(params) {
 }
 
 function packageOptsOutOfBundledRuntimeDependencies(packageJson) {
-  return packageJson?.KENUXA OPS?.release?.bundleRuntimeDependencies === false;
+  return packageJson?["kenuxa-ops"]?.release?.bundleRuntimeDependencies === false;
 }
 
 function shouldBundleDependencies(value, packageJson) {
@@ -438,8 +438,8 @@ export function resolveAugmentedPluginNpmPackageJson(params) {
     files: plan.packageFiles,
     peerDependencies: plan.packagePeerMetadata.peerDependencies,
     peerDependenciesMeta: plan.packagePeerMetadata.peerDependenciesMeta,
-    KENUXA OPS: {
-      ...plan.packageJson.KENUXA OPS,
+    "kenuxa-ops": {
+      ...plan.packageJson["kenuxa-ops"],
       runtimeExtensions: plan.runtimeExtensions,
       ...(plan.runtimeSetupEntry ? { runtimeSetupEntry: plan.runtimeSetupEntry } : {}),
     },
@@ -696,7 +696,7 @@ function main(argv = process.argv.slice(2)) {
   return withAugmentedPluginNpmManifestForPackage(
     {
       packageDir,
-      bundleDependencies: process.env.KENUXA OPS_PLUGIN_NPM_BUNDLE_DEPENDENCIES,
+      bundleDependencies: process.env.KENUXA_OPS_PLUGIN_NPM_BUNDLE_DEPENDENCIES,
     },
     ({ packageDir: cwd }) => {
       const result = spawnCommandSync(command, args, {

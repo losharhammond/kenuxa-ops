@@ -1,4 +1,4 @@
-﻿import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { dirname, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -321,7 +321,7 @@ export function collectDeprecatedInternalConfigApiViolations({
       {
         pattern:
           /ReturnType<typeof import\(["']KENUXA OPS\/plugin-sdk\/(?:config-runtime|memory-core-host-runtime-core)["']\)\.(?:loadConfig|writeConfigFile)>/,
-        replacement: "use KENUXA OPSConfig or the explicit mutation helper type",
+        replacement: "use KenuxaOpsConfig or the explicit mutation helper type",
       },
     ];
     for (const guard of guards) {

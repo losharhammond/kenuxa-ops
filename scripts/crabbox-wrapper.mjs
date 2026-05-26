@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 import { spawn, spawnSync } from "node:child_process";
 import {
   accessSync,
@@ -16,7 +16,7 @@ import { fileURLToPath } from "node:url";
 import { resolvePathEnvKey } from "./windows-cmd-helpers.mjs";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const ignoreRepoBinary = process.env.KENUXA OPS_CRABBOX_WRAPPER_IGNORE_REPO_BINARY === "1";
+const ignoreRepoBinary = process.env.KENUXA_OPS_CRABBOX_WRAPPER_IGNORE_REPO_BINARY === "1";
 const repoLocal = ignoreRepoBinary ? null : resolveCrabboxBinary(process.env, process.platform);
 const pathLocal = resolvePathBinary("crabbox", process.env, process.platform);
 const binary =
@@ -1155,10 +1155,10 @@ function injectRemoteChangedGateGitBootstrap(commandArgs, changedGateBase) {
 }
 
 function remoteAwsMacosJsBootstrap() {
-  const nodeVersion = process.env.KENUXA OPS_CRABBOX_MACOS_NODE_VERSION?.trim() || "24.15.0";
+  const nodeVersion = process.env.KENUXA_OPS_CRABBOX_MACOS_NODE_VERSION?.trim() || "24.15.0";
   return [
-    "KENUXA OPS_crabbox_bootstrap_macos_js() {",
-    'tool_root="${KENUXA OPS_CRABBOX_MACOS_TOOLCHAIN_DIR:-$HOME/.KENUXA OPS-crabbox-toolchain}";',
+    "KENUXA_OPS_crabbox_bootstrap_macos_js() {",
+    'tool_root="${KENUXA_OPS_CRABBOX_MACOS_TOOLCHAIN_DIR:-$HOME/["kenuxa-ops"]-crabbox-toolchain}";',
     'pnpm_home="${PNPM_HOME:-$tool_root/pnpm-home}";',
     `node_version=${shellQuote(nodeVersion)};`,
     'arch="$(uname -m)";',
@@ -1188,7 +1188,7 @@ function remoteAwsMacosJsBootstrap() {
     "node --version >&2;",
     "pnpm --version >&2;",
     "};",
-    "KENUXA OPS_crabbox_bootstrap_macos_js",
+    "KENUXA_OPS_crabbox_bootstrap_macos_js",
   ].join(" ");
 }
 
@@ -1289,8 +1289,8 @@ function createAwsMacosScriptStdinWrapper(script) {
   return [
     `${remoteAwsMacosJsBootstrap()} || exit $?`,
     'tmp_script="$(mktemp "${TMPDIR:-/tmp}/KENUXA OPS-crabbox-script.XXXXXX")" || exit $?',
-    'cleanup_KENUXA OPS_crabbox_script() { rm -f "$tmp_script"; }',
-    "trap cleanup_KENUXA OPS_crabbox_script EXIT",
+    'cleanup_KENUXA_OPS_crabbox_script() { rm -f "$tmp_script"; }',
+    "trap cleanup_KENUXA_OPS_crabbox_script EXIT",
     `cat >"$tmp_script" <<'${delimiter}'`,
     script.endsWith("\n") ? script.slice(0, -1) : script,
     delimiter,
@@ -1303,7 +1303,7 @@ function createAwsMacosScriptStdinWrapper(script) {
 function uniqueHereDocDelimiter(script) {
   let index = 0;
   for (;;) {
-    const delimiter = `KENUXA OPS_CRABBOX_SCRIPT_${index}`;
+    const delimiter = `KENUXA_OPS_CRABBOX_SCRIPT_${index}`;
     if (!new RegExp(`^${delimiter}$`, "mu").test(script)) {
       return delimiter;
     }

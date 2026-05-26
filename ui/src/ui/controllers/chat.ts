@@ -153,8 +153,8 @@ function hasTranscriptMeta(message: unknown): boolean {
   return Boolean(
     message &&
     typeof message === "object" &&
-    (message as { __KENUXA OPS?: unknown })["__KENUXA OPS"] &&
-    typeof (message as { __KENUXA OPS?: unknown })["__KENUXA OPS"] === "object",
+    (message as { __KenuxaOps?: unknown })["__KenuxaOps"] &&
+    typeof (message as { __KenuxaOps?: unknown })["__KenuxaOps"] === "object",
   );
 }
 

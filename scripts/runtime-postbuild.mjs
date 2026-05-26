@@ -1,4 +1,4 @@
-﻿import fs from "node:fs";
+import fs from "node:fs";
 import path from "node:path";
 import { performance } from "node:perf_hooks";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -454,7 +454,7 @@ export function writeLegacyCliExitCompatChunks(params = {}) {
 }
 
 export function runRuntimePostBuild(params = {}) {
-  const timingsEnabled = params.timings ?? process.env.KENUXA OPS_RUNTIME_POSTBUILD_TIMINGS !== "0";
+  const timingsEnabled = params.timings ?? process.env.KENUXA_OPS_RUNTIME_POSTBUILD_TIMINGS !== "0";
   const runPhase = (label, action) => {
     const startedAt = performance.now();
     try {

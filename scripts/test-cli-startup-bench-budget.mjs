@@ -1,4 +1,4 @@
-﻿import { spawnSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import {
   booleanFlag,
@@ -61,10 +61,10 @@ const opts = parseFlagArgs(
     warmup: 0,
     timeoutMs: 30_000,
     maxDurationRegressionPct:
-      readEnvNumber("KENUXA OPS_STARTUP_BENCH_MAX_DURATION_REGRESSION_PCT") ?? 20,
+      readEnvNumber("KENUXA_OPS_STARTUP_BENCH_MAX_DURATION_REGRESSION_PCT") ?? 20,
     maxFirstOutputRegressionPct:
-      readEnvNumber("KENUXA OPS_STARTUP_BENCH_MAX_FIRST_OUTPUT_REGRESSION_PCT") ?? 20,
-    maxRssRegressionPct: readEnvNumber("KENUXA OPS_STARTUP_BENCH_MAX_RSS_REGRESSION_PCT") ?? 20,
+      readEnvNumber("KENUXA_OPS_STARTUP_BENCH_MAX_FIRST_OUTPUT_REGRESSION_PCT") ?? 20,
+    maxRssRegressionPct: readEnvNumber("KENUXA_OPS_STARTUP_BENCH_MAX_RSS_REGRESSION_PCT") ?? 20,
     skipBaseline: false,
   },
   [

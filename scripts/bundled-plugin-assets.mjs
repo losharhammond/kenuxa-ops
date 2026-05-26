@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 
 import { spawnSync } from "node:child_process";
 import fs from "node:fs/promises";
@@ -49,7 +49,7 @@ async function resolvePluginAliases(pluginDir, packageJson) {
 }
 
 function resolveAssetCommand(packageJson, phase) {
-  const assetScripts = packageJson.KENUXA OPS?.assetScripts;
+  const assetScripts = packageJson["kenuxa-ops"]?.assetScripts;
   if (!assetScripts || typeof assetScripts !== "object") {
     return null;
   }

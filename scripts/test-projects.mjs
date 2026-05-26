@@ -1,4 +1,4 @@
-﻿import fs from "node:fs";
+import fs from "node:fs";
 import { performance } from "node:perf_hooks";
 import { formatMs } from "./lib/check-timing-summary.mjs";
 import { acquireLocalHeavyCheckLockSync } from "./lib/local-heavy-check-runtime.mjs";
@@ -93,7 +93,7 @@ function runVitestSpec(spec) {
 }
 
 function applyDefaultParallelVitestWorkerBudget(specs, env) {
-  if (env.KENUXA OPS_VITEST_MAX_WORKERS || env.KENUXA OPS_TEST_WORKERS || isCiLikeEnv(env)) {
+  if (env.KENUXA_OPS_VITEST_MAX_WORKERS || env.KENUXA_OPS_TEST_WORKERS || isCiLikeEnv(env)) {
     return specs;
   }
   const { vitestMaxWorkers } = resolveLocalFullSuiteProfile(env);
@@ -101,7 +101,7 @@ function applyDefaultParallelVitestWorkerBudget(specs, env) {
     ...spec,
     env: {
       ...spec.env,
-      KENUXA OPS_VITEST_MAX_WORKERS: String(vitestMaxWorkers),
+      KENUXA_OPS_VITEST_MAX_WORKERS: String(vitestMaxWorkers),
     },
   }));
 }
@@ -188,7 +188,9 @@ async function main() {
   if (unmatchedExplicitTargets.length > 0) {
     for (const unmatched of unmatchedExplicitTargets) {
       const suffix = unmatched.includePattern ? ` (${unmatched.includePattern})` : "";
-      console.error(`[test] explicit test target matched no test files: ${unmatched.target}${suffix}`);
+      console.error(
+        `[test] explicit test target matched no test files: ${unmatched.target}${suffix}`,
+      );
     }
     printTestSummary("failed", 1, performance.now() - suiteStartedAt);
     process.exitCode = 1;
@@ -246,7 +248,7 @@ async function main() {
     changedTargetArgs === null &&
     !runSpecs.some((spec) => spec.watchMode);
   const isExplicitParallelMultiConfigRun =
-    Boolean(baseEnv.KENUXA OPS_TEST_PROJECTS_PARALLEL) &&
+    Boolean(baseEnv.KENUXA_OPS_TEST_PROJECTS_PARALLEL) &&
     runSpecs.length > 1 &&
     !runSpecs.some((spec) => spec.watchMode);
   const isParallelShardRun =
@@ -265,9 +267,9 @@ async function main() {
       );
       if (
         !isCiLikeEnv(baseEnv) &&
-        !baseEnv.KENUXA OPS_TEST_PROJECTS_PARALLEL &&
-        !baseEnv.KENUXA OPS_VITEST_MAX_WORKERS &&
-        !baseEnv.KENUXA OPS_TEST_WORKERS &&
+        !baseEnv.KENUXA_OPS_TEST_PROJECTS_PARALLEL &&
+        !baseEnv.KENUXA_OPS_VITEST_MAX_WORKERS &&
+        !baseEnv.KENUXA_OPS_TEST_WORKERS &&
         localFullSuiteProfile.shardParallelism === 10 &&
         localFullSuiteProfile.vitestMaxWorkers === 2
       ) {

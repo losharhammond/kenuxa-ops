@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 import { execFileSync } from "node:child_process";
 import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -511,7 +511,7 @@ function listPublishablePluginPackageDirs() {
         return false;
       }
       const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf8"));
-      return packageJson.KENUXA OPS?.release?.publishToNpm === true;
+      return packageJson["kenuxa-ops"]?.release?.publishToNpm === true;
     })
     .toSorted((left, right) => left.localeCompare(right));
 }

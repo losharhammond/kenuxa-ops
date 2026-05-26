@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -8,13 +8,13 @@ const pluginDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..
 const rootDir = path.resolve(pluginDir, "../..");
 
 function getA2uiPaths(env = process.env) {
-  const srcDir = env.KENUXA OPS_A2UI_SRC_DIR ?? path.join(pluginDir, "src", "host", "a2ui");
-  const outDir = env.KENUXA OPS_A2UI_OUT_DIR ?? path.join(rootDir, "dist", "canvas-host", "a2ui");
+  const srcDir = env.kenuxa-ops_A2UI_SRC_DIR ?? path.join(pluginDir, "src", "host", "a2ui");
+  const outDir = env.kenuxa-ops_A2UI_OUT_DIR ?? path.join(rootDir, "dist", "canvas-host", "a2ui");
   return { srcDir, outDir };
 }
 
 function shouldSkipMissingA2uiAssets(env = process.env) {
-  return env.KENUXA OPS_A2UI_SKIP_MISSING === "1" || Boolean(env.KENUXA OPS_SPARSE_PROFILE);
+  return env.kenuxa-ops_A2UI_SKIP_MISSING === "1" || Boolean(env.kenuxa-ops_SPARSE_PROFILE);
 }
 
 export async function copyA2uiAssets({ srcDir, outDir }) {
@@ -26,7 +26,7 @@ export async function copyA2uiAssets({ srcDir, outDir }) {
     const message = 'Missing A2UI bundle assets. Run "pnpm canvas:a2ui:bundle" and retry.';
     if (skipMissing) {
       console.warn(
-        `${message} Skipping copy because KENUXA OPS_A2UI_SKIP_MISSING=1 or KENUXA OPS_SPARSE_PROFILE is set.`,
+        `${message} Skipping copy because KENUXA_OPS_A2UI_SKIP_MISSING=1 or KENUXA_OPS_SPARSE_PROFILE is set.`,
       );
       return;
     }

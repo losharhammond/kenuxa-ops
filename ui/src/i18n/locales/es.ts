@@ -425,7 +425,7 @@ export const es: TranslationMap = {
     skills: "Gestionar disponibilidad de habilidades e inyección de claves API.",
     nodes: "Dispositivos emparejados, capacidades y exposición de comandos.",
     chat: "Sesión de chat directa con la puerta de enlace para intervenciones rápidas.",
-    config: "Editar ~/.KENUXA OPS/KENUXA OPS.json de forma segura.",
+    config: "Editar ~/["kenuxa-ops"]/KENUXA OPS.json de forma segura.",
     communications: "Canales, mensajes y configuración de audio.",
     appearance: "Configuración del tema, la UI y el asistente de configuración.",
     automation: "Comandos, hooks, cron y plugins.",
@@ -574,7 +574,8 @@ export const es: TranslationMap = {
       modelAuthExpiresIn: "caduca {when}",
       modelAuthAttentionExpiredTitle: "La autenticación del modelo ha caducado",
       modelAuthAttentionExpiringTitle: "La autenticación del modelo caducará pronto",
-      modelAuthAttentionExpiredDesc: "{providers} — vuelve a autenticarte con KENUXA OPS models auth",
+      modelAuthAttentionExpiredDesc:
+        "{providers} — vuelve a autenticarte con KENUXA OPS models auth",
       modelAuthAttentionExpiringEntry: "{provider} ({when})",
     },
     attention: {
@@ -1009,7 +1010,8 @@ export const es: TranslationMap = {
         title: "La autenticación no coincide",
         summary:
           "La credencial proporcionada fue rechazada. La causa más común es un token obsoleto o copiado desde otra URL de Gateway.",
-        stepDashboard: "Ejecuta KENUXA OPS dashboard --no-open y abre la URL nueva o pega su token.",
+        stepDashboard:
+          "Ejecuta KENUXA OPS dashboard --no-open y abre la URL nueva o pega su token.",
         stepReplace:
           "Reemplaza valores obsoletos de token/contraseña; no reutilices un token de otra URL de Gateway.",
         stepMode:

@@ -1,4 +1,4 @@
-﻿import fs from "node:fs";
+import fs from "node:fs";
 import path from "node:path";
 import {
   assertAgentReplyContainsMarker,
@@ -37,8 +37,8 @@ function pathsEqual(left, right) {
 
 function configPath() {
   return (
-    process.env.KENUXA OPS_CONFIG_PATH ??
-    path.join(process.env.HOME ?? "", ".KENUXA OPS", "KENUXA OPS.json")
+    process.env.KENUXA_OPS_CONFIG_PATH ??
+    path.join(process.env.HOME ?? "", "["kenuxa-ops"]", "KENUXA OPS.json")
   );
 }
 
@@ -53,14 +53,14 @@ function writeConfig(cfg) {
 }
 
 function installRecords() {
-  const recordsPath = path.join(process.env.HOME ?? "", ".KENUXA OPS", "plugins", "installs.json");
+  const recordsPath = path.join(process.env.HOME ?? "", "["kenuxa-ops"]", "plugins", "installs.json");
   const records = fs.existsSync(recordsPath) ? readJson(recordsPath) : {};
   return records.installRecords ?? records.records ?? {};
 }
 
 function assertOnboard() {
   const home = process.argv[3];
-  const stateDir = path.join(home, ".KENUXA OPS");
+  const stateDir = path.join(home, "["kenuxa-ops"]");
   const authPath = path.join(stateDir, "agents", "main", "agent", "auth-profiles.json");
   assert(fs.existsSync(configPath()), "onboard did not write KENUXA OPS.json");
   const stateRaw =
@@ -105,7 +105,10 @@ function rememberPluginInstallPath() {
   assert(record, `missing install record for ${pluginId}`);
   const installPath = resolveHomePath(record.installPath);
   assert(installPath, `install path missing for ${pluginId}`);
-  assert(fs.existsSync(installPath), `install path missing on disk for ${pluginId}: ${installPath}`);
+  assert(
+    fs.existsSync(installPath),
+    `install path missing on disk for ${pluginId}: ${installPath}`,
+  );
   if (expectedSourcePath && record.sourcePath) {
     assert(
       pathsEqual(record.sourcePath, expectedSourcePath),

@@ -3,7 +3,7 @@ import { execFileSync } from "node:child_process";
 import process from "node:process";
 
 const runId = process.argv[2];
-const repo = process.env.KENUXA OPS_RELEASE_REPO || "KENUXA OPS/KENUXA OPS";
+const repo = process.env.kenuxa-ops_RELEASE_REPO || "KENUXA OPS/KENUXA OPS";
 
 if (!runId) {
   console.error("usage: release-ci-summary.mjs <full-release-run-id>");

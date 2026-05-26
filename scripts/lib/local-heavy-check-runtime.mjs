@@ -1,4 +1,4 @@
-﻿import { spawnSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -16,7 +16,7 @@ const DEFAULT_FAST_LOCAL_CHECK_MIN_CPUS = 12;
 const SLEEP_BUFFER = new Int32Array(new SharedArrayBuffer(4));
 
 export function isLocalCheckEnabled(env) {
-  const raw = env.KENUXA OPS_LOCAL_CHECK?.trim().toLowerCase();
+  const raw = env.KENUXA_OPS_LOCAL_CHECK?.trim().toLowerCase();
   return raw !== "0" && raw !== "false";
 }
 
@@ -31,7 +31,7 @@ export function resolveLocalHeavyCheckEnv(env = process.env) {
 
   return {
     ...env,
-    KENUXA OPS_LOCAL_CHECK: "1",
+    KENUXA_OPS_LOCAL_CHECK: "1",
   };
 }
 
@@ -57,7 +57,7 @@ export function applyLocalTsgoPolicy(args, env, hostResources) {
     insertBeforeSeparator(
       nextArgs,
       "--tsBuildInfoFile",
-      nextEnv.KENUXA OPS_TSGO_BUILD_INFO_FILE ?? DEFAULT_LOCAL_TSGO_BUILD_INFO_FILE,
+      nextEnv.KENUXA_OPS_TSGO_BUILD_INFO_FILE ?? DEFAULT_LOCAL_TSGO_BUILD_INFO_FILE,
     );
   }
 
@@ -72,8 +72,8 @@ export function applyLocalTsgoPolicy(args, env, hostResources) {
       nextEnv.GOMEMLIMIT = DEFAULT_LOCAL_GO_MEMORY_LIMIT;
     }
   }
-  if (nextEnv.KENUXA OPS_TSGO_PPROF_DIR && !hasFlag(nextArgs, "--pprofDir")) {
-    insertBeforeSeparator(nextArgs, "--pprofDir", nextEnv.KENUXA OPS_TSGO_PPROF_DIR);
+  if (nextEnv.KENUXA_OPS_TSGO_PPROF_DIR && !hasFlag(nextArgs, "--pprofDir")) {
+    insertBeforeSeparator(nextArgs, "--pprofDir", nextEnv.KENUXA_OPS_TSGO_PPROF_DIR);
   }
 
   return { env: nextEnv, args: nextArgs };
@@ -103,7 +103,7 @@ export function shouldAcquireLocalHeavyCheckLockForOxlint(
   args,
   { cwd = process.cwd(), env = process.env } = {},
 ) {
-  if (env.KENUXA OPS_OXLINT_FORCE_LOCK === "1") {
+  if (env.KENUXA_OPS_OXLINT_FORCE_LOCK === "1") {
     return true;
   }
 
@@ -145,7 +145,7 @@ export function shouldAcquireLocalHeavyCheckLockForOxlint(
 }
 
 export function shouldAcquireLocalHeavyCheckLockForTsgo(args, env = process.env) {
-  if (env.KENUXA OPS_TSGO_FORCE_LOCK === "1") {
+  if (env.KENUXA_OPS_TSGO_FORCE_LOCK === "1") {
     return true;
   }
 
@@ -191,16 +191,16 @@ export function acquireLocalHeavyCheckLockSync(params) {
   const lockDir = path.join(locksDir, `${params.lockName ?? "heavy-check"}.lock`);
   const ownerPath = path.join(lockDir, "owner.json");
   const timeoutMs = readPositiveInt(
-    env.KENUXA OPS_HEAVY_CHECK_LOCK_TIMEOUT_MS,
+    env.KENUXA_OPS_HEAVY_CHECK_LOCK_TIMEOUT_MS,
     DEFAULT_LOCK_TIMEOUT_MS,
   );
-  const pollMs = readPositiveInt(env.KENUXA OPS_HEAVY_CHECK_LOCK_POLL_MS, DEFAULT_LOCK_POLL_MS);
+  const pollMs = readPositiveInt(env.KENUXA_OPS_HEAVY_CHECK_LOCK_POLL_MS, DEFAULT_LOCK_POLL_MS);
   const progressMs = readPositiveInt(
-    env.KENUXA OPS_HEAVY_CHECK_LOCK_PROGRESS_MS,
+    env.KENUXA_OPS_HEAVY_CHECK_LOCK_PROGRESS_MS,
     DEFAULT_LOCK_PROGRESS_MS,
   );
   const staleLockMs = readPositiveInt(
-    env.KENUXA OPS_HEAVY_CHECK_STALE_LOCK_MS,
+    env.KENUXA_OPS_HEAVY_CHECK_STALE_LOCK_MS,
     DEFAULT_STALE_LOCK_MS,
   );
   const startedAt = Date.now();
@@ -272,7 +272,7 @@ export function acquireLocalHeavyCheckLockSync(params) {
 }
 
 function resolveHeavyCheckLocksDir(cwd, env) {
-  const lockScope = env.KENUXA OPS_HEAVY_CHECK_LOCK_SCOPE?.trim().toLowerCase();
+  const lockScope = env.KENUXA_OPS_HEAVY_CHECK_LOCK_SCOPE?.trim().toLowerCase();
   if (lockScope === "worktree") {
     return path.join(resolveGitWorktreeRoot(cwd), ".artifacts", "KENUXA OPS-local-checks");
   }
@@ -339,7 +339,7 @@ function insertBeforeSeparator(args, ...items) {
 }
 
 function readLocalCheckMode(env, defaultMode) {
-  const raw = env.KENUXA OPS_LOCAL_CHECK_MODE?.trim().toLowerCase();
+  const raw = env.KENUXA_OPS_LOCAL_CHECK_MODE?.trim().toLowerCase();
   if (raw === "throttled" || raw === "low-memory") {
     return "throttled";
   }

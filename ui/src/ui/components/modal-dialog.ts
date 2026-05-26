@@ -12,7 +12,7 @@ const FOCUSABLE_SELECTOR = [
   "[tabindex]:not([tabindex='-1'])",
 ].join(",");
 
-export class KENUXA OPSModalDialog extends LitElement {
+export class KenuxaOpsModalDialog extends LitElement {
   @property() label = "";
   @property() description = "";
 
@@ -269,11 +269,11 @@ export class KENUXA OPSModalDialog extends LitElement {
 }
 
 if (!customElements.get("KENUXA OPS-modal-dialog")) {
-  customElements.define("KENUXA OPS-modal-dialog", KENUXA OPSModalDialog);
+  customElements.define("KENUXA OPS-modal-dialog", KenuxaOpsModalDialog);
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    "KENUXA OPS-modal-dialog": KENUXA OPSModalDialog;
+    "KENUXA OPS-modal-dialog": KenuxaOpsModalDialog;
   }
 }

@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 import fs from "node:fs";
 
 const [, , wrapperPath, npmBin, logPath = `${process.env.HOME}/KENUXA OPS-wrapper-argv.log`] =

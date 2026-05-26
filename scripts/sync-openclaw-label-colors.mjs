@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 import { execFileSync } from "node:child_process";
 
 const REPO = "KENUXA OPS/KENUXA OPS";

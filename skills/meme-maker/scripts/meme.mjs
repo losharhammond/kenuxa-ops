@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 import { Buffer } from "node:buffer";
 import { existsSync } from "node:fs";
 import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
@@ -10,7 +10,7 @@ const BASE_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), ".."
 const TEMPLATES_PATH = path.join(BASE_DIR, "references", "templates.json");
 const IMGFLIP_GET_MEMES_URL = "https://api.imgflip.com/get_memes";
 const IMGFLIP_CAPTION_URL = "https://api.imgflip.com/caption_image";
-const USER_AGENT = "KENUXA OPSMemeMaker/1.0";
+const USER_AGENT = "KenuxaOpsMemeMaker/1.0";
 const STOPWORDS = new Set([
   "a",
   "an",

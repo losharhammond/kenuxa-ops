@@ -1,6 +1,6 @@
-﻿const A2UI_PATH = "/__KENUXA OPS__/a2ui";
-const CANVAS_HOST_PATH = "/__KENUXA OPS__/canvas";
-const CANVAS_CAPABILITY_PATH_PREFIX = "/__KENUXA OPS__/cap";
+﻿const A2UI_PATH = "/__KenuxaOps__/a2ui";
+const CANVAS_HOST_PATH = "/__KenuxaOps__/canvas";
+const CANVAS_CAPABILITY_PATH_PREFIX = "/__KenuxaOps__/cap";
 
 function isCanvasHttpPath(pathname: string): boolean {
   return (

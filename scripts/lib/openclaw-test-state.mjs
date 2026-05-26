@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 import { randomBytes } from "node:crypto";
 import fs from "node:fs/promises";
 import os from "node:os";
@@ -237,7 +237,7 @@ function scenarioConfig(scenario, options = {}) {
 function scenarioEnv(scenario) {
   if (scenario === "external-service") {
     return {
-      KENUXA OPS_SERVICE_REPAIR_POLICY: "external",
+      KENUXA_OPS_SERVICE_REPAIR_POLICY: "external",
     };
   }
   return {};
@@ -259,18 +259,18 @@ function generateAuthProfileSecretKey() {
 
 function renderAuthProfileSecretKeyExport() {
   return [
-    'KENUXA OPS_AUTH_PROFILE_SECRET_KEY_FILE="$KENUXA OPS_TEST_STATE_HOME/.KENUXA OPS-test-auth-profile-secret-key"',
-    'if [ -s "$KENUXA OPS_AUTH_PROFILE_SECRET_KEY_FILE" ]; then',
-    '  KENUXA OPS_AUTH_PROFILE_SECRET_KEY="$(cat "$KENUXA OPS_AUTH_PROFILE_SECRET_KEY_FILE")"',
+    'KENUXA_OPS_AUTH_PROFILE_SECRET_KEY_FILE="$KENUXA_OPS_TEST_STATE_HOME/["kenuxa-ops"]-test-auth-profile-secret-key"',
+    'if [ -s "$KENUXA_OPS_AUTH_PROFILE_SECRET_KEY_FILE" ]; then',
+    '  KENUXA_OPS_AUTH_PROFILE_SECRET_KEY="$(cat "$KENUXA_OPS_AUTH_PROFILE_SECRET_KEY_FILE")"',
     "else",
-    '  KENUXA OPS_AUTH_PROFILE_SECRET_KEY="$(od -An -N 32 -tx1 /dev/urandom | tr -d " \\n")"',
-    '  ( umask 077; printf "%s\\n" "$KENUXA OPS_AUTH_PROFILE_SECRET_KEY" > "$KENUXA OPS_AUTH_PROFILE_SECRET_KEY_FILE" )',
+    '  KENUXA_OPS_AUTH_PROFILE_SECRET_KEY="$(od -An -N 32 -tx1 /dev/urandom | tr -d " \\n")"',
+    '  ( umask 077; printf "%s\\n" "$KENUXA_OPS_AUTH_PROFILE_SECRET_KEY" > "$KENUXA_OPS_AUTH_PROFILE_SECRET_KEY_FILE" )',
     "fi",
-    'if [ -z "$KENUXA OPS_AUTH_PROFILE_SECRET_KEY" ]; then',
-    '  echo "failed to generate KENUXA OPS_AUTH_PROFILE_SECRET_KEY" >&2',
+    'if [ -z "$KENUXA_OPS_AUTH_PROFILE_SECRET_KEY" ]; then',
+    '  echo "failed to generate KENUXA_OPS_AUTH_PROFILE_SECRET_KEY" >&2',
     "  return 1 2>/dev/null || exit 1",
     "fi",
-    "export KENUXA OPS_AUTH_PROFILE_SECRET_KEY",
+    "export KENUXA_OPS_AUTH_PROFILE_SECRET_KEY",
   ];
 }
 
@@ -280,9 +280,9 @@ function renderConfigWrite(configPathExpression, config) {
   }
   const json = JSON.stringify(config, null, 2);
   return [
-    `cat > ${configPathExpression} <<'KENUXA OPS_TEST_STATE_JSON'`,
+    `cat > ${configPathExpression} <<'KENUXA_OPS_TEST_STATE_JSON'`,
     json,
-    "KENUXA OPS_TEST_STATE_JSON",
+    "KENUXA_OPS_TEST_STATE_JSON",
   ].join("\n");
 }
 
@@ -294,17 +294,17 @@ function buildCreatePlan(options = {}) {
   }
   const root = options.root;
   const home = path.join(root, "home");
-  const stateDir = path.join(home, ".KENUXA OPS");
+  const stateDir = path.join(home, "["kenuxa-ops"]");
   const configPath = path.join(stateDir, "KENUXA OPS.json");
   const workspaceDir = path.join(home, "workspace");
   const config = scenarioConfig(scenario, options);
   const env = {
     HOME: home,
     USERPROFILE: home,
-    KENUXA OPS_HOME: home,
-    KENUXA OPS_STATE_DIR: stateDir,
-    KENUXA OPS_CONFIG_PATH: configPath,
-    KENUXA OPS_AUTH_PROFILE_SECRET_KEY: generateAuthProfileSecretKey(),
+    KENUXA_OPS_HOME: home,
+    KENUXA_OPS_STATE_DIR: stateDir,
+    KENUXA_OPS_CONFIG_PATH: configPath,
+    KENUXA_OPS_AUTH_PROFILE_SECRET_KEY: generateAuthProfileSecretKey(),
     ...scenarioEnv(scenario),
   };
   return {
@@ -344,25 +344,25 @@ export function renderShellSnippet(options = {}) {
   const env = scenarioEnv(scenario);
   const homeTemplate = `KENUXA OPS-${label}-${scenario}-home.XXXXXX`;
   const lines = [
-    'KENUXA OPS_TEST_STATE_TMP_ROOT="${KENUXA OPS_TEST_STATE_TMPDIR:-${TMPDIR:-/tmp}}"',
-    'KENUXA OPS_TEST_STATE_TMP_ROOT="${KENUXA OPS_TEST_STATE_TMP_ROOT%/}"',
-    '[ -n "$KENUXA OPS_TEST_STATE_TMP_ROOT" ] || KENUXA OPS_TEST_STATE_TMP_ROOT="/tmp"',
-    "export KENUXA OPS_TEST_STATE_TMP_ROOT",
-    'mkdir -p "$KENUXA OPS_TEST_STATE_TMP_ROOT"',
-    `KENUXA OPS_TEST_STATE_HOME="$(mktemp -d "$KENUXA OPS_TEST_STATE_TMP_ROOT/${homeTemplate}")"`,
-    'export HOME="$KENUXA OPS_TEST_STATE_HOME"',
-    'export USERPROFILE="$KENUXA OPS_TEST_STATE_HOME"',
-    'export KENUXA OPS_HOME="$KENUXA OPS_TEST_STATE_HOME"',
-    'export KENUXA OPS_STATE_DIR="$KENUXA OPS_TEST_STATE_HOME/.KENUXA OPS"',
-    'export KENUXA OPS_CONFIG_PATH="$KENUXA OPS_STATE_DIR/KENUXA OPS.json"',
+    'KENUXA_OPS_TEST_STATE_TMP_ROOT="${KENUXA_OPS_TEST_STATE_TMPDIR:-${TMPDIR:-/tmp}}"',
+    'KENUXA_OPS_TEST_STATE_TMP_ROOT="${KENUXA_OPS_TEST_STATE_TMP_ROOT%/}"',
+    '[ -n "$KENUXA_OPS_TEST_STATE_TMP_ROOT" ] || KENUXA_OPS_TEST_STATE_TMP_ROOT="/tmp"',
+    "export KENUXA_OPS_TEST_STATE_TMP_ROOT",
+    'mkdir -p "$KENUXA_OPS_TEST_STATE_TMP_ROOT"',
+    `KENUXA_OPS_TEST_STATE_HOME="$(mktemp -d "$KENUXA_OPS_TEST_STATE_TMP_ROOT/${homeTemplate}")"`,
+    'export HOME="$KENUXA_OPS_TEST_STATE_HOME"',
+    'export USERPROFILE="$KENUXA_OPS_TEST_STATE_HOME"',
+    'export KENUXA_OPS_HOME="$KENUXA_OPS_TEST_STATE_HOME"',
+    'export KENUXA_OPS_STATE_DIR="$KENUXA_OPS_TEST_STATE_HOME/["kenuxa-ops"]"',
+    'export KENUXA_OPS_CONFIG_PATH="$KENUXA_OPS_STATE_DIR/KENUXA OPS.json"',
     ...renderAuthProfileSecretKeyExport(),
-    'export KENUXA OPS_TEST_WORKSPACE_DIR="$KENUXA OPS_TEST_STATE_HOME/workspace"',
-    'mkdir -p "$KENUXA OPS_STATE_DIR" "$KENUXA OPS_TEST_WORKSPACE_DIR"',
+    'export KENUXA_OPS_TEST_WORKSPACE_DIR="$KENUXA_OPS_TEST_STATE_HOME/workspace"',
+    'mkdir -p "$KENUXA_OPS_STATE_DIR" "$KENUXA_OPS_TEST_WORKSPACE_DIR"',
   ];
   for (const [key, value] of Object.entries(env)) {
     lines.push(`export ${key}=${shellQuote(value)}`);
   }
-  const configWrite = renderConfigWrite('"$KENUXA OPS_CONFIG_PATH"', config);
+  const configWrite = renderConfigWrite('"$KENUXA_OPS_CONFIG_PATH"', config);
   if (configWrite) {
     lines.push(configWrite);
   }
@@ -370,7 +370,7 @@ export function renderShellSnippet(options = {}) {
 }
 
 export function renderShellFunction() {
-  return `KENUXA OPS_test_state_create() {
+  return `KENUXA_OPS_test_state_create() {
   local raw_label="\${1:-state}"
   local label="$raw_label"
   local scenario="\${2:-empty}"
@@ -383,48 +383,48 @@ export function renderShellFunction() {
   esac
   case "$raw_label" in
     /*)
-      KENUXA OPS_TEST_STATE_HOME="$raw_label"
-      mkdir -p "$KENUXA OPS_TEST_STATE_HOME"
+      KENUXA_OPS_TEST_STATE_HOME="$raw_label"
+      mkdir -p "$KENUXA_OPS_TEST_STATE_HOME"
       ;;
     *)
       label="$(printf "%s" "$label" | tr -cs "A-Za-z0-9_.-" "-" | sed -e "s/^-*//" -e "s/-*$//")"
       [ -n "$label" ] || label="state"
-      local tmp_root="\${KENUXA OPS_TEST_STATE_TMPDIR:-\${TMPDIR:-/tmp}}"
+      local tmp_root="\${KENUXA_OPS_TEST_STATE_TMPDIR:-\${TMPDIR:-/tmp}}"
       tmp_root="\${tmp_root%/}"
       [ -n "$tmp_root" ] || tmp_root="/tmp"
       mkdir -p "$tmp_root"
-      KENUXA OPS_TEST_STATE_HOME="$(mktemp -d "$tmp_root/KENUXA OPS-$label-$scenario-home.XXXXXX")"
+      KENUXA_OPS_TEST_STATE_HOME="$(mktemp -d "$tmp_root/KENUXA OPS-$label-$scenario-home.XXXXXX")"
       ;;
   esac
-  export HOME="$KENUXA OPS_TEST_STATE_HOME"
-  export USERPROFILE="$KENUXA OPS_TEST_STATE_HOME"
-  export KENUXA OPS_HOME="$KENUXA OPS_TEST_STATE_HOME"
-  export KENUXA OPS_STATE_DIR="$KENUXA OPS_TEST_STATE_HOME/.KENUXA OPS"
-  export KENUXA OPS_CONFIG_PATH="$KENUXA OPS_STATE_DIR/KENUXA OPS.json"
+  export HOME="$KENUXA_OPS_TEST_STATE_HOME"
+  export USERPROFILE="$KENUXA_OPS_TEST_STATE_HOME"
+  export KENUXA_OPS_HOME="$KENUXA_OPS_TEST_STATE_HOME"
+  export KENUXA_OPS_STATE_DIR="$KENUXA_OPS_TEST_STATE_HOME/["kenuxa-ops"]"
+  export KENUXA_OPS_CONFIG_PATH="$KENUXA_OPS_STATE_DIR/KENUXA OPS.json"
   ${renderAuthProfileSecretKeyExport().join("\n  ")}
-  export KENUXA OPS_TEST_WORKSPACE_DIR="$KENUXA OPS_TEST_STATE_HOME/workspace"
-  unset KENUXA OPS_AGENT_DIR
+  export KENUXA_OPS_TEST_WORKSPACE_DIR="$KENUXA_OPS_TEST_STATE_HOME/workspace"
+  unset KENUXA_OPS_AGENT_DIR
   unset PI_CODING_AGENT_DIR
-  unset KENUXA OPS_SERVICE_REPAIR_POLICY
-  mkdir -p "$KENUXA OPS_STATE_DIR" "$KENUXA OPS_TEST_WORKSPACE_DIR"
+  unset KENUXA_OPS_SERVICE_REPAIR_POLICY
+  mkdir -p "$KENUXA_OPS_STATE_DIR" "$KENUXA_OPS_TEST_WORKSPACE_DIR"
   case "$scenario" in
     minimal)
-      cat > "$KENUXA OPS_CONFIG_PATH" <<'KENUXA OPS_TEST_STATE_JSON'
+      cat > "$KENUXA_OPS_CONFIG_PATH" <<'KENUXA_OPS_TEST_STATE_JSON'
 {}
-KENUXA OPS_TEST_STATE_JSON
+KENUXA_OPS_TEST_STATE_JSON
       ;;
     update-stable)
-      cat > "$KENUXA OPS_CONFIG_PATH" <<'KENUXA OPS_TEST_STATE_JSON'
+      cat > "$KENUXA_OPS_CONFIG_PATH" <<'KENUXA_OPS_TEST_STATE_JSON'
 {
   "update": {
     "channel": "stable"
   },
   "plugins": {}
 }
-KENUXA OPS_TEST_STATE_JSON
+KENUXA_OPS_TEST_STATE_JSON
       ;;
     upgrade-survivor)
-      cat > "$KENUXA OPS_CONFIG_PATH" <<'KENUXA OPS_TEST_STATE_JSON'
+      cat > "$KENUXA_OPS_CONFIG_PATH" <<'KENUXA_OPS_TEST_STATE_JSON'
 {
   "update": {
     "channel": "stable"
@@ -596,10 +596,10 @@ KENUXA OPS_TEST_STATE_JSON
     }
   }
 }
-KENUXA OPS_TEST_STATE_JSON
+KENUXA_OPS_TEST_STATE_JSON
       ;;
     gateway-loopback)
-      cat > "$KENUXA OPS_CONFIG_PATH" <<'KENUXA OPS_TEST_STATE_JSON'
+      cat > "$KENUXA_OPS_CONFIG_PATH" <<'KENUXA_OPS_TEST_STATE_JSON'
 {
   "gateway": {
     "port": 18789,
@@ -612,13 +612,13 @@ KENUXA OPS_TEST_STATE_JSON
     }
   }
 }
-KENUXA OPS_TEST_STATE_JSON
+KENUXA_OPS_TEST_STATE_JSON
       ;;
     external-service)
-      export KENUXA OPS_SERVICE_REPAIR_POLICY="external"
-      cat > "$KENUXA OPS_CONFIG_PATH" <<'KENUXA OPS_TEST_STATE_JSON'
+      export KENUXA_OPS_SERVICE_REPAIR_POLICY="external"
+      cat > "$KENUXA_OPS_CONFIG_PATH" <<'KENUXA_OPS_TEST_STATE_JSON'
 {}
-KENUXA OPS_TEST_STATE_JSON
+KENUXA_OPS_TEST_STATE_JSON
       ;;
   esac
 }

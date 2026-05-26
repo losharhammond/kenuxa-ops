@@ -1,4 +1,4 @@
-﻿export const PROOF_OVERRIDE_LABEL = "proof: override";
+export const PROOF_OVERRIDE_LABEL = "proof: override";
 export const PROOF_SUPPLIED_LABEL = "proof: supplied";
 export const PROOF_SUFFICIENT_LABEL = "proof: sufficient";
 export const NEEDS_REAL_BEHAVIOR_PROOF_LABEL = "triage: needs-real-behavior-proof";

@@ -1,10 +1,10 @@
-﻿import fs from "node:fs";
+import fs from "node:fs";
 import path from "node:path";
 
 const command = process.argv[2];
 const readJson = (file) => JSON.parse(fs.readFileSync(file, "utf8"));
 const agentTurnTimeoutSeconds = Number.parseInt(
-  process.env.KENUXA OPS_LIVE_PLUGIN_TOOL_TIMEOUT_SECONDS ?? "300",
+  process.env.KENUXA_OPS_LIVE_PLUGIN_TOOL_TIMEOUT_SECONDS ?? "300",
   10,
 );
 
@@ -17,11 +17,11 @@ function requireEnv(name) {
 }
 
 function stateDir() {
-  return process.env.KENUXA OPS_STATE_DIR || path.join(process.env.HOME, ".KENUXA OPS");
+  return process.env.KENUXA_OPS_STATE_DIR || path.join(process.env.HOME, "["kenuxa-ops"]");
 }
 
 function configPath() {
-  return process.env.KENUXA OPS_CONFIG_PATH || path.join(stateDir(), "KENUXA OPS.json");
+  return process.env.KENUXA_OPS_CONFIG_PATH || path.join(stateDir(), "KENUXA OPS.json");
 }
 
 function realPathMaybe(filePath) {
@@ -82,7 +82,7 @@ function writeFixture() {
     name: pluginName,
     version,
     dependencies: { slugify: "^1.6.6" },
-    KENUXA OPS: { extensions: ["./index.js"] },
+    "kenuxa-ops": { extensions: ["./index.js"] },
   });
   writeJson(path.join(dir, "KENUXA OPS.plugin.json"), {
     id: pluginId,

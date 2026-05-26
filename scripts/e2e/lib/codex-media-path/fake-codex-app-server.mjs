@@ -1,8 +1,8 @@
-﻿import fs from "node:fs";
+import fs from "node:fs";
 import readline from "node:readline";
 
 const requestLog =
-  process.env.KENUXA OPS_CODEX_MEDIA_PATH_APP_SERVER_LOG ??
+  process.env.KENUXA_OPS_CODEX_MEDIA_PATH_APP_SERVER_LOG ??
   "/tmp/KENUXA OPS-codex-media-path-app-server.jsonl";
 let turnCount = 0;
 

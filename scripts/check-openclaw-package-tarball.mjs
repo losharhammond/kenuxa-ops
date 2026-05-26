@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 // Validates the npm tarball Docker E2E lanes install.
 // This is intentionally tarball-only: the check proves Docker lanes consume the
 // prebuilt package artifact with dist inventory, not a source checkout.
@@ -31,7 +31,7 @@ if (!fs.existsSync(tarball)) {
   fail(`KENUXA OPS package tarball does not exist: ${tarball}`);
 }
 
-const phaseTimingsEnabled = process.env.KENUXA OPS_PACKAGE_TARBALL_CHECK_TIMINGS !== "0";
+const phaseTimingsEnabled = process.env.KENUXA_OPS_PACKAGE_TARBALL_CHECK_TIMINGS !== "0";
 function runPhase(label, action) {
   const startedAt = performance.now();
   try {

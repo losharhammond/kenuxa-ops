@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 
 import path from "node:path";
 import {
@@ -7,8 +7,8 @@ import {
 } from "./lib/extension-test-plan.mjs";
 import { isDirectScriptRun, runVitestBatch } from "./lib/vitest-batch-runner.mjs";
 
-const FS_MODULE_CACHE_PATH_ENV_KEY = "KENUXA OPS_VITEST_FS_MODULE_CACHE_PATH";
-const PARALLEL_ENV_KEY = "KENUXA OPS_EXTENSION_BATCH_PARALLEL";
+const FS_MODULE_CACHE_PATH_ENV_KEY = "KENUXA_OPS_VITEST_FS_MODULE_CACHE_PATH";
+const PARALLEL_ENV_KEY = "KENUXA_OPS_EXTENSION_BATCH_PARALLEL";
 
 function printUsage() {
   console.error("Usage: pnpm test:extensions:batch <extension[,extension...]> [vitest args...]");

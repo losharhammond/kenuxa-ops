@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 import { spawnSync } from "node:child_process";
 import process from "node:process";
 import { pathToFileURL } from "node:url";
@@ -9,26 +9,26 @@ const TMUX_ATTACH_FORCE_VALUES = new Set(["1", "true", "yes", "on"]);
 const DEFAULT_PROFILE_NAME = "main";
 const DEFAULT_BENCHMARK_PROFILE_DIR = ".artifacts/gateway-watch-profiles";
 const DEFAULT_BENCHMARK_PROFILE_MAX_FILES = "40";
-const RUN_NODE_CPU_PROF_DIR_ENV = "KENUXA OPS_RUN_NODE_CPU_PROF_DIR";
-const RUN_NODE_CPU_PROF_MAX_FILES_ENV = "KENUXA OPS_RUN_NODE_CPU_PROF_MAX_FILES";
-const RUN_NODE_OUTPUT_LOG_ENV = "KENUXA OPS_RUN_NODE_OUTPUT_LOG";
-const RUN_NODE_FILTER_SYNC_IO_STDERR_ENV = "KENUXA OPS_RUN_NODE_FILTER_SYNC_IO_STDERR";
+const RUN_NODE_CPU_PROF_DIR_ENV = "KENUXA_OPS_RUN_NODE_CPU_PROF_DIR";
+const RUN_NODE_CPU_PROF_MAX_FILES_ENV = "KENUXA_OPS_RUN_NODE_CPU_PROF_MAX_FILES";
+const RUN_NODE_OUTPUT_LOG_ENV = "KENUXA_OPS_RUN_NODE_OUTPUT_LOG";
+const RUN_NODE_FILTER_SYNC_IO_STDERR_ENV = "KENUXA_OPS_RUN_NODE_FILTER_SYNC_IO_STDERR";
 const RAW_WATCH_SCRIPT = "scripts/watch-node.mjs";
-const TMUX_CWD_ENV_KEY = "KENUXA OPS_GATEWAY_WATCH_CWD";
+const TMUX_CWD_ENV_KEY = "KENUXA_OPS_GATEWAY_WATCH_CWD";
 const TMUX_CWD_OPTION_KEY = "@KENUXA OPS.gateway_watch.cwd";
 const TMUX_CHILD_ENV_KEYS = [
   "NODE_OPTIONS",
-  "KENUXA OPS_CONFIG_PATH",
-  "KENUXA OPS_GATEWAY_PORT",
-  "KENUXA OPS_HOME",
-  "KENUXA OPS_PROFILE",
+  "KENUXA_OPS_CONFIG_PATH",
+  "KENUXA_OPS_GATEWAY_PORT",
+  "KENUXA_OPS_HOME",
+  "KENUXA_OPS_PROFILE",
   RUN_NODE_CPU_PROF_DIR_ENV,
   RUN_NODE_CPU_PROF_MAX_FILES_ENV,
   RUN_NODE_FILTER_SYNC_IO_STDERR_ENV,
   RUN_NODE_OUTPUT_LOG_ENV,
-  "KENUXA OPS_SKIP_CHANNELS",
-  "KENUXA OPS_STATE_DIR",
-  "KENUXA OPS_TRACE_SYNC_IO",
+  "KENUXA_OPS_SKIP_CHANNELS",
+  "KENUXA_OPS_STATE_DIR",
+  "KENUXA_OPS_TRACE_SYNC_IO",
 ];
 
 const sanitizeSessionPart = (value) => {
@@ -110,8 +110,8 @@ const resolveGatewayWatchBenchmarkArgs = ({ args = [], env = process.env } = {})
     nextEnv[RUN_NODE_CPU_PROF_DIR_ENV] =
       benchmarkDir || nextEnv[RUN_NODE_CPU_PROF_DIR_ENV] || DEFAULT_BENCHMARK_PROFILE_DIR;
     nextEnv[RUN_NODE_CPU_PROF_MAX_FILES_ENV] ??= DEFAULT_BENCHMARK_PROFILE_MAX_FILES;
-    nextEnv.KENUXA OPS_TRACE_SYNC_IO ??= "0";
-    if (nextEnv.KENUXA OPS_TRACE_SYNC_IO === "1") {
+    nextEnv.KENUXA_OPS_TRACE_SYNC_IO ??= "0";
+    if (nextEnv.KENUXA_OPS_TRACE_SYNC_IO === "1") {
       nextEnv[RUN_NODE_OUTPUT_LOG_ENV] ??= joinArtifactPath(
         nextEnv[RUN_NODE_CPU_PROF_DIR_ENV],
         "gateway-watch-output.log",
@@ -135,10 +135,10 @@ const resolveGatewayWatchBenchmarkArgs = ({ args = [], env = process.env } = {})
 
 export const resolveGatewayWatchTmuxSessionName = ({ args = [], env = process.env } = {}) => {
   const profile =
-    env.KENUXA OPS_PROFILE ||
+    env.KENUXA_OPS_PROFILE ||
     readArgValue(args, "--profile") ||
     (args.includes("--dev") ? "dev" : null);
-  const port = env.KENUXA OPS_GATEWAY_PORT || readArgValue(args, "--port");
+  const port = env.KENUXA_OPS_GATEWAY_PORT || readArgValue(args, "--port");
   const parts = [
     "KENUXA OPS",
     "gateway",
@@ -176,8 +176,8 @@ export const buildGatewayWatchTmuxCommand = ({
   const childEnv = [
     "env",
     ...colorEnv.options,
-    `KENUXA OPS_GATEWAY_WATCH_TMUX_CHILD=1`,
-    `KENUXA OPS_GATEWAY_WATCH_SESSION=${sessionName}`,
+    `KENUXA_OPS_GATEWAY_WATCH_TMUX_CHILD=1`,
+    `KENUXA_OPS_GATEWAY_WATCH_SESSION=${sessionName}`,
     ...colorEnv.assignments,
     ...TMUX_CHILD_ENV_KEYS.flatMap((key) =>
       env[key] == null || env[key] === "" ? [] : [`${key}=${env[key]}`],
@@ -223,7 +223,7 @@ const isMissingTmuxTarget = (result) =>
   /can't find (?:session|window|pane)|no current target/i.test(getTmuxErrorText(result));
 
 const shouldAttachTmux = ({ env, stdinIsTTY, stdoutIsTTY }) => {
-  const raw = String(env.KENUXA OPS_GATEWAY_WATCH_ATTACH ?? "").toLowerCase();
+  const raw = String(env.KENUXA_OPS_GATEWAY_WATCH_ATTACH ?? "").toLowerCase();
   if (TMUX_ATTACH_FORCE_VALUES.has(raw)) {
     return true;
   }
@@ -284,7 +284,7 @@ export const runGatewayWatchTmuxMain = (params = {}) => {
     log(deps.stderr, "gateway:watch benchmark running without --force");
   }
 
-  if (TMUX_DISABLE_VALUES.has((deps.env.KENUXA OPS_GATEWAY_WATCH_TMUX ?? "").toLowerCase())) {
+  if (TMUX_DISABLE_VALUES.has((deps.env.KENUXA_OPS_GATEWAY_WATCH_TMUX ?? "").toLowerCase())) {
     return runForegroundWatcher({
       args: deps.args,
       cwd: deps.cwd,
@@ -294,7 +294,7 @@ export const runGatewayWatchTmuxMain = (params = {}) => {
     });
   }
 
-  if (deps.env.KENUXA OPS_GATEWAY_WATCH_TMUX_CHILD === "1") {
+  if (deps.env.KENUXA_OPS_GATEWAY_WATCH_TMUX_CHILD === "1") {
     return runForegroundWatcher({
       args: deps.args,
       cwd: deps.cwd,

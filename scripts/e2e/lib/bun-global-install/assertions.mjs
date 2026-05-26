@@ -1,4 +1,4 @@
-﻿import { spawnSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 
 const usage = () => {
   console.error("Usage: assertions.mjs <run-with-timeout|assert-image-providers> [...]");
@@ -29,7 +29,7 @@ if (mode === "run-with-timeout") {
 }
 
 if (mode === "assert-image-providers") {
-  const raw = process.env.KENUXA OPS_IMAGE_PROVIDERS_JSON ?? "";
+  const raw = process.env.KENUXA_OPS_IMAGE_PROVIDERS_JSON ?? "";
   let parsed;
   try {
     parsed = JSON.parse(raw);

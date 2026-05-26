@@ -1,4 +1,4 @@
-﻿import { accessSync, chmodSync, constants, mkdtempSync, writeFileSync } from "node:fs";
+import { accessSync, chmodSync, constants, mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { performance } from "node:perf_hooks";
@@ -36,9 +36,9 @@ export function createChangedCheckChildEnv(baseEnv = process.env) {
   const resolvedBaseEnv = resolveLocalHeavyCheckEnv(baseEnv);
   return {
     ...resolvedBaseEnv,
-    KENUXA OPS_OXLINT_SKIP_LOCK: "1",
-    KENUXA OPS_TEST_HEAVY_CHECK_LOCK_HELD: "1",
-    KENUXA OPS_TSGO_HEAVY_CHECK_LOCK_HELD: "1",
+    KENUXA_OPS_OXLINT_SKIP_LOCK: "1",
+    KENUXA_OPS_TEST_HEAVY_CHECK_LOCK_HELD: "1",
+    KENUXA_OPS_TSGO_HEAVY_CHECK_LOCK_HELD: "1",
   };
 }
 
@@ -77,7 +77,7 @@ export function shouldSkipAppLintForMissingSwiftlint(options = {}) {
 }
 
 export function shouldDelegateChangedCheckToCrabbox(argv = [], env = process.env) {
-  if (!isTruthyEnvFlag(env.KENUXA OPS_TESTBOX)) {
+  if (!isTruthyEnvFlag(env.KENUXA_OPS_TESTBOX)) {
     return false;
   }
   if (isTruthyEnvFlag(env.CI) || isTruthyEnvFlag(env.GITHUB_ACTIONS)) {
@@ -144,7 +144,7 @@ export function createShrinkwrapGuardCommand(paths) {
 
 export async function runChangedCheckViaCrabbox(argv = [], env = process.env) {
   console.error(
-    "[check:changed] KENUXA OPS_TESTBOX=1 set; delegating to Blacksmith Testbox via `pnpm crabbox:run`.",
+    "[check:changed] KENUXA_OPS_TESTBOX=1 set; delegating to Blacksmith Testbox via `pnpm crabbox:run`.",
   );
   return await runManagedCommand({
     bin: "pnpm",
@@ -288,8 +288,8 @@ export function createChangedCheckPlan(result, options = {}) {
     addCommand("live Docker shell syntax", "bash", ["-n", ...LIVE_DOCKER_AUTH_SHELL_TARGETS]);
     addCommand("live Docker scheduler dry run", "node", ["scripts/test-docker-all.mjs"], {
       ...baseEnv,
-      KENUXA OPS_DOCKER_ALL_DRY_RUN: "1",
-      KENUXA OPS_DOCKER_ALL_LIVE_MODE: "only",
+      KENUXA_OPS_DOCKER_ALL_DRY_RUN: "1",
+      KENUXA_OPS_DOCKER_ALL_LIVE_MODE: "only",
     });
   }
 

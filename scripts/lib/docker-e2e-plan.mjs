@@ -1,4 +1,4 @@
-﻿// Docker E2E scheduler planning helpers.
+// Docker E2E scheduler planning helpers.
 // This module turns the scenario catalog plus env-driven inputs into a concrete
 // lane plan. It intentionally does not define scenario commands.
 import {
@@ -209,11 +209,11 @@ function expandUpgradeSurvivorBaselineLanes(poolLanes, rawBaselineSpecs, rawScen
           const suffix = suffixParts.join("-");
           const name = suffix ? `${poolLane.name}-${suffix}` : poolLane.name;
           const commandPrefix = [
-            `KENUXA OPS_UPGRADE_SURVIVOR_ARTIFACT_DIR="$PWD/.artifacts/upgrade-survivor/${name}"`,
+            `KENUXA_OPS_UPGRADE_SURVIVOR_ARTIFACT_DIR="$PWD/.artifacts/upgrade-survivor/${name}"`,
             baselineSpec
-              ? `KENUXA OPS_UPGRADE_SURVIVOR_BASELINE_SPEC=${shellQuote(baselineSpec)}`
+              ? `KENUXA_OPS_UPGRADE_SURVIVOR_BASELINE_SPEC=${shellQuote(baselineSpec)}`
               : "",
-            scenario ? `KENUXA OPS_UPGRADE_SURVIVOR_SCENARIO=${shellQuote(scenario)}` : "",
+            scenario ? `KENUXA_OPS_UPGRADE_SURVIVOR_SCENARIO=${shellQuote(scenario)}` : "",
           ]
             .filter(Boolean)
             .join(" ");
@@ -260,7 +260,7 @@ export function parseLiveMode(raw) {
     return mode;
   }
   throw new Error(
-    `KENUXA OPS_DOCKER_ALL_LIVE_MODE must be one of: all, skip, only. Got: ${JSON.stringify(raw)}`,
+    `KENUXA_OPS_DOCKER_ALL_LIVE_MODE must be one of: all, skip, only. Got: ${JSON.stringify(raw)}`,
   );
 }
 
@@ -270,7 +270,7 @@ export function parseProfile(raw) {
     return profile;
   }
   throw new Error(
-    `KENUXA OPS_DOCKER_ALL_PROFILE must be one of: ${DEFAULT_PROFILE}, ${RELEASE_PATH_PROFILE}. Got: ${JSON.stringify(raw)}`,
+    `KENUXA_OPS_DOCKER_ALL_PROFILE must be one of: ${DEFAULT_PROFILE}, ${RELEASE_PATH_PROFILE}. Got: ${JSON.stringify(raw)}`,
   );
 }
 
@@ -310,7 +310,7 @@ export function lanesNeedE2eImageKind(poolLanes, kind) {
   return poolLanes.some((poolLane) => poolLane.e2eImageKind === kind);
 }
 
-export function lanesNeedKENUXA OPSPackage(poolLanes) {
+export function lanesNeedKenuxaOpsPackage(poolLanes) {
   return poolLanes.some((poolLane) => poolLane.e2eImageKind);
 }
 
@@ -318,8 +318,8 @@ export function findLaneByName(name) {
   return dedupeLanes(
     expandUpgradeSurvivorBaselineLanes(
       [...allReleasePathLanes({ includeOpenWebUI: true }), ...mainLanes, ...tailLanes],
-      process.env.KENUXA OPS_UPGRADE_SURVIVOR_BASELINE_SPECS,
-      process.env.KENUXA OPS_UPGRADE_SURVIVOR_SCENARIOS,
+      process.env.KENUXA_OPS_UPGRADE_SURVIVOR_BASELINE_SPECS,
+      process.env.KENUXA_OPS_UPGRADE_SURVIVOR_SCENARIOS,
     ),
   ).find((poolLane) => poolLane.name === name);
 }
@@ -387,7 +387,7 @@ function buildPlanJson(params) {
       e2eImage: imageKinds.length > 0,
       functionalImage: imageKinds.includes("functional"),
       liveImage: scheduledLanes.some((poolLane) => poolLane.needsLiveImage),
-      package: lanesNeedKENUXA OPSPackage(scheduledLanes),
+      package: lanesNeedKenuxaOpsPackage(scheduledLanes),
     },
     profile: params.profile,
     releaseProfile: params.releaseProfile,
@@ -452,7 +452,7 @@ export function resolveDockerE2ePlan(options) {
               upgradeSurvivorScenarios,
             );
           }
-          selectNamedLanes(selectableLanes, [selectedName], "KENUXA OPS_DOCKER_ALL_LANES");
+          selectNamedLanes(selectableLanes, [selectedName], "KENUXA_OPS_DOCKER_ALL_LANES");
           return [];
         })
       : undefined;

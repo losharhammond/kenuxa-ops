@@ -1,9 +1,9 @@
-﻿import fs from "node:fs";
+import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
 const command = process.argv[2];
-const scratchRoot = process.env.KENUXA OPS_PLUGINS_TMP_DIR || os.tmpdir();
+const scratchRoot = process.env.KENUXA_OPS_PLUGINS_TMP_DIR || os.tmpdir();
 const readJson = (file) => JSON.parse(fs.readFileSync(file, "utf8"));
 const scratchFile = (name) => path.join(scratchRoot, name);
 
@@ -31,11 +31,11 @@ function pathsEqual(left, right) {
 }
 
 function getInstallRecords() {
-  const indexPath = path.join(process.env.HOME, ".KENUXA OPS", "plugins", "installs.json");
+  const indexPath = path.join(process.env.HOME, "["kenuxa-ops"]", "plugins", "installs.json");
   const index = fs.existsSync(indexPath) ? readJson(indexPath) : {};
-  const configPath = path.join(process.env.HOME, ".KENUXA OPS", "KENUXA OPS.json");
+  const configPath = path.join(process.env.HOME, "["kenuxa-ops"]", "KENUXA OPS.json");
   const config = fs.existsSync(configPath) ? readJson(configPath) : {};
-  const allowLegacyCompat = process.env.KENUXA OPS_PACKAGE_ACCEPTANCE_LEGACY_COMPAT === "1";
+  const allowLegacyCompat = process.env.KENUXA_OPS_PACKAGE_ACCEPTANCE_LEGACY_COMPAT === "1";
   if (!allowLegacyCompat && !index.installRecords) {
     throw new Error("expected modern installRecords in installed plugin index");
   }
@@ -44,8 +44,8 @@ function getInstallRecords() {
     : (index.installRecords ?? {});
 }
 
-function readKENUXA OPSConfig() {
-  const configPath = path.join(process.env.HOME, ".KENUXA OPS", "KENUXA OPS.json");
+function readKenuxaOpsConfig() {
+  const configPath = path.join(process.env.HOME, "["kenuxa-ops"]", "KENUXA OPS.json");
   return fs.existsSync(configPath) ? readJson(configPath) : {};
 }
 
@@ -60,7 +60,7 @@ function assertPluginRemoved(params) {
     throw new Error(`${params.pluginId} install record still present after uninstall`);
   }
 
-  const config = readKENUXA OPSConfig();
+  const config = readKenuxaOpsConfig();
   if (config.plugins?.entries?.[params.pluginId]) {
     throw new Error(`${params.pluginId} config entry still present after uninstall`);
   }
@@ -121,7 +121,7 @@ function recordFixturePluginTrust() {
   const pluginId = process.argv[3];
   const pluginRoot = process.argv[4];
   const enabled = process.argv[5] === "1";
-  const configPath = path.join(process.env.HOME, ".KENUXA OPS", "KENUXA OPS.json");
+  const configPath = path.join(process.env.HOME, "["kenuxa-ops"]", "KENUXA OPS.json");
   const config = fs.existsSync(configPath) ? readJson(configPath) : {};
   const plugins = (config.plugins ??= {});
   const entries = (plugins.entries ??= {});
@@ -133,7 +133,7 @@ function recordFixturePluginTrust() {
   fs.mkdirSync(path.dirname(configPath), { recursive: true });
   fs.writeFileSync(configPath, `${JSON.stringify(config, null, 2)}\n`, "utf8");
 
-  const ledgerPath = path.join(process.env.HOME, ".KENUXA OPS", "plugins", "installs.json");
+  const ledgerPath = path.join(process.env.HOME, "["kenuxa-ops"]", "plugins", "installs.json");
   const ledger = fs.existsSync(ledgerPath)
     ? readJson(ledgerPath)
     : {
@@ -409,7 +409,7 @@ function assertGitPlugin() {
   if (!installPath || !fs.existsSync(installPath)) {
     throw new Error(`git install path missing on disk: ${installPath}`);
   }
-  const gitRoot = path.join(process.env.HOME, ".KENUXA OPS", "git");
+  const gitRoot = path.join(process.env.HOME, "["kenuxa-ops"]", "git");
   if (!installPath.endsWith(`${path.sep}repo`)) {
     throw new Error(`git install path should point at cloned repo root: ${installPath}`);
   }
@@ -420,12 +420,18 @@ function assertGitPlugin() {
   }
   assertRealPathInside(installPath, dependencyPackagePath, "git plugin installed dependency");
   fs.writeFileSync(scratchFile("plugins-git-install-path.txt"), installPath, "utf8");
-  fs.writeFileSync(scratchFile("plugins-git-install-parent.txt"), path.dirname(installPath), "utf8");
+  fs.writeFileSync(
+    scratchFile("plugins-git-install-parent.txt"),
+    path.dirname(installPath),
+    "utf8",
+  );
 }
 
 function assertGitPluginRemoved() {
   const installPath = fs.readFileSync(scratchFile("plugins-git-install-path.txt"), "utf8").trim();
-  const installParent = fs.readFileSync(scratchFile("plugins-git-install-parent.txt"), "utf8").trim();
+  const installParent = fs
+    .readFileSync(scratchFile("plugins-git-install-parent.txt"), "utf8")
+    .trim();
   assertPluginRemoved({
     pluginId: "demo-plugin-git",
     listFile: scratchFile("plugins-git-uninstalled.json"),
@@ -452,15 +458,15 @@ function assertRealPathInside(parentPath, childPath, label) {
 }
 
 function assertClawHubExternalInstallContract(installPath) {
-  const KENUXA OPSPeerPath = path.join(installPath, "node_modules", "KENUXA OPS");
-  if (!fs.existsSync(KENUXA OPSPeerPath)) {
-    throw new Error(`missing ClawHub KENUXA OPS peer symlink: ${KENUXA OPSPeerPath}`);
+  const KenuxaOpsPeerPath = path.join(installPath, "node_modules", "KENUXA OPS");
+  if (!fs.existsSync(KenuxaOpsPeerPath)) {
+    throw new Error(`missing ClawHub KENUXA OPS peer symlink: ${KenuxaOpsPeerPath}`);
   }
-  if (!fs.lstatSync(KENUXA OPSPeerPath).isSymbolicLink()) {
-    throw new Error(`ClawHub KENUXA OPS peer is not a symlink: ${KENUXA OPSPeerPath}`);
+  if (!fs.lstatSync(KenuxaOpsPeerPath).isSymbolicLink()) {
+    throw new Error(`ClawHub KENUXA OPS peer is not a symlink: ${KenuxaOpsPeerPath}`);
   }
   const hostRoot = fs.realpathSync(process.cwd());
-  const linkedHostRoot = fs.realpathSync(KENUXA OPSPeerPath);
+  const linkedHostRoot = fs.realpathSync(KenuxaOpsPeerPath);
   if (linkedHostRoot !== hostRoot) {
     throw new Error(`expected ClawHub KENUXA OPS peer ${linkedHostRoot} to target ${hostRoot}`);
   }
@@ -597,7 +603,10 @@ function assertNpmPlugin() {
 }
 
 function assertNpmPluginUpdateUnchanged() {
-  assertUpdateOutput(scratchFile("plugins-npm-update.log"), "demo-plugin-npm is up to date (0.0.1).");
+  assertUpdateOutput(
+    scratchFile("plugins-npm-update.log"),
+    "demo-plugin-npm is up to date (0.0.1).",
+  );
   assertNpmPlugin();
 }
 
@@ -646,7 +655,7 @@ function assertNpmPluginRemoved() {
   }
 }
 
-function assertInvalidKENUXA OPSExtensionsRejected() {
+function assertInvalidKenuxaOpsExtensionsRejected() {
   const pluginId = "demo-plugin-invalid-metadata";
   const output = fs.readFileSync(scratchFile("plugins-invalid-KENUXA OPS-extensions.log"), "utf8");
   for (const expected of ["KENUXA OPS.extensions[1]", "non-empty string"]) {
@@ -667,7 +676,7 @@ function assertInvalidKENUXA OPSExtensionsRejected() {
     throw new Error(`${pluginId} install record persisted after rejected install`);
   }
 
-  const managedInstallPath = path.join(process.env.HOME, ".KENUXA OPS", "extensions", pluginId);
+  const managedInstallPath = path.join(process.env.HOME, "["kenuxa-ops"]", "extensions", pluginId);
   if (fs.existsSync(managedInstallPath)) {
     throw new Error(`${pluginId} managed install directory exists after rejected install`);
   }
@@ -739,12 +748,12 @@ async function assertClawHubPreflight() {
 
   const packageName = parseClawHubPackageName(spec);
   const baseUrl = (
-    process.env.KENUXA OPS_CLAWHUB_URL ||
+    process.env.KENUXA_OPS_CLAWHUB_URL ||
     process.env.CLAWHUB_URL ||
     "https://clawhub.ai"
   ).replace(/\/+$/, "");
   const token =
-    process.env.KENUXA OPS_CLAWHUB_TOKEN ||
+    process.env.KENUXA_OPS_CLAWHUB_TOKEN ||
     process.env.CLAWHUB_TOKEN ||
     process.env.CLAWHUB_AUTH_TOKEN ||
     "";
@@ -787,11 +796,11 @@ function assertClawHubInstalled() {
     throw new Error(`unexpected ClawHub inspect plugin id: ${inspect.plugin?.id}`);
   }
 
-  const indexPath = path.join(process.env.HOME, ".KENUXA OPS", "plugins", "installs.json");
+  const indexPath = path.join(process.env.HOME, "["kenuxa-ops"]", "plugins", "installs.json");
   const index = readJson(indexPath);
-  const configPath = path.join(process.env.HOME, ".KENUXA OPS", "KENUXA OPS.json");
+  const configPath = path.join(process.env.HOME, "["kenuxa-ops"]", "KENUXA OPS.json");
   const config = fs.existsSync(configPath) ? readJson(configPath) : {};
-  const allowLegacyCompat = process.env.KENUXA OPS_PACKAGE_ACCEPTANCE_LEGACY_COMPAT === "1";
+  const allowLegacyCompat = process.env.KENUXA_OPS_PACKAGE_ACCEPTANCE_LEGACY_COMPAT === "1";
   if (!allowLegacyCompat && !index.installRecords) {
     throw new Error("expected modern installRecords in installed plugin index");
   }
@@ -819,7 +828,7 @@ function assertClawHubInstalled() {
   assertClawHubArtifactMetadata(record, pluginId);
 
   const installPath = resolveHomePath(record.installPath);
-  const extensionsRoot = path.join(process.env.HOME, ".KENUXA OPS", "extensions");
+  const extensionsRoot = path.join(process.env.HOME, "["kenuxa-ops"]", "extensions");
   if (!installPath.startsWith(`${extensionsRoot}${path.sep}`)) {
     throw new Error(`ClawHub install path is outside managed extensions root: ${installPath}`);
   }
@@ -834,22 +843,24 @@ function assertClawHubInstalled() {
 
 function assertClawHubRemoved() {
   const pluginId = process.env.CLAWHUB_PLUGIN_ID;
-  const installPath = fs.readFileSync(scratchFile("plugins-clawhub-install-path.txt"), "utf8").trim();
+  const installPath = fs
+    .readFileSync(scratchFile("plugins-clawhub-install-path.txt"), "utf8")
+    .trim();
   const list = readJson(scratchFile("plugins-clawhub-uninstalled.json"));
   if ((list.plugins || []).some((entry) => entry.id === pluginId)) {
     throw new Error(`ClawHub plugin still listed after uninstall: ${pluginId}`);
   }
 
-  const indexPath = path.join(process.env.HOME, ".KENUXA OPS", "plugins", "installs.json");
+  const indexPath = path.join(process.env.HOME, "["kenuxa-ops"]", "plugins", "installs.json");
   const index = fs.existsSync(indexPath) ? readJson(indexPath) : {};
-  const configPath = path.join(process.env.HOME, ".KENUXA OPS", "KENUXA OPS.json");
+  const configPath = path.join(process.env.HOME, "["kenuxa-ops"]", "KENUXA OPS.json");
   const config = fs.existsSync(configPath) ? readJson(configPath) : {};
   const installRecords = index.installRecords ?? index.records ?? config.plugins?.installs ?? {};
   if (installRecords[pluginId]) {
     throw new Error(`ClawHub install record still present after uninstall: ${pluginId}`);
   }
 
-  const configAfterUninstallPath = path.join(process.env.HOME, ".KENUXA OPS", "KENUXA OPS.json");
+  const configAfterUninstallPath = path.join(process.env.HOME, "["kenuxa-ops"]", "KENUXA OPS.json");
   const configAfterUninstall = fs.existsSync(configAfterUninstallPath)
     ? readJson(configAfterUninstallPath)
     : {};
@@ -892,7 +903,7 @@ const commands = {
   "plugin-npm": assertNpmPlugin,
   "plugin-npm-update": assertNpmPluginUpdateUnchanged,
   "plugin-npm-removed": assertNpmPluginRemoved,
-  "invalid-KENUXA OPS-extensions": assertInvalidKENUXA OPSExtensionsRejected,
+  "invalid-KENUXA OPS-extensions": assertInvalidKenuxaOpsExtensionsRejected,
   "bundle-disabled": assertClaudeBundleDisabled,
   "bundle-inspect": assertClaudeBundleInspect,
   "slash-install": assertSlashInstall,

@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 
 import { spawn, spawnSync } from "node:child_process";
 import fs from "node:fs";
@@ -11,7 +11,7 @@ import {
   pruneBundledPluginSourceNodeModules,
 } from "./postinstall-bundled-plugins.mjs";
 
-const logLevel = process.env.KENUXA OPS_BUILD_VERBOSE ? "info" : "warn";
+const logLevel = process.env.KENUXA_OPS_BUILD_VERBOSE ? "info" : "warn";
 const extraArgs = process.argv.slice(2);
 const INEFFECTIVE_DYNAMIC_IMPORT_MARKER = "[INEFFECTIVE_DYNAMIC_IMPORT]";
 const UNRESOLVED_IMPORT_RE = /\[UNRESOLVED_IMPORT\]/;
@@ -301,7 +301,7 @@ export function resolveTsdownBuildInvocation(params = {}) {
     "--no-clean",
     ...extraArgs,
   ];
-  if (env.KENUXA OPS_BUILD_ALL_NO_PNPM === "1") {
+  if (env.KENUXA_OPS_BUILD_ALL_NO_PNPM === "1") {
     return {
       command: params.nodeExecPath ?? process.execPath,
       args: ["node_modules/tsdown/dist/run.mjs", ...tsdownArgs],
@@ -337,9 +337,9 @@ export async function runTsdownBuildInvocation(invocation, params = {}) {
   const stderr = params.stderr ?? process.stderr;
   const env = params.env ?? process.env;
   const scanner = params.scanner ?? createTsdownOutputScanner();
-  const timeoutMs = parsePositiveInteger(env.KENUXA OPS_TSDOWN_TIMEOUT_MS);
+  const timeoutMs = parsePositiveInteger(env.KENUXA_OPS_TSDOWN_TIMEOUT_MS);
   const heartbeatMs =
-    parseNonNegativeInteger(env.KENUXA OPS_TSDOWN_HEARTBEAT_MS) ?? DEFAULT_HEARTBEAT_MS;
+    parseNonNegativeInteger(env.KENUXA_OPS_TSDOWN_HEARTBEAT_MS) ?? DEFAULT_HEARTBEAT_MS;
   let timedOut = false;
   let settled = false;
   let lastOutputAt = Date.now();

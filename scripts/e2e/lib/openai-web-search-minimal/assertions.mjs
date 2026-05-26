@@ -1,4 +1,4 @@
-﻿import fs from "node:fs";
+import fs from "node:fs";
 
 const command = process.argv[2];
 
@@ -51,7 +51,7 @@ function assertSuccessRequest() {
     throw new Error(`mock OpenAI /v1/responses was not used. Requests: ${JSON.stringify(entries)}`);
   }
   const success = responseEntries.find((entry) =>
-    JSON.stringify(entry.body).includes("KENUXA OPS_SCHEMA_E2E_OK"),
+    JSON.stringify(entry.body).includes("KENUXA_OPS_SCHEMA_E2E_OK"),
   );
   if (!success) {
     throw new Error(`missing success request. Requests: ${JSON.stringify(responseEntries)}`);

@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 import { spawnSync } from "node:child_process";
 import process from "node:process";
 import { resolveSystemBin } from "../src/infra/resolve-system-bin.js";

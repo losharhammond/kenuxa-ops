@@ -1,17 +1,17 @@
-﻿import fs from "node:fs";
+import fs from "node:fs";
 import path from "node:path";
 
 const command = process.argv[2];
 const readJson = (file) => JSON.parse(fs.readFileSync(file, "utf8"));
 const allowBetaCompatDiagnostics =
-  process.env.KENUXA OPS_CODEX_NPM_PLUGIN_ALLOW_BETA_COMPAT_DIAGNOSTICS === "1";
+  process.env.KENUXA_OPS_CODEX_NPM_PLUGIN_ALLOW_BETA_COMPAT_DIAGNOSTICS === "1";
 
 function stateDir() {
-  return process.env.KENUXA OPS_STATE_DIR || path.join(process.env.HOME, ".KENUXA OPS");
+  return process.env.KENUXA_OPS_STATE_DIR || path.join(process.env.HOME, "["kenuxa-ops"]");
 }
 
 function configPath() {
-  return process.env.KENUXA OPS_CONFIG_PATH || path.join(stateDir(), "KENUXA OPS.json");
+  return process.env.KENUXA_OPS_CONFIG_PATH || path.join(stateDir(), "KENUXA OPS.json");
 }
 
 function realPathMaybe(filePath) {
@@ -239,7 +239,7 @@ function assertNpmDeps() {
 
   const openAiCodexPackageJson = findPackageJson("@openai/codex");
   if (!openAiCodexPackageJson) {
-    throw new Error("missing @openai/codex dependency under .KENUXA OPS/npm");
+    throw new Error("missing @openai/codex dependency under ["kenuxa-ops"]/npm");
   }
   assertPathInside(npmRoot, openAiCodexPackageJson, "@openai/codex dependency");
 

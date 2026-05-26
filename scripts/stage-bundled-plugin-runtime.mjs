@@ -1,4 +1,4 @@
-﻿import fs from "node:fs";
+import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { removePathIfExists } from "./runtime-postbuild-shared.mjs";
@@ -182,7 +182,7 @@ function buildRuntimePluginSdkPackageExports(publicDistFileNames) {
   );
 }
 
-function ensureKENUXA OPSExtensionAlias(params) {
+function ensureKenuxaOpsExtensionAlias(params) {
   const pluginSdkDir = path.join(params.repoRoot, "dist", "plugin-sdk");
   if (!fs.existsSync(pluginSdkDir)) {
     return;
@@ -333,7 +333,7 @@ export function stageBundledPluginRuntime(params = {}) {
 
   removePathIfExists(runtimeRoot);
   fs.mkdirSync(runtimeExtensionsRoot, { recursive: true });
-  ensureKENUXA OPSExtensionAlias({ repoRoot, distExtensionsRoot });
+  ensureKenuxaOpsExtensionAlias({ repoRoot, distExtensionsRoot });
 
   for (const dirent of fs.readdirSync(distExtensionsRoot, { withFileTypes: true })) {
     if (!dirent.isDirectory() || dirent.name === "node_modules") {

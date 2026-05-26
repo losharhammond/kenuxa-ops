@@ -189,7 +189,7 @@ function installControlUiMockGateway(input: {
     requests: BrowserRequest[];
   };
   type WindowWithGateway = Window & {
-    KENUXA OPSControlUiE2eGateway?: ExposedGateway;
+    KenuxaOpsControlUiE2eGateway?: ExposedGateway;
   };
 
   const scenario: BrowserScenario = input.scenario;
@@ -485,7 +485,7 @@ function installControlUiMockGateway(input: {
     requests,
   };
 
-  (window as WindowWithGateway).KENUXA OPSControlUiE2eGateway = exposed;
+  (window as WindowWithGateway).kenuxaOpsControlUiE2eGateway = exposed;
   window.WebSocket = MockWebSocket as unknown as typeof WebSocket;
 }
 
@@ -511,11 +511,11 @@ function createMockGatewayControls(page: Page, defaultSessionKey: string): MockG
       ({ eventName, eventPayload }) => {
         const gateway = (
           window as Window & {
-            KENUXA OPSControlUiE2eGateway?: {
+            KenuxaOpsControlUiE2eGateway?: {
               emit: (event: string, payload?: unknown) => void;
             };
           }
-        ).KENUXA OPSControlUiE2eGateway;
+        ).kenuxaOpsControlUiE2eGateway;
         if (!gateway) {
           throw new Error("Mock Gateway is not installed");
         }
@@ -529,11 +529,11 @@ function createMockGatewayControls(page: Page, defaultSessionKey: string): MockG
     page.evaluate((targetMethod) => {
       const gateway = (
         window as Window & {
-          KENUXA OPSControlUiE2eGateway?: {
+          KenuxaOpsControlUiE2eGateway?: {
             findRequests: (method?: string) => MockGatewayRequest[];
           };
         }
-      ).KENUXA OPSControlUiE2eGateway;
+      ).kenuxaOpsControlUiE2eGateway;
       return gateway?.findRequests(targetMethod) ?? [];
     }, method);
 
@@ -557,11 +557,11 @@ function createMockGatewayControls(page: Page, defaultSessionKey: string): MockG
         (targetMethod) => {
           const gateway = (
             window as Window & {
-              KENUXA OPSControlUiE2eGateway?: {
+              KenuxaOpsControlUiE2eGateway?: {
                 requests: MockGatewayRequest[];
               };
             }
-          ).KENUXA OPSControlUiE2eGateway;
+          ).kenuxaOpsControlUiE2eGateway;
           return Boolean(gateway?.requests.some((request) => request.method === targetMethod));
         },
         method,

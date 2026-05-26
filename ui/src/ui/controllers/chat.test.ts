@@ -1357,9 +1357,9 @@ describe("loadChatHistory retry handling", () => {
             {
               type: "text",
               text: [
-                "<<<BEGIN_KENUXA OPS_INTERNAL_CONTEXT>>>",
+                "<<<BEGIN_KenuxaOps_INTERNAL_CONTEXT>>>",
                 "subagent completion payload",
-                "<<<END_KENUXA OPS_INTERNAL_CONTEXT>>>",
+                "<<<END_KenuxaOps_INTERNAL_CONTEXT>>>",
               ].join("\n"),
             },
           ],
@@ -1384,7 +1384,7 @@ describe("loadChatHistory retry handling", () => {
     const persistedUser = {
       role: "user",
       content: [{ type: "text", text: "first" }],
-      __KENUXA OPS: { seq: 1 },
+      __KenuxaOps: { seq: 1 },
     };
     const optimisticUser = {
       role: "user",
@@ -1448,12 +1448,12 @@ describe("loadChatHistory retry handling", () => {
     const historyUser = {
       role: "user",
       content: [{ type: "text", text: "latest ask" }],
-      __KENUXA OPS: { seq: 1 },
+      __KenuxaOps: { seq: 1 },
     };
     const historyAssistant = {
       role: "assistant",
       content: [{ type: "text", text: "latest answer" }],
-      __KENUXA OPS: { seq: 2 },
+      __KenuxaOps: { seq: 2 },
     };
     const request = vi.fn().mockResolvedValue({
       messages: [historyUser, historyAssistant],

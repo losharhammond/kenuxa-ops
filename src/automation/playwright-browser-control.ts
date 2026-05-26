@@ -1,4 +1,4 @@
-/**
+﻿/**
  * KENUXA OPS — Real Playwright Browser Control
  *
  * Provides high-level browser automation actions for the OPS runtime.
@@ -250,7 +250,7 @@ async function loadPlaywright(): Promise<Playwright> {
     return (await import("playwright")) as Playwright;
   } catch {
     throw new Error(
-      "KENUXA OPS: Playwright is not installed.\n" +
+      ""kenuxa-ops": Playwright is not installed.\n" +
       "Run: npm install playwright && npx playwright install chromium",
     );
   }

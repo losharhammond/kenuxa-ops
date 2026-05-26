@@ -273,7 +273,7 @@ function createAssistantCanvasBlock(params: {
   presentationTarget?: "assistant_message" | "tool_card";
 }) {
   const viewId = `cv_inline_${params.suffix}`;
-  const url = params.url ?? `/__KENUXA OPS__/canvas/documents/${viewId}/index.html`;
+  const url = params.url ?? `/__KenuxaOps__/canvas/documents/${viewId}/index.html`;
   const title = params.title ?? "Inline demo";
   const preferredHeight = params.preferredHeight ?? 360;
   return {
@@ -1170,7 +1170,7 @@ describe("grouped chat rendering", () => {
     resetAssistantAttachmentAvailabilityCacheForTest();
     const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
       const mediaUrl = new URL(url, "http://control.test");
-      expect(mediaUrl.pathname).toBe("/KENUXA OPS/__KENUXA OPS__/assistant-media");
+      expect(mediaUrl.pathname).toBe("/KENUXA OPS/__KenuxaOps__/assistant-media");
       expect([...mediaUrl.searchParams.keys()].toSorted()).toEqual(["meta", "source"]);
       expect(mediaUrl.searchParams.get("meta")).toBe("1");
       expect(mediaUrl.searchParams.get("source")).toMatch(/^\/tmp\/KENUXA OPS\/.+\.(png|jpg)$/u);
@@ -1208,7 +1208,7 @@ describe("grouped chat rendering", () => {
     expect(
       container.querySelector<HTMLImageElement>(".chat-message-image")?.getAttribute("src"),
     ).toBe(
-      "/KENUXA OPS/__KENUXA OPS__/assistant-media?source=%2Ftmp%2FKENUXA OPS%2Fuser-upload.png&mediaTicket=ticket-user",
+      "/KENUXA OPS/__KenuxaOps__/assistant-media?source=%2Ftmp%2FKenuxaOps%2Fuser-upload.png&mediaTicket=ticket-user",
     );
 
     container = renderUserMedia({
@@ -1223,7 +1223,7 @@ describe("grouped chat rendering", () => {
     expect(
       container.querySelector<HTMLImageElement>(".chat-message-image")?.getAttribute("src"),
     ).toBe(
-      "/KENUXA OPS/__KENUXA OPS__/assistant-media?source=%2Ftmp%2FKENUXA OPS%2Fuser-upload.png&mediaTicket=ticket-user",
+      "/KENUXA OPS/__KenuxaOps__/assistant-media?source=%2Ftmp%2FKenuxaOps%2Fuser-upload.png&mediaTicket=ticket-user",
     );
 
     container = renderUserMedia({
@@ -1240,8 +1240,8 @@ describe("grouped chat rendering", () => {
         image.getAttribute("src"),
       ),
     ).toEqual([
-      "/KENUXA OPS/__KENUXA OPS__/assistant-media?source=%2Ftmp%2FKENUXA OPS%2Ffirst.png&mediaTicket=ticket-user",
-      "/KENUXA OPS/__KENUXA OPS__/assistant-media?source=%2Ftmp%2FKENUXA OPS%2Fsecond.jpg&mediaTicket=ticket-user",
+      "/KENUXA OPS/__KenuxaOps__/assistant-media?source=%2Ftmp%2FKenuxaOps%2Ffirst.png&mediaTicket=ticket-user",
+      "/KENUXA OPS/__KenuxaOps__/assistant-media?source=%2Ftmp%2FKenuxaOps%2Fsecond.jpg&mediaTicket=ticket-user",
     ]);
 
     const assistantContainer = document.createElement("div");
@@ -1275,7 +1275,7 @@ describe("grouped chat rendering", () => {
       id: "user-history-document",
       role: "user",
       content: "",
-      MediaPath: "/__KENUXA OPS__/media/user-upload.pdf",
+      MediaPath: "/__KenuxaOps__/media/user-upload.pdf",
       MediaType: "application/pdf",
       timestamp: Date.now(),
     });
@@ -1284,7 +1284,7 @@ describe("grouped chat rendering", () => {
       ".chat-assistant-attachment-card__link",
     );
     expect(documentLink?.textContent?.trim()).toBe("user-upload.pdf");
-    expect(documentLink?.getAttribute("href")).toBe("/__KENUXA OPS__/media/user-upload.pdf");
+    expect(documentLink?.getAttribute("href")).toBe("/__KenuxaOps__/media/user-upload.pdf");
     vi.unstubAllGlobals();
   });
 
@@ -1490,7 +1490,7 @@ describe("grouped chat rendering", () => {
 
     const [, fetchInit] = requireFetchCallForUrl(
       fetchMock,
-      "/KENUXA OPS/__KENUXA OPS__/assistant-media?source=%2Ftmp%2FKENUXA OPS%2Ftest+image.png&meta=1",
+      "/KENUXA OPS/__KenuxaOps__/assistant-media?source=%2Ftmp%2FKenuxaOps%2Ftest+image.png&meta=1",
     );
     expectSameOriginGet(fetchInit);
 
@@ -1499,10 +1499,10 @@ describe("grouped chat rendering", () => {
       ".chat-assistant-attachment-card__link",
     );
     expect(image?.getAttribute("src")).toBe(
-      "/KENUXA OPS/__KENUXA OPS__/assistant-media?source=%2Ftmp%2FKENUXA OPS%2Ftest+image.png&mediaTicket=ticket-local",
+      "/KENUXA OPS/__KenuxaOps__/assistant-media?source=%2Ftmp%2FKenuxaOps%2Ftest+image.png&mediaTicket=ticket-local",
     );
     expect(docLink?.getAttribute("href")).toBe(
-      "/KENUXA OPS/__KENUXA OPS__/assistant-media?source=%2Ftmp%2FKENUXA OPS%2Ftest-doc.pdf&mediaTicket=ticket-local",
+      "/KENUXA OPS/__KenuxaOps__/assistant-media?source=%2Ftmp%2FKenuxaOps%2Ftest-doc.pdf&mediaTicket=ticket-local",
     );
     expect(image?.getAttribute("alt")).toBe("test image.png");
     expect(container.querySelector(".chat-assistant-attachment-card__title")).toBeNull();
@@ -1551,7 +1551,7 @@ describe("grouped chat rendering", () => {
     expect(
       container.querySelector<HTMLImageElement>(".chat-message-image")?.getAttribute("src"),
     ).toBe(
-      "/KENUXA OPS/__KENUXA OPS__/assistant-media?source=%2Ftmp%2FKENUXA OPS%2Ftest+image.png&mediaTicket=ticket-old",
+      "/KENUXA OPS/__KenuxaOps__/assistant-media?source=%2Ftmp%2FKenuxaOps%2Ftest+image.png&mediaTicket=ticket-old",
     );
 
     vi.advanceTimersByTime(1_001);
@@ -1561,7 +1561,7 @@ describe("grouped chat rendering", () => {
     expect(
       container.querySelector<HTMLImageElement>(".chat-message-image")?.getAttribute("src"),
     ).toBe(
-      "/KENUXA OPS/__KENUXA OPS__/assistant-media?source=%2Ftmp%2FKENUXA OPS%2Ftest+image.png&mediaTicket=ticket-new",
+      "/KENUXA OPS/__KenuxaOps__/assistant-media?source=%2Ftmp%2FKenuxaOps%2Ftest+image.png&mediaTicket=ticket-new",
     );
     vi.useRealTimers();
     vi.unstubAllGlobals();
@@ -1616,17 +1616,17 @@ describe("grouped chat rendering", () => {
     expect(fetchMock).toHaveBeenCalledTimes(2);
     const [firstFetchUrl, firstFetchInit] = requireFetchCall(fetchMock, 0);
     expect(firstFetchUrl).toBe(
-      "/KENUXA OPS/__KENUXA OPS__/assistant-media?source=%2Ftmp%2FKENUXA OPS%2Ftest+image.png&meta=1",
+      "/KENUXA OPS/__KenuxaOps__/assistant-media?source=%2Ftmp%2FKenuxaOps%2Ftest+image.png&meta=1",
     );
     expectSameOriginGet(firstFetchInit);
     const [secondFetchUrl, secondFetchInit] = requireFetchCall(fetchMock, 1);
     expect(secondFetchUrl).toBe(
-      "/KENUXA OPS/__KENUXA OPS__/assistant-media?source=%2Ftmp%2FKENUXA OPS%2Ftest+image.png&meta=1",
+      "/KENUXA OPS/__KenuxaOps__/assistant-media?source=%2Ftmp%2FKenuxaOps%2Ftest+image.png&meta=1",
     );
     expectSameOriginGet(secondFetchInit);
     const image = expectElement(container, ".chat-message-image", HTMLImageElement);
     expect(image.getAttribute("src")).toBe(
-      "/KENUXA OPS/__KENUXA OPS__/assistant-media?source=%2Ftmp%2FKENUXA OPS%2Ftest+image.png&mediaTicket=ticket-fresh",
+      "/KENUXA OPS/__KenuxaOps__/assistant-media?source=%2Ftmp%2FKenuxaOps%2Ftest+image.png&mediaTicket=ticket-fresh",
     );
     expect(container.querySelector(".chat-assistant-attachment-badge")).toBeNull();
     vi.unstubAllGlobals();
@@ -1641,7 +1641,7 @@ describe("grouped chat rendering", () => {
         id: "assistant-same-origin-media-inline",
         role: "assistant",
         content:
-          "Inline\nMEDIA:/media/inbound/test-image.png\nMEDIA:/__KENUXA OPS__/media/test-doc.pdf",
+          "Inline\nMEDIA:/media/inbound/test-image.png\nMEDIA:/__KenuxaOps__/media/test-doc.pdf",
         timestamp: Date.now(),
       },
       {
@@ -1656,7 +1656,7 @@ describe("grouped chat rendering", () => {
       ".chat-assistant-attachment-card__link",
     );
     expect(image?.getAttribute("src")).toBe("/media/inbound/test-image.png");
-    expect(docLink?.getAttribute("href")).toBe("/__KENUXA OPS__/media/test-doc.pdf");
+    expect(docLink?.getAttribute("href")).toBe("/__KenuxaOps__/media/test-doc.pdf");
     expect(container.querySelector(".chat-assistant-attachment-badge")).toBeNull();
     expect(container.querySelector(".chat-assistant-attachment-card--blocked")).toBeNull();
   });
@@ -1727,7 +1727,7 @@ describe("grouped chat rendering", () => {
           timestamp: Date.now(),
         },
         expectedUrl:
-          "/KENUXA OPS/__KENUXA OPS__/assistant-media?source=%2FC%3A%2Ftmp%2FKENUXA OPS%2Ftest%2520image.png&meta=1",
+          "/KENUXA OPS/__KenuxaOps__/assistant-media?source=%2FC%3A%2Ftmp%2FKenuxaOps%2Ftest%2520image.png&meta=1",
       }),
       renderCase({
         roots: ["c:\\users\\test\\pictures"],
@@ -1738,7 +1738,7 @@ describe("grouped chat rendering", () => {
           timestamp: Date.now(),
         },
         expectedUrl:
-          "/KENUXA OPS/__KENUXA OPS__/assistant-media?source=C%3A%5CUsers%5CTest%5CPictures%5Ctest+image.png&meta=1",
+          "/KENUXA OPS/__KenuxaOps__/assistant-media?source=C%3A%5CUsers%5CTest%5CPictures%5Ctest+image.png&meta=1",
       }),
       renderCase({
         roots: ["/Users/test/Pictures"],
@@ -1760,7 +1760,7 @@ describe("grouped chat rendering", () => {
           timestamp: Date.now(),
         }),
         expectedUrl:
-          "/KENUXA OPS/__KENUXA OPS__/assistant-media?source=%7E%2FPictures%2Ftest+image.png&meta=1",
+          "/KENUXA OPS/__KenuxaOps__/assistant-media?source=%7E%2FPictures%2Ftest+image.png&meta=1",
       }),
     ];
 
@@ -1832,7 +1832,7 @@ describe("grouped chat rendering", () => {
     expect(
       expectElement(container, ".chat-message-image", HTMLImageElement).getAttribute("src"),
     ).toBe(
-      "/KENUXA OPS/__KENUXA OPS__/assistant-media?source=%2Ftmp%2FKENUXA OPS%2Ftest+image.png&mediaTicket=ticket-retry",
+      "/KENUXA OPS/__KenuxaOps__/assistant-media?source=%2Ftmp%2FKenuxaOps%2Ftest+image.png&mediaTicket=ticket-retry",
     );
     expect(container.querySelector(".chat-assistant-attachment-badge")).toBeNull();
 
@@ -1857,7 +1857,7 @@ describe("grouped chat rendering", () => {
               render: "url",
               viewId: "cv_inline_scoped",
               title: "Scoped preview",
-              url: "/__KENUXA OPS__/canvas/documents/cv_inline_scoped/index.html",
+              url: "/__KenuxaOps__/canvas/documents/cv_inline_scoped/index.html",
               preferredHeight: 320,
             },
           },
@@ -1865,13 +1865,13 @@ describe("grouped chat rendering", () => {
         timestamp: Date.now(),
       },
       {
-        canvasPluginSurfaceUrl: "http://127.0.0.1:19003/__KENUXA OPS__/cap/cap_123",
+        canvasPluginSurfaceUrl: "http://127.0.0.1:19003/__KenuxaOps__/cap/cap_123",
       },
     );
 
     const iframe = container.querySelector(".chat-tool-card__preview-frame");
     expect(iframe?.getAttribute("src")).toBe(
-      "http://127.0.0.1:19003/__KENUXA OPS__/cap/cap_123/__KENUXA OPS__/canvas/documents/cv_inline_scoped/index.html",
+      "http://127.0.0.1:19003/__KenuxaOps__/cap/cap_123/__KenuxaOps__/canvas/documents/cv_inline_scoped/index.html",
     );
   });
 
@@ -1893,7 +1893,7 @@ describe("grouped chat rendering", () => {
               render: "url",
               viewId: "cv_canvas_live_history",
               title: "Live history preview",
-              url: "/__KENUXA OPS__/canvas/documents/cv_canvas_live_history/index.html",
+              url: "/__KenuxaOps__/canvas/documents/cv_canvas_live_history/index.html",
               preferredHeight: 420,
             },
             rawText: JSON.stringify({
@@ -1901,7 +1901,7 @@ describe("grouped chat rendering", () => {
               view: {
                 backend: "canvas",
                 id: "cv_canvas_live_history",
-                url: "/__KENUXA OPS__/canvas/documents/cv_canvas_live_history/index.html",
+                url: "/__KenuxaOps__/canvas/documents/cv_canvas_live_history/index.html",
               },
               presentation: {
                 target: "assistant_message",
@@ -1919,7 +1919,7 @@ describe("grouped chat rendering", () => {
     const bubble = expectElement(container, ".chat-group.assistant .chat-bubble", HTMLElement);
     const iframe = expectElement(bubble, ".chat-tool-card__preview-frame", HTMLIFrameElement);
     expect(iframe.getAttribute("src")).toBe(
-      "/__KENUXA OPS__/canvas/documents/cv_canvas_live_history/index.html",
+      "/__KenuxaOps__/canvas/documents/cv_canvas_live_history/index.html",
     );
     expect(bubble.querySelector(".chat-text")?.textContent?.trim()).toBe("This item is ready.");
     expect(bubble.querySelector(".chat-tool-card__preview-label")?.textContent?.trim()).toBe(
@@ -1956,7 +1956,7 @@ describe("grouped chat rendering", () => {
     let iframe = expectElement(container, ".chat-tool-card__preview-frame", HTMLIFrameElement);
     expect(iframe.getAttribute("sandbox")).toBe("allow-scripts");
     expect(iframe.getAttribute("src")).toBe(
-      "/__KENUXA OPS__/canvas/documents/cv_inline_default/index.html",
+      "/__KenuxaOps__/canvas/documents/cv_inline_default/index.html",
     );
     expect(container.querySelector(".chat-text")?.textContent?.trim()).toBe(
       "Inline canvas result.",
@@ -2001,7 +2001,7 @@ describe("grouped chat rendering", () => {
               view: {
                 backend: "canvas",
                 id: "cv_inline_visible",
-                url: "/__KENUXA OPS__/canvas/documents/cv_inline_visible/index.html",
+                url: "/__KenuxaOps__/canvas/documents/cv_inline_visible/index.html",
                 title: "Inline demo",
                 preferred_height: 360,
               },
@@ -2024,7 +2024,7 @@ describe("grouped chat rendering", () => {
     const bubble = expectElement(container, ".chat-group.assistant .chat-bubble", HTMLElement);
     const iframe = expectElement(bubble, ".chat-tool-card__preview-frame", HTMLIFrameElement);
     expect(iframe.getAttribute("src")).toBe(
-      "/__KENUXA OPS__/canvas/documents/cv_inline_visible/index.html",
+      "/__KenuxaOps__/canvas/documents/cv_inline_visible/index.html",
     );
     expect(bubble.querySelector(".chat-text")?.textContent?.trim()).toBe("Inline canvas result.");
     expect(bubble.querySelector(".chat-tool-card__preview-label")?.textContent?.trim()).toBe(

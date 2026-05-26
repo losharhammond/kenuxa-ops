@@ -3,19 +3,19 @@ import { resolveCanvasIframeUrl } from "./canvas-url.ts";
 
 describe("resolveCanvasIframeUrl", () => {
   it("allows same-origin hosted canvas document paths", () => {
-    expect(resolveCanvasIframeUrl("/__KENUXA OPS__/canvas/documents/cv_demo/index.html")).toBe(
-      "/__KENUXA OPS__/canvas/documents/cv_demo/index.html",
+    expect(resolveCanvasIframeUrl("/__KenuxaOps__/canvas/documents/cv_demo/index.html")).toBe(
+      "/__KenuxaOps__/canvas/documents/cv_demo/index.html",
     );
   });
 
   it("rewrites safe canvas paths through the scoped canvas host", () => {
     expect(
       resolveCanvasIframeUrl(
-        "/__KENUXA OPS__/canvas/documents/cv_demo/index.html",
-        "http://127.0.0.1:19003/__KENUXA OPS__/cap/cap_123",
+        "/__KenuxaOps__/canvas/documents/cv_demo/index.html",
+        "http://127.0.0.1:19003/__KenuxaOps__/cap/cap_123",
       ),
     ).toBe(
-      "http://127.0.0.1:19003/__KENUXA OPS__/cap/cap_123/__KENUXA OPS__/canvas/documents/cv_demo/index.html",
+      "http://127.0.0.1:19003/__KenuxaOps__/cap/cap_123/__KenuxaOps__/canvas/documents/cv_demo/index.html",
     );
   });
 

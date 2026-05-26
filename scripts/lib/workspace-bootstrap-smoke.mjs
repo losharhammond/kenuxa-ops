@@ -1,4 +1,4 @@
-﻿import { execFileSync } from "node:child_process";
+import { execFileSync } from "node:child_process";
 import { existsSync, mkdtempSync, mkdirSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
@@ -53,11 +53,11 @@ export function createWorkspaceBootstrapSmokeEnv(env, homeDir, overrides = {}) {
     PATH: safePath,
     HOME: homeDir,
     USERPROFILE: homeDir,
-    KENUXA OPS_HOME: homeDir,
-    KENUXA OPS_NO_ONBOARD: "1",
-    KENUXA OPS_SUPPRESS_NOTES: "1",
-    KENUXA OPS_DISABLE_BUNDLED_PLUGINS: "1",
-    KENUXA OPS_DISABLE_BUNDLED_ENTRY_SOURCE_FALLBACK: "1",
+    KENUXA_OPS_HOME: homeDir,
+    KENUXA_OPS_NO_ONBOARD: "1",
+    KENUXA_OPS_SUPPRESS_NOTES: "1",
+    KENUXA_OPS_DISABLE_BUNDLED_PLUGINS: "1",
+    KENUXA_OPS_DISABLE_BUNDLED_ENTRY_SOURCE_FALLBACK: "1",
     AWS_EC2_METADATA_DISABLED: "true",
     AWS_SHARED_CREDENTIALS_FILE: join(homeDir, ".aws", "credentials"),
     AWS_CONFIG_FILE: join(homeDir, ".aws", "config"),
@@ -133,7 +133,7 @@ export function runInstalledWorkspaceBootstrapSmoke(params) {
       );
     }
 
-    const workspaceDir = join(homeDir, ".KENUXA OPS", "workspace");
+    const workspaceDir = join(homeDir, "["kenuxa-ops"]", "workspace");
     const missingFiles = collectMissingBootstrapWorkspaceFiles(workspaceDir);
     if (missingFiles.length > 0) {
       const outputDetails = combinedOutput.length > 0 ? `\nCommand output:\n${combinedOutput}` : "";

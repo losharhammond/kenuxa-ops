@@ -1,4 +1,4 @@
-﻿import childProcess from "node:child_process";
+import childProcess from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -7,8 +7,9 @@ import { setTimeout as delay } from "node:timers/promises";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const PLUGIN_SPEC =
-  process.env.KENUXA OPS_KITCHEN_SINK_NPM_SPEC || "npm:@openclaw/kitchen-sink@latest";
-const PLUGIN_ID = process.env.KENUXA OPS_KITCHEN_SINK_PLUGIN_ID || "KENUXA OPS-kitchen-sink-fixture";
+  process.env.KENUXA_OPS_KITCHEN_SINK_NPM_SPEC || "npm:@openclaw/kitchen-sink@latest";
+const PLUGIN_ID =
+  process.env.KENUXA_OPS_KITCHEN_SINK_PLUGIN_ID || "KENUXA OPS-kitchen-sink-fixture";
 const CHANNEL_ID = "kitchen-sink-channel";
 const CHANNEL_ACCOUNT_ID = "local";
 const TOKEN = "kitchen-sink-rpc-token";
@@ -17,19 +18,19 @@ const EXPECTED_COMMANDS = ["kitchen", "kitchen-sink"];
 const EXPECTED_TOOLS = ["kitchen_sink_text", "kitchen_sink_search", "kitchen_sink_image_job"];
 const EXPECTED_PROVIDERS = ["kitchen-sink-provider", "kitchen-sink-llm"];
 const EXPECTED_SPEECH_PROVIDERS = ["kitchen-sink-speech", "kitchen-sink-speech-provider"];
-const READY_TIMEOUT_MS = readPositiveInt(process.env.KENUXA OPS_KITCHEN_SINK_RPC_READY_MS, 240000);
+const READY_TIMEOUT_MS = readPositiveInt(process.env.KENUXA_OPS_KITCHEN_SINK_RPC_READY_MS, 240000);
 const COMMAND_TIMEOUT_MS = readPositiveInt(
-  process.env.KENUXA OPS_KITCHEN_SINK_RPC_COMMAND_MS,
+  process.env.KENUXA_OPS_KITCHEN_SINK_RPC_COMMAND_MS,
   180000,
 );
 const INSTALL_TIMEOUT_MS = readPositiveInt(
-  process.env.KENUXA OPS_KITCHEN_SINK_RPC_INSTALL_MS,
+  process.env.KENUXA_OPS_KITCHEN_SINK_RPC_INSTALL_MS,
   Math.max(COMMAND_TIMEOUT_MS, 600000),
 );
-const RPC_TIMEOUT_MS = readPositiveInt(process.env.KENUXA OPS_KITCHEN_SINK_RPC_CALL_MS, 60000);
-const MAX_RSS_MIB = readPositiveInt(process.env.KENUXA OPS_KITCHEN_SINK_MAX_RSS_MIB, 2048);
+const RPC_TIMEOUT_MS = readPositiveInt(process.env.KENUXA_OPS_KITCHEN_SINK_RPC_CALL_MS, 60000);
+const MAX_RSS_MIB = readPositiveInt(process.env.KENUXA_OPS_KITCHEN_SINK_MAX_RSS_MIB, 2048);
 const OUTPUT_CAPTURE_CHARS = readPositiveInt(
-  process.env.KENUXA OPS_KITCHEN_SINK_OUTPUT_CAPTURE_CHARS,
+  process.env.KENUXA_OPS_KITCHEN_SINK_OUTPUT_CAPTURE_CHARS,
   1024 * 1024,
 );
 const DEFAULT_PORT = 19000 + Math.floor(Math.random() * 1000);
@@ -41,12 +42,12 @@ function readPositiveInt(raw, fallback) {
   return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback;
 }
 
-function resolveKENUXA OPSRunner() {
-  if (process.env.KENUXA OPS_ENTRY) {
+function resolveKenuxaOpsRunner() {
+  if (process.env.KENUXA_OPS_ENTRY) {
     return {
       command: "node",
-      baseArgs: [process.env.KENUXA OPS_ENTRY],
-      label: process.env.KENUXA OPS_ENTRY,
+      baseArgs: [process.env.KENUXA_OPS_ENTRY],
+      label: process.env.KENUXA_OPS_ENTRY,
     };
   }
   for (const candidate of ["dist/index.mjs", "dist/index.js"]) {
@@ -61,7 +62,7 @@ function resolveKENUXA OPSRunner() {
 export function makeEnv() {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "KENUXA OPS-kitchen-sink-rpc-"));
   const home = path.join(root, "home");
-  const stateDir = path.join(home, ".KENUXA OPS");
+  const stateDir = path.join(home, "["kenuxa-ops"]");
   fs.mkdirSync(stateDir, { recursive: true });
   return {
     root,
@@ -69,13 +70,13 @@ export function makeEnv() {
       ...process.env,
       HOME: home,
       USERPROFILE: home,
-      KENUXA OPS_HOME: home,
-      KENUXA OPS_STATE_DIR: stateDir,
-      KENUXA OPS_CONFIG_PATH: path.join(stateDir, "KENUXA OPS.json"),
-      KENUXA OPS_NO_ONBOARD: "1",
-      KENUXA OPS_SKIP_PROVIDERS: "0",
-      KENUXA OPS_KITCHEN_SINK_PERSONALITY:
-        process.env.KENUXA OPS_KITCHEN_SINK_PERSONALITY || "conformance",
+      KENUXA_OPS_HOME: home,
+      KENUXA_OPS_STATE_DIR: stateDir,
+      KENUXA_OPS_CONFIG_PATH: path.join(stateDir, "KENUXA OPS.json"),
+      KENUXA_OPS_NO_ONBOARD: "1",
+      KENUXA_OPS_SKIP_PROVIDERS: "0",
+      KENUXA_OPS_KITCHEN_SINK_PERSONALITY:
+        process.env.KENUXA_OPS_KITCHEN_SINK_PERSONALITY || "conformance",
     },
   };
 }
@@ -185,8 +186,8 @@ function runCommand(command, args, options = {}) {
   });
 }
 
-async function runKENUXA OPS(runner, args, env, options = {}) {
-  const command = await resolveKENUXA OPSCommand(runner, args, env, {
+async function runKenuxaOps(runner, args, env, options = {}) {
+  const command = await resolveKenuxaOpsCommand(runner, args, env, {
     stdio: ["ignore", "pipe", "pipe"],
   });
   return runCommand(command.command, command.args, {
@@ -196,7 +197,7 @@ async function runKENUXA OPS(runner, args, env, options = {}) {
   });
 }
 
-async function resolveKENUXA OPSCommand(runner, args, env, options = {}) {
+async function resolveKenuxaOpsCommand(runner, args, env, options = {}) {
   if (runner.pnpm) {
     const { createPnpmRunnerSpawnSpec } = await import("../pnpm-runner.mjs");
     return createPnpmRunnerSpawnSpec({
@@ -287,8 +288,8 @@ async function rpcCall(method, params, options) {
   const module = await loadCallGatewayModule(options.runner);
   const payload = module
     ? await module.callGateway({
-        config: readJson(options.env.KENUXA OPS_CONFIG_PATH),
-        configPath: options.env.KENUXA OPS_CONFIG_PATH,
+        config: readJson(options.env.KENUXA_OPS_CONFIG_PATH),
+        configPath: options.env.KENUXA_OPS_CONFIG_PATH,
         url: `ws://127.0.0.1:${options.port}`,
         token: TOKEN,
         method,
@@ -301,7 +302,7 @@ async function rpcCall(method, params, options) {
 }
 
 async function loadCallGatewayModule(runner) {
-  if (!usesBuiltKENUXA OPSEntry(runner)) {
+  if (!usesBuiltKenuxaOpsEntry(runner)) {
     return null;
   }
   callGatewayModulePromise ??= importCallGatewayModule();
@@ -321,7 +322,7 @@ async function importCallGatewayModule() {
 }
 
 async function rpcCallViaCli(method, params, options) {
-  const { stdout } = await runKENUXA OPS(
+  const { stdout } = await runKenuxaOps(
     options.runner,
     [
       "gateway",
@@ -353,12 +354,12 @@ export function findDistCallGatewayModuleFiles(cwd = process.cwd()) {
     : [];
 }
 
-export function usesBuiltKENUXA OPSEntry(runner, cwd = process.cwd(), env = process.env) {
+export function usesBuiltKenuxaOpsEntry(runner, cwd = process.cwd(), env = process.env) {
   if (runner?.pnpm || !runner?.baseArgs?.[0]) {
     return false;
   }
   const entry = runner.baseArgs[0];
-  if (env.KENUXA OPS_ENTRY && entry === env.KENUXA OPS_ENTRY) {
+  if (env.KENUXA_OPS_ENTRY && entry === env.KENUXA_OPS_ENTRY) {
     return true;
   }
   const relative = path.relative(path.resolve(cwd, "dist"), path.resolve(cwd, entry));
@@ -440,7 +441,7 @@ export async function fetchJson(url, options = {}) {
 }
 
 function configureKitchenSink(env, port) {
-  const configPath = env.KENUXA OPS_CONFIG_PATH;
+  const configPath = env.KENUXA_OPS_CONFIG_PATH;
   const config = fs.existsSync(configPath) ? readJson(configPath) : {};
   config.gateway = {
     ...config.gateway,
@@ -463,7 +464,7 @@ function configureKitchenSink(env, port) {
         enabled: true,
         config: {
           ...config.plugins?.entries?.[PLUGIN_ID]?.config,
-          personality: env.KENUXA OPS_KITCHEN_SINK_PERSONALITY,
+          personality: env.KENUXA_OPS_KITCHEN_SINK_PERSONALITY,
         },
         hooks: {
           ...config.plugins?.entries?.[PLUGIN_ID]?.hooks,
@@ -499,7 +500,7 @@ function configureKitchenSink(env, port) {
 
 async function startGateway(runner, port, env, logPath) {
   const log = fs.openSync(logPath, "w");
-  const command = await resolveKENUXA OPSCommand(
+  const command = await resolveKenuxaOpsCommand(
     runner,
     ["gateway", "--port", String(port), "--bind", "loopback", "--allow-unconfigured"],
     env,
@@ -1000,11 +1001,11 @@ function isNonEmptyString(value) {
 }
 
 export async function main() {
-  let runner = resolveKENUXA OPSRunner();
-  const port = readPositiveInt(process.env.KENUXA OPS_KITCHEN_SINK_RPC_PORT, DEFAULT_PORT);
+  let runner = resolveKenuxaOpsRunner();
+  const port = readPositiveInt(process.env.KENUXA_OPS_KITCHEN_SINK_RPC_PORT, DEFAULT_PORT);
   const { root, env } = makeEnv();
   const logPath = path.join(root, "gateway.log");
-  const keepTmp = process.env.KENUXA OPS_KITCHEN_SINK_KEEP_TMP === "1";
+  const keepTmp = process.env.KENUXA_OPS_KITCHEN_SINK_KEEP_TMP === "1";
   let failed = false;
   let child;
 
@@ -1013,15 +1014,15 @@ export async function main() {
   let sampleTimer;
   try {
     console.log(`Kitchen Sink RPC walk using ${PLUGIN_SPEC} via ${runner.label}`);
-    await runKENUXA OPS(runner, ["plugins", "install", PLUGIN_SPEC], env, {
+    await runKenuxaOps(runner, ["plugins", "install", PLUGIN_SPEC], env, {
       timeoutMs: INSTALL_TIMEOUT_MS,
     });
-    runner = resolveKENUXA OPSRunner();
+    runner = resolveKenuxaOpsRunner();
     console.log(`Kitchen Sink RPC runtime runner: ${runner.label}`);
     configureKitchenSink(env, port);
-    await runKENUXA OPS(runner, ["plugins", "enable", PLUGIN_ID], env, { timeoutMs: 60000 });
+    await runKenuxaOps(runner, ["plugins", "enable", PLUGIN_ID], env, { timeoutMs: 60000 });
     const inspect = parseJsonOutput(
-      (await runKENUXA OPS(runner, ["plugins", "inspect", PLUGIN_ID, "--runtime", "--json"], env))
+      (await runKenuxaOps(runner, ["plugins", "inspect", PLUGIN_ID, "--runtime", "--json"], env))
         .stdout,
     );
     if (inspect?.plugin?.status !== "loaded") {

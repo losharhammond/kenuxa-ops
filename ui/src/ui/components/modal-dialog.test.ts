@@ -7,7 +7,7 @@ import {
   installDialogPolyfill,
   nextFrame,
 } from "../../test-helpers/modal-dialog.ts";
-import { type KENUXA OPSModalDialog } from "./modal-dialog.ts";
+import { type KenuxaOpsModalDialog } from "./modal-dialog.ts";
 import "./modal-dialog.ts";
 
 let container: HTMLDivElement;
@@ -33,7 +33,7 @@ async function renderModal() {
   return await getRenderedModalDialog(container);
 }
 
-function expectShadowElement(modal: KENUXA OPSModalDialog, id: string): HTMLElement {
+function expectShadowElement(modal: KenuxaOpsModalDialog, id: string): HTMLElement {
   const element = modal.shadowRoot?.getElementById(id);
   if (!(element instanceof HTMLElement)) {
     throw new Error(`Expected shadow element #${id}`);

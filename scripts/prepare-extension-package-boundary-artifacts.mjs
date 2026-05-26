@@ -1,4 +1,4 @@
-﻿import { spawn } from "node:child_process";
+import { spawn } from "node:child_process";
 import fs from "node:fs";
 import path, { resolve } from "node:path";
 import { isLocalCheckEnabled } from "./lib/local-heavy-check-runtime.mjs";
@@ -341,7 +341,7 @@ async function main(argv = process.argv.slice(2)) {
         prerequisiteSteps.push({
           label: "plugin-sdk boundary dts",
           args: [runTsgoScript, "-p", "tsconfig.plugin-sdk.dts.json", "--declaration", "true"],
-          env: { KENUXA OPS_TSGO_HEAVY_CHECK_LOCK_HELD: "1" },
+          env: { KENUXA_OPS_TSGO_HEAVY_CHECK_LOCK_HELD: "1" },
           timeoutMs: 300_000,
           stampPath: ROOT_DTS_STAMP,
         });
@@ -357,7 +357,7 @@ async function main(argv = process.argv.slice(2)) {
       prerequisiteSteps.push({
         label: "plugin-sdk package boundary dts",
         args: [runTsgoScript, "-p", "packages/plugin-sdk/tsconfig.json", "--declaration", "true"],
-        env: { KENUXA OPS_TSGO_HEAVY_CHECK_LOCK_HELD: "1" },
+        env: { KENUXA_OPS_TSGO_HEAVY_CHECK_LOCK_HELD: "1" },
         timeoutMs: 300_000,
         stampPath: PACKAGE_DTS_STAMP,
       });
@@ -389,7 +389,7 @@ async function main(argv = process.argv.slice(2)) {
             "--tsBuildInfoFile",
             "dist/plugin-sdk/extensions/qa-channel/.tsbuildinfo",
           ],
-          env: { KENUXA OPS_TSGO_HEAVY_CHECK_LOCK_HELD: "1" },
+          env: { KENUXA_OPS_TSGO_HEAVY_CHECK_LOCK_HELD: "1" },
           timeoutMs: 300_000,
           stampPath: QA_CHANNEL_DTS_STAMP,
         });
@@ -420,7 +420,7 @@ async function main(argv = process.argv.slice(2)) {
             "--tsBuildInfoFile",
             "dist/plugin-sdk/extensions/discord/.tsbuildinfo",
           ],
-          env: { KENUXA OPS_TSGO_HEAVY_CHECK_LOCK_HELD: "1" },
+          env: { KENUXA_OPS_TSGO_HEAVY_CHECK_LOCK_HELD: "1" },
           timeoutMs: 300_000,
           stampPath: DISCORD_DTS_STAMP,
         });
@@ -451,7 +451,7 @@ async function main(argv = process.argv.slice(2)) {
             "--tsBuildInfoFile",
             "dist/plugin-sdk/extensions/slack/.tsbuildinfo",
           ],
-          env: { KENUXA OPS_TSGO_HEAVY_CHECK_LOCK_HELD: "1" },
+          env: { KENUXA_OPS_TSGO_HEAVY_CHECK_LOCK_HELD: "1" },
           timeoutMs: 300_000,
           stampPath: SLACK_DTS_STAMP,
         });
@@ -482,7 +482,7 @@ async function main(argv = process.argv.slice(2)) {
             "--tsBuildInfoFile",
             "dist/plugin-sdk/extensions/whatsapp/.tsbuildinfo",
           ],
-          env: { KENUXA OPS_TSGO_HEAVY_CHECK_LOCK_HELD: "1" },
+          env: { KENUXA_OPS_TSGO_HEAVY_CHECK_LOCK_HELD: "1" },
           timeoutMs: 300_000,
           stampPath: WHATSAPP_DTS_STAMP,
         });

@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 /**
  * Live repro for implicit session_status + runSessionKey (#82669 / PR #82696).
  * Run: pnpm exec tsx scripts/repro/session-status-run-session-key-live-proof.mjs
@@ -26,8 +26,8 @@ const store = {
 };
 fs.writeFileSync(configPath, "{}\n");
 fs.writeFileSync(storePath, `${JSON.stringify(store, null, 2)}\n`);
-process.env.KENUXA OPS_CONFIG_PATH = configPath;
-process.env.KENUXA OPS_DISABLE_BUNDLED_PLUGINS = "1";
+process.env.KENUXA_OPS_CONFIG_PATH = configPath;
+process.env.KENUXA_OPS_DISABLE_BUNDLED_PLUGINS = "1";
 
 const originalStderrWrite = process.stderr.write.bind(process.stderr);
 process.stderr.write = (chunk, encoding, callback) => {

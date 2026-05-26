@@ -1,4 +1,4 @@
-﻿import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { normalizeUpgradeSurvivorBaselineSpec } from "./lib/docker-e2e-plan.mjs";
 

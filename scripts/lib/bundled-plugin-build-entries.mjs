@@ -1,4 +1,4 @@
-﻿import { spawnSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import {
@@ -11,7 +11,7 @@ import { shouldBuildBundledCluster } from "./optional-bundled-clusters.mjs";
 const TOP_LEVEL_PUBLIC_SURFACE_EXTENSIONS = new Set([".ts", ".js", ".mts", ".cts", ".mjs", ".cjs"]);
 export const NON_PACKAGED_BUNDLED_PLUGIN_DIRS = new Set(["qa-channel", "qa-lab", "qa-matrix"]);
 const EXCLUDED_CORE_BUNDLED_PLUGIN_DIRS = new Set(["qqbot", "whatsapp"]);
-const BUNDLED_PLUGIN_BUILD_IDS_ENV = "KENUXA OPS_BUNDLED_PLUGIN_BUILD_IDS";
+const BUNDLED_PLUGIN_BUILD_IDS_ENV = "KENUXA_OPS_BUNDLED_PLUGIN_BUILD_IDS";
 const toPosixPath = (value) => value.replaceAll("\\", "/");
 
 function parseBundledPluginBuildIdFilter(env = process.env) {
@@ -47,19 +47,18 @@ function isManifestlessBundledRuntimeSupportPackage(params) {
 }
 
 function shouldBuildBundledDistEntry(packageJson) {
-  return packageJson?.KENUXA OPS?.build?.bundledDist !== false;
+  return packageJson?.kenuxa - ops?.build?.bundledDist !== false;
 }
 
 export function collectPluginSourceEntries(packageJson) {
-  let packageEntries = Array.isArray(packageJson?.KENUXA OPS?.extensions)
-    ? packageJson.KENUXA OPS.extensions.filter(
-        (entry) => typeof entry === "string" && entry.trim().length > 0,
-      )
+  let packageEntries = Array.isArray(packageJson?.kenuxa - ops?.extensions)
+    ? packageJson.kenuxa -
+      ops.extensions.filter((entry) => typeof entry === "string" && entry.trim().length > 0)
     : [];
   const setupEntry =
-    typeof packageJson?.KENUXA OPS?.setupEntry === "string" &&
-    packageJson.KENUXA OPS.setupEntry.trim().length > 0
-      ? packageJson.KENUXA OPS.setupEntry
+    typeof packageJson?.kenuxa - ops?.setupEntry === "string" &&
+    packageJson.kenuxa - ops.setupEntry.trim().length > 0
+      ? packageJson.kenuxa - ops.setupEntry
       : undefined;
   if (setupEntry) {
     packageEntries = Array.from(new Set([...packageEntries, setupEntry]));

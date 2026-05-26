@@ -880,7 +880,7 @@ describe("saveConfig", () => {
       gateway: {
         mode: "remote",
         remote: {
-          token: "__KENUXA OPS_REDACTED__",
+          token: "__KenuxaOps_REDACTED__",
         },
       },
     };
@@ -888,7 +888,7 @@ describe("saveConfig", () => {
       gateway: {
         mode: "remote",
         remote: {
-          token: "__KENUXA OPS_REDACTED__",
+          token: "__KenuxaOps_REDACTED__",
         },
       },
     };
@@ -971,7 +971,7 @@ describe("saveConfig", () => {
     state.configForm = {
       gateway: {
         remote: {
-          token: "__KENUXA OPS_REDACTED__",
+          token: "__KenuxaOps_REDACTED__",
         },
       },
       ui: { theme: "dark" },
@@ -979,7 +979,7 @@ describe("saveConfig", () => {
     state.configFormOriginal = {
       gateway: {
         remote: {
-          token: "__KENUXA OPS_REDACTED__",
+          token: "__KenuxaOps_REDACTED__",
         },
       },
       ui: { theme: "dark" },

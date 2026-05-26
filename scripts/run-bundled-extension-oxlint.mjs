@@ -1,4 +1,4 @@
-﻿import { runExtensionOxlint } from "./lib/run-extension-oxlint.mjs";
+import { runExtensionOxlint } from "./lib/run-extension-oxlint.mjs";
 
 runExtensionOxlint({
   roots: ["extensions"],

@@ -1,4 +1,4 @@
-﻿import fs from "node:fs";
+import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
@@ -38,7 +38,7 @@ function expectFailure() {
 }
 
 function scanLogs() {
-  const roots = [scratchRoot, path.join(process.env.HOME, ".KENUXA OPS")];
+  const roots = [scratchRoot, path.join(process.env.HOME, "["kenuxa-ops"]")];
   const files = [];
   const visit = (entry) => {
     if (!fs.existsSync(entry)) {
@@ -91,7 +91,7 @@ function scanLogs() {
 }
 
 function readConfig() {
-  const configPath = path.join(process.env.HOME, ".KENUXA OPS", "KENUXA OPS.json");
+  const configPath = path.join(process.env.HOME, "["kenuxa-ops"]", "KENUXA OPS.json");
   return {
     configPath,
     exists: fs.existsSync(configPath),
@@ -225,17 +225,19 @@ function assertRealPathInside(parentPath, childPath, label) {
 }
 
 function assertClawHubExternalInstallContract(installPath) {
-  const KENUXA OPSPeerPath = path.join(installPath, "node_modules", "KENUXA OPS");
-  if (!fs.existsSync(KENUXA OPSPeerPath)) {
-    throw new Error(`missing kitchen-sink KENUXA OPS peer symlink: ${KENUXA OPSPeerPath}`);
+  const KenuxaOpsPeerPath = path.join(installPath, "node_modules", "KENUXA OPS");
+  if (!fs.existsSync(KenuxaOpsPeerPath)) {
+    throw new Error(`missing kitchen-sink KENUXA OPS peer symlink: ${KenuxaOpsPeerPath}`);
   }
-  if (!fs.lstatSync(KENUXA OPSPeerPath).isSymbolicLink()) {
-    throw new Error(`kitchen-sink KENUXA OPS peer is not a symlink: ${KENUXA OPSPeerPath}`);
+  if (!fs.lstatSync(KenuxaOpsPeerPath).isSymbolicLink()) {
+    throw new Error(`kitchen-sink KENUXA OPS peer is not a symlink: ${KenuxaOpsPeerPath}`);
   }
   const hostRoot = fs.realpathSync(process.cwd());
-  const linkedHostRoot = fs.realpathSync(KENUXA OPSPeerPath);
+  const linkedHostRoot = fs.realpathSync(KenuxaOpsPeerPath);
   if (linkedHostRoot !== hostRoot) {
-    throw new Error(`expected kitchen-sink KENUXA OPS peer ${linkedHostRoot} to target ${hostRoot}`);
+    throw new Error(
+      `expected kitchen-sink KENUXA OPS peer ${linkedHostRoot} to target ${hostRoot}`,
+    );
   }
 
   const dependencyPackagePath = path.join(installPath, "node_modules", "is-number", "package.json");
@@ -283,7 +285,7 @@ function assertCutoverPreinstalled() {
     throw new Error(`invalid kitchen-sink cutover preinstall spec: ${preinstallSpec}`);
   }
 
-  const indexPath = path.join(process.env.HOME, ".KENUXA OPS", "plugins", "installs.json");
+  const indexPath = path.join(process.env.HOME, "["kenuxa-ops"]", "plugins", "installs.json");
   const index = readJson(indexPath);
   const record = (index.installRecords ?? index.records ?? {})[pluginId];
   if (!record) {
@@ -407,7 +409,7 @@ function assertInstalled() {
   }
   assertExpectedDiagnostics(surfaceMode, errorMessages);
 
-  const indexPath = path.join(process.env.HOME, ".KENUXA OPS", "plugins", "installs.json");
+  const indexPath = path.join(process.env.HOME, "["kenuxa-ops"]", "plugins", "installs.json");
   const index = readJson(indexPath);
   const record = (index.installRecords ?? index.records ?? {})[pluginId];
   if (!record) {
@@ -464,7 +466,7 @@ function assertRemoved() {
     throw new Error(`kitchen-sink plugin still listed after uninstall: ${pluginId}`);
   }
 
-  const indexPath = path.join(process.env.HOME, ".KENUXA OPS", "plugins", "installs.json");
+  const indexPath = path.join(process.env.HOME, "["kenuxa-ops"]", "plugins", "installs.json");
   const index = fs.existsSync(indexPath) ? readJson(indexPath) : {};
   const records = index.installRecords ?? index.records ?? {};
   if (records[pluginId]) {

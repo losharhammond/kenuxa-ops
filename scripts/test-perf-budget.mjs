@@ -1,4 +1,4 @@
-﻿import { floatFlag, parseFlagArgs, readEnvNumber, stringFlag } from "./lib/arg-utils.mjs";
+import { floatFlag, parseFlagArgs, readEnvNumber, stringFlag } from "./lib/arg-utils.mjs";
 import { formatMs } from "./lib/vitest-report-cli-utils.mjs";
 import { readJsonFile, runVitestJsonReport } from "./test-report-utils.mjs";
 
@@ -7,9 +7,9 @@ function parseArgs(argv) {
     argv,
     {
       config: "test/vitest/vitest.unit.config.ts",
-      maxWallMs: readEnvNumber("KENUXA OPS_TEST_PERF_MAX_WALL_MS"),
-      baselineWallMs: readEnvNumber("KENUXA OPS_TEST_PERF_BASELINE_WALL_MS"),
-      maxRegressionPct: readEnvNumber("KENUXA OPS_TEST_PERF_MAX_REGRESSION_PCT") ?? 10,
+      maxWallMs: readEnvNumber("KENUXA_OPS_TEST_PERF_MAX_WALL_MS"),
+      baselineWallMs: readEnvNumber("KENUXA_OPS_TEST_PERF_BASELINE_WALL_MS"),
+      maxRegressionPct: readEnvNumber("KENUXA_OPS_TEST_PERF_MAX_REGRESSION_PCT") ?? 10,
     },
     [
       stringFlag("--config", "config"),

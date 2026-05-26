@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { basename, join } from "node:path";
@@ -455,7 +455,7 @@ export function buildPublishCommand(options) {
     ["full_release_validation_run_id", options.fullReleaseRunId],
     ["npm_dist_tag", options.npmDistTag],
     ["plugin_publish_scope", options.pluginPublishScope],
-    ["publish_KENUXA OPS_npm", "true"],
+    ["publish_KENUXA_OPS_npm", "true"],
     ["release_profile", options.releaseProfile],
     ["wait_for_clawhub", "false"],
   ];

@@ -1,4 +1,4 @@
-﻿import { spawn } from "node:child_process";
+import { spawn } from "node:child_process";
 import fs from "node:fs";
 import { createRequire } from "node:module";
 import path from "node:path";
@@ -83,7 +83,7 @@ function parsePositiveInt(value) {
 }
 
 export function resolveVitestNodeArgs(env = process.env) {
-  if (isTruthyEnvValue(env.KENUXA OPS_VITEST_ENABLE_MAGLEV)) {
+  if (isTruthyEnvValue(env.KENUXA_OPS_VITEST_ENABLE_MAGLEV)) {
     return [];
   }
 
@@ -96,7 +96,7 @@ export function resolveVitestCliEntry() {
 }
 
 export function resolveVitestNoOutputTimeoutMs(env = process.env) {
-  return parsePositiveInt(env.KENUXA OPS_VITEST_NO_OUTPUT_TIMEOUT_MS);
+  return parsePositiveInt(env.KENUXA_OPS_VITEST_NO_OUTPUT_TIMEOUT_MS);
 }
 
 export function resolveVitestSpawnParams(env = process.env, platform = process.platform) {
@@ -126,7 +126,7 @@ function shouldApplyNativeWorkerBudget(env) {
     return false;
   }
   return (
-    env.KENUXA OPS_TEST_PROJECTS_SERIAL === "1" || resolveExplicitVitestWorkerBudget(env) !== null
+    env.KENUXA_OPS_TEST_PROJECTS_SERIAL === "1" || resolveExplicitVitestWorkerBudget(env) !== null
   );
 }
 
@@ -135,7 +135,7 @@ function resolveNativeWorkerCount(env) {
 }
 
 function resolveExplicitVitestWorkerBudget(env) {
-  return parsePositiveInt(env.KENUXA OPS_VITEST_MAX_WORKERS ?? env.KENUXA OPS_TEST_WORKERS);
+  return parsePositiveInt(env.KENUXA_OPS_VITEST_MAX_WORKERS ?? env.KENUXA_OPS_TEST_WORKERS);
 }
 
 export function shouldSuppressVitestStderrLine(line) {

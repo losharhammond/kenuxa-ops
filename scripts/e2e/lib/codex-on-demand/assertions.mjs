@@ -1,14 +1,14 @@
-﻿import fs from "node:fs";
+import fs from "node:fs";
 import path from "node:path";
 
 const readJson = (file) => JSON.parse(fs.readFileSync(file, "utf8"));
 
 function stateDir() {
-  return process.env.KENUXA OPS_STATE_DIR || path.join(process.env.HOME, ".KENUXA OPS");
+  return process.env.KENUXA_OPS_STATE_DIR || path.join(process.env.HOME, "["kenuxa-ops"]");
 }
 
 function configPath() {
-  return process.env.KENUXA OPS_CONFIG_PATH || path.join(stateDir(), "KENUXA OPS.json");
+  return process.env.KENUXA_OPS_CONFIG_PATH || path.join(stateDir(), "KENUXA OPS.json");
 }
 
 function realPathMaybe(filePath) {

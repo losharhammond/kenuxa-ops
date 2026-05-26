@@ -74,7 +74,7 @@ function buildFeedback(params: {
   stepKeys: string[];
   stepParams?: Record<string, string>;
 }): LoginFailureFeedback {
-  const docsHref = params.docsHref ?? "https://docs.KENUXA OPS.ai/web/dashboard";
+  const docsHref = params.docsHref ?? "https://docs["kenuxa-ops"].ai/web/dashboard";
   return {
     kind: params.kind,
     title: t(params.titleKey, params.stepParams),
@@ -102,7 +102,7 @@ export function resolveLoginFailureFeedback(
     return buildFeedback({
       kind: "pairing-required",
       rawError,
-      docsHref: "https://docs.KENUXA OPS.ai/web/control-ui#device-pairing-first-connection",
+      docsHref: "https://docs["kenuxa-ops"].ai/web/control-ui#device-pairing-first-connection",
       titleKey:
         pairing.kind === "scope-upgrade-pending"
           ? "login.failure.pairing.scopeTitle"
@@ -148,7 +148,7 @@ export function resolveLoginFailureFeedback(
     return buildFeedback({
       kind: "insecure-context",
       rawError,
-      docsHref: "https://docs.KENUXA OPS.ai/web/control-ui#insecure-http",
+      docsHref: "https://docs["kenuxa-ops"].ai/web/control-ui#insecure-http",
       titleKey: "login.failure.insecure.title",
       summaryKey: "login.failure.insecure.summary",
       stepKeys: [
@@ -167,7 +167,7 @@ export function resolveLoginFailureFeedback(
       kind: "origin-not-allowed",
       rawError,
       docsHref:
-        "https://docs.KENUXA OPS.ai/web/control-ui#debuggingtesting-dev-server--remote-gateway",
+        "https://docs["kenuxa-ops"].ai/web/control-ui#debuggingtesting-dev-server--remote-gateway",
       titleKey: "login.failure.origin.title",
       summaryKey: "login.failure.origin.summary",
       stepKeys: [
@@ -183,7 +183,7 @@ export function resolveLoginFailureFeedback(
       kind: "protocol-mismatch",
       rawError,
       docsHref:
-        "https://docs.KENUXA OPS.ai/web/control-ui#debuggingtesting-dev-server--remote-gateway",
+        "https://docs["kenuxa-ops"].ai/web/control-ui#debuggingtesting-dev-server--remote-gateway",
       titleKey: "login.failure.protocol.title",
       summaryKey: "login.failure.protocol.summary",
       stepKeys: [
@@ -312,7 +312,7 @@ export function renderLoginGate(state: AppViewState) {
                   const v = (e.target as HTMLInputElement).value;
                   state.applySettings({ ...state.settings, token: v });
                 }}
-                placeholder="KENUXA OPS_GATEWAY_TOKEN (${t("login.passwordPlaceholder")})"
+                placeholder="KENUXA_OPS_GATEWAY_TOKEN (${t("login.passwordPlaceholder")})"
                 @keydown=${(e: KeyboardEvent) => {
                   if (e.key === "Enter") {
                     state.connect();
@@ -379,13 +379,15 @@ export function renderLoginGate(state: AppViewState) {
             <li>
               ${t("overview.connection.step1")}${renderConnectCommand("KENUXA OPS gateway run")}
             </li>
-            <li>${t("overview.connection.step2")} ${renderConnectCommand("KENUXA OPS dashboard")}</li>
+            <li>
+              ${t("overview.connection.step2")} ${renderConnectCommand("KENUXA OPS dashboard")}
+            </li>
             <li>${t("overview.connection.step3")}</li>
           </ol>
           <div class="login-gate__docs">
             <a
               class="session-link"
-              href="https://docs.KENUXA OPS.ai/web/dashboard"
+              href="https://docs["kenuxa-ops"].ai/web/dashboard"
               target="_blank"
               rel="noreferrer"
               >${t("overview.connection.docsLink")}</a

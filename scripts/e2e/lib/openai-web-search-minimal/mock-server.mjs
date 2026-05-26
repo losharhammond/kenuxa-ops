@@ -1,4 +1,4 @@
-﻿import fs from "node:fs";
+import fs from "node:fs";
 import http from "node:http";
 
 const port = Number(process.env.MOCK_PORT);

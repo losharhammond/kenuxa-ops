@@ -1,5 +1,5 @@
 ﻿import { expect } from "vitest";
-import type { KENUXA OPSModalDialog } from "../ui/components/modal-dialog.ts";
+import type { KenuxaOpsModalDialog } from "../ui/components/modal-dialog.ts";
 
 type DialogMethodName = "showModal" | "close";
 type DialogDescriptorSnapshot = Record<DialogMethodName, PropertyDescriptor | undefined>;
@@ -42,7 +42,7 @@ export function installDialogPolyfill(): () => void {
 }
 
 export async function getRenderedModalDialog(container: HTMLElement) {
-  const modal = container.querySelector<KENUXA OPSModalDialog>("KENUXA OPS-modal-dialog");
+  const modal = container.querySelector<KenuxaOpsModalDialog>("KENUXA OPS-modal-dialog");
   expect(modal).toBeInstanceOf(HTMLElement);
   if (!modal) {
     throw new Error("Expected KENUXA OPS-modal-dialog");

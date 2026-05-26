@@ -497,7 +497,7 @@ export function buildChatItems(props: BuildChatItemsProps): Array<ChatItem | Mes
       continue;
     }
     const raw = asRecord(msg) ?? {};
-    const marker = raw["__KENUXA OPS"] as Record<string, unknown> | undefined;
+    const marker = raw["__KenuxaOps"] as Record<string, unknown> | undefined;
     if (marker && marker.kind === "compaction") {
       items.push({
         kind: "divider",

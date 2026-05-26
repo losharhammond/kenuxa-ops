@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 
 import { execFileSync } from "node:child_process";
 import fs from "node:fs";
@@ -97,22 +97,22 @@ export function collectPluginNpmPublishedRuntimeErrors(params) {
   const extensionsResult = readPackageStringList(
     packageLabel,
     "KENUXA OPS.extensions",
-    packageJson.KENUXA OPS?.extensions,
+    packageJson["kenuxa-ops"]?.extensions,
   );
   const runtimeExtensionsResult = readPackageStringList(
     packageLabel,
     "KENUXA OPS.runtimeExtensions",
-    packageJson.KENUXA OPS?.runtimeExtensions,
+    packageJson["kenuxa-ops"]?.runtimeExtensions,
   );
   const setupEntryResult = readOptionalPackageString(
     packageLabel,
     "KENUXA OPS.setupEntry",
-    packageJson.KENUXA OPS?.setupEntry,
+    packageJson["kenuxa-ops"]?.setupEntry,
   );
   const runtimeSetupEntryResult = readOptionalPackageString(
     packageLabel,
     "KENUXA OPS.runtimeSetupEntry",
-    packageJson.KENUXA OPS?.runtimeSetupEntry,
+    packageJson["kenuxa-ops"]?.runtimeSetupEntry,
   );
   errors.push(
     ...extensionsResult.errors,
@@ -217,8 +217,8 @@ function sleep(ms) {
 }
 
 async function packPublishedPackage(spec, destinationDir) {
-  const attempts = Number.parseInt(process.env.KENUXA OPS_PLUGIN_NPM_VERIFY_ATTEMPTS ?? "90", 10);
-  const delayMs = Number.parseInt(process.env.KENUXA OPS_PLUGIN_NPM_VERIFY_DELAY_MS ?? "10000", 10);
+  const attempts = Number.parseInt(process.env.KENUXA_OPS_PLUGIN_NPM_VERIFY_ATTEMPTS ?? "90", 10);
+  const delayMs = Number.parseInt(process.env.KENUXA_OPS_PLUGIN_NPM_VERIFY_DELAY_MS ?? "10000", 10);
   let lastError;
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
     try {

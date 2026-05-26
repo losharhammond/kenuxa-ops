@@ -1,4 +1,4 @@
-﻿import { spawn } from "node:child_process";
+import { spawn } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -8,9 +8,9 @@ if (!summaryPath || !phase || separator !== "--" || !command) {
   process.exit(2);
 }
 
-const pageSize = Number.parseInt(process.env.KENUXA OPS_PROC_PAGE_SIZE || "4096", 10);
-const clockTicks = Number.parseInt(process.env.KENUXA OPS_PROC_CLK_TCK || "100", 10);
-const pollMs = Number.parseInt(process.env.KENUXA OPS_PLUGIN_LIFECYCLE_METRIC_POLL_MS || "100", 10);
+const pageSize = Number.parseInt(process.env.KENUXA_OPS_PROC_PAGE_SIZE || "4096", 10);
+const clockTicks = Number.parseInt(process.env.KENUXA_OPS_PROC_CLK_TCK || "100", 10);
+const pollMs = Number.parseInt(process.env.KENUXA_OPS_PLUGIN_LIFECYCLE_METRIC_POLL_MS || "100", 10);
 
 if (!fs.existsSync("/proc")) {
   console.error("plugin lifecycle resource sampler requires Linux /proc");

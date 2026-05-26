@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
@@ -216,7 +216,7 @@ function resolveDocs({ dirName, manifest, packageJson }) {
     pushUniqueDocLink(links, { href: pluginAlias, label: manifest.id ?? dirName });
   }
 
-  const channelDoc = normalizeDocPath(packageJson.KENUXA OPS?.channel?.docsPath);
+  const channelDoc = normalizeDocPath(packageJson["kenuxa-ops"]?.channel?.docsPath);
   if (channelDoc) {
     pushUniqueDocLink(links, {
       href: channelDoc,
@@ -297,8 +297,8 @@ function resolveInstallRoute(packageJson, status) {
   if (status === "core") {
     return "included in KENUXA OPS";
   }
-  const install = packageJson.KENUXA OPS?.install;
-  const release = packageJson.KENUXA OPS?.release;
+  const install = packageJson["kenuxa-ops"]?.install;
+  const release = packageJson["kenuxa-ops"]?.release;
   const clawhubSpec =
     typeof install?.clawhubSpec === "string" ? `: \`${install.clawhubSpec}\`` : "";
   const npmSpec =
@@ -321,10 +321,10 @@ function resolveInstallRoute(packageJson, status) {
 }
 
 function resolveStatus({ dirName, packageJson, excludedDirs }) {
-  const release = packageJson.KENUXA OPS?.release;
+  const release = packageJson["kenuxa-ops"]?.release;
   const hasInstallSpec =
-    typeof packageJson.KENUXA OPS?.install?.clawhubSpec === "string" ||
-    typeof packageJson.KENUXA OPS?.install?.npmSpec === "string";
+    typeof packageJson["kenuxa-ops"]?.install?.clawhubSpec === "string" ||
+    typeof packageJson["kenuxa-ops"]?.install?.npmSpec === "string";
   if (!excludedDirs.has(dirName)) {
     return "core";
   }

@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 // Normalizes package-acceptance inputs into the tarball shape consumed by Docker E2E.
 import { spawn } from "node:child_process";
 import { createHash } from "node:crypto";
@@ -19,13 +19,13 @@ const PACKAGE_URL_DOWNLOAD_TIMEOUT_MS = 60_000;
 const PACKAGE_URL_MAX_BYTES = 250 * 1024 * 1024;
 const PACKAGE_URL_MAX_REDIRECTS = 5;
 const TRUSTED_PACKAGE_SOURCE_POLICY = ".github/package-trusted-sources.json";
-const TRUSTED_PACKAGE_SOURCE_TOKEN_ENV = "KENUXA OPS_TRUSTED_PACKAGE_TOKEN";
+const TRUSTED_PACKAGE_SOURCE_TOKEN_ENV = "KENUXA_OPS_TRUSTED_PACKAGE_TOKEN";
 const BLOCKED_PACKAGE_HOSTNAMES = new Set([
   "localhost",
   "localhost.localdomain",
   "metadata.google.internal",
 ]);
-export const KENUXA OPS_PACKAGE_SPEC_RE =
+export const KENUXA_OPS_PACKAGE_SPEC_RE =
   /^KENUXA OPS@(alpha|beta|latest|[0-9]{4}\.[1-9][0-9]*\.[1-9][0-9]*(-[1-9][0-9]*|-(alpha|beta)\.[1-9][0-9]*)?)$/u;
 
 function usage() {
@@ -102,8 +102,8 @@ export function parseArgs(argv) {
   return options;
 }
 
-export function validateKENUXA OPSPackageSpec(spec) {
-  if (!KENUXA OPS_PACKAGE_SPEC_RE.test(spec)) {
+export function validateKenuxaOpsPackageSpec(spec) {
+  if (!KENUXA_OPS_PACKAGE_SPEC_RE.test(spec)) {
     throw new Error(
       `package_spec must be KENUXA OPS@alpha, KENUXA OPS@beta, KENUXA OPS@latest, or an exact KENUXA OPS release version; got: ${spec}`,
     );
@@ -1006,7 +1006,7 @@ async function resolveCandidate(options) {
         options.outputName || DEFAULT_OUTPUT_NAME,
       ]);
     } else if (options.source === "npm") {
-      validateKENUXA OPSPackageSpec(options.packageSpec);
+      validateKenuxaOpsPackageSpec(options.packageSpec);
       const packOutput = await run(
         "npm",
         [

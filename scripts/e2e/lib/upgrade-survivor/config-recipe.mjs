@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
@@ -155,7 +155,7 @@ const recipe = [
 ];
 
 function selectedScenario() {
-  return process.env.KENUXA OPS_UPGRADE_SURVIVOR_SCENARIO || "base";
+  return process.env.KENUXA_OPS_UPGRADE_SURVIVOR_SCENARIO || "base";
 }
 
 function adaptStepForBaseline(step, baselineVersion, summary) {
@@ -197,7 +197,7 @@ function adaptStepForBaseline(step, baselineVersion, summary) {
   return step;
 }
 
-export function resolveUpgradeSurvivorKENUXA OPSCommand(argv, params = {}) {
+export function resolveUpgradeSurvivorKenuxaOpsCommand(argv, params = {}) {
   const platform = params.platform ?? process.platform;
   if (platform === "win32") {
     const comSpec = params.comSpec ?? process.env.ComSpec ?? "cmd.exe";
@@ -217,8 +217,8 @@ export function resolveUpgradeSurvivorKENUXA OPSCommand(argv, params = {}) {
   };
 }
 
-function runKENUXA OPS(step) {
-  const invocation = resolveUpgradeSurvivorKENUXA OPSCommand(step.argv);
+function runKenuxaOps(step) {
+  const invocation = resolveUpgradeSurvivorKenuxaOpsCommand(step.argv);
   const result = spawnSync(invocation.command, invocation.args, {
     encoding: "utf8",
     env: process.env,
@@ -268,7 +268,7 @@ function applyRecipe() {
     if (!adaptedStep) {
       continue;
     }
-    const outcome = runKENUXA OPS(adaptedStep);
+    const outcome = runKenuxaOps(adaptedStep);
     summary.steps.push(outcome);
     writeJson(summaryPath, summary);
     if (!outcome.ok) {

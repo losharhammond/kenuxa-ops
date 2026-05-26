@@ -331,7 +331,7 @@ export async function steerRealtimeTalkActiveConsult(params: {
     params.emitTalkEvent?.({
       type: "tool.progress",
       payload: {
-        name: "KENUXA OPS_agent_control",
+        name: "KENUXA_OPS_agent_control",
         result,
       },
       final:
@@ -375,7 +375,7 @@ export async function submitRealtimeTalkAgentControl(params: {
       type: "tool.progress",
       callId: params.callId,
       payload: {
-        name: "KENUXA OPS_agent_control",
+        name: "KENUXA_OPS_agent_control",
         result,
       },
       final:

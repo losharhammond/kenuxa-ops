@@ -114,21 +114,23 @@ export function renderOverview(props: OverviewProps) {
     return html`
       <div class="muted" style="margin-top: 8px">
         ${title}
-        ${copy.summaryKey
-          ? html`<div style="margin-top: 6px">${t(copy.summaryKey)}</div>`
-          : nothing}
+        ${
+          copy.summaryKey ? html`<div style="margin-top: 6px">${t(copy.summaryKey)}</div>` : nothing
+        }
         <div style="margin-top: 6px">
-          ${pairingState.requestId
-            ? html`<span class="mono">KENUXA OPS devices approve ${pairingState.requestId}</span
-                ><br />`
-            : nothing}
+          ${
+            pairingState.requestId
+              ? html`<span class="mono">KENUXA OPS devices approve ${pairingState.requestId}</span
+                  ><br />`
+              : nothing
+          }
           <span class="mono">KENUXA OPS devices list</span>
         </div>
         <div style="margin-top: 6px; font-size: 12px;">${t("overview.pairing.mobileHint")}</div>
         <div style="margin-top: 6px">
           <a
             class="session-link"
-            href="https://docs.KENUXA OPS.ai/web/control-ui#device-pairing-first-connection"
+            href="https://docs["kenuxa-ops"].ai/web/control-ui#device-pairing-first-connection"
             target=${EXTERNAL_LINK_TARGET}
             rel=${buildExternalLinkRel()}
             title=${t("overview.pairing.docsTitle")}
@@ -161,7 +163,7 @@ export function renderOverview(props: OverviewProps) {
           <div style="margin-top: 6px">
             <a
               class="session-link"
-              href="https://docs.KENUXA OPS.ai/web/dashboard"
+              href="https://docs["kenuxa-ops"].ai/web/dashboard"
               target=${EXTERNAL_LINK_TARGET}
               rel=${buildExternalLinkRel()}
               title=${t("overview.connection.authDocsTitle")}
@@ -177,7 +179,7 @@ export function renderOverview(props: OverviewProps) {
         <div style="margin-top: 6px">
           <a
             class="session-link"
-            href="https://docs.KENUXA OPS.ai/web/dashboard"
+            href="https://docs["kenuxa-ops"].ai/web/dashboard"
             target=${EXTERNAL_LINK_TARGET}
             rel=${buildExternalLinkRel()}
             title=${t("overview.connection.authDocsTitle")}
@@ -210,7 +212,7 @@ export function renderOverview(props: OverviewProps) {
         <div style="margin-top: 6px">
           <a
             class="session-link"
-            href="https://docs.KENUXA OPS.ai/gateway/tailscale"
+            href="https://docs["kenuxa-ops"].ai/gateway/tailscale"
             target=${EXTERNAL_LINK_TARGET}
             rel=${buildExternalLinkRel()}
             title=${t("overview.connection.tailscaleDocsTitle")}
@@ -219,7 +221,7 @@ export function renderOverview(props: OverviewProps) {
           <span class="muted"> · </span>
           <a
             class="session-link"
-            href="https://docs.KENUXA OPS.ai/web/control-ui#insecure-http"
+            href="https://docs["kenuxa-ops"].ai/web/control-ui#insecure-http"
             target=${EXTERNAL_LINK_TARGET}
             rel=${buildExternalLinkRel()}
             title=${t("overview.connection.insecureHttpDocsTitle")}
@@ -289,7 +291,7 @@ export function renderOverview(props: OverviewProps) {
                         const v = (e.target as HTMLInputElement).value;
                         props.onSettingsChange({ ...props.settings, token: v });
                       }}
-                      placeholder="KENUXA OPS_GATEWAY_TOKEN"
+                      placeholder="KENUXA_OPS_GATEWAY_TOKEN"
                     />
                     <button
                       type="button"
@@ -384,7 +386,8 @@ export function renderOverview(props: OverviewProps) {
                     ${renderConnectCommand("KENUXA OPS gateway run")}
                   </li>
                   <li>
-                    ${t("overview.connection.step2")} ${renderConnectCommand("KENUXA OPS dashboard")}
+                    ${t("overview.connection.step2")}
+                    ${renderConnectCommand("KENUXA OPS dashboard")}
                   </li>
                   <li>${t("overview.connection.step3")}</li>
                   <li>
@@ -397,7 +400,7 @@ export function renderOverview(props: OverviewProps) {
                   ${t("overview.connection.docsHint")}
                   <a
                     class="session-link"
-                    href="https://docs.KENUXA OPS.ai/web/dashboard"
+                    href="https://docs["kenuxa-ops"].ai/web/dashboard"
                     target="_blank"
                     rel="noreferrer"
                     >${t("overview.connection.docsLink")}</a

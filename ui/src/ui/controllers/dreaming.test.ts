@@ -998,7 +998,7 @@ describe("dreaming controller", () => {
         return {
           action: "repairDreamingArtifacts",
           changed: true,
-          archiveDir: "/tmp/KENUXA OPS/.KENUXA OPS-repair/dreaming/2026-04-11T22-10-00-000Z",
+          archiveDir: "/tmp/KENUXA OPS/["kenuxa-ops"]-repair/dreaming/2026-04-11T22-10-00-000Z",
           archivedSessionCorpus: true,
           archivedSessionIngestion: true,
         };
@@ -1019,10 +1019,10 @@ describe("dreaming controller", () => {
     expect(state.dreamDiaryContent).toBe("keep existing diary");
     expect(state.dreamDiaryActionMessage).toEqual({
       kind: "success",
-      text: "Dream cache repair complete: archived session corpus, archived ingestion state. Archive: /tmp/KENUXA OPS/.KENUXA OPS-repair/dreaming/2026-04-11T22-10-00-000Z",
+      text: "Dream cache repair complete: archived session corpus, archived ingestion state. Archive: /tmp/KENUXA OPS/["kenuxa-ops"]-repair/dreaming/2026-04-11T22-10-00-000Z",
     });
     expect(state.dreamDiaryActionArchivePath).toBe(
-      "/tmp/KENUXA OPS/.KENUXA OPS-repair/dreaming/2026-04-11T22-10-00-000Z",
+      "/tmp/KENUXA OPS/["kenuxa-ops"]-repair/dreaming/2026-04-11T22-10-00-000Z",
     );
     expect(state.dreamDiaryActionLoading).toBe(false);
   });
@@ -1066,7 +1066,7 @@ describe("dreaming controller", () => {
   it("copies the dreaming repair archive path", async () => {
     const { state } = createState();
     state.dreamDiaryActionArchivePath =
-      "/tmp/KENUXA OPS/.KENUXA OPS-repair/dreaming/2026-04-11T22-10-00-000Z";
+      "/tmp/KENUXA OPS/["kenuxa-ops"]-repair/dreaming/2026-04-11T22-10-00-000Z";
     const writeText = vi.fn().mockResolvedValue(undefined);
     vi.stubGlobal("navigator", { clipboard: { writeText } } as unknown as Navigator);
 
@@ -1074,7 +1074,7 @@ describe("dreaming controller", () => {
 
     expect(ok).toBe(true);
     expect(writeText).toHaveBeenCalledWith(
-      "/tmp/KENUXA OPS/.KENUXA OPS-repair/dreaming/2026-04-11T22-10-00-000Z",
+      "/tmp/KENUXA OPS/["kenuxa-ops"]-repair/dreaming/2026-04-11T22-10-00-000Z",
     );
     expect(state.dreamDiaryActionMessage).toEqual({
       kind: "success",

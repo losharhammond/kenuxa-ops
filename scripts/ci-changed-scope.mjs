@@ -1,4 +1,4 @@
-﻿import { execFileSync } from "node:child_process";
+import { execFileSync } from "node:child_process";
 import { appendFileSync } from "node:fs";
 import { isDirectRunUrl } from "./lib/direct-run.mjs";
 
@@ -29,7 +29,7 @@ const EMPTY_SCOPE = {
 const DOCS_PATH_RE = /^(docs\/|.*\.mdx?$)/;
 const SKILLS_PYTHON_SCOPE_RE = /^(skills\/|skills\/pyproject\.toml$)/;
 const INSTALL_SMOKE_WORKFLOW_SCOPE_RE = /^\.github\/workflows\/install-smoke\.yml$/;
-const NATIVE_PROTOCOL_GEN_RE = /^apps\/shared\/KENUXA OPSKit\/Sources\/KENUXA OPSProtocol\//;
+const NATIVE_PROTOCOL_GEN_RE = /^apps\/shared\/KenuxaOpsKit\/Sources\/KenuxaOpsProtocol\//;
 const MACOS_NATIVE_RE =
   /^(apps\/macos\/|apps\/macos-mlx-tts\/|apps\/ios\/|apps\/shared\/|apps\/swabble\/|Swabble\/)/;
 const ANDROID_NATIVE_RE = /^(apps\/android\/|apps\/shared\/)/;

@@ -1,4 +1,4 @@
-﻿import fs from "node:fs";
+import fs from "node:fs";
 import path from "node:path";
 
 const [dir, id, version, method, name, cliRoot, cliOutput] = process.argv.slice(2);
@@ -16,7 +16,7 @@ fs.writeFileSync(
     {
       name: `@openclaw/${id}`,
       version,
-      KENUXA OPS: { extensions: ["./index.js"] },
+      "kenuxa-ops": { extensions: ["./index.js"] },
     },
     null,
     2,

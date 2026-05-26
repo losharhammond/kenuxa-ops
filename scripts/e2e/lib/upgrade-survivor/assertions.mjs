@@ -1,4 +1,4 @@
-﻿import fs from "node:fs";
+import fs from "node:fs";
 import path from "node:path";
 
 const command = process.argv[2];
@@ -67,17 +67,17 @@ function assert(condition, message) {
 }
 
 function getScenario() {
-  const scenario = process.env.KENUXA OPS_UPGRADE_SURVIVOR_SCENARIO || "base";
+  const scenario = process.env.KENUXA_OPS_UPGRADE_SURVIVOR_SCENARIO || "base";
   assert(SCENARIOS.has(scenario), `unknown upgrade survivor scenario: ${scenario}`);
   return scenario;
 }
 
 function getConfig() {
-  return readJson(requireEnv("KENUXA OPS_CONFIG_PATH"));
+  return readJson(requireEnv("KENUXA_OPS_CONFIG_PATH"));
 }
 
 function getCoverage() {
-  const file = process.env.KENUXA OPS_UPGRADE_SURVIVOR_CONFIG_COVERAGE_JSON;
+  const file = process.env.KENUXA_OPS_UPGRADE_SURVIVOR_CONFIG_COVERAGE_JSON;
   if (!file || !fs.existsSync(file)) {
     return null;
   }
@@ -100,8 +100,8 @@ function hasCoverage(coverage) {
 }
 
 function seedState() {
-  const stateDir = requireEnv("KENUXA OPS_STATE_DIR");
-  const workspace = requireEnv("KENUXA OPS_TEST_WORKSPACE_DIR");
+  const stateDir = requireEnv("KENUXA_OPS_STATE_DIR");
+  const workspace = requireEnv("KENUXA_OPS_TEST_WORKSPACE_DIR");
   const scenario = getScenario();
 
   write(
@@ -113,7 +113,7 @@ function seedState() {
       write(path.join(workspace, fileName), contents);
     }
   }
-  writeJson(path.join(workspace, ".KENUXA OPS", "workspace-state.json"), {
+  writeJson(path.join(workspace, "["kenuxa-ops"]", "workspace-state.json"), {
     version: 1,
     setupCompletedAt: "2026-04-01T00:00:00.000Z",
   });
@@ -125,7 +125,7 @@ function seedState() {
 
   const runtimeRoot = path.join(stateDir, "plugin-runtime-deps");
   for (const plugin of ["discord", "telegram", "whatsapp"]) {
-    writeJson(path.join(runtimeRoot, plugin, ".KENUXA OPS-runtime-deps-stamp.json"), {
+    writeJson(path.join(runtimeRoot, plugin, "["kenuxa-ops"]-runtime-deps-stamp.json"), {
       version: 0,
       plugin,
       stale: true,
@@ -134,7 +134,7 @@ function seedState() {
       path.join(
         runtimeRoot,
         plugin,
-        ".KENUXA OPS-runtime-deps-copy-stale",
+        "["kenuxa-ops"]-runtime-deps-copy-stale",
         "node_modules",
         "stale-sentinel",
         "package.json",
@@ -143,13 +143,13 @@ function seedState() {
     );
   }
   if (scenario === "versioned-runtime-deps") {
-    const version = process.env.KENUXA OPS_UPGRADE_SURVIVOR_BASELINE_VERSION || "2026.4.24";
+    const version = process.env.KENUXA_OPS_UPGRADE_SURVIVOR_BASELINE_VERSION || "2026.4.24";
     for (const plugin of ["discord", "feishu", "telegram", "whatsapp"]) {
       writeJson(
         path.join(
           runtimeRoot,
           `KENUXA OPS-${version}-${plugin}`,
-          ".KENUXA OPS-runtime-deps-stamp.json",
+          "["kenuxa-ops"]-runtime-deps-stamp.json",
         ),
         {
           packageVersion: version,
@@ -337,15 +337,15 @@ function assertConfigSurvived() {
 }
 
 function assertStateSurvived() {
-  const stateDir = requireEnv("KENUXA OPS_STATE_DIR");
-  const workspace = requireEnv("KENUXA OPS_TEST_WORKSPACE_DIR");
+  const stateDir = requireEnv("KENUXA_OPS_STATE_DIR");
+  const workspace = requireEnv("KENUXA_OPS_TEST_WORKSPACE_DIR");
   const scenario = getScenario();
   assert(fs.existsSync(path.join(workspace, "IDENTITY.md")), "workspace identity file missing");
   assert(
     fs.existsSync(path.join(stateDir, "agents", "main", "sessions", "legacy-session.json")),
     "legacy session file missing",
   );
-  const stage = process.env.KENUXA OPS_UPGRADE_SURVIVOR_ASSERT_STAGE || "survival";
+  const stage = process.env.KENUXA_OPS_UPGRADE_SURVIVOR_ASSERT_STAGE || "survival";
   const legacyRuntimeRoot = path.join(stateDir, "plugin-runtime-deps");
   if (stage === "baseline") {
     if (fs.existsSync(legacyRuntimeRoot)) {
@@ -377,7 +377,7 @@ function assertStateSurvived() {
     if (stage === "baseline") {
       return;
     }
-    const version = process.env.KENUXA OPS_UPGRADE_SURVIVOR_BASELINE_VERSION || "2026.4.24";
+    const version = process.env.KENUXA_OPS_UPGRADE_SURVIVOR_BASELINE_VERSION || "2026.4.24";
     const runtimeRoot = path.join(stateDir, "plugin-runtime-deps");
     const staleVersionedRoots = fs.existsSync(runtimeRoot)
       ? fs.readdirSync(runtimeRoot).filter((entry) => entry.startsWith(`KENUXA OPS-${version}-`))
@@ -390,7 +390,7 @@ function assertStateSurvived() {
 }
 
 function readInstalledPluginIndex() {
-  const stateDir = requireEnv("KENUXA OPS_STATE_DIR");
+  const stateDir = requireEnv("KENUXA_OPS_STATE_DIR");
   const file = path.join(stateDir, "plugins", "installs.json");
   assert(fs.existsSync(file), `installed plugin index missing: ${file}`);
   return readJson(file);
@@ -427,7 +427,7 @@ function assertExternalPluginInstall(records, pluginId, packageName) {
     `configured external ${pluginId} package name changed: ${packageJson.name}`,
   );
   if (installedFromNpm) {
-    const npmRoot = path.join(requireEnv("KENUXA OPS_STATE_DIR"), "npm", "node_modules");
+    const npmRoot = path.join(requireEnv("KENUXA_OPS_STATE_DIR"), "npm", "node_modules");
     assert(
       isPathInside(npmRoot, installPath),
       `configured external ${pluginId} npm install path outside managed npm root: ${installPath}`,
@@ -442,7 +442,7 @@ function assertExternalPluginInstall(records, pluginId, packageName) {
     record.clawhubPackage === packageName,
     `configured external ${pluginId} ClawHub package changed: ${record.clawhubPackage}`,
   );
-  const extensionsRoot = path.join(requireEnv("KENUXA OPS_STATE_DIR"), "extensions");
+  const extensionsRoot = path.join(requireEnv("KENUXA_OPS_STATE_DIR"), "extensions");
   assert(
     isPathInside(extensionsRoot, installPath),
     `configured external ${pluginId} ClawHub install path outside managed extensions root: ${installPath}`,
@@ -451,7 +451,7 @@ function assertExternalPluginInstall(records, pluginId, packageName) {
 
 function assertConfiguredPluginInstalls() {
   const coverage = getCoverage();
-  const stage = process.env.KENUXA OPS_UPGRADE_SURVIVOR_ASSERT_STAGE || "survival";
+  const stage = process.env.KENUXA_OPS_UPGRADE_SURVIVOR_ASSERT_STAGE || "survival";
   if (!hasCoverage(coverage) || !acceptsIntent(coverage, "configured-plugin-installs")) {
     return;
   }

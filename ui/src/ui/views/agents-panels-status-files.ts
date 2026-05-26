@@ -297,7 +297,7 @@ export function renderAgentChannels(params: {
                           ? html`
                               <div>
                                 <a
-                                  href="https://docs.KENUXA OPS.ai/channels"
+                                  href="https://docs["kenuxa-ops"].ai/channels"
                                   target="_blank"
                                   rel="noopener"
                                   style="color: var(--accent); font-size: 12px"

@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 
 import fs from "node:fs";
 import path from "node:path";
@@ -33,7 +33,7 @@ const allowFailing = new Set(
     .filter(Boolean),
 );
 const timeoutMs = Number.parseInt(
-  option("--timeout-ms", process.env.KENUXA OPS_UPGRADE_SURVIVOR_PROBE_TIMEOUT_MS || "60000"),
+  option("--timeout-ms", process.env.KENUXA_OPS_UPGRADE_SURVIVOR_PROBE_TIMEOUT_MS || "60000"),
   10,
 );
 const url = new URL(probePath, baseUrl).toString();

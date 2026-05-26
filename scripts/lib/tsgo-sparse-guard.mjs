@@ -1,4 +1,4 @@
-﻿import { spawnSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { readFlagValue } from "./arg-utils.mjs";
@@ -11,12 +11,12 @@ const CORE_TEST_CONFIGS = new Set([
 ]);
 
 const CORE_PROD_CONFIGS = new Set(["tsconfig.core.json"]);
-const TSGO_SPARSE_SKIP_ENV_KEY = "KENUXA OPS_TSGO_SPARSE_SKIP";
+const TSGO_SPARSE_SKIP_ENV_KEY = "KENUXA_OPS_TSGO_SPARSE_SKIP";
 const CORE_SPARSE_ROOTS = ["packages", "ui/config", "ui/src"];
 
 const CORE_PROD_REQUIRED_PATHS = [
   {
-    path: "apps/shared/KENUXA OPSKit/Sources/KENUXA OPSKit/Resources/tool-display.json",
+    path: "apps/shared/KenuxaOpsKit/Sources/KenuxaOpsKit/Resources/tool-display.json",
     whenPresent: "ui/src/ui/tool-display.ts",
   },
   {

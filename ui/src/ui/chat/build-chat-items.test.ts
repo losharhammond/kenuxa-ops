@@ -437,7 +437,7 @@ describe("buildChatItems", () => {
             view: {
               backend: "canvas",
               id: "cv_nearest_turn",
-              url: "/__KENUXA OPS__/canvas/documents/cv_nearest_turn/index.html",
+              url: "/__KenuxaOps__/canvas/documents/cv_nearest_turn/index.html",
               title: "Nearest turn demo",
               preferred_height: 320,
             },
@@ -475,7 +475,7 @@ describe("buildChatItems", () => {
             view: {
               backend: "canvas",
               id: "cv_empty_anchor",
-              url: "/__KENUXA OPS__/canvas/documents/cv_empty_anchor/index.html",
+              url: "/__KenuxaOps__/canvas/documents/cv_empty_anchor/index.html",
               title: "Empty anchor demo",
               preferred_height: 320,
             },
@@ -518,7 +518,7 @@ describe("buildChatItems", () => {
               view: {
                 backend: "canvas",
                 id: "cv_generic_inline",
-                url: "/__KENUXA OPS__/canvas/documents/cv_generic_inline/index.html",
+                url: "/__KenuxaOps__/canvas/documents/cv_generic_inline/index.html",
                 title: "Inline generic preview",
                 preferred_height: 420,
               },
@@ -562,7 +562,7 @@ describe("buildChatItems", () => {
                 view: {
                   backend: "canvas",
                   id: "cv_streamed_artifact",
-                  url: "/__KENUXA OPS__/canvas/documents/cv_streamed_artifact/index.html",
+                  url: "/__KenuxaOps__/canvas/documents/cv_streamed_artifact/index.html",
                   title: "Streamed demo",
                   preferred_height: 320,
                 },
@@ -594,7 +594,7 @@ describe("buildChatItems", () => {
           {
             role: "system",
             timestamp: 2_000,
-            __KENUXA OPS: {
+            __KenuxaOps: {
               kind: "compaction",
               id: "checkpoint-1",
             },
@@ -639,7 +639,7 @@ function createAssistantCanvasBlock(params: { suffix: string }) {
       render: "url",
       viewId,
       title: "Inline demo",
-      url: `/__KENUXA OPS__/canvas/documents/${viewId}/index.html`,
+      url: `/__KenuxaOps__/canvas/documents/${viewId}/index.html`,
       preferredHeight: 360,
     },
   };

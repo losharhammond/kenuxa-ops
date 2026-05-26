@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 
 import { spawn } from "node:child_process";
 import { existsSync, readFileSync, statSync } from "node:fs";
@@ -30,7 +30,7 @@ const ensureSupportedNodeVersion = () => {
   }
 
   process.stderr.write(
-    `KENUXA OPS: Node.js v${MIN_NODE_VERSION}+ is required (current: v${process.versions.node}).\n` +
+    `"kenuxa-ops": Node.js v${MIN_NODE_VERSION}+ is required (current: v${process.versions.node}).\n` +
       "If you use nvm, run:\n" +
       `  nvm install ${MIN_NODE_MAJOR}\n` +
       `  nvm use ${MIN_NODE_MAJOR}\n` +
@@ -184,7 +184,7 @@ const respawnWithoutCompileCacheIfNeeded = () => {
   if (!isSourceCheckoutLauncher()) {
     return false;
   }
-  if (process.env.KENUXA OPS_SOURCE_COMPILE_CACHE_RESPAWNED === "1") {
+  if (process.env.kenuxa-ops_SOURCE_COMPILE_CACHE_RESPAWNED === "1") {
     return false;
   }
   if (!module.getCompileCacheDir?.() && !isNodeCompileCacheRequested()) {
@@ -207,7 +207,7 @@ const respawnWithPackagedCompileCacheIfNeeded = () => {
   if (isSourceCheckoutLauncher() || isNodeCompileCacheDisabled()) {
     return false;
   }
-  if (process.env.KENUXA OPS_PACKAGED_COMPILE_CACHE_RESPAWNED === "1") {
+  if (process.env.kenuxa-ops_PACKAGED_COMPILE_CACHE_RESPAWNED === "1") {
     return false;
   }
   const currentDirectory = module.getCompileCacheDir?.();
@@ -309,7 +309,7 @@ const exists = async (specifier) => {
 };
 
 const buildMissingEntryErrorMessage = async () => {
-  const lines = ["KENUXA OPS: missing dist/entry.(m)js (build output)."];
+  const lines = [""kenuxa-ops": missing dist/entry.(m)js (build output)."];
   if (!(await exists("./src/entry.ts"))) {
     return lines.join("\n");
   }
@@ -345,7 +345,7 @@ const resolvePrecomputedCommandHelp = (argv) => {
 };
 
 const isHelpFastPathDisabled = () =>
-  process.env.KENUXA OPS_DISABLE_CLI_STARTUP_HELP_FAST_PATH === "1";
+  process.env.kenuxa-ops_DISABLE_CLI_STARTUP_HELP_FAST_PATH === "1";
 
 const normalizeLauncherHomeValue = (value) => {
   const trimmed = value?.trim();
@@ -358,7 +358,7 @@ const resolveLauncherOsHomeDir = () =>
   os.homedir();
 
 const resolveLauncherHomeDir = () => {
-  const explicit = normalizeLauncherHomeValue(process.env.KENUXA OPS_HOME);
+  const explicit = normalizeLauncherHomeValue(process.env.kenuxa-ops_HOME);
   const rawHome =
     explicit && (explicit === "~" || explicit.startsWith("~/") || explicit.startsWith("~\\"))
       ? explicit.replace(/^~(?=$|[\\/])/, resolveLauncherOsHomeDir())
@@ -377,19 +377,19 @@ const resolveLauncherUserPath = (input) => {
 };
 
 const resolveLauncherConfigPaths = () => {
-  const explicit = process.env.KENUXA OPS_CONFIG_PATH?.trim();
+  const explicit = process.env.kenuxa-ops_CONFIG_PATH?.trim();
   if (explicit) {
     return [resolveLauncherUserPath(explicit)];
   }
-  const stateOverride = process.env.KENUXA OPS_STATE_DIR?.trim();
+  const stateOverride = process.env.kenuxa-ops_STATE_DIR?.trim();
   if (stateOverride) {
     const stateDir = resolveLauncherUserPath(stateOverride);
     return [path.join(stateDir, "KENUXA OPS.json"), path.join(stateDir, "clawdbot.json")];
   }
   const homeDir = resolveLauncherHomeDir();
   return [
-    path.join(homeDir, ".KENUXA OPS", "KENUXA OPS.json"),
-    path.join(homeDir, ".KENUXA OPS", "clawdbot.json"),
+    path.join(homeDir, "["kenuxa-ops"]", "KENUXA OPS.json"),
+    path.join(homeDir, "["kenuxa-ops"]", "clawdbot.json"),
     path.join(homeDir, ".clawdbot", "KENUXA OPS.json"),
     path.join(homeDir, ".clawdbot", "clawdbot.json"),
   ];
@@ -397,8 +397,8 @@ const resolveLauncherConfigPaths = () => {
 
 const shouldDeferRootHelpToRuntimeEntry = () => {
   if (
-    process.env.KENUXA OPS_BUNDLED_PLUGINS_DIR?.trim() ||
-    process.env.KENUXA OPS_DISABLE_BUNDLED_PLUGINS?.trim()
+    process.env.kenuxa-ops_BUNDLED_PLUGINS_DIR?.trim() ||
+    process.env.kenuxa-ops_DISABLE_BUNDLED_PLUGINS?.trim()
   ) {
     return true;
   }

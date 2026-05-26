@@ -1,4 +1,4 @@
-﻿import { spawnSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { readFlagValue } from "./lib/arg-utils.mjs";
@@ -8,11 +8,11 @@ import {
   resolveLocalHeavyCheckEnv,
   shouldAcquireLocalHeavyCheckLockForTsgo,
 } from "./lib/local-heavy-check-runtime.mjs";
+import { createManagedCommandInvocation } from "./lib/managed-child-process.mjs";
 import {
   getSparseTsgoGuardError,
   shouldSkipSparseTsgoGuardError,
 } from "./lib/tsgo-sparse-guard.mjs";
-import { createManagedCommandInvocation } from "./lib/managed-child-process.mjs";
 
 const { args: finalArgs, env } = applyLocalTsgoPolicy(
   process.argv.slice(2),
@@ -27,7 +27,7 @@ if (tsBuildInfoFile) {
 const sparseGuardError = getSparseTsgoGuardError(finalArgs, { cwd: process.cwd() });
 const releaseLock =
   sparseGuardError ||
-  env.KENUXA OPS_TSGO_HEAVY_CHECK_LOCK_HELD === "1" ||
+  env.KENUXA_OPS_TSGO_HEAVY_CHECK_LOCK_HELD === "1" ||
   !shouldAcquireLocalHeavyCheckLockForTsgo(finalArgs, env)
     ? () => {}
     : acquireLocalHeavyCheckLockSync({
@@ -40,7 +40,7 @@ try {
   if (sparseGuardError) {
     console.error(sparseGuardError);
     if (shouldSkipSparseTsgoGuardError(env)) {
-      console.error("[tsgo] skipping sparse-missing project because KENUXA OPS_TSGO_SPARSE_SKIP=1");
+      console.error("[tsgo] skipping sparse-missing project because KENUXA_OPS_TSGO_SPARSE_SKIP=1");
       process.exitCode = 0;
     } else {
       process.exitCode = 1;

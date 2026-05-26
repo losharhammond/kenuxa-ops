@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
@@ -90,7 +90,7 @@ export const BUILD_ALL_STEPS = [
     kind: "pnpm",
     pnpmArgs: ["ui:build"],
     // No build-all cache: ui/vite.config.ts derives the Control UI build ID
-    // from package.json, git HEAD, and KENUXA OPS_CONTROL_UI_BUILD_ID env, so a
+    // from package.json, git HEAD, and KENUXA_OPS_CONTROL_UI_BUILD_ID env, so a
     // file-input signature cannot exactly invalidate generated assets and a
     // warm hit could restore stale service-worker/app cache metadata.
     cache: undefined,
@@ -184,7 +184,7 @@ export function resolveBuildAllStep(step, params = {}) {
   const env = resolveStepEnv(step, params.env ?? process.env, platform);
   if (step.kind === "pnpm") {
     const nodeFallbackArgs =
-      env.KENUXA OPS_BUILD_ALL_NO_PNPM === "1" ? PNPM_STEP_NODE_FALLBACKS.get(step.label) : undefined;
+      env.KENUXA_OPS_BUILD_ALL_NO_PNPM === "1" ? PNPM_STEP_NODE_FALLBACKS.get(step.label) : undefined;
     if (nodeFallbackArgs) {
       return {
         command: params.nodeExecPath ?? nodeBin,
@@ -410,7 +410,7 @@ if (isMainModule()) {
   const profile = process.argv[2] ?? "full";
   for (const step of resolveBuildAllSteps(profile)) {
     const cacheState = resolveBuildAllStepCacheState(step);
-    if (process.env.KENUXA OPS_BUILD_CACHE !== "0" && cacheState.fresh) {
+    if (process.env.KENUXA_OPS_BUILD_CACHE !== "0" && cacheState.fresh) {
       restoreBuildAllStepCacheOutputs(cacheState);
       console.error(`[build-all] ${step.label} (cached)`);
       continue;

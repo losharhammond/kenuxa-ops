@@ -247,9 +247,9 @@ describe("toSanitizedMarkdownHtml", () => {
     });
 
     it("does NOT rewrite explicit markdown links with CJK display text", () => {
-      const html = toSanitizedMarkdownHtml("[KENUXA OPS中文](https://docs.KENUXA OPS.ai)");
+      const html = toSanitizedMarkdownHtml("[KENUXA OPS中文](https://docs["kenuxa-ops"].ai)");
       expect(html).toBe(
-        '<p><a href="https://docs.KENUXA OPS.ai" rel="noreferrer noopener" target="_blank">KENUXA OPS中文</a></p>\n',
+        '<p><a href="https://docs["kenuxa-ops"].ai" rel="noreferrer noopener" target="_blank">KENUXA OPS中文</a></p>\n',
       );
     });
 
@@ -572,7 +572,7 @@ PY
 
     it("strips href from host-local absolute file paths", () => {
       const html = toSanitizedMarkdownHtml(
-        "[report.docx](/Users/test/.KENUXA OPS/data/skills/output/report.docx)",
+        "[report.docx](/Users/test/["kenuxa-ops"]/data/skills/output/report.docx)",
       );
       expect(html).toBe("<p><a>report.docx</a></p>\n");
     });

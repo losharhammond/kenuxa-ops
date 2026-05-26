@@ -1,4 +1,4 @@
-﻿import { spawnSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -12,10 +12,10 @@ const bundledRuntimeFragments = (pluginDir) => [
 const bundledRuntimeRootFragments = ["/dist/extensions/", "/dist-runtime/extensions/"];
 
 function resolveStateDir() {
-  if (process.env.KENUXA OPS_STATE_DIR) {
-    return process.env.KENUXA OPS_STATE_DIR;
+  if (process.env.KENUXA_OPS_STATE_DIR) {
+    return process.env.KENUXA_OPS_STATE_DIR;
   }
-  return path.join(process.env.HOME || os.homedir(), ".KENUXA OPS");
+  return path.join(process.env.HOME || os.homedir(), "["kenuxa-ops"]");
 }
 
 function pathReferencesBundledRuntime(value, pluginDir) {
@@ -28,20 +28,20 @@ function pathReferencesPackagedBundledRoot(value) {
   return bundledRuntimeRootFragments.some((fragment) => normalized.includes(fragment));
 }
 
-function resolveKENUXA OPSEntry() {
-  if (process.env.KENUXA OPS_ENTRY) {
-    return process.env.KENUXA OPS_ENTRY;
+function resolveKenuxaOpsEntry() {
+  if (process.env.KENUXA_OPS_ENTRY) {
+    return process.env.KENUXA_OPS_ENTRY;
   }
   for (const entry of ["dist/index.mjs", "dist/index.js"]) {
     if (fs.existsSync(entry)) {
       return entry;
     }
   }
-  throw new Error("Missing KENUXA OPS_ENTRY and dist/index.(m)js");
+  throw new Error("Missing KENUXA_OPS_ENTRY and dist/index.(m)js");
 }
 
 function readPluginsList() {
-  const entry = resolveKENUXA OPSEntry();
+  const entry = resolveKenuxaOpsEntry();
   const result = spawnSync(process.execPath, [entry, "plugins", "list", "--json"], {
     cwd: process.cwd(),
     encoding: "utf8",
@@ -89,7 +89,7 @@ async function loadPackagedBundledEntries() {
 }
 
 async function loadManifestEntries() {
-  const explicit = (process.env.KENUXA OPS_BUNDLED_PLUGIN_SWEEP_IDS || "")
+  const explicit = (process.env.KENUXA_OPS_BUNDLED_PLUGIN_SWEEP_IDS || "")
     .split(/[,\s]+/u)
     .map((entry) => entry.trim())
     .filter(Boolean);
@@ -103,7 +103,7 @@ async function loadManifestEntries() {
     const found = manifestEntries.find((entry) => entry.id === lookup || entry.dir === lookup);
     if (!found) {
       throw new Error(
-        `KENUXA OPS_BUNDLED_PLUGIN_SWEEP_IDS entry is not an installable bundled plugin in this package: ${lookup}. Available: ${available}`,
+        `KENUXA_OPS_BUNDLED_PLUGIN_SWEEP_IDS entry is not an installable bundled plugin in this package: ${lookup}. Available: ${available}`,
       );
     }
     return found;
@@ -112,16 +112,16 @@ async function loadManifestEntries() {
 
 async function selectedManifestEntries() {
   const allEntries = await loadManifestEntries();
-  const total = Number.parseInt(process.env.KENUXA OPS_BUNDLED_PLUGIN_SWEEP_TOTAL || "1", 10);
-  const index = Number.parseInt(process.env.KENUXA OPS_BUNDLED_PLUGIN_SWEEP_INDEX || "0", 10);
+  const total = Number.parseInt(process.env.KENUXA_OPS_BUNDLED_PLUGIN_SWEEP_TOTAL || "1", 10);
+  const index = Number.parseInt(process.env.KENUXA_OPS_BUNDLED_PLUGIN_SWEEP_INDEX || "0", 10);
   if (!Number.isInteger(total) || total < 1) {
     throw new Error(
-      `KENUXA OPS_BUNDLED_PLUGIN_SWEEP_TOTAL must be >= 1, got ${process.env.KENUXA OPS_BUNDLED_PLUGIN_SWEEP_TOTAL}`,
+      `KENUXA_OPS_BUNDLED_PLUGIN_SWEEP_TOTAL must be >= 1, got ${process.env.KENUXA_OPS_BUNDLED_PLUGIN_SWEEP_TOTAL}`,
     );
   }
   if (!Number.isInteger(index) || index < 0 || index >= total) {
     throw new Error(
-      `KENUXA OPS_BUNDLED_PLUGIN_SWEEP_INDEX must be in [0, ${total - 1}], got ${process.env.KENUXA OPS_BUNDLED_PLUGIN_SWEEP_INDEX}`,
+      `KENUXA_OPS_BUNDLED_PLUGIN_SWEEP_INDEX must be in [0, ${total - 1}], got ${process.env.KENUXA_OPS_BUNDLED_PLUGIN_SWEEP_INDEX}`,
     );
   }
 

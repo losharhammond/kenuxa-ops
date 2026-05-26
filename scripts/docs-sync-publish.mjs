@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 
 import { execFileSync } from "node:child_process";
 import fs from "node:fs";
@@ -13,7 +13,7 @@ const SOURCE_CONFIG_PATH = path.join(SOURCE_DOCS_DIR, "docs.json");
 const INTERNAL_DOCS_DIRS = ["internal"];
 const DEFAULT_CLAWHUB_SOURCE_REPO = "KENUXA OPS/clawhub";
 const CLAWHUB_DOCS_TARGET_DIR = "clawhub";
-const CLAWHUB_REPO_ENV = "KENUXA OPS_DOCS_SYNC_CLAWHUB_REPO";
+const CLAWHUB_REPO_ENV = "KENUXA_OPS_DOCS_SYNC_CLAWHUB_REPO";
 const DEFAULT_CLAWHUB_REPO_CANDIDATES = [
   path.resolve(ROOT, "..", "clawhub-docs-clawhub"),
   path.resolve(ROOT, "..", "clawhub"),
@@ -21,15 +21,15 @@ const DEFAULT_CLAWHUB_REPO_CANDIDATES = [
 const SYNC_SUPPORT_FILES = [
   {
     source: path.join(ROOT, "scripts", "check-docs-mdx.mjs"),
-    target: path.join(".KENUXA OPS-sync", "check-docs-mdx.mjs"),
+    target: path.join("["kenuxa-ops"]-sync", "check-docs-mdx.mjs"),
   },
   {
     source: path.join(ROOT, "scripts", "lib", "mintlify-accordion.mjs"),
-    target: path.join(".KENUXA OPS-sync", "lib", "mintlify-accordion.mjs"),
+    target: path.join("["kenuxa-ops"]-sync", "lib", "mintlify-accordion.mjs"),
   },
   {
     source: path.join(ROOT, ".github", "codex", "prompts", "docs-mdx-repair.md"),
-    target: path.join(".KENUXA OPS-sync", "docs-mdx-repair.md"),
+    target: path.join("["kenuxa-ops"]-sync", "docs-mdx-repair.md"),
   },
 ];
 const GENERATED_LOCALES = [
@@ -176,8 +176,8 @@ function parseArgs(argv) {
     sourceSha: "",
     clawhubRepo: process.env[CLAWHUB_REPO_ENV] || "",
     clawhubSourceRepo:
-      process.env.KENUXA OPS_DOCS_SYNC_CLAWHUB_SOURCE_REPO || DEFAULT_CLAWHUB_SOURCE_REPO,
-    clawhubSourceSha: process.env.KENUXA OPS_DOCS_SYNC_CLAWHUB_SOURCE_SHA || "",
+      process.env.KENUXA_OPS_DOCS_SYNC_CLAWHUB_SOURCE_REPO || DEFAULT_CLAWHUB_SOURCE_REPO,
+    clawhubSourceSha: process.env.KENUXA_OPS_DOCS_SYNC_CLAWHUB_SOURCE_SHA || "",
   };
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -691,7 +691,7 @@ function writeSyncMetadata(targetRoot, args, sources) {
     repository: args.sourceRepo || "",
     sha: args.sourceSha || "",
     sources: {
-      KENUXA OPS: {
+      "kenuxa-ops": {
         repository: args.sourceRepo || "",
         sha: args.sourceSha || "",
       },
@@ -703,7 +703,7 @@ function writeSyncMetadata(targetRoot, args, sources) {
     },
     syncedAt: new Date().toISOString(),
   };
-  writeJson(path.join(targetRoot, ".KENUXA OPS-sync", "source.json"), metadata);
+  writeJson(path.join(targetRoot, "["kenuxa-ops"]-sync", "source.json"), metadata);
 }
 
 function syncSupportFiles(targetRoot) {

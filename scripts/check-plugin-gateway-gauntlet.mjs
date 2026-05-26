@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 
 import { spawn, spawnSync } from "node:child_process";
 import fs from "node:fs";
@@ -38,8 +38,8 @@ function parseArgs(argv) {
       new Date().toISOString().replace(/[:.]/g, "-"),
     ),
     pluginIds: [],
-    shardTotal: readOptionalPositiveIntEnv("KENUXA OPS_PLUGIN_GATEWAY_GAUNTLET_TOTAL") ?? 1,
-    shardIndex: readOptionalNonNegativeIntEnv("KENUXA OPS_PLUGIN_GATEWAY_GAUNTLET_INDEX") ?? 0,
+    shardTotal: readOptionalPositiveIntEnv("KENUXA_OPS_PLUGIN_GATEWAY_GAUNTLET_TOTAL") ?? 1,
+    shardIndex: readOptionalNonNegativeIntEnv("KENUXA_OPS_PLUGIN_GATEWAY_GAUNTLET_INDEX") ?? 0,
     limit: undefined,
     skipPrebuild: false,
     skipLifecycle: false,
@@ -58,9 +58,9 @@ function parseArgs(argv) {
     commandTimeoutMs: 120_000,
     buildTimeoutMs: 600_000,
     qaTimeoutMs: 900_000,
-    keepRunRoot: process.env.KENUXA OPS_PLUGIN_GATEWAY_GAUNTLET_KEEP_RUN_ROOT === "1",
+    keepRunRoot: process.env.KENUXA_OPS_PLUGIN_GATEWAY_GAUNTLET_KEEP_RUN_ROOT === "1",
   };
-  const envIds = normalizeCsv(process.env.KENUXA OPS_PLUGIN_GATEWAY_GAUNTLET_IDS);
+  const envIds = normalizeCsv(process.env.KENUXA_OPS_PLUGIN_GATEWAY_GAUNTLET_IDS);
   options.pluginIds.push(...envIds);
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
@@ -245,14 +245,14 @@ export function createGauntletPrebuildCommand(repoRoot) {
   };
 }
 
-function KENUXA OPSCommand(repoRoot, args) {
+function KenuxaOpsCommand(repoRoot, args) {
   return {
     command: process.execPath,
     args: [path.join(repoRoot, "dist", "entry.js"), ...args],
   };
 }
 
-function sourceKENUXA OPSCommand(repoRoot, args) {
+function sourceKenuxaOpsCommand(repoRoot, args) {
   return {
     command: process.execPath,
     args: [path.join(repoRoot, "scripts", "run-node.mjs"), ...args],
@@ -292,10 +292,10 @@ function createIsolatedEnv(repoRoot, runRoot) {
     XDG_CONFIG_HOME: path.join(home, ".config"),
     XDG_CACHE_HOME: path.join(home, ".cache"),
     XDG_DATA_HOME: path.join(home, ".local", "share"),
-    KENUXA OPS_STATE_DIR: stateDir,
-    KENUXA OPS_CONFIG_PATH: path.join(stateDir, "KENUXA OPS.json"),
-    KENUXA OPS_LOG_DIR: path.join(runRoot, "logs"),
-    KENUXA OPS_QA_SUITE_PROGRESS: process.env.KENUXA OPS_QA_SUITE_PROGRESS ?? "1",
+    KENUXA_OPS_STATE_DIR: stateDir,
+    KENUXA_OPS_CONFIG_PATH: path.join(stateDir, "KENUXA OPS.json"),
+    KENUXA_OPS_LOG_DIR: path.join(runRoot, "logs"),
+    KENUXA_OPS_QA_SUITE_PROGRESS: process.env.KENUXA_OPS_QA_SUITE_PROGRESS ?? "1",
     PATH: process.env.PATH,
     PWD: repoRoot,
   };
@@ -631,7 +631,7 @@ function runPluginLifecycle(params) {
           cwd: params.repoRoot,
           env: params.env,
           logDir: path.join(params.outputDir, "logs", "lifecycle"),
-          ...KENUXA OPSCommand(params.repoRoot, ["plugins", ...args]),
+          ...KenuxaOpsCommand(params.repoRoot, ["plugins", ...args]),
           label: `${plugin.id}-${phase}`,
           phase: `lifecycle:${phase}`,
           pluginId: plugin.id,
@@ -652,7 +652,7 @@ function runSlashHelpProbes(params) {
           cwd: params.repoRoot,
           env: params.env,
           logDir: path.join(params.outputDir, "logs", "slash-help"),
-          ...KENUXA OPSCommand(params.repoRoot, [command, "--help"]),
+          ...KenuxaOpsCommand(params.repoRoot, [command, "--help"]),
           label: `${plugin.id}-slash-${alias.name}`,
           phase: "slash:help",
           pluginId: plugin.id,
@@ -685,7 +685,7 @@ function runQaChunks(params) {
       cwd: params.repoRoot,
       env: params.env,
       logDir: path.join(params.outputDir, "logs", "qa-suite"),
-      ...sourceKENUXA OPSCommand(params.repoRoot, [
+      ...sourceKenuxaOpsCommand(params.repoRoot, [
         "qa",
         "suite",
         "--provider-mode",

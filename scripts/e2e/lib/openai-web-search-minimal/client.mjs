@@ -1,4 +1,4 @@
-﻿import { readdirSync } from "node:fs";
+import { readdirSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 
 async function loadCallGateway() {
@@ -17,15 +17,15 @@ async function loadCallGateway() {
 const callGateway = await loadCallGateway();
 
 const port = process.env.PORT;
-const token = process.env.KENUXA OPS_GATEWAY_TOKEN;
+const token = process.env.KENUXA_OPS_GATEWAY_TOKEN;
 const mode = process.argv[2];
 const sessionKey = `agent:main:openai-web-search-minimal:${mode}`;
 const message =
-  mode === "reject" ? "FORCE_SCHEMA_REJECT" : "Return exactly KENUXA OPS_SCHEMA_E2E_OK.";
+  mode === "reject" ? "FORCE_SCHEMA_REJECT" : "Return exactly KENUXA_OPS_SCHEMA_E2E_OK.";
 const id = mode === "reject" ? "schema-reject" : "schema-success";
 
 if (!port || !token) {
-  throw new Error("missing PORT/KENUXA OPS_GATEWAY_TOKEN");
+  throw new Error("missing PORT/KENUXA_OPS_GATEWAY_TOKEN");
 }
 
 async function gatewayAgent(params) {

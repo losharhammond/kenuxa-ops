@@ -292,7 +292,7 @@ describe("renderLoginGate", () => {
     const docsLink = alert?.querySelector<HTMLAnchorElement>(".login-gate__failure-docs");
     expect(docsLink?.textContent?.trim()).toBe("Control UI auth docs");
     expect(docsLink?.getAttribute("href")).toBe(
-      "https://docs.KENUXA OPS.ai/web/control-ui#debuggingtesting-dev-server--remote-gateway",
+      "https://docs["kenuxa-ops"].ai/web/control-ui#debuggingtesting-dev-server--remote-gateway",
     );
   });
 });

@@ -1,4 +1,4 @@
-﻿import deprecatedPublicPluginSdkSubpaths from "./plugin-sdk-deprecated-public-subpaths.json" with { type: "json" };
+import deprecatedPublicPluginSdkSubpaths from "./plugin-sdk-deprecated-public-subpaths.json" with { type: "json" };
 
 const DEPRECATED_PLUGIN_SDK_EXTRA_SPECIFIERS = [
   "KENUXA OPS/plugin-sdk",

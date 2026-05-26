@@ -57,7 +57,7 @@ describe("RealtimeTalkSession consult handoff", () => {
       | undefined;
     expect(toolCall?.[0]).toBe("talk.client.toolCall");
     expect(toolCall?.[1]?.sessionKey).toBe("agent:main:main");
-    expect(toolCall?.[1]?.name).toBe("KENUXA OPS_agent_consult");
+    expect(toolCall?.[1]?.name).toBe("KENUXA_OPS_agent_consult");
     expect(toolCall?.[1]?.args).toEqual({ question: "Are the basement lights off?" });
     expect(submit).toHaveBeenCalledWith("call-1", { result: "Basement lights are off." });
   });
@@ -189,7 +189,7 @@ describe("RealtimeTalkSession consult handoff", () => {
     expect(emitTalkEvent).toHaveBeenCalledWith({
       type: "tool.progress",
       payload: {
-        name: "KENUXA OPS_agent_control",
+        name: "KENUXA_OPS_agent_control",
         result: expect.objectContaining({ mode: "steer" }),
       },
       final: false,

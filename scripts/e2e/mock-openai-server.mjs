@@ -1,12 +1,12 @@
-﻿import fs from "node:fs";
+import fs from "node:fs";
 import http from "node:http";
 
-const port = Number(process.env.MOCK_PORT ?? process.env.KENUXA OPS_MOCK_OPENAI_PORT);
-const successMarker = process.env.SUCCESS_MARKER ?? "KENUXA OPS_E2E_OK";
+const port = Number(process.env.MOCK_PORT ?? process.env.KENUXA_OPS_MOCK_OPENAI_PORT);
+const successMarker = process.env.SUCCESS_MARKER ?? "KENUXA_OPS_E2E_OK";
 const requestLog = process.env.MOCK_REQUEST_LOG;
 
 if (!Number.isInteger(port) || port <= 0) {
-  throw new Error("missing valid MOCK_PORT or KENUXA OPS_MOCK_OPENAI_PORT");
+  throw new Error("missing valid MOCK_PORT or KENUXA_OPS_MOCK_OPENAI_PORT");
 }
 
 function readBody(req) {
@@ -140,7 +140,7 @@ function writeImageGeneration(res) {
 }
 
 function resolveResponseText(bodyText) {
-  const matches = Array.from(bodyText.matchAll(/\bKENUXA OPS_E2E_OK(?:_\d+)?\b/gu));
+  const matches = Array.from(bodyText.matchAll(/\bKENUXA_OPS_E2E_OK(?:_\d+)?\b/gu));
   return matches.at(-1)?.[0] ?? successMarker;
 }
 

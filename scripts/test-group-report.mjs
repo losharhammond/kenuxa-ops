@@ -1,4 +1,4 @@
-﻿import { spawnSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -277,15 +277,15 @@ function withUniqueLabels(plans) {
 }
 
 function buildFullSuiteLeafRunPlans() {
-  const previousLeafShards = process.env.KENUXA OPS_TEST_PROJECTS_LEAF_SHARDS;
-  process.env.KENUXA OPS_TEST_PROJECTS_LEAF_SHARDS = "1";
+  const previousLeafShards = process.env.KENUXA_OPS_TEST_PROJECTS_LEAF_SHARDS;
+  process.env.KENUXA_OPS_TEST_PROJECTS_LEAF_SHARDS = "1";
   try {
     return buildFullSuiteVitestRunPlans([], process.cwd());
   } finally {
     if (previousLeafShards === undefined) {
-      delete process.env.KENUXA OPS_TEST_PROJECTS_LEAF_SHARDS;
+      delete process.env.KENUXA_OPS_TEST_PROJECTS_LEAF_SHARDS;
     } else {
-      process.env.KENUXA OPS_TEST_PROJECTS_LEAF_SHARDS = previousLeafShards;
+      process.env.KENUXA_OPS_TEST_PROJECTS_LEAF_SHARDS = previousLeafShards;
     }
   }
 }

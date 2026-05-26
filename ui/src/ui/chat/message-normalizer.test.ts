@@ -207,7 +207,7 @@ describe("message-normalizer", () => {
             surface: "assistant_message",
             render: "url",
             viewId: "cv_status",
-            url: "/__KENUXA OPS__/canvas/documents/cv_status/index.html",
+            url: "/__KenuxaOps__/canvas/documents/cv_status/index.html",
             title: "Status",
             preferredHeight: 320,
           },

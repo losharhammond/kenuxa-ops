@@ -1,4 +1,4 @@
-﻿import { pathToFileURL } from "node:url";
+import { pathToFileURL } from "node:url";
 
 const allowedLifecyclePackageManagers = new Set(["pnpm", "npm", "yarn", "bun"]);
 

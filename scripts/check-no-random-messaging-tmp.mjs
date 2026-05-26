@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 
 import ts from "typescript";
 import { bundledPluginFile } from "./lib/bundled-plugin-paths.mjs";
@@ -78,7 +78,7 @@ export async function main() {
     skipRelativePath: (relativePath) => allowedRelativePaths.has(relativePath),
     header: "Found os.tmpdir()/tmpdir() usage in messaging/channel runtime sources:",
     footer:
-      "Use resolvePreferredKENUXA OPSTmpDir() or plugin-sdk temp helpers instead of host tmp defaults.",
+      "Use resolvePreferredKenuxaOpsTmpDir() or plugin-sdk temp helpers instead of host tmp defaults.",
     sortViolations: false,
   });
 }

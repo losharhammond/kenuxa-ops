@@ -1,4 +1,4 @@
-﻿import fs from "node:fs";
+import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { collectRootPackageExcludedExtensionDirs } from "./lib/bundled-plugin-build-entries.mjs";
@@ -67,7 +67,9 @@ function collectPackageRuntimeClosure(repoRoot, seedPackageNames) {
     }
     seen.add(packageName);
 
-    const packageJson = readPackageJson(path.join(nodeModulePath(repoRoot, packageName), "package.json"));
+    const packageJson = readPackageJson(
+      path.join(nodeModulePath(repoRoot, packageName), "package.json"),
+    );
     for (const dependencyName of collectRuntimeDependencyNames(packageJson)) {
       if (!seen.has(dependencyName)) {
         stack.push(dependencyName);
@@ -106,7 +108,9 @@ function pruneNodeModulesForOmittedPlugins(repoRoot, bundledPluginDir, omittedPl
   const omittedSeeds = new Set();
 
   for (const pluginId of omittedPluginIds) {
-    const packageJson = readPackageJson(path.join(repoRoot, bundledPluginDir, pluginId, "package.json"));
+    const packageJson = readPackageJson(
+      path.join(repoRoot, bundledPluginDir, pluginId, "package.json"),
+    );
     if (typeof packageJson?.name === "string") {
       omittedPackageNames.add(packageJson.name);
     }
@@ -116,7 +120,11 @@ function pruneNodeModulesForOmittedPlugins(repoRoot, bundledPluginDir, omittedPl
   }
 
   const keptSeeds = new Set(collectRuntimeDependencyNames(rootPackageJson));
-  for (const dependencyName of collectWorkspacePackageRuntimeSeeds(repoRoot, "packages", new Set())) {
+  for (const dependencyName of collectWorkspacePackageRuntimeSeeds(
+    repoRoot,
+    "packages",
+    new Set(),
+  )) {
     keptSeeds.add(dependencyName);
   }
   for (const dependencyName of collectWorkspacePackageRuntimeSeeds(
@@ -153,15 +161,19 @@ function pruneNodeModulesForOmittedPlugins(repoRoot, bundledPluginDir, omittedPl
 export function pruneDockerPluginDist(params = {}) {
   const repoRoot = params.cwd ?? params.repoRoot ?? process.cwd();
   const env = params.env ?? process.env;
-  const bundledPluginDir = env.KENUXA OPS_BUNDLED_PLUGIN_DIR ?? "extensions";
-  const keepPluginIds = parseDockerPluginKeepList(env.KENUXA OPS_EXTENSIONS);
+  const bundledPluginDir = env.KENUXA_OPS_BUNDLED_PLUGIN_DIR ?? "extensions";
+  const keepPluginIds = parseDockerPluginKeepList(env.KENUXA_OPS_EXTENSIONS);
   const excludedPluginIds = collectRootPackageExcludedExtensionDirs({ cwd: repoRoot });
-  const omittedPluginIds = new Set([...excludedPluginIds].filter((pluginId) => !keepPluginIds.has(pluginId)));
+  const omittedPluginIds = new Set(
+    [...excludedPluginIds].filter((pluginId) => !keepPluginIds.has(pluginId)),
+  );
   const removed = [];
 
   removed.push(...pruneNodeModulesForOmittedPlugins(repoRoot, bundledPluginDir, omittedPluginIds));
 
-  for (const pluginId of [...omittedPluginIds].toSorted((left, right) => left.localeCompare(right))) {
+  for (const pluginId of [...omittedPluginIds].toSorted((left, right) =>
+    left.localeCompare(right),
+  )) {
     for (const pluginPath of [
       path.join(bundledPluginDir, pluginId),
       path.join("dist", "extensions", pluginId),

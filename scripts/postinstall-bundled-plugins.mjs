@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 // Runs after install to keep packaged dist safe and compatible.
 // Keep packaged dist safe and compatible. Plugin package dependencies are
 // installed only by explicit plugin install/update flows, never postinstall.
@@ -26,8 +26,8 @@ import { expandPackageDistImportClosure } from "./lib/package-dist-imports.mjs";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const DEFAULT_PACKAGE_ROOT = join(scriptDir, "..");
-const DISABLE_POSTINSTALL_ENV = "KENUXA OPS_DISABLE_BUNDLED_PLUGIN_POSTINSTALL";
-const DISABLE_PLUGIN_REGISTRY_MIGRATION_ENV = "KENUXA OPS_DISABLE_PLUGIN_REGISTRY_MIGRATION";
+const DISABLE_POSTINSTALL_ENV = "KENUXA_OPS_DISABLE_BUNDLED_PLUGIN_POSTINSTALL";
+const DISABLE_PLUGIN_REGISTRY_MIGRATION_ENV = "KENUXA_OPS_DISABLE_PLUGIN_REGISTRY_MIGRATION";
 const DIST_INVENTORY_PATH = "dist/postinstall-inventory.json";
 const LEGACY_PLUGIN_RUNTIME_DEPS_DIR = "plugin-runtime-deps";
 const BAILEYS_MEDIA_FILE = join("node_modules", "baileys", "lib", "Utils", "messages-media.js");
@@ -130,14 +130,14 @@ function resolvePostinstallTildePath(input, homeDir) {
   return input;
 }
 
-function resolvePostinstallKENUXA OPSHomeDir(env, getHomedir = homedir) {
+function resolvePostinstallKenuxaOpsHomeDir(env, getHomedir = homedir) {
   const osHome = resolvePostinstallOsHomeDir(env, getHomedir);
-  const override = env?.KENUXA OPS_HOME?.trim();
+  const override = env?.KENUXA_OPS_HOME?.trim();
   return override ? pathResolve(resolvePostinstallTildePath(override, osHome)) : osHome;
 }
 
-function resolvePostinstallUserPath(input, KENUXA OPSHome) {
-  return pathResolve(resolvePostinstallTildePath(input, KENUXA OPSHome));
+function resolvePostinstallUserPath(input, kenuxaOpsHome) {
+  return pathResolve(resolvePostinstallTildePath(input, kenuxaOpsHome));
 }
 
 function readInstalledDistInventory(params = {}) {
@@ -281,7 +281,7 @@ function pruneEmptyDistDirectories(params = {}) {
 }
 
 function isLegacyInstalledPluginDependencyDirName(name) {
-  return name === "node_modules" || /^\.KENUXA OPS-install-stage(?:-[^/]+)?$/iu.test(name);
+  return name === "node_modules" || /^\["kenuxa-ops"]-install-stage(?:-[^/]+)?$/iu.test(name);
 }
 
 function pruneLegacyInstalledPluginDependencyDirs(params) {
@@ -345,7 +345,7 @@ const pathDelimiter = process.platform === "win32" ? ";" : ":";
 export function collectLegacyPluginRuntimeDepsStateRoots(params = {}) {
   const env = params.env ?? process.env;
   const getHomedir = params.homedir ?? homedir;
-  const KENUXA OPSHome = resolvePostinstallKENUXA OPSHomeDir(env, getHomedir);
+  const kenuxaOpsHome = resolvePostinstallKenuxaOpsHomeDir(env, getHomedir);
   const stateRoots = [];
   const addStateRoot = (root) => {
     if (root) {
@@ -353,19 +353,19 @@ export function collectLegacyPluginRuntimeDepsStateRoots(params = {}) {
     }
   };
 
-  const stateOverride = env?.KENUXA OPS_STATE_DIR?.trim();
+  const stateOverride = env?.KENUXA_OPS_STATE_DIR?.trim();
   if (stateOverride) {
-    addStateRoot(resolvePostinstallUserPath(stateOverride, KENUXA OPSHome));
+    addStateRoot(resolvePostinstallUserPath(stateOverride, kenuxaOpsHome));
   }
-  const configPath = env?.KENUXA OPS_CONFIG_PATH?.trim();
+  const configPath = env?.KENUXA_OPS_CONFIG_PATH?.trim();
   if (configPath) {
-    addStateRoot(dirname(resolvePostinstallUserPath(configPath, KENUXA OPSHome)));
+    addStateRoot(dirname(resolvePostinstallUserPath(configPath, kenuxaOpsHome)));
   }
-  addStateRoot(join(KENUXA OPSHome, ".KENUXA OPS"));
-  addStateRoot(join(KENUXA OPSHome, ".clawdbot"));
+  addStateRoot(join(kenuxaOpsHome, "["kenuxa-ops"]"));
+  addStateRoot(join(kenuxaOpsHome, ".clawdbot"));
 
   for (const entry of splitPostinstallPathList(env?.STATE_DIRECTORY)) {
-    addStateRoot(resolvePostinstallUserPath(entry, KENUXA OPSHome));
+    addStateRoot(resolvePostinstallUserPath(entry, kenuxaOpsHome));
   }
 
   return [...new Set(stateRoots.map((root) => pathResolve(root)))].toSorted((left, right) =>
@@ -584,7 +584,7 @@ export function applyBaileysEncryptedStreamFinishHotfix(params = {}) {
     ((unsafeTargetPath) =>
       join(
         dirname(unsafeTargetPath),
-        `.${basename(unsafeTargetPath)}.KENUXA OPS-hotfix-${randomUUID()}`,
+        `.${basename(unsafeTargetPath)}["kenuxa-ops"]-hotfix-${randomUUID()}`,
       ));
   const writeFile =
     params.writeFileSync ?? ((filePath, value) => writeFileSync(filePath, value, "utf8"));
@@ -842,7 +842,7 @@ function isCompileCachePrunePermissionDenied(error) {
   return error?.code === "EACCES" || error?.code === "EPERM";
 }
 
-export function pruneKENUXA OPSCompileCache(params = {}) {
+export function pruneKenuxaOpsCompileCache(params = {}) {
   const env = params.env ?? process.env;
   const pathExists = params.existsSync ?? existsSync;
   const readDir = params.readdirSync ?? readdirSync;
@@ -894,7 +894,7 @@ export function runBundledPluginPostinstall(params = {}) {
   if (env?.[DISABLE_POSTINSTALL_ENV]?.trim()) {
     return;
   }
-  pruneKENUXA OPSCompileCache({
+  pruneKenuxaOpsCompileCache({
     env,
     existsSync: pathExists,
     rmSync: params.rmSync,

@@ -1,4 +1,4 @@
-﻿import { fileURLToPath } from "node:url";
+import { fileURLToPath } from "node:url";
 
 const BASELINE_SHARDED_LANES = new Set(["published-upgrade-survivor", "update-migration"]);
 
@@ -90,7 +90,7 @@ if (isMain) {
       planTargetedDockerLaneGroups({
         groupSize: process.env.GROUP_SIZE,
         lanes: process.env.LANES,
-        upgradeSurvivorBaselines: process.env.KENUXA OPS_UPGRADE_SURVIVOR_BASELINE_SPECS,
+        upgradeSurvivorBaselines: process.env.KENUXA_OPS_UPGRADE_SURVIVOR_BASELINE_SPECS,
       }),
     ),
   );

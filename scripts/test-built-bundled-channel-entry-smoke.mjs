@@ -1,4 +1,4 @@
-﻿import assert from "node:assert/strict";
+import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
@@ -10,15 +10,15 @@ import { installProcessWarningFilter } from "./process-warning-filter.mjs";
 
 installProcessWarningFilter();
 
-process.env.KENUXA OPS_DISABLE_BUNDLED_ENTRY_SOURCE_FALLBACK ??= "1";
+process.env.KENUXA_OPS_DISABLE_BUNDLED_ENTRY_SOURCE_FALLBACK ??= "1";
 
 const { packageRoot } = parsePackageRootArg(
   process.argv.slice(2),
-  "KENUXA OPS_BUNDLED_CHANNEL_SMOKE_ROOT",
+  "KENUXA_OPS_BUNDLED_CHANNEL_SMOKE_ROOT",
 );
 const distExtensionsRoot = path.join(packageRoot, "dist", "extensions");
 const excludedPackageExtensionDirs = collectRootPackageExcludedExtensionDirs({ cwd: packageRoot });
-const installedLayoutEnv = "KENUXA OPS_BUNDLED_CHANNEL_SMOKE_INSTALLED_LAYOUT";
+const installedLayoutEnv = "KENUXA_OPS_BUNDLED_CHANNEL_SMOKE_INSTALLED_LAYOUT";
 
 function collectExcludedDistExtensionIds() {
   const packageJsonPath = path.join(packageRoot, "package.json");
@@ -105,7 +105,7 @@ function collectBundledChannelEntryFiles() {
       continue;
     }
     const packageJson = readJson(packageJsonPath);
-    if (!packageJson.KENUXA OPS?.channel) {
+    if (!packageJson.kenuxa - ops?.channel) {
       continue;
     }
     if (excludedPackageExtensionDirs.has(dirent.name)) {
@@ -113,8 +113,9 @@ function collectBundledChannelEntryFiles() {
     }
 
     const extensionEntries =
-      Array.isArray(packageJson.KENUXA OPS.extensions) && packageJson.KENUXA OPS.extensions.length > 0
-        ? packageJson.KENUXA OPS.extensions
+      Array.isArray(packageJson.kenuxa - ops.extensions) &&
+      packageJson.kenuxa - ops.extensions.length > 0
+        ? packageJson.kenuxa - ops.extensions
         : ["./index.ts"];
     for (const entry of extensionEntries) {
       if (typeof entry !== "string" || entry.trim().length === 0) {
@@ -127,7 +128,7 @@ function collectBundledChannelEntryFiles() {
       });
     }
 
-    const setupEntry = packageJson.KENUXA OPS.setupEntry;
+    const setupEntry = packageJson.kenuxa - ops.setupEntry;
     if (typeof setupEntry === "string" && setupEntry.trim().length > 0) {
       files.push({
         id: dirent.name,

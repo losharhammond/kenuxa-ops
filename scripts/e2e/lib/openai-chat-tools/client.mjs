@@ -1,13 +1,13 @@
-﻿const port = process.env.PORT;
-const token = process.env.KENUXA OPS_GATEWAY_TOKEN;
+const port = process.env.PORT;
+const token = process.env.KENUXA_OPS_GATEWAY_TOKEN;
 const backendModel = process.env.MODEL_REF || "openai/gpt-5.4-mini";
 const timeoutSeconds = Number.parseInt(
-  process.env.KENUXA OPS_OPENAI_CHAT_TOOLS_TIMEOUT_SECONDS ?? "180",
+  process.env.KENUXA_OPS_OPENAI_CHAT_TOOLS_TIMEOUT_SECONDS ?? "180",
   10,
 );
 
 if (!port || !token) {
-  throw new Error("missing PORT/KENUXA OPS_GATEWAY_TOKEN");
+  throw new Error("missing PORT/KENUXA_OPS_GATEWAY_TOKEN");
 }
 
 const controller = new AbortController();

@@ -1,10 +1,10 @@
-﻿import { createHash } from "node:crypto";
+import { createHash } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 
-const TIMINGS_FILE_ENV_KEY = "KENUXA OPS_TEST_PROJECTS_TIMINGS_PATH";
-const TIMINGS_DISABLE_ENV_KEY = "KENUXA OPS_TEST_PROJECTS_TIMINGS";
-const SHARD_NAME_ENV_KEY = "KENUXA OPS_VITEST_SHARD_NAME";
+const TIMINGS_FILE_ENV_KEY = "KENUXA_OPS_TEST_PROJECTS_TIMINGS_PATH";
+const TIMINGS_DISABLE_ENV_KEY = "KENUXA_OPS_TEST_PROJECTS_TIMINGS";
+const SHARD_NAME_ENV_KEY = "KENUXA_OPS_VITEST_SHARD_NAME";
 
 function sanitizeTimingLabel(value) {
   return String(value)

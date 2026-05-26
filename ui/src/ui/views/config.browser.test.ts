@@ -943,7 +943,7 @@ describe("config view", () => {
     const secretRefValue = {
       channels: {
         discord: {
-          token: { source: "env", provider: "default", id: "__KENUXA OPS_REDACTED__" },
+          token: { source: "env", provider: "default", id: "__KenuxaOps_REDACTED__" },
         },
       },
     };

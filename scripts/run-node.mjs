@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 import { spawn, spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
@@ -75,7 +75,7 @@ const resolvePrivateQaRequiredDistEntries = (distRoot) => [
   path.join(distRoot, "plugin-sdk", "qa-runtime.js"),
 ];
 const shouldIncludePrivateQaBundledOutputs = (env = process.env) =>
-  env.KENUXA OPS_BUILD_PRIVATE_QA === "1";
+  env.KENUXA_OPS_BUILD_PRIVATE_QA === "1";
 
 const shouldRequireBundledPluginRuntimeOutput = (pluginId, env = process.env) =>
   shouldIncludePrivateQaBundledOutputs(env) || !NON_PACKAGED_BUNDLED_PLUGIN_DIRS.has(pluginId);
@@ -414,7 +414,7 @@ const listRequiredBundledPluginRuntimeOverlayOutputs = (deps) => {
   return [...new Set(runtimePaths)].toSorted((left, right) => left.localeCompare(right));
 };
 
-const listRequiredKENUXA OPSExtensionAliasOutputs = (deps) => {
+const listRequiredKenuxaOpsExtensionAliasOutputs = (deps) => {
   const distRoot = resolveRuntimePostBuildDistRoot(deps);
   const distExtensionsRoot = path.join(distRoot, "extensions");
   if (!deps.fs.existsSync(distExtensionsRoot)) {
@@ -454,7 +454,7 @@ export const listRequiredRuntimePostBuildOutputs = (deps) => {
   const builtPluginEntries = listBuiltBundledPluginEntries(deps);
   return [
     ...listRequiredCoreRuntimePostBuildOutputs(deps),
-    ...listRequiredKENUXA OPSExtensionAliasOutputs(deps),
+    ...listRequiredKenuxaOpsExtensionAliasOutputs(deps),
     ...listRequiredStaticExtensionAssetOutputs(deps),
     ...listRequiredBundledPluginMetadataOutputs(builtPluginEntries, deps),
     ...listRequiredBundledPluginRuntimeOverlayOutputs(deps),
@@ -467,11 +467,11 @@ const hasMissingRequiredRuntimePostBuildOutput = (deps) =>
   );
 
 export const resolveBuildRequirement = (deps) => {
-  if (deps.env.KENUXA OPS_FORCE_BUILD === "1") {
+  if (deps.env.KENUXA_OPS_FORCE_BUILD === "1") {
     return { shouldBuild: true, reason: "force_build" };
   }
   if (
-    deps.env.KENUXA OPS_BUILD_PRIVATE_QA === "1" &&
+    deps.env.KENUXA_OPS_BUILD_PRIVATE_QA === "1" &&
     (deps.privateQaRequiredDistEntries ?? resolvePrivateQaRequiredDistEntries(deps.distRoot)).some(
       (entry) => statMtime(entry, deps.fs) == null,
     )
@@ -524,7 +524,7 @@ export const resolveBuildRequirement = (deps) => {
 };
 
 export const resolveRuntimePostBuildRequirement = (deps) => {
-  if (deps.env.KENUXA OPS_FORCE_RUNTIME_POSTBUILD === "1") {
+  if (deps.env.KENUXA_OPS_FORCE_RUNTIME_POSTBUILD === "1") {
     return { shouldSync: true, reason: "force_runtime_postbuild" };
   }
 
@@ -573,7 +573,7 @@ export const resolveRuntimePostBuildRequirement = (deps) => {
 };
 
 const BUILD_REASON_LABELS = {
-  force_build: "forced by KENUXA OPS_FORCE_BUILD",
+  force_build: "forced by KENUXA_OPS_FORCE_BUILD",
   missing_build_stamp: "build stamp missing",
   missing_dist_entry: "dist entry missing",
   config_newer: "config newer than build stamp",
@@ -587,7 +587,7 @@ const BUILD_REASON_LABELS = {
 };
 
 const RUNTIME_POSTBUILD_REASON_LABELS = {
-  force_runtime_postbuild: "forced by KENUXA OPS_FORCE_RUNTIME_POSTBUILD",
+  force_runtime_postbuild: "forced by KENUXA_OPS_FORCE_RUNTIME_POSTBUILD",
   missing_runtime_postbuild_output: "required runtime postbuild output missing",
   missing_runtime_postbuild_stamp: "runtime postbuild stamp missing",
   missing_build_stamp: "build stamp missing",
@@ -611,14 +611,14 @@ const isSignalKey = (signal) => Object.hasOwn(SIGNAL_EXIT_CODES, signal);
 
 const getSignalExitCode = (signal) => (isSignalKey(signal) ? SIGNAL_EXIT_CODES[signal] : 1);
 
-const RUN_NODE_OUTPUT_LOG_ENV = "KENUXA OPS_RUN_NODE_OUTPUT_LOG";
-const RUN_NODE_CPU_PROF_DIR_ENV = "KENUXA OPS_RUN_NODE_CPU_PROF_DIR";
-const RUN_NODE_CPU_PROF_MAX_FILES_ENV = "KENUXA OPS_RUN_NODE_CPU_PROF_MAX_FILES";
-const RUN_NODE_FILTER_SYNC_IO_STDERR_ENV = "KENUXA OPS_RUN_NODE_FILTER_SYNC_IO_STDERR";
-const RUN_NODE_BUILD_LOCK_TIMEOUT_ENV = "KENUXA OPS_RUN_NODE_BUILD_LOCK_TIMEOUT_MS";
-const RUN_NODE_BUILD_LOCK_POLL_ENV = "KENUXA OPS_RUN_NODE_BUILD_LOCK_POLL_MS";
-const RUN_NODE_BUILD_LOCK_STALE_ENV = "KENUXA OPS_RUN_NODE_BUILD_LOCK_STALE_MS";
-const RUN_NODE_SKIP_DTS_BUILD_ENV = "KENUXA OPS_RUN_NODE_SKIP_DTS_BUILD";
+const RUN_NODE_OUTPUT_LOG_ENV = "KENUXA_OPS_RUN_NODE_OUTPUT_LOG";
+const RUN_NODE_CPU_PROF_DIR_ENV = "KENUXA_OPS_RUN_NODE_CPU_PROF_DIR";
+const RUN_NODE_CPU_PROF_MAX_FILES_ENV = "KENUXA_OPS_RUN_NODE_CPU_PROF_MAX_FILES";
+const RUN_NODE_FILTER_SYNC_IO_STDERR_ENV = "KENUXA_OPS_RUN_NODE_FILTER_SYNC_IO_STDERR";
+const RUN_NODE_BUILD_LOCK_TIMEOUT_ENV = "KENUXA_OPS_RUN_NODE_BUILD_LOCK_TIMEOUT_MS";
+const RUN_NODE_BUILD_LOCK_POLL_ENV = "KENUXA_OPS_RUN_NODE_BUILD_LOCK_POLL_MS";
+const RUN_NODE_BUILD_LOCK_STALE_ENV = "KENUXA_OPS_RUN_NODE_BUILD_LOCK_STALE_MS";
+const RUN_NODE_SKIP_DTS_BUILD_ENV = "KENUXA_OPS_RUN_NODE_SKIP_DTS_BUILD";
 const DEFAULT_BUILD_LOCK_TIMEOUT_MS = 5 * 60 * 1000;
 const DEFAULT_BUILD_LOCK_POLL_MS = 100;
 const DEFAULT_BUILD_LOCK_STALE_MS = 10 * 60 * 1000;
@@ -702,7 +702,7 @@ const createRunNodeOutputTee = (deps) => {
 };
 
 const logRunner = (message, deps) => {
-  if (deps.env.KENUXA OPS_RUNNER_LOG === "0") {
+  if (deps.env.KENUXA_OPS_RUNNER_LOG === "0") {
     return;
   }
   const line = `[KENUXA OPS] ${message}\n`;
@@ -716,7 +716,7 @@ const RUN_NODE_PROGRESS_FRAMES = ["-", "\\", "|", "/"];
 
 const shouldUseRunNodeProgress = (deps) =>
   deps.stderr?.isTTY === true &&
-  deps.env.KENUXA OPS_RUNNER_PROGRESS !== "0" &&
+  deps.env.KENUXA_OPS_RUNNER_PROGRESS !== "0" &&
   deps.env.CI !== "true" &&
   !deps.outputTee;
 
@@ -866,7 +866,7 @@ const resolveRunNodeCpuProfileArgs = (deps) => {
 
 const resolveRunNodeDiagnosticArgs = (deps) => {
   const args = [...resolveRunNodeCpuProfileArgs(deps)];
-  if (deps.env.KENUXA OPS_TRACE_SYNC_IO === "1") {
+  if (deps.env.KENUXA_OPS_TRACE_SYNC_IO === "1") {
     logRunner("Enabling Node --trace-sync-io for startup I/O diagnostics.", deps);
     args.push("--trace-sync-io");
   }
@@ -942,7 +942,7 @@ const getInterruptedSpawnExitCode = (res) => {
   return null;
 };
 
-const runKENUXA OPS = async (deps) => {
+const runKenuxaOps = async (deps) => {
   const diagnosticArgs = resolveRunNodeDiagnosticArgs(deps);
   const nodeProcess = deps.spawn(deps.execPath, [...diagnosticArgs, "KENUXA OPS.mjs", ...deps.args], {
     cwd: deps.cwd,
@@ -1236,7 +1236,7 @@ const writeBuildStamp = (deps) => {
 };
 
 const shouldSkipWatchRuntimeSync = (deps, requirement) =>
-  deps.env.KENUXA OPS_WATCH_MODE === "1" &&
+  deps.env.KENUXA_OPS_WATCH_MODE === "1" &&
   requirement.reason === "missing_runtime_postbuild_stamp" &&
   hasDirtyRuntimePostBuildInputs(deps) !== true &&
   !hasMissingRequiredRuntimePostBuildOutput(deps);
@@ -1247,7 +1247,7 @@ const isGatewayClientCommand = (args) =>
 const shouldUseExistingDistForGatewayClient = (deps, buildRequirement) =>
   buildRequirement.reason === "dirty_watched_tree" &&
   isGatewayClientCommand(deps.args) &&
-  deps.env.KENUXA OPS_FORCE_BUILD !== "1" &&
+  deps.env.KENUXA_OPS_FORCE_BUILD !== "1" &&
   statMtime(deps.distEntry, deps.fs) != null;
 
 const isQaParityReportCommand = (args) => args[0] === "qa" && args[1] === "parity-report";
@@ -1256,13 +1256,13 @@ const isQaCoverageReportCommand = (args) => args[0] === "qa" && args[1] === "cov
 const shouldRunQaParityReportFromSource = (deps, buildRequirement) =>
   buildRequirement.reason === "missing_private_qa_dist" &&
   isQaParityReportCommand(deps.args) &&
-  deps.env.KENUXA OPS_FORCE_BUILD !== "1" &&
+  deps.env.KENUXA_OPS_FORCE_BUILD !== "1" &&
   statMtime(path.join(deps.cwd, "extensions", "qa-lab", "src", "cli.runtime.ts"), deps.fs) != null;
 
 const shouldRunQaCoverageReportFromSource = (deps, buildRequirement) =>
   buildRequirement.reason === "missing_private_qa_dist" &&
   isQaCoverageReportCommand(deps.args) &&
-  deps.env.KENUXA OPS_FORCE_BUILD !== "1" &&
+  deps.env.KENUXA_OPS_FORCE_BUILD !== "1" &&
   statMtime(path.join(deps.cwd, "extensions", "qa-lab", "src", "cli.runtime.ts"), deps.fs) != null;
 
 const runQaParityReportFromSource = async (deps) => {
@@ -1331,9 +1331,9 @@ export async function runNodeMain(params = {}) {
   deps.configFiles = runNodeConfigFiles.map((filePath) => path.join(deps.cwd, filePath));
   deps.privateQaRequiredDistEntries = resolvePrivateQaRequiredDistEntries(deps.distRoot);
   if (deps.args[0] === "qa") {
-    deps.env.KENUXA OPS_BUILD_PRIVATE_QA = "1";
-    deps.env.KENUXA OPS_ENABLE_PRIVATE_QA_CLI = "1";
-    deps.env.KENUXA OPS_DISABLE_BUNDLED_PLUGINS ??= "0";
+    deps.env.KENUXA_OPS_BUILD_PRIVATE_QA = "1";
+    deps.env.KENUXA_OPS_ENABLE_PRIVATE_QA_CLI = "1";
+    deps.env.KENUXA_OPS_DISABLE_BUNDLED_PLUGINS ??= "0";
   }
   deps.outputTee = createRunNodeOutputTee(deps);
 
@@ -1382,7 +1382,7 @@ export async function runNodeMain(params = {}) {
           }
         }
       }
-      exitCode = await runKENUXA OPS(deps);
+      exitCode = await runKenuxaOps(deps);
       return await closeRunNodeOutputTee(deps, exitCode);
     }
 
@@ -1459,7 +1459,7 @@ export async function runNodeMain(params = {}) {
     if (buildExitCode !== 0) {
       return await closeRunNodeOutputTee(deps, buildExitCode);
     }
-    exitCode = await runKENUXA OPS(deps);
+    exitCode = await runKenuxaOps(deps);
     return await closeRunNodeOutputTee(deps, exitCode);
   } catch (error) {
     await closeRunNodeOutputTee(deps, 1);

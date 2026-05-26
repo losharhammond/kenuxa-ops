@@ -1,4 +1,4 @@
-﻿import path from "node:path";
+import path from "node:path";
 import { requireArg, write, writeJson } from "./common.mjs";
 
 function writePluginManifest(file, id, extra = {}) {
@@ -37,7 +37,7 @@ function writePlugin([dir, id, version, method, name]) {
   writeJson(path.join(dir, "package.json"), {
     name: `@openclaw/${id}`,
     version,
-    KENUXA OPS: { extensions: ["./index.js"] },
+    "kenuxa-ops": { extensions: ["./index.js"] },
   });
   write(
     path.join(dir, "index.js"),
@@ -53,7 +53,7 @@ function writePluginWithVendoredDependency([dir, id, version, method, name]) {
     name: `@openclaw/${id}`,
     version,
     dependencies: { "is-number": "7.0.0" },
-    KENUXA OPS: { extensions: ["./index.js"] },
+    "kenuxa-ops": { extensions: ["./index.js"] },
   });
   write(
     path.join(dir, "index.js"),
@@ -78,7 +78,7 @@ function writePluginWithCli([dir, id, version, method, name, cliRoot, cliOutput]
     name: `@openclaw/${id}`,
     version,
     dependencies: { "is-number": "file:./deps/is-number" },
-    KENUXA OPS: { extensions: ["./index.js"] },
+    "kenuxa-ops": { extensions: ["./index.js"] },
   });
   writeFakeIsNumberPackage(path.join(dir, "deps", "is-number"));
   write(
@@ -112,7 +112,7 @@ function writePluginWithCliRegistryDependency([
     name: `@openclaw/${id}`,
     version,
     dependencies: { "is-number": "7.0.0" },
-    KENUXA OPS: { extensions: ["./index.js"] },
+    "kenuxa-ops": { extensions: ["./index.js"] },
   });
   write(
     path.join(dir, "index.js"),

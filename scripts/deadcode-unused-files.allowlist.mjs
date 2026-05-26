@@ -1,4 +1,4 @@
-﻿// Intentional Knip unused-file findings. These are dynamic entrypoints,
+// Intentional Knip unused-file findings. These are dynamic entrypoints,
 // generated/build inputs, manifest-discovered plugin surfaces, live-test
 // helpers, or package bridge files that static production scanning cannot see.
 export const KNIP_UNUSED_FILE_ALLOWLIST = [];

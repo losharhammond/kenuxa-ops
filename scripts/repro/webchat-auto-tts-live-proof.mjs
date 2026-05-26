@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 /**
  * Live repro for WebChat auto-TTS fix (PR #82701).
  * Run: pnpm exec tsx scripts/repro/webchat-auto-tts-live-proof.mjs

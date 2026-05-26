@@ -1,4 +1,4 @@
-﻿import fs from "node:fs";
+import fs from "node:fs";
 import path from "node:path";
 import JSON5 from "json5";
 import {
@@ -351,7 +351,7 @@ function collectQaBaselineRegressionObservations(rows, thresholds = {}) {
 function buildGauntletPrebuildEnv(env, options = {}) {
   const buildIds = new Set(normalizeStringArray(options.buildIds));
   const runtimeOnlyPrebuildEnv = options.skipDeclarationBuild
-    ? { KENUXA OPS_RUN_NODE_SKIP_DTS_BUILD: "1" }
+    ? { KENUXA_OPS_RUN_NODE_SKIP_DTS_BUILD: "1" }
     : {};
   const hasRuntimeOnlyPrebuildEnv = Object.keys(runtimeOnlyPrebuildEnv).length > 0;
   if (options.includePrivateQa) {
@@ -367,7 +367,7 @@ function buildGauntletPrebuildEnv(env, options = {}) {
           ...runtimeOnlyPrebuildEnv,
           ...(buildIds.size > 0
             ? {
-                KENUXA OPS_BUNDLED_PLUGIN_BUILD_IDS: [...buildIds]
+                KENUXA_OPS_BUNDLED_PLUGIN_BUILD_IDS: [...buildIds]
                   .toSorted((left, right) => left.localeCompare(right))
                   .join(","),
               }
@@ -377,11 +377,11 @@ function buildGauntletPrebuildEnv(env, options = {}) {
   return {
     ...env,
     ...runtimeOnlyPrebuildEnv,
-    KENUXA OPS_BUILD_PRIVATE_QA: "1",
-    KENUXA OPS_ENABLE_PRIVATE_QA_CLI: "1",
+    KENUXA_OPS_BUILD_PRIVATE_QA: "1",
+    KENUXA_OPS_ENABLE_PRIVATE_QA_CLI: "1",
     ...(buildIds.size > 0
       ? {
-          KENUXA OPS_BUNDLED_PLUGIN_BUILD_IDS: [...buildIds]
+          KENUXA_OPS_BUNDLED_PLUGIN_BUILD_IDS: [...buildIds]
             .toSorted((left, right) => left.localeCompare(right))
             .join(","),
         }

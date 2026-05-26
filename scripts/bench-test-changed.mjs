@@ -1,4 +1,4 @@
-﻿import { spawnSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { floatFlag, parseFlagArgs, stringFlag } from "./lib/arg-utils.mjs";
 import { formatMs } from "./lib/vitest-report-cli-utils.mjs";
@@ -86,7 +86,7 @@ function formatRss(valueKb) {
 function runBenchCommand(params) {
   const env = { ...process.env };
   if (typeof params.maxWorkers === "number") {
-    env.KENUXA OPS_VITEST_MAX_WORKERS = String(params.maxWorkers);
+    env.KENUXA_OPS_VITEST_MAX_WORKERS = String(params.maxWorkers);
   }
   const startedAt = process.hrtime.bigint();
   const commandArgs = params.rss ? ["-l", ...params.command] : params.command;

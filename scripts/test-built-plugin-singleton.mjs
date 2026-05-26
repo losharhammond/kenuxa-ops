@@ -1,4 +1,4 @@
-﻿import assert from "node:assert/strict";
+import assert from "node:assert/strict";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -12,10 +12,10 @@ const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), ".."
 const smokeEntryPath = path.join(repoRoot, "dist", "plugins", "build-smoke-entry.js");
 assert.ok(fs.existsSync(smokeEntryPath), `missing build output: ${smokeEntryPath}`);
 
-const { clearPluginCommands, getPluginCommandSpecs, loadKENUXA OPSPlugins, matchPluginCommand } =
+const { clearPluginCommands, getPluginCommandSpecs, loadKenuxaOpsPlugins, matchPluginCommand } =
   await import(pathToFileURL(smokeEntryPath).href);
 
-assert.equal(typeof loadKENUXA OPSPlugins, "function", "built loader export missing");
+assert.equal(typeof loadKenuxaOpsPlugins, "function", "built loader export missing");
 assert.equal(typeof clearPluginCommands, "function", "clearPluginCommands missing");
 assert.equal(typeof getPluginCommandSpecs, "function", "getPluginCommandSpecs missing");
 assert.equal(typeof matchPluginCommand, "function", "matchPluginCommand missing");
@@ -49,7 +49,7 @@ fs.writeFileSync(
     {
       name: "@openclaw/build-smoke-plugin",
       type: "module",
-      KENUXA OPS: {
+      "kenuxa-ops": {
         extensions: ["./index.js"],
       },
     },
@@ -112,12 +112,12 @@ assert.equal(
 
 clearPluginCommands();
 
-const registry = loadKENUXA OPSPlugins({
+const registry = loadKenuxaOpsPlugins({
   cache: false,
   workspaceDir: tempRoot,
   env: {
     ...process.env,
-    KENUXA OPS_BUNDLED_PLUGINS_DIR: path.join(repoRoot, "dist-runtime", "extensions"),
+    KENUXA_OPS_BUNDLED_PLUGINS_DIR: path.join(repoRoot, "dist-runtime", "extensions"),
   },
   config: {
     plugins: {

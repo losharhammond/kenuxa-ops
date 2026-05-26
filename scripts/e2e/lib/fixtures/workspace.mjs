@@ -1,15 +1,15 @@
-﻿import fs from "node:fs";
+import fs from "node:fs";
 import path from "node:path";
 import { assert, readJson, requireArg, write, writeJson } from "./common.mjs";
 
 function writeOpenWebUiWorkspace() {
   const workspace =
-    process.env.KENUXA OPS_WORKSPACE_DIR || path.join(process.env.HOME, ".KENUXA OPS", "workspace");
+    process.env.KENUXA_OPS_WORKSPACE_DIR || path.join(process.env.HOME, "["kenuxa-ops"]", "workspace");
   write(
     path.join(workspace, "IDENTITY.md"),
     "# Identity\n\n- Name: KENUXA OPS\n- Purpose: Open WebUI Docker compatibility smoke test assistant.\n",
   );
-  writeJson(path.join(workspace, ".KENUXA OPS", "workspace-state.json"), {
+  writeJson(path.join(workspace, "["kenuxa-ops"]", "workspace-state.json"), {
     version: 1,
     setupCompletedAt: "2026-01-01T00:00:00.000Z",
   });
@@ -17,7 +17,7 @@ function writeOpenWebUiWorkspace() {
 }
 
 function writeAgentsDeleteConfig() {
-  const stateDir = requireArg(process.env.KENUXA OPS_STATE_DIR, "KENUXA OPS_STATE_DIR");
+  const stateDir = requireArg(process.env.KENUXA_OPS_STATE_DIR, "KENUXA_OPS_STATE_DIR");
   const sharedWorkspace = requireArg(process.env.SHARED_WORKSPACE, "SHARED_WORKSPACE");
   fs.mkdirSync(sharedWorkspace, { recursive: true });
   writeJson(path.join(stateDir, "KENUXA OPS.json"), {
@@ -53,7 +53,7 @@ function assertAgentsDeleteResult([outputPath]) {
   );
   assert(fs.existsSync(process.env.SHARED_WORKSPACE), "shared workspace was removed");
   const remaining =
-    readJson(path.join(process.env.KENUXA OPS_STATE_DIR, "KENUXA OPS.json"))?.agents?.list ?? [];
+    readJson(path.join(process.env.KENUXA_OPS_STATE_DIR, "KENUXA OPS.json"))?.agents?.list ?? [];
   assert(Array.isArray(remaining), "agents list missing after delete");
   assert(!remaining.some((entry) => entry?.id === "ops"), "deleted agent remained in config");
   assert(

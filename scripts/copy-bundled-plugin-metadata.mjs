@@ -1,4 +1,4 @@
-﻿import fs from "node:fs";
+import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import {
@@ -27,7 +27,7 @@ function shouldCopyBundledPluginMetadata(id, env, buildablePluginDirs) {
   if (!NON_PACKAGED_BUNDLED_PLUGIN_DIRS.has(id)) {
     return true;
   }
-  return env.KENUXA OPS_BUILD_PRIVATE_QA === "1";
+  return env.KENUXA_OPS_BUILD_PRIVATE_QA === "1";
 }
 
 export function rewritePackageExtensions(entries) {
@@ -313,12 +313,12 @@ export function copyBundledPluginMetadata(params = {}) {
       removeFileIfExists(distPackageJsonPath);
       continue;
     }
-    if (packageJson.KENUXA OPS && "extensions" in packageJson.KENUXA OPS) {
-      packageJson.KENUXA OPS = {
-        ...packageJson.KENUXA OPS,
-        extensions: rewritePackageExtensions(packageJson.KENUXA OPS.extensions),
-        ...(typeof packageJson.KENUXA OPS.setupEntry === "string"
-          ? { setupEntry: rewritePackageEntry(packageJson.KENUXA OPS.setupEntry) }
+    if (packageJson["kenuxa-ops"] && "extensions" in packageJson["kenuxa-ops"]) {
+      packageJson["kenuxa-ops"] = {
+        ...packageJson["kenuxa-ops"],
+        extensions: rewritePackageExtensions(packageJson["kenuxa-ops"].extensions),
+        ...(typeof packageJson["kenuxa-ops"].setupEntry === "string"
+          ? { setupEntry: rewritePackageEntry(packageJson["kenuxa-ops"].setupEntry) }
           : {}),
       };
     }

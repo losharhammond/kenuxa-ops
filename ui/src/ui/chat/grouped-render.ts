@@ -864,7 +864,7 @@ function renderReplyPill(replyTarget: NormalizedMessage["replyTarget"]) {
 
 function isLocalAssistantAttachmentSource(source: string): boolean {
   const trimmed = source.trim();
-  if (/^\/(?:__KENUXA OPS__|media|api\/chat\/media\/outgoing)\//.test(trimmed)) {
+  if (/^\/(?:__KenuxaOps__|media|api\/chat\/media\/outgoing)\//.test(trimmed)) {
     return false;
   }
   return (
@@ -968,7 +968,7 @@ function buildAssistantAttachmentUrl(
   if (normalizedMediaTicket) {
     params.set("mediaTicket", normalizedMediaTicket);
   }
-  return `${normalizedBasePath}/__KENUXA OPS__/assistant-media?${params.toString()}`;
+  return `${normalizedBasePath}/__KenuxaOps__/assistant-media?${params.toString()}`;
 }
 
 function isManagedOutgoingImageSource(source: string): boolean {

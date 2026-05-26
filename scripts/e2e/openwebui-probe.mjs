@@ -1,4 +1,4 @@
-﻿import { Agent, setGlobalDispatcher } from "undici";
+import { Agent, setGlobalDispatcher } from "undici";
 
 const baseUrl = process.env.OPENWEBUI_BASE_URL ?? "";
 const email = process.env.OPENWEBUI_ADMIN_EMAIL ?? "";
@@ -9,7 +9,7 @@ const modelAttempts = Number.parseInt(process.env.OPENWEBUI_MODEL_ATTEMPTS ?? "7
 const modelRetryMs = Number.parseInt(process.env.OPENWEBUI_MODEL_RETRY_MS ?? "5000", 10);
 const fetchTimeoutMs = Number.parseInt(process.env.OPENWEBUI_FETCH_TIMEOUT_MS ?? "720000", 10);
 const smokeMode =
-  process.env.OPENWEBUI_SMOKE_MODE ?? process.env.KENUXA OPS_OPENWEBUI_SMOKE_MODE ?? "chat";
+  process.env.OPENWEBUI_SMOKE_MODE ?? process.env.KENUXA_OPS_OPENWEBUI_SMOKE_MODE ?? "chat";
 
 setGlobalDispatcher(new Agent({ bodyTimeout: fetchTimeoutMs, headersTimeout: fetchTimeoutMs }));
 
@@ -95,7 +95,8 @@ for (let attempt = 1; attempt <= modelAttempts; attempt += 1) {
     const modelsJson = await modelsRes.json();
     modelIds = extractModelIds(modelsJson);
     targetModel =
-      modelIds.find((id) => id === "KENUXA OPS/default") ?? modelIds.find((id) => id === "KENUXA OPS");
+      modelIds.find((id) => id === "KENUXA OPS/default") ??
+      modelIds.find((id) => id === "KENUXA OPS");
     if (targetModel) {
       break;
     }

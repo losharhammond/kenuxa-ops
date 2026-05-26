@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 import assert from "node:assert/strict";
 /**
  * Live repro for limit/CLI numeric fixes (PR #82679). Run: pnpm exec tsx scripts/repro/limit-edge-case-live-proof.mjs

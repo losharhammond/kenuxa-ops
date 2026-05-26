@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
@@ -181,9 +181,9 @@ async function main() {
       console.log("A2UI package missing; keeping prebuilt bundle.");
       return;
     }
-    if (process.env.KENUXA OPS_SPARSE_PROFILE || process.env.KENUXA OPS_A2UI_SKIP_MISSING === "1") {
+    if (process.env.kenuxa-ops_SPARSE_PROFILE || process.env.kenuxa-ops_A2UI_SKIP_MISSING === "1") {
       console.error(
-        "A2UI package missing; skipping bundle because KENUXA OPS_A2UI_SKIP_MISSING=1 or KENUXA OPS_SPARSE_PROFILE is set.",
+        "A2UI package missing; skipping bundle because KENUXA_OPS_A2UI_SKIP_MISSING=1 or KENUXA_OPS_SPARSE_PROFILE is set.",
       );
       return;
     }

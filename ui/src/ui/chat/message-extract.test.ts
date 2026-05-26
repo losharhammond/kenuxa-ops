@@ -85,9 +85,9 @@ describe("extractTextCached", () => {
         {
           type: "text",
           text: [
-            "<<<BEGIN_KENUXA OPS_INTERNAL_CONTEXT>>>",
+            "<<<BEGIN_KenuxaOps_INTERNAL_CONTEXT>>>",
             "internal subagent payload",
-            "<<<END_KENUXA OPS_INTERNAL_CONTEXT>>>",
+            "<<<END_KenuxaOps_INTERNAL_CONTEXT>>>",
             "",
             "visible ask",
           ].join("\n"),

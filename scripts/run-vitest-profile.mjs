@@ -1,4 +1,4 @@
-﻿import { spawnSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -9,7 +9,7 @@ import { createPnpmRunnerSpawnSpec } from "./pnpm-runner.mjs";
 export function parseArgs(argv) {
   const args = {
     mode: "",
-    outputDir: process.env.KENUXA OPS_VITEST_PROFILE_DIR?.trim() || "",
+    outputDir: process.env.KENUXA_OPS_VITEST_PROFILE_DIR?.trim() || "",
     vitestArgs: [],
   };
 

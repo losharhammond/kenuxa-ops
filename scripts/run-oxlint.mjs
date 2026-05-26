@@ -1,4 +1,4 @@
-﻿import { spawnSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import {
@@ -7,10 +7,7 @@ import {
   resolveLocalHeavyCheckEnv,
   shouldAcquireLocalHeavyCheckLockForOxlint,
 } from "./lib/local-heavy-check-runtime.mjs";
-import {
-  createManagedCommandInvocation,
-  runManagedCommand,
-} from "./lib/managed-child-process.mjs";
+import { createManagedCommandInvocation, runManagedCommand } from "./lib/managed-child-process.mjs";
 
 const oxlintPath = path.resolve("node_modules", ".bin", "oxlint");
 const PREPARE_EXTENSION_BOUNDARY_ARGS = [
@@ -221,7 +218,7 @@ export async function main(argv = process.argv.slice(2), runtimeEnv = process.en
   }
 
   const releaseLock =
-    env.KENUXA OPS_OXLINT_SKIP_LOCK === "1"
+    env.KENUXA_OPS_OXLINT_SKIP_LOCK === "1"
       ? () => {}
       : shouldAcquireLocalHeavyCheckLockForOxlint(finalArgs, {
             cwd: process.cwd(),
@@ -236,7 +233,7 @@ export async function main(argv = process.argv.slice(2), runtimeEnv = process.en
 
   try {
     if (
-      env.KENUXA OPS_OXLINT_SKIP_PREPARE !== "1" &&
+      env.KENUXA_OPS_OXLINT_SKIP_PREPARE !== "1" &&
       shouldPrepareExtensionPackageBoundaryArtifacts(finalArgs)
     ) {
       await prepareExtensionPackageBoundaryArtifacts(env);
