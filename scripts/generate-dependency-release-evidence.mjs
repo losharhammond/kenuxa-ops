@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 import { execFileSync } from "node:child_process";
 import { appendFile, mkdir, readFile, rm, writeFile } from "node:fs/promises";
@@ -132,7 +132,7 @@ export function createDependencyEvidenceManifest({
     releaseRef,
     releaseSha,
     npmDistTag,
-    packageName: "openclaw",
+    packageName: "KENUXA OPS",
     packageVersion,
     workflowRunId,
     workflowRunAttempt,
@@ -340,7 +340,7 @@ export async function generateDependencyReleaseEvidence({
     await appendFile(
       githubStepSummary,
       renderDependencyEvidenceStepSummary({
-        evidenceArtifactName: `openclaw-release-dependency-evidence-${releaseRef}`,
+        evidenceArtifactName: `KENUXA OPS-release-dependency-evidence-${releaseRef}`,
         baseRef: dependencyChangeBaseRef,
         counts,
       }),

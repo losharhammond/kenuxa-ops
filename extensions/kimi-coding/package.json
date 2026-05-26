@@ -1,16 +1,16 @@
-{
-  "name": "@openclaw/kimi-provider",
+﻿{
+  "name": "@KENUXA OPS/kimi-provider",
   "version": "2026.5.26",
   "private": true,
-  "description": "OpenClaw Kimi provider plugin",
+  "description": "KENUXA OPS Kimi provider plugin",
   "type": "module",
   "dependencies": {
     "@earendil-works/pi-ai": "0.75.5"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ]

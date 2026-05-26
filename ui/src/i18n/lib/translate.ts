@@ -1,4 +1,4 @@
-import { getSafeLocalStorage } from "../../local-storage.ts";
+﻿import { getSafeLocalStorage } from "../../local-storage.ts";
 import { en } from "../locales/en.ts";
 import {
   DEFAULT_LOCALE,
@@ -28,7 +28,7 @@ class I18nManager {
       return null;
     }
     try {
-      return storage.getItem("openclaw.i18n.locale");
+      return storage.getItem("KENUXA OPS.i18n.locale");
     } catch {
       return null;
     }
@@ -40,7 +40,7 @@ class I18nManager {
       return;
     }
     try {
-      storage.setItem("openclaw.i18n.locale", locale);
+      storage.setItem("KENUXA OPS.i18n.locale", locale);
     } catch {
       // Ignore storage write failures in private/blocked contexts.
     }

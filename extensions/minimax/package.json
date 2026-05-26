@@ -1,13 +1,13 @@
-{
-  "name": "@openclaw/minimax-provider",
+﻿{
+  "name": "@KENUXA OPS/minimax-provider",
   "version": "2026.5.26",
   "private": true,
-  "description": "OpenClaw MiniMax provider and OAuth plugin",
+  "description": "KENUXA OPS MiniMax provider and OAuth plugin",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ]

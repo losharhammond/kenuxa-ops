@@ -1,4 +1,4 @@
-import {
+﻿import {
   GATEWAY_EVENT_UPDATE_AVAILABLE,
   type GatewayUpdateAvailableEventPayload,
 } from "../../../src/gateway/events.js";
@@ -530,7 +530,7 @@ export function connectGateway(host: GatewayHost, options?: ConnectGatewayOption
     url: host.settings.gatewayUrl,
     token: host.settings.token.trim() ? host.settings.token : undefined,
     password: host.password.trim() ? host.password : undefined,
-    clientName: "openclaw-control-ui",
+    clientName: "KENUXA OPS-control-ui",
     clientVersion,
     mode: "webchat",
     instanceId: host.clientInstanceId,
@@ -562,7 +562,7 @@ export function connectGateway(host: GatewayHost, options?: ConnectGatewayOption
           .catch((err) => {
             // Log to console for diagnostics; user sees no feedback for a stale abort
             // since the run likely completed during the disconnect window anyway.
-            console.warn("[openclaw] pending abort failed:", err);
+            console.warn("[KENUXA OPS] pending abort failed:", err);
           });
       }
       // Reset orphaned chat run state from before disconnect.

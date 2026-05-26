@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+﻿import { describe, expect, it } from "vitest";
 import {
   TAB_GROUPS,
   SETTINGS_TABS,
@@ -99,7 +99,7 @@ describe("subtitleForTab", () => {
       skills: "Skills and API keys.",
       nodes: "Paired devices and commands.",
       dreams: "Memory dreaming, consolidation, and reflection.",
-      config: "Edit openclaw.json.",
+      config: "Edit KENUXA OPS.json.",
       communications: "Channels, messages, and audio settings.",
       appearance: "Theme, UI, and setup wizard settings.",
       automation: "Commands, hooks, cron, and plugins.",
@@ -134,7 +134,7 @@ describe("normalizeBasePath", () => {
   });
 
   it("handles nested paths", () => {
-    expect(normalizeBasePath("/apps/openclaw")).toBe("/apps/openclaw");
+    expect(normalizeBasePath("/apps/KENUXA OPS")).toBe("/apps/KENUXA OPS");
   });
 });
 
@@ -157,7 +157,7 @@ describe("pathForTab", () => {
 
   it("prepends base path", () => {
     expect(pathForTab("chat", "/ui")).toBe("/ui/chat");
-    expect(pathForTab("sessions", "/apps/openclaw")).toBe("/apps/openclaw/sessions");
+    expect(pathForTab("sessions", "/apps/KENUXA OPS")).toBe("/apps/KENUXA OPS/sessions");
   });
 });
 
@@ -177,7 +177,7 @@ describe("tabFromPath", () => {
 
   it("handles base paths", () => {
     expect(tabFromPath("/ui/chat", "/ui")).toBe("chat");
-    expect(tabFromPath("/apps/openclaw/sessions", "/apps/openclaw")).toBe("sessions");
+    expect(tabFromPath("/apps/KENUXA OPS/sessions", "/apps/KENUXA OPS")).toBe("sessions");
   });
 
   it("returns null for unknown path", () => {
@@ -204,7 +204,7 @@ describe("inferBasePathFromPathname", () => {
 
   it("infers base path from nested paths", () => {
     expect(inferBasePathFromPathname("/ui/chat")).toBe("/ui");
-    expect(inferBasePathFromPathname("/apps/openclaw/sessions")).toBe("/apps/openclaw");
+    expect(inferBasePathFromPathname("/apps/KENUXA OPS/sessions")).toBe("/apps/KENUXA OPS");
   });
 
   it("handles index.html suffix", () => {

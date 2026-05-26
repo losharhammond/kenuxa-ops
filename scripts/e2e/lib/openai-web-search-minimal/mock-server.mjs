@@ -1,4 +1,4 @@
-import fs from "node:fs";
+﻿import fs from "node:fs";
 import http from "node:http";
 
 const port = Number(process.env.MOCK_PORT);
@@ -118,7 +118,7 @@ const server = http.createServer(async (req, res) => {
   if (req.method === "GET" && url.pathname === "/v1/models") {
     writeJson(res, 200, {
       object: "list",
-      data: [{ id: "gpt-5", object: "model", owned_by: "openclaw-e2e" }],
+      data: [{ id: "gpt-5", object: "model", owned_by: "KENUXA OPS-e2e" }],
     });
     return;
   }

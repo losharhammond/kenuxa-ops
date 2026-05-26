@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 // Builds cheap rerun commands from a Docker E2E GitHub run or local summary.
 // For GitHub runs, the script downloads Docker E2E artifacts, reads
 // summary/failures JSON, and prints targeted workflow commands for failed
@@ -9,7 +9,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
-const DEFAULT_WORKFLOW = "openclaw-live-and-e2e-checks-reusable.yml";
+const DEFAULT_WORKFLOW = "KENUXA OPS-live-and-e2e-checks-reusable.yml";
 
 function usage() {
   return [
@@ -118,7 +118,7 @@ function commonReuseInputs(entries) {
 }
 
 function ghWorkflowCommand(lanes, ref, workflow, reuseInputs = {}) {
-  const workflowRef = process.env.OPENCLAW_DOCKER_E2E_WORKFLOW_REF || process.env.GITHUB_REF_NAME;
+  const workflowRef = process.env.KENUXA OPS_DOCKER_E2E_WORKFLOW_REF || process.env.GITHUB_REF_NAME;
   const releasePath = lanes.some(laneNeedsReleasePath);
   const fields = [
     "gh workflow run",
@@ -310,7 +310,7 @@ if (isLocalJson) {
   const run = runInfo(options.input, repo);
   const ref = options.ref || run.headSha || run.headBranch;
   const outputDir =
-    options.dir || path.join(os.tmpdir(), `openclaw-docker-e2e-rerun-${options.input}`);
+    options.dir || path.join(os.tmpdir(), `KENUXA OPS-docker-e2e-rerun-${options.input}`);
   const artifactNames = downloadDockerArtifacts(options.input, repo, outputDir);
   const files = findFiles(outputDir, new Set(["failures.json", "summary.json"]));
   const entries = mergeByLane(

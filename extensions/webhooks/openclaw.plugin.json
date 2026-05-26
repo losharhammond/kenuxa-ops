@@ -1,10 +1,10 @@
-{
+﻿{
   "id": "webhooks",
   "activation": {
     "onStartup": true
   },
   "name": "Webhooks",
-  "description": "Authenticated inbound webhooks that bind external automation to OpenClaw TaskFlows.",
+  "description": "Authenticated inbound webhooks that bind external automation to KENUXA OPS TaskFlows.",
   "configSchema": {
     "type": "object",
     "additionalProperties": false,

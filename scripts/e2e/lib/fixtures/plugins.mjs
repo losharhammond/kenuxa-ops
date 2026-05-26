@@ -1,4 +1,4 @@
-import path from "node:path";
+﻿import path from "node:path";
 import { requireArg, write, writeJson } from "./common.mjs";
 
 function writePluginManifest(file, id, extra = {}) {
@@ -19,7 +19,7 @@ function writePluginDemo([dir]) {
     path.join(requireArg(dir, "dir"), "index.js"),
     'module.exports = { id: "demo-plugin", name: "Demo Plugin", description: "Docker E2E demo plugin", register(api) { api.registerTool(() => null, { name: "demo_tool" }); api.registerGatewayMethod("demo.ping", async () => ({ ok: true })); api.registerCli(() => {}, { commands: ["demo"] }); api.registerService({ id: "demo-service", start: () => {} }); }, };\n',
   );
-  writePluginManifest(path.join(dir, "openclaw.plugin.json"), "demo-plugin", {
+  writePluginManifest(path.join(dir, "KENUXA OPS.plugin.json"), "demo-plugin", {
     contracts: { tools: ["demo_tool"] },
   });
 }
@@ -35,25 +35,25 @@ function writePlugin([dir, id, version, method, name]) {
     requireArg(value, label);
   }
   writeJson(path.join(dir, "package.json"), {
-    name: `@openclaw/${id}`,
+    name: `@KENUXA OPS/${id}`,
     version,
-    openclaw: { extensions: ["./index.js"] },
+    KENUXA OPS: { extensions: ["./index.js"] },
   });
   write(
     path.join(dir, "index.js"),
     `module.exports = { id: ${JSON.stringify(id)}, name: ${JSON.stringify(name)}, register(api) { api.registerGatewayMethod(${JSON.stringify(method)}, async () => ({ ok: true })); }, };\n`,
   );
-  writePluginManifest(path.join(dir, "openclaw.plugin.json"), id);
+  writePluginManifest(path.join(dir, "KENUXA OPS.plugin.json"), id);
 }
 
 function writePluginWithVendoredDependency([dir, id, version, method, name]) {
   writePlugin([dir, id, version, method, name]);
   const packageJsonPath = path.join(dir, "package.json");
   writeJson(packageJsonPath, {
-    name: `@openclaw/${id}`,
+    name: `@KENUXA OPS/${id}`,
     version,
     dependencies: { "is-number": "7.0.0" },
-    openclaw: { extensions: ["./index.js"] },
+    KENUXA OPS: { extensions: ["./index.js"] },
   });
   write(
     path.join(dir, "index.js"),
@@ -75,17 +75,17 @@ function writePluginWithCli([dir, id, version, method, name, cliRoot, cliOutput]
     requireArg(value, label);
   }
   writeJson(path.join(dir, "package.json"), {
-    name: `@openclaw/${id}`,
+    name: `@KENUXA OPS/${id}`,
     version,
     dependencies: { "is-number": "file:./deps/is-number" },
-    openclaw: { extensions: ["./index.js"] },
+    KENUXA OPS: { extensions: ["./index.js"] },
   });
   writeFakeIsNumberPackage(path.join(dir, "deps", "is-number"));
   write(
     path.join(dir, "index.js"),
     `const isNumber = require("is-number");\nmodule.exports = { id: ${JSON.stringify(id)}, name: ${JSON.stringify(name)}, register(api) { api.registerGatewayMethod(${JSON.stringify(method)}, async () => ({ ok: isNumber(42) })); api.registerCli(({ program }) => { const root = program.command(${JSON.stringify(cliRoot)}).description(${JSON.stringify(`${name} fixture command`)}); root.command("ping").description("Print fixture ping output").action(() => { console.log(${JSON.stringify(cliOutput)}); }); }, { descriptors: [{ name: ${JSON.stringify(cliRoot)}, description: ${JSON.stringify(`${name} fixture command`)}, hasSubcommands: true }] }); }, };\n`,
   );
-  writePluginManifest(path.join(dir, "openclaw.plugin.json"), id);
+  writePluginManifest(path.join(dir, "KENUXA OPS.plugin.json"), id);
 }
 
 function writePluginWithCliRegistryDependency([
@@ -109,16 +109,16 @@ function writePluginWithCliRegistryDependency([
     requireArg(value, label);
   }
   writeJson(path.join(dir, "package.json"), {
-    name: `@openclaw/${id}`,
+    name: `@KENUXA OPS/${id}`,
     version,
     dependencies: { "is-number": "7.0.0" },
-    openclaw: { extensions: ["./index.js"] },
+    KENUXA OPS: { extensions: ["./index.js"] },
   });
   write(
     path.join(dir, "index.js"),
     `const isNumber = require("is-number");\nmodule.exports = { id: ${JSON.stringify(id)}, name: ${JSON.stringify(name)}, register(api) { api.registerGatewayMethod(${JSON.stringify(method)}, async () => ({ ok: isNumber(42) })); api.registerCli(({ program }) => { const root = program.command(${JSON.stringify(cliRoot)}).description(${JSON.stringify(`${name} fixture command`)}); root.command("ping").description("Print fixture ping output").action(() => { console.log(${JSON.stringify(cliOutput)}); }); }, { descriptors: [{ name: ${JSON.stringify(cliRoot)}, description: ${JSON.stringify(`${name} fixture command`)}, hasSubcommands: true }] }); }, };\n`,
   );
-  writePluginManifest(path.join(dir, "openclaw.plugin.json"), id);
+  writePluginManifest(path.join(dir, "KENUXA OPS.plugin.json"), id);
 }
 
 function writeClaudeBundle([root]) {
@@ -153,7 +153,7 @@ function writePluginMarketplace([root]) {
   writeJson(path.join(process.env.HOME, ".claude", "plugins", "known_marketplaces.json"), {
     "claude-fixtures": {
       installLocation: root,
-      source: { type: "github", repo: "openclaw/fixture-marketplace" },
+      source: { type: "github", repo: "KENUXA OPS/fixture-marketplace" },
     },
   });
 }

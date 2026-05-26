@@ -1,13 +1,13 @@
-{
-  "name": "@openclaw/microsoft-foundry",
+﻿{
+  "name": "@KENUXA OPS/microsoft-foundry",
   "version": "2026.5.26",
   "private": true,
-  "description": "OpenClaw Microsoft Foundry provider plugin",
+  "description": "KENUXA OPS Microsoft Foundry provider plugin",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ]

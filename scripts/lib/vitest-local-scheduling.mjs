@@ -1,4 +1,4 @@
-/** @typedef {{ cpuCount?: number, loadAverage1m?: number, totalMemoryBytes?: number, freeMemoryBytes?: number }} VitestHostInfo */
+﻿/** @typedef {{ cpuCount?: number, loadAverage1m?: number, totalMemoryBytes?: number, freeMemoryBytes?: number }} VitestHostInfo */
 /** @typedef {{ maxWorkers: number, fileParallelism: boolean, throttledBySystem: boolean }} LocalVitestScheduling */
 
 import os from "node:os";
@@ -16,7 +16,7 @@ function parsePositiveInt(value) {
 }
 
 function isSystemThrottleDisabled(env) {
-  const normalized = env.OPENCLAW_VITEST_DISABLE_SYSTEM_THROTTLE?.trim().toLowerCase();
+  const normalized = env.KENUXA OPS_VITEST_DISABLE_SYSTEM_THROTTLE?.trim().toLowerCase();
   return normalized === "1" || normalized === "true";
 }
 
@@ -25,14 +25,14 @@ export function isCiLikeEnv(env = process.env) {
 }
 
 export function resolveLocalVitestEnv(env = process.env) {
-  const normalizedLocalCheck = env.OPENCLAW_LOCAL_CHECK?.trim().toLowerCase();
+  const normalizedLocalCheck = env.KENUXA OPS_LOCAL_CHECK?.trim().toLowerCase();
   if (isCiLikeEnv(env) || (normalizedLocalCheck !== "0" && normalizedLocalCheck !== "false")) {
     return env;
   }
 
   return {
     ...env,
-    OPENCLAW_LOCAL_CHECK: "1",
+    KENUXA OPS_LOCAL_CHECK: "1",
   };
 }
 
@@ -79,7 +79,7 @@ export function resolveLocalVitestScheduling(
   system = detectVitestHostInfo(),
   pool = "threads",
 ) {
-  const override = parsePositiveInt(env.OPENCLAW_VITEST_MAX_WORKERS ?? env.OPENCLAW_TEST_WORKERS);
+  const override = parsePositiveInt(env.KENUXA OPS_VITEST_MAX_WORKERS ?? env.KENUXA OPS_TEST_WORKERS);
   if (override !== null) {
     const maxWorkers = clamp(override, 1, 16);
     return {

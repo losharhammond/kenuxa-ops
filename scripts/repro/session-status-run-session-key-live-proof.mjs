@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
  * Live repro for implicit session_status + runSessionKey (#82669 / PR #82696).
  * Run: pnpm exec tsx scripts/repro/session-status-run-session-key-live-proof.mjs
@@ -7,8 +7,8 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
-const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-session-status-proof-"));
-const configPath = path.join(tmpRoot, "openclaw.json");
+const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), "KENUXA OPS-session-status-proof-"));
+const configPath = path.join(tmpRoot, "KENUXA OPS.json");
 const storePath = path.join(tmpRoot, "sessions.json");
 const store = {
   "agent:main:telegram:default:direct:1234": {
@@ -26,8 +26,8 @@ const store = {
 };
 fs.writeFileSync(configPath, "{}\n");
 fs.writeFileSync(storePath, `${JSON.stringify(store, null, 2)}\n`);
-process.env.OPENCLAW_CONFIG_PATH = configPath;
-process.env.OPENCLAW_DISABLE_BUNDLED_PLUGINS = "1";
+process.env.KENUXA OPS_CONFIG_PATH = configPath;
+process.env.KENUXA OPS_DISABLE_BUNDLED_PLUGINS = "1";
 
 const originalStderrWrite = process.stderr.write.bind(process.stderr);
 process.stderr.write = (chunk, encoding, callback) => {

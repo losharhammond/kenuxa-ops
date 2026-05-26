@@ -1,8 +1,8 @@
-{
-  "name": "@openclaw/browser-plugin",
+﻿{
+  "name": "@KENUXA OPS/browser-plugin",
   "version": "2026.5.26",
   "private": true,
-  "description": "OpenClaw browser tool plugin",
+  "description": "KENUXA OPS browser tool plugin",
   "type": "module",
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.29.0",
@@ -13,10 +13,10 @@
     "ws": "8.21.0"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*",
+    "@KENUXA OPS/plugin-sdk": "workspace:*",
     "undici": "8.3.0"
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ]

@@ -1,16 +1,16 @@
-{
-  "name": "@openclaw/signal",
+﻿{
+  "name": "@KENUXA OPS/signal",
   "version": "2026.5.26",
   "private": true,
-  "description": "OpenClaw Signal channel plugin",
+  "description": "KENUXA OPS Signal channel plugin",
   "type": "module",
   "dependencies": {
     "ws": "8.21.0"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ],

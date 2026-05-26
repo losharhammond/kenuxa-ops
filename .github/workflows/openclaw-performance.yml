@@ -1,4 +1,4 @@
-name: OpenClaw Performance
+﻿name: KENUXA OPS Performance
 
 on:
   schedule:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       target_ref:
-        description: OpenClaw ref to benchmark; defaults to the workflow ref
+        description: KENUXA OPS ref to benchmark; defaults to the workflow ref
         required: false
         default: ""
         type: string
@@ -41,7 +41,7 @@ on:
         default: false
         type: boolean
       kova_ref:
-        description: openclaw/Kova Git ref to install
+        description: KENUXA OPS/Kova Git ref to install
         required: false
         default: b63b6f9e20efb23641df00487e982230d81a90ac
         type: string
@@ -56,7 +56,7 @@ concurrency:
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
   OCM_VERSION: v0.2.15
-  KOVA_REPOSITORY: openclaw/Kova
+  KOVA_REPOSITORY: KENUXA OPS/Kova
   PERFORMANCE_MODEL_ID: gpt-5.5
 
 jobs:
@@ -96,7 +96,7 @@ jobs:
       REPORT_DIR: ${{ github.workspace }}/.artifacts/kova/reports/${{ matrix.lane }}
       BUNDLE_DIR: ${{ github.workspace }}/.artifacts/kova/bundles/${{ matrix.lane }}
       SUMMARY_DIR: ${{ github.workspace }}/.artifacts/kova/summaries
-      SOURCE_PERF_DIR: ${{ github.workspace }}/.artifacts/openclaw-performance/source/${{ matrix.lane }}
+      SOURCE_PERF_DIR: ${{ github.workspace }}/.artifacts/KENUXA OPS-performance/source/${{ matrix.lane }}
       LANE_ID: ${{ matrix.lane }}
       TARGET_REF: ${{ inputs.target_ref || github.ref_name }}
       PROFILE: ${{ inputs.profile || 'diagnostic' }}
@@ -142,7 +142,7 @@ jobs:
             echo "present=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Checkout OpenClaw
+      - name: Checkout KENUXA OPS
         if: steps.lane.outputs.run == 'true'
         uses: actions/checkout@v6
         with:
@@ -210,8 +210,8 @@ jobs:
           const path = require("node:path");
           const root = process.env.KOVA_SRC;
           const files = [
-            "support/configure-openclaw-mock-auth.mjs",
-            "support/configure-openclaw-live-auth.mjs",
+            "support/configure-KENUXA OPS-mock-auth.mjs",
+            "support/configure-KENUXA OPS-live-auth.mjs",
             "support/mock-openai-server.mjs",
             "states/mock-openai-provider.json"
           ];
@@ -346,7 +346,7 @@ jobs:
           run_slug="${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
           report_url=""
           if [[ "${CLAWGRIT_REPORTS_TOKEN_PRESENT:-false}" == "true" ]]; then
-            report_url="https://github.com/openclaw/clawgrit-reports/tree/main/openclaw-performance/${ref_slug}/${run_slug}/${LANE_ID}"
+            report_url="https://github.com/KENUXA OPS/clawgrit-reports/tree/main/KENUXA OPS-performance/${ref_slug}/${run_slug}/${LANE_ID}"
           fi
           summary_path="$SUMMARY_DIR/${LANE_ID}.md"
           summary_args=(node "$PERFORMANCE_HELPER_DIR/scripts/kova-ci-summary.mjs" --report "$report_json" --output "$summary_path" --lane "$LANE_ID")
@@ -387,19 +387,19 @@ jobs:
           reports_root=".artifacts/clawgrit-baseline"
           mkdir -p "$reports_root"
           git -C "$reports_root" init -b main
-          git -C "$reports_root" remote add origin "https://x-access-token:${CLAWGRIT_REPORTS_TOKEN}@github.com/openclaw/clawgrit-reports.git"
+          git -C "$reports_root" remote add origin "https://x-access-token:${CLAWGRIT_REPORTS_TOKEN}@github.com/KENUXA OPS/clawgrit-reports.git"
           if ! git -C "$reports_root" fetch --depth=1 origin main; then
             echo "No previous source performance baseline could be fetched." >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
           git -C "$reports_root" checkout -B main FETCH_HEAD
           ref_slug="$(printf '%s' "${TESTED_REF}" | tr -c 'A-Za-z0-9._-' '-')"
-          pointer="${reports_root}/openclaw-performance/${ref_slug}/latest-mock-provider.json"
+          pointer="${reports_root}/KENUXA OPS-performance/${ref_slug}/latest-mock-provider.json"
           if [[ ! -f "$pointer" ]]; then
             echo "No previous source performance baseline exists for ${TESTED_REF}." >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
-          if ! latest_path="$(node -e "const fs=require('node:fs'); const data=JSON.parse(fs.readFileSync(process.argv[1],'utf8')); const value=String(data.path || ''); if (!/^openclaw-performance\\/[A-Za-z0-9._-]+\\/[0-9]+-[0-9]+\\/mock-provider$/u.test(value)) process.exit(1); process.stdout.write(value);" "$pointer")"; then
+          if ! latest_path="$(node -e "const fs=require('node:fs'); const data=JSON.parse(fs.readFileSync(process.argv[1],'utf8')); const value=String(data.path || ''); if (!/^KENUXA OPS-performance\\/[A-Za-z0-9._-]+\\/[0-9]+-[0-9]+\\/mock-provider$/u.test(value)) process.exit(1); process.stdout.write(value);" "$pointer")"; then
             echo "Previous source performance baseline pointer is invalid." >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
@@ -412,7 +412,7 @@ jobs:
             echo "Previous source performance baseline has no source directory." >> "$GITHUB_STEP_SUMMARY"
           fi
 
-      - name: Run OpenClaw source performance probes
+      - name: Run KENUXA OPS source performance probes
         if: ${{ steps.lane.outputs.run == 'true' && matrix.lane == 'mock-provider' }}
         shell: bash
         run: |
@@ -423,9 +423,9 @@ jobs:
           fi
 
           mkdir -p "$SOURCE_PERF_DIR/mock-hello"
-          if ! node -e "const fs=require('node:fs'); const scripts=require('./package.json').scripts||{}; process.exit(scripts['test:gateway:cpu-scenarios'] && scripts['test:extensions:memory'] && scripts.openclaw && fs.existsSync('scripts/bench-cli-startup.ts') && fs.existsSync('scripts/profile-extension-memory.mjs') ? 0 : 1)"; then
+          if ! node -e "const fs=require('node:fs'); const scripts=require('./package.json').scripts||{}; process.exit(scripts['test:gateway:cpu-scenarios'] && scripts['test:extensions:memory'] && scripts.KENUXA OPS && fs.existsSync('scripts/bench-cli-startup.ts') && fs.existsSync('scripts/profile-extension-memory.mjs') ? 0 : 1)"; then
             cat > "$SOURCE_PERF_DIR/index.md" <<EOF
-          # OpenClaw Source Performance
+          # KENUXA OPS Source Performance
 
           Generated: $(date -u +%Y-%m-%dT%H:%M:%SZ)
 
@@ -435,7 +435,7 @@ jobs:
 
           - Tested ref: ${TESTED_REF}
           - Tested SHA: ${TESTED_SHA}
-          - Required scripts: test:gateway:cpu-scenarios, test:extensions:memory, openclaw, scripts/bench-cli-startup.ts, scripts/profile-extension-memory.mjs
+          - Required scripts: test:gateway:cpu-scenarios, test:extensions:memory, KENUXA OPS, scripts/bench-cli-startup.ts, scripts/profile-extension-memory.mjs
           EOF
             cat "$SOURCE_PERF_DIR/index.md" >> "$GITHUB_STEP_SUMMARY"
             exit 0
@@ -460,7 +460,7 @@ jobs:
 
           for run_index in $(seq 1 "$source_runs"); do
             run_dir="$SOURCE_PERF_DIR/mock-hello/run-$(printf '%03d' "$run_index")"
-            pnpm openclaw qa suite \
+            pnpm KENUXA OPS qa suite \
               --provider-mode mock-openai \
               --model "mock-openai/${PERFORMANCE_MODEL_ID}" \
               --concurrency 1 \
@@ -470,8 +470,8 @@ jobs:
 
           gateway_home="$(mktemp -d)"
           gateway_port="$(node -e "const net=require('node:net'); const s=net.createServer(); s.listen(0,'127.0.0.1',()=>{ console.log(s.address().port); s.close(); });")"
-          gateway_state="$gateway_home/.openclaw"
-          gateway_config="$gateway_state/openclaw.json"
+          gateway_state="$gateway_home/.KENUXA OPS"
+          gateway_config="$gateway_state/KENUXA OPS.json"
           gateway_log="$SOURCE_PERF_DIR/cli-gateway.log"
           gateway_pid=""
           mkdir -p "$gateway_state"
@@ -500,7 +500,7 @@ jobs:
             rm -rf "$gateway_home"
           }
           trap cleanup_gateway EXIT
-          OPENCLAW_HOME="$gateway_home" OPENCLAW_STATE_DIR="$gateway_state" OPENCLAW_CONFIG_PATH="$gateway_config" OPENCLAW_GATEWAY_PORT="$gateway_port" OPENCLAW_SKIP_CHANNELS=1 \
+          KENUXA OPS_HOME="$gateway_home" KENUXA OPS_STATE_DIR="$gateway_state" KENUXA OPS_CONFIG_PATH="$gateway_config" KENUXA OPS_GATEWAY_PORT="$gateway_port" KENUXA OPS_SKIP_CHANNELS=1 \
             node dist/entry.js gateway run --bind loopback --port "$gateway_port" --auth none --allow-unconfigured --force \
             >"$gateway_log" 2>&1 &
           gateway_pid="$!"
@@ -517,7 +517,7 @@ jobs:
           done
           curl -fsS "http://127.0.0.1:${gateway_port}/healthz" >/dev/null
 
-          OPENCLAW_HOME="$gateway_home" OPENCLAW_STATE_DIR="$gateway_state" OPENCLAW_CONFIG_PATH="$gateway_config" OPENCLAW_GATEWAY_PORT="$gateway_port" \
+          KENUXA OPS_HOME="$gateway_home" KENUXA OPS_STATE_DIR="$gateway_state" KENUXA OPS_CONFIG_PATH="$gateway_config" KENUXA OPS_GATEWAY_PORT="$gateway_port" \
             node --import tsx scripts/bench-cli-startup.ts \
             --case gatewayHealthJson \
             --case configGetGatewayPort \
@@ -527,7 +527,7 @@ jobs:
           cleanup_gateway
           trap - EXIT
 
-          summary_args=(node "$PERFORMANCE_HELPER_DIR/scripts/openclaw-performance-source-summary.mjs" \
+          summary_args=(node "$PERFORMANCE_HELPER_DIR/scripts/KENUXA OPS-performance-source-summary.mjs" \
             --source-dir "$SOURCE_PERF_DIR" \
             --output "$SOURCE_PERF_DIR/index.md")
           if [[ -n "${SOURCE_PERF_BASELINE_DIR:-}" && -d "$SOURCE_PERF_BASELINE_DIR" ]]; then
@@ -541,12 +541,12 @@ jobs:
         if: ${{ always() && steps.lane.outputs.run == 'true' }}
         uses: actions/upload-artifact@v7
         with:
-          name: openclaw-performance-${{ matrix.lane }}-${{ github.run_id }}-${{ github.run_attempt }}
+          name: KENUXA OPS-performance-${{ matrix.lane }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
             .artifacts/kova/reports/${{ matrix.lane }}
             .artifacts/kova/bundles/${{ matrix.lane }}
             .artifacts/kova/summaries/${{ matrix.lane }}.md
-            .artifacts/openclaw-performance/source/${{ matrix.lane }}
+            .artifacts/KENUXA OPS-performance/source/${{ matrix.lane }}
           if-no-files-found: ignore
           retention-days: ${{ matrix.deep_profile == 'true' && 14 || 30 }}
 
@@ -560,7 +560,7 @@ jobs:
           reports_root=".artifacts/clawgrit-reports"
           mkdir -p "$reports_root"
           git -C "$reports_root" init -b main
-          git -C "$reports_root" remote add origin "https://x-access-token:${CLAWGRIT_REPORTS_TOKEN}@github.com/openclaw/clawgrit-reports.git"
+          git -C "$reports_root" remote add origin "https://x-access-token:${CLAWGRIT_REPORTS_TOKEN}@github.com/KENUXA OPS/clawgrit-reports.git"
           if git -C "$reports_root" ls-remote --exit-code --heads origin main >/dev/null 2>&1; then
             git -C "$reports_root" fetch --depth=1 origin main
             git -C "$reports_root" checkout -B main FETCH_HEAD
@@ -576,10 +576,10 @@ jobs:
         run: |
           set -euo pipefail
           reports_root=".artifacts/clawgrit-reports"
-          git -C "$reports_root" remote set-url origin "https://x-access-token:${CLAWGRIT_REPORTS_TOKEN}@github.com/openclaw/clawgrit-reports.git"
+          git -C "$reports_root" remote set-url origin "https://x-access-token:${CLAWGRIT_REPORTS_TOKEN}@github.com/KENUXA OPS/clawgrit-reports.git"
           ref_slug="$(printf '%s' "${TESTED_REF}" | tr -c 'A-Za-z0-9._-' '-')"
           run_slug="${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
-          dest="${reports_root}/openclaw-performance/${ref_slug}/${run_slug}/${LANE_ID}"
+          dest="${reports_root}/KENUXA OPS-performance/${ref_slug}/${run_slug}/${LANE_ID}"
           mkdir -p "$dest"
           cp "${{ steps.kova.outputs.report_json }}" "$dest/report.json"
           if [[ -f "${{ steps.kova.outputs.report_md }}" ]]; then
@@ -602,7 +602,7 @@ jobs:
           EOF
             fi
           fi
-          cat > "${reports_root}/openclaw-performance/${ref_slug}/latest-${LANE_ID}.json" <<EOF
+          cat > "${reports_root}/KENUXA OPS-performance/${ref_slug}/latest-${LANE_ID}.json" <<EOF
           {
             "repository": "${GITHUB_REPOSITORY}",
             "ref": "${TESTED_REF}",
@@ -615,18 +615,18 @@ jobs:
             "run_id": "${GITHUB_RUN_ID}",
             "run_attempt": "${GITHUB_RUN_ATTEMPT}",
             "lane": "${LANE_ID}",
-            "path": "openclaw-performance/${ref_slug}/${run_slug}/${LANE_ID}"
+            "path": "KENUXA OPS-performance/${ref_slug}/${run_slug}/${LANE_ID}"
           }
           EOF
 
-          git -C "$reports_root" config user.name "openclaw-performance[bot]"
-          git -C "$reports_root" config user.email "openclaw-performance[bot]@users.noreply.github.com"
-          git -C "$reports_root" add openclaw-performance
+          git -C "$reports_root" config user.name "KENUXA OPS-performance[bot]"
+          git -C "$reports_root" config user.email "KENUXA OPS-performance[bot]@users.noreply.github.com"
+          git -C "$reports_root" add KENUXA OPS-performance
           if git -C "$reports_root" diff --cached --quiet; then
             echo "No clawgrit report changes to publish."
             exit 0
           fi
-          git -C "$reports_root" commit -m "perf: add OpenClaw ${LANE_ID} report ${TESTED_SHA::12}"
+          git -C "$reports_root" commit -m "perf: add KENUXA OPS ${LANE_ID} report ${TESTED_SHA::12}"
           for attempt in 1 2 3 4 5; do
             if git -C "$reports_root" push origin HEAD:main; then
               exit 0

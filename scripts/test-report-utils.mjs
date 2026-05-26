@@ -1,4 +1,4 @@
-import { spawnSync } from "node:child_process";
+﻿import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -32,7 +32,7 @@ export function tryReadJsonFile(filePath, fallback) {
 export function runVitestJsonReport({
   config,
   reportPath = "",
-  prefix = "openclaw-vitest-report",
+  prefix = "KENUXA OPS-vitest-report",
 }) {
   const resolvedReportPath = reportPath || path.join(os.tmpdir(), `${prefix}-${Date.now()}.json`);
 

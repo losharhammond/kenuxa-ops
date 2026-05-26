@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 import fs from "node:fs";
 import path from "node:path";
 import { collectPackageDistImportErrors } from "./lib/package-dist-imports.mjs";
@@ -49,7 +49,7 @@ const errors = collectPackageDistImportErrors({
 });
 
 if (errors.length > 0) {
-  fail(`OpenClaw package dist import closure failed:\n${errors.join("\n")}`);
+  fail(`KENUXA OPS package dist import closure failed:\n${errors.join("\n")}`);
 }
 
-console.log("OpenClaw package dist import closure passed.");
+console.log("KENUXA OPS package dist import closure passed.");

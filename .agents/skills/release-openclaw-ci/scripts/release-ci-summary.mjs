@@ -1,9 +1,9 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 import { execFileSync } from "node:child_process";
 import process from "node:process";
 
 const runId = process.argv[2];
-const repo = process.env.OPENCLAW_RELEASE_REPO || "openclaw/openclaw";
+const repo = process.env.KENUXA OPS_RELEASE_REPO || "KENUXA OPS/KENUXA OPS";
 
 if (!runId) {
   console.error("usage: release-ci-summary.mjs <full-release-run-id>");
@@ -63,7 +63,7 @@ const runList = gh([
   "api",
   `repos/${repo}/actions/runs?per_page=100`,
   "--jq",
-  `.workflow_runs[] | select(.created_at >= "${since}") | select(.name=="CI" or .name=="OpenClaw Release Checks" or .name=="Plugin Prerelease" or .name=="NPM Telegram Beta E2E" or .name=="Full Release Validation") | [.id,.name,.status,.conclusion,.head_sha,.html_url] | @tsv`,
+  `.workflow_runs[] | select(.created_at >= "${since}") | select(.name=="CI" or .name=="KENUXA OPS Release Checks" or .name=="Plugin Prerelease" or .name=="NPM Telegram Beta E2E" or .name=="Full Release Validation") | [.id,.name,.status,.conclusion,.head_sha,.html_url] | @tsv`,
 ]).trim();
 
 if (!runList) {

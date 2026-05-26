@@ -1,4 +1,4 @@
-// @vitest-environment node
+﻿// @vitest-environment node
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   MIN_CLIENT_PROTOCOL_VERSION,
@@ -176,7 +176,7 @@ function expectSignedPayloadFields(
   expect(payload?.split("|")).toEqual([
     "v2",
     "device-1",
-    "openclaw-control-ui",
+    "KENUXA OPS-control-ui",
     "webchat",
     "operator",
     params.scopes.join(","),

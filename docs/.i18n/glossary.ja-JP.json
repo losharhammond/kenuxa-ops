@@ -1,4 +1,4 @@
-[
+﻿[
   {
     "source": "ACP",
     "target": "ACP"
@@ -52,8 +52,8 @@
     "target": "オンボーディング"
   },
   {
-    "source": "OpenClaw",
-    "target": "OpenClaw"
+    "source": "KENUXA OPS",
+    "target": "KENUXA OPS"
   },
   {
     "source": "Pi",

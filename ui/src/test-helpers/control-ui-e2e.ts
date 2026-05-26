@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+﻿import { existsSync } from "node:fs";
 import { createRequire } from "node:module";
 import { createServer as createNetServer } from "node:net";
 import path from "node:path";
@@ -69,7 +69,7 @@ export async function startControlUiE2eServer(): Promise<ControlUiE2eServer> {
     clearScreen: false,
     configFile: false,
     define: {
-      OPENCLAW_CONTROL_UI_BUILD_ID: JSON.stringify("e2e"),
+      KENUXA_OPS_BUILD_ID: JSON.stringify("e2e"),
     },
     logLevel: "error",
     optimizeDeps: {
@@ -131,7 +131,7 @@ function normalizeScenario(
   const sessionKey = scenario.sessionKey?.trim() || "main";
   return {
     assistantAgentId: scenario.assistantAgentId?.trim() || defaultAgentId,
-    assistantName: scenario.assistantName?.trim() || "OpenClaw",
+    assistantName: scenario.assistantName?.trim() || "KENUXA OPS",
     defaultAgentId,
     historyMessages: scenario.historyMessages ?? [],
     methodResponses: scenario.methodResponses ?? {},
@@ -189,7 +189,7 @@ function installControlUiMockGateway(input: {
     requests: BrowserRequest[];
   };
   type WindowWithGateway = Window & {
-    openclawControlUiE2eGateway?: ExposedGateway;
+    KENUXA OPSControlUiE2eGateway?: ExposedGateway;
   };
 
   const scenario: BrowserScenario = input.scenario;
@@ -485,7 +485,7 @@ function installControlUiMockGateway(input: {
     requests,
   };
 
-  (window as WindowWithGateway).openclawControlUiE2eGateway = exposed;
+  (window as WindowWithGateway).KENUXA OPSControlUiE2eGateway = exposed;
   window.WebSocket = MockWebSocket as unknown as typeof WebSocket;
 }
 
@@ -511,11 +511,11 @@ function createMockGatewayControls(page: Page, defaultSessionKey: string): MockG
       ({ eventName, eventPayload }) => {
         const gateway = (
           window as Window & {
-            openclawControlUiE2eGateway?: {
+            KENUXA OPSControlUiE2eGateway?: {
               emit: (event: string, payload?: unknown) => void;
             };
           }
-        ).openclawControlUiE2eGateway;
+        ).KENUXA OPSControlUiE2eGateway;
         if (!gateway) {
           throw new Error("Mock Gateway is not installed");
         }
@@ -529,11 +529,11 @@ function createMockGatewayControls(page: Page, defaultSessionKey: string): MockG
     page.evaluate((targetMethod) => {
       const gateway = (
         window as Window & {
-          openclawControlUiE2eGateway?: {
+          KENUXA OPSControlUiE2eGateway?: {
             findRequests: (method?: string) => MockGatewayRequest[];
           };
         }
-      ).openclawControlUiE2eGateway;
+      ).KENUXA OPSControlUiE2eGateway;
       return gateway?.findRequests(targetMethod) ?? [];
     }, method);
 
@@ -557,11 +557,11 @@ function createMockGatewayControls(page: Page, defaultSessionKey: string): MockG
         (targetMethod) => {
           const gateway = (
             window as Window & {
-              openclawControlUiE2eGateway?: {
+              KENUXA OPSControlUiE2eGateway?: {
                 requests: MockGatewayRequest[];
               };
             }
-          ).openclawControlUiE2eGateway;
+          ).KENUXA OPSControlUiE2eGateway;
           return Boolean(gateway?.requests.some((request) => request.method === targetMethod));
         },
         method,

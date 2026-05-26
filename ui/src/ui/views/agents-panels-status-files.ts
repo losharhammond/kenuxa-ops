@@ -1,4 +1,4 @@
-import { applyPreviewTheme } from "@create-markdown/preview";
+﻿import { applyPreviewTheme } from "@create-markdown/preview";
 import DOMPurify from "dompurify";
 import { html, nothing } from "lit";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
@@ -297,7 +297,7 @@ export function renderAgentChannels(params: {
                           ? html`
                               <div>
                                 <a
-                                  href="https://docs.openclaw.ai/channels"
+                                  href="https://docs.KENUXA OPS.ai/channels"
                                   target="_blank"
                                   rel="noopener"
                                   style="color: var(--accent); font-size: 12px"

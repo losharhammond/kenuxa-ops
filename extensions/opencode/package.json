@@ -1,13 +1,13 @@
-{
-  "name": "@openclaw/opencode-provider",
+﻿{
+  "name": "@KENUXA OPS/opencode-provider",
   "version": "2026.5.26",
   "private": true,
-  "description": "OpenClaw OpenCode Zen provider plugin",
+  "description": "KENUXA OPS OpenCode Zen provider plugin",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ]

@@ -1,4 +1,4 @@
-// @vitest-environment node
+﻿// @vitest-environment node
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { handleDisconnected } from "./app-lifecycle.ts";
 
@@ -9,7 +9,7 @@ function createHost() {
     connectGeneration: 0,
     connected: true,
     tab: "chat",
-    assistantName: "OpenClaw",
+    assistantName: "KENUXA OPS",
     assistantAvatar: null,
     assistantAgentId: null,
     localMediaPreviewRoots: [],

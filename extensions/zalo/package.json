@@ -1,25 +1,25 @@
-{
-  "name": "@openclaw/zalo",
+﻿{
+  "name": "@KENUXA OPS/zalo",
   "version": "2026.5.26",
-  "description": "OpenClaw Zalo channel plugin",
+  "description": "KENUXA OPS Zalo channel plugin",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openclaw/openclaw"
+    "url": "https://github.com/KENUXA OPS/KENUXA OPS"
   },
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*",
-    "openclaw": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*",
+    "KENUXA OPS": "workspace:*"
   },
   "peerDependencies": {
-    "openclaw": ">=2026.5.26"
+    "KENUXA OPS": ">=2026.5.26"
   },
   "peerDependenciesMeta": {
-    "openclaw": {
+    "KENUXA OPS": {
       "optional": true
     }
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ],
@@ -38,7 +38,7 @@
       "quickstartAllowFrom": true
     },
     "install": {
-      "npmSpec": "@openclaw/zalo",
+      "npmSpec": "@KENUXA OPS/zalo",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.4.10"
     },
@@ -46,7 +46,7 @@
       "pluginApi": ">=2026.5.26"
     },
     "build": {
-      "openclawVersion": "2026.5.26"
+      "KENUXA OPSVersion": "2026.5.26"
     },
     "release": {
       "publishToClawHub": true,

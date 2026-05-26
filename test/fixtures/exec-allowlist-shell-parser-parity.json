@@ -1,4 +1,4 @@
-{
+﻿{
   "cases": [
     {
       "id": "simple-pipeline",
@@ -8,7 +8,7 @@
     },
     {
       "id": "chained-commands",
-      "command": "ls && rm -rf /tmp/openclaw-allowlist",
+      "command": "ls && rm -rf /tmp/KENUXA OPS-allowlist",
       "ok": true,
       "executables": ["ls", "rm"]
     },

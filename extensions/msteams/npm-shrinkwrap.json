@@ -1,11 +1,11 @@
-{
-  "name": "@openclaw/msteams",
+﻿{
+  "name": "@KENUXA OPS/msteams",
   "version": "2026.5.26",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
-      "name": "@openclaw/msteams",
+      "name": "@KENUXA OPS/msteams",
       "version": "2026.5.26",
       "dependencies": {
         "@azure/identity": "4.13.1",
@@ -17,10 +17,10 @@
         "typebox": "1.1.38"
       },
       "peerDependencies": {
-        "openclaw": ">=2026.5.26"
+        "KENUXA OPS": ">=2026.5.26"
       },
       "peerDependenciesMeta": {
-        "openclaw": {
+        "KENUXA OPS": {
           "optional": true
         }
       }

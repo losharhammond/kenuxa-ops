@@ -1,13 +1,13 @@
-{
-  "name": "@openclaw/cerebras-provider",
+﻿{
+  "name": "@KENUXA OPS/cerebras-provider",
   "version": "2026.5.26",
   "private": true,
-  "description": "OpenClaw Cerebras provider plugin",
+  "description": "KENUXA OPS Cerebras provider plugin",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ]

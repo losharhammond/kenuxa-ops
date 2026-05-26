@@ -1,4 +1,4 @@
-{
+﻿{
   "schemaVersion": 1,
   "dependencies": {
     "@agentclientprotocol/sdk": {
@@ -96,7 +96,7 @@
       "class": "core-runtime",
       "risk": ["file-sniffing", "untrusted-files"]
     },
-    "@openclaw/proxyline": {
+    "@KENUXA OPS/proxyline": {
       "owner": "core:proxy",
       "class": "core-runtime",
       "risk": ["network", "proxy"]

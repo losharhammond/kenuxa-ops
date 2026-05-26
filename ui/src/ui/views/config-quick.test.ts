@@ -1,4 +1,4 @@
-/* @vitest-environment jsdom */
+﻿/* @vitest-environment jsdom */
 
 import { render } from "lit";
 import { describe, expect, it, vi } from "vitest";
@@ -77,7 +77,7 @@ function createProps(overrides: Partial<QuickSettingsProps> = {}): QuickSettings
     onAdvancedSettings: vi.fn(),
     connected: true,
     gatewayUrl: "ws://localhost:18789",
-    assistantName: "OpenClaw",
+    assistantName: "KENUXA OPS",
     assistantAvatar: null,
     assistantAvatarUrl: null,
     assistantAvatarSource: null,

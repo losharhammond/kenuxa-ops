@@ -1,11 +1,11 @@
-import fs from "node:fs";
+﻿import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
 const home = os.homedir();
 
-function openclawPath(...parts) {
-  return path.join(home, ".openclaw", ...parts);
+function KENUXA OPSPath(...parts) {
+  return path.join(home, ".KENUXA OPS", ...parts);
 }
 
 function readJson(file) {
@@ -17,7 +17,7 @@ function readJson(file) {
 }
 
 function records() {
-  const index = readJson(openclawPath("plugins", "installs.json"));
+  const index = readJson(KENUXA OPSPath("plugins", "installs.json"));
   return index.installRecords ?? index.records ?? {};
 }
 
@@ -26,7 +26,7 @@ function recordFor(pluginId) {
 }
 
 function config() {
-  return readJson(process.env.OPENCLAW_CONFIG_PATH ?? openclawPath("openclaw.json"));
+  return readJson(process.env.KENUXA OPS_CONFIG_PATH ?? KENUXA OPSPath("KENUXA OPS.json"));
 }
 
 function assert(condition, message) {

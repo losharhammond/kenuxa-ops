@@ -1,4 +1,4 @@
-import assert from "node:assert/strict";
+﻿import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
@@ -10,15 +10,15 @@ import { installProcessWarningFilter } from "./process-warning-filter.mjs";
 
 installProcessWarningFilter();
 
-process.env.OPENCLAW_DISABLE_BUNDLED_ENTRY_SOURCE_FALLBACK ??= "1";
+process.env.KENUXA OPS_DISABLE_BUNDLED_ENTRY_SOURCE_FALLBACK ??= "1";
 
 const { packageRoot } = parsePackageRootArg(
   process.argv.slice(2),
-  "OPENCLAW_BUNDLED_CHANNEL_SMOKE_ROOT",
+  "KENUXA OPS_BUNDLED_CHANNEL_SMOKE_ROOT",
 );
 const distExtensionsRoot = path.join(packageRoot, "dist", "extensions");
 const excludedPackageExtensionDirs = collectRootPackageExcludedExtensionDirs({ cwd: packageRoot });
-const installedLayoutEnv = "OPENCLAW_BUNDLED_CHANNEL_SMOKE_INSTALLED_LAYOUT";
+const installedLayoutEnv = "KENUXA OPS_BUNDLED_CHANNEL_SMOKE_INSTALLED_LAYOUT";
 
 function collectExcludedDistExtensionIds() {
   const packageJsonPath = path.join(packageRoot, "package.json");
@@ -41,7 +41,7 @@ function collectExcludedDistExtensionIds() {
 }
 
 function packageRootLooksInstalled(root) {
-  return root.replaceAll("\\", "/").endsWith("/node_modules/openclaw");
+  return root.replaceAll("\\", "/").endsWith("/node_modules/KENUXA OPS");
 }
 
 function smokeInInstalledLayoutIfNeeded() {
@@ -49,9 +49,9 @@ function smokeInInstalledLayoutIfNeeded() {
     return;
   }
 
-  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-channel-entry-smoke-"));
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "KENUXA OPS-channel-entry-smoke-"));
   const nodeModulesRoot = path.join(tempRoot, "node_modules");
-  const installedPackageRoot = path.join(nodeModulesRoot, "openclaw");
+  const installedPackageRoot = path.join(nodeModulesRoot, "KENUXA OPS");
   fs.mkdirSync(nodeModulesRoot, { recursive: true });
   fs.symlinkSync(packageRoot, installedPackageRoot, "dir");
 
@@ -105,7 +105,7 @@ function collectBundledChannelEntryFiles() {
       continue;
     }
     const packageJson = readJson(packageJsonPath);
-    if (!packageJson.openclaw?.channel) {
+    if (!packageJson.KENUXA OPS?.channel) {
       continue;
     }
     if (excludedPackageExtensionDirs.has(dirent.name)) {
@@ -113,8 +113,8 @@ function collectBundledChannelEntryFiles() {
     }
 
     const extensionEntries =
-      Array.isArray(packageJson.openclaw.extensions) && packageJson.openclaw.extensions.length > 0
-        ? packageJson.openclaw.extensions
+      Array.isArray(packageJson.KENUXA OPS.extensions) && packageJson.KENUXA OPS.extensions.length > 0
+        ? packageJson.KENUXA OPS.extensions
         : ["./index.ts"];
     for (const entry of extensionEntries) {
       if (typeof entry !== "string" || entry.trim().length === 0) {
@@ -127,7 +127,7 @@ function collectBundledChannelEntryFiles() {
       });
     }
 
-    const setupEntry = packageJson.openclaw.setupEntry;
+    const setupEntry = packageJson.KENUXA OPS.setupEntry;
     if (typeof setupEntry === "string" && setupEntry.trim().length > 0) {
       files.push({
         id: dirent.name,

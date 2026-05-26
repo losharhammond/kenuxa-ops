@@ -57,7 +57,9 @@ function readGitShortSha(): string | null {
 
 function resolveControlUiBuildId(): string {
   const explicit =
-    process.env.OPENCLAW_CONTROL_UI_BUILD_ID?.trim() || process.env.OPENCLAW_VERSION?.trim();
+    process.env.KENUXA_OPS_BUILD_ID?.trim() ||
+    process.env.OPENCLAW_CONTROL_UI_BUILD_ID?.trim() ||
+    process.env.OPENCLAW_VERSION?.trim();
   if (explicit) {
     return normalizeBuildId(explicit);
   }
@@ -68,16 +70,20 @@ function resolveControlUiBuildId(): string {
 
 function controlUiServiceWorkerBuildIdPlugin(buildId: string): Plugin {
   return {
-    name: "control-ui-service-worker-build-id",
+    name: "kenuxa-ops-service-worker-build-id",
     apply: "build",
     closeBundle() {
       const swPath = path.join(outDir, "sw.js");
       const publicSwPath = path.join(here, "public/sw.js");
       const source = fs.readFileSync(fs.existsSync(swPath) ? swPath : publicSwPath, "utf8");
-      const placeholder = '"__OPENCLAW_CONTROL_UI_BUILD_ID__"';
-      const updated = source.replace(placeholder, JSON.stringify(buildId));
+      const placeholder = '"__KENUXA_OPS_BUILD_ID__"';
+      const legacyPlaceholder = '"__OPENCLAW_CONTROL_UI_BUILD_ID__"';
+      let updated = source.replace(placeholder, JSON.stringify(buildId));
       if (updated === source) {
-        throw new Error(`Control UI service worker build id placeholder missing in ${swPath}`);
+        updated = source.replace(legacyPlaceholder, JSON.stringify(buildId));
+      }
+      if (updated === source) {
+        throw new Error(`KENUXA OPS service worker build id placeholder missing in ${swPath}`);
       }
       fs.mkdirSync(outDir, { recursive: true });
       fs.writeFileSync(swPath, updated);
@@ -86,12 +92,15 @@ function controlUiServiceWorkerBuildIdPlugin(buildId: string): Plugin {
 }
 
 export default defineConfig(() => {
-  const envBase = process.env.OPENCLAW_CONTROL_UI_BASE_PATH?.trim();
+  const envBase = process.env.KENUXA_OPS_BASE_PATH?.trim() ||
+    process.env.OPENCLAW_CONTROL_UI_BASE_PATH?.trim();
   const base = envBase ? normalizeBase(envBase) : "./";
   const controlUiBuildId = resolveControlUiBuildId();
   return {
     base,
     define: {
+      KENUXA_OPS_BUILD_ID: JSON.stringify(controlUiBuildId),
+      // Legacy alias — kept for any bundled service worker stubs that still use old name
       OPENCLAW_CONTROL_UI_BUILD_ID: JSON.stringify(controlUiBuildId),
     },
     publicDir: path.resolve(here, "public"),

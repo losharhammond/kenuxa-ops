@@ -1,4 +1,4 @@
-import { LitElement } from "lit";
+﻿import { LitElement } from "lit";
 import { state } from "lit/decorators.js";
 import { i18n, I18nController, isSupportedLocale, t } from "../i18n/index.ts";
 import type { ActivityEntry, ActivityStatus } from "./activity-model.ts";
@@ -139,7 +139,7 @@ import type { NostrProfileFormState } from "./views/channels.nostr-profile-form.
 
 declare global {
   interface Window {
-    __OPENCLAW_CONTROL_UI_BASE_PATH__?: string;
+    __KENUXA_OPS_BASE_PATH__?: string;
   }
 }
 
@@ -159,7 +159,7 @@ function resolveOnboardingMode(): boolean {
   return normalized === "1" || normalized === "true" || normalized === "yes" || normalized === "on";
 }
 
-export class OpenClawApp extends LitElement {
+export class KenuxaOpsApp extends LitElement {
   readonly i18nController = new I18nController(this);
   clientInstanceId = generateUUID();
   connectGeneration = 0;
@@ -1132,7 +1132,7 @@ export class OpenClawApp extends LitElement {
           }
         },
         onTranscript: (entry) => {
-          this.realtimeTalkTranscript = `${entry.role === "user" ? "You" : "OpenClaw"}: ${entry.text}`;
+          this.realtimeTalkTranscript = `${entry.role === "user" ? "You" : "KENUXA OPS"}: ${entry.text}`;
           this.realtimeTalkConversationState = updateRealtimeTalkConversation(
             this.realtimeTalkConversationState,
             entry,
@@ -1384,6 +1384,6 @@ export class OpenClawApp extends LitElement {
   }
 }
 
-if (!customElements.get("openclaw-app")) {
-  customElements.define("openclaw-app", OpenClawApp);
+if (!customElements.get("kenuxa-ops-app")) {
+  customElements.define("kenuxa-ops-app", KenuxaOpsApp);
 }

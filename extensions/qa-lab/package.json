@@ -1,8 +1,8 @@
-{
-  "name": "@openclaw/qa-lab",
+﻿{
+  "name": "@KENUXA OPS/qa-lab",
   "version": "2026.5.26",
   "private": true,
-  "description": "OpenClaw QA lab plugin with private debugger UI and scenario runner",
+  "description": "KENUXA OPS QA lab plugin with private debugger UI and scenario runner",
   "type": "module",
   "dependencies": {
     "@copilotkit/aimock": "1.27.1",
@@ -12,21 +12,21 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@openclaw/discord": "workspace:*",
-    "@openclaw/plugin-sdk": "workspace:*",
-    "@openclaw/slack": "workspace:*",
-    "@openclaw/whatsapp": "workspace:*",
-    "openclaw": "workspace:*"
+    "@KENUXA OPS/discord": "workspace:*",
+    "@KENUXA OPS/plugin-sdk": "workspace:*",
+    "@KENUXA OPS/slack": "workspace:*",
+    "@KENUXA OPS/whatsapp": "workspace:*",
+    "KENUXA OPS": "workspace:*"
   },
   "peerDependencies": {
-    "openclaw": ">=2026.5.26"
+    "KENUXA OPS": ">=2026.5.26"
   },
   "peerDependenciesMeta": {
-    "openclaw": {
+    "KENUXA OPS": {
       "optional": true
     }
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ],

@@ -1,4 +1,4 @@
-import DOMPurify from "dompurify";
+﻿import DOMPurify from "dompurify";
 import hljs from "highlight.js/lib/core";
 import bash from "highlight.js/lib/languages/bash";
 import cpp from "highlight.js/lib/languages/cpp";
@@ -440,7 +440,7 @@ md.core.ruler.after("linkify", "linkify-cjk-trim", (state) => {
         continue;
       }
       // Only trim linkify-generated autolinks, not explicit markdown links
-      // like [OpenClaw中文](https://docs.openclaw.ai) where CJK in display
+      // like [KENUXA OPS中文](https://docs.KENUXA OPS.ai) where CJK in display
       // text is intentional and href must not be rewritten.
       if (token.markup !== "linkify") {
         continue;

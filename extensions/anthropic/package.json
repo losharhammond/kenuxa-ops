@@ -1,16 +1,16 @@
-{
-  "name": "@openclaw/anthropic-provider",
+﻿{
+  "name": "@KENUXA OPS/anthropic-provider",
   "version": "2026.5.26",
   "private": true,
-  "description": "OpenClaw Anthropic provider plugin",
+  "description": "KENUXA OPS Anthropic provider plugin",
   "type": "module",
   "dependencies": {
     "@earendil-works/pi-ai": "0.75.5"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ]

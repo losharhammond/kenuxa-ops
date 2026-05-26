@@ -1,4 +1,4 @@
-name: Dependency Change Awareness
+﻿name: Dependency Change Awareness
 
 on:
   pull_request_target: # zizmor: ignore[dangerous-triggers] metadata-only workflow; no checkout or untrusted code execution
@@ -22,7 +22,7 @@ jobs:
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
         with:
           script: |
-            const marker = "<!-- openclaw:dependency-change-awareness -->";
+            const marker = "<!-- KENUXA OPS:dependency-change-awareness -->";
             const labelName = "dependencies-changed";
             const maxListedFiles = 25;
             const pullRequest = context.payload.pull_request;

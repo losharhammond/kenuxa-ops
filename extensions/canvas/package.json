@@ -1,11 +1,11 @@
-{
-  "name": "@openclaw/canvas-plugin",
+﻿{
+  "name": "@KENUXA OPS/canvas-plugin",
   "version": "2026.5.26",
   "private": true,
-  "description": "OpenClaw Canvas plugin",
+  "description": "KENUXA OPS Canvas plugin",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*"
   },
   "dependencies": {
     "@a2ui/lit": "0.10.0",
@@ -15,7 +15,7 @@
     "typebox": "1.1.38",
     "ws": "8.21.0"
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ],

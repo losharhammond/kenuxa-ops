@@ -1,4 +1,4 @@
-import { html, nothing } from "lit";
+﻿import { html, nothing } from "lit";
 import { t } from "../../i18n/index.ts";
 import type { AppViewState } from "../app-view-state.ts";
 import "../components/modal-dialog.ts";
@@ -14,7 +14,7 @@ export function renderGatewayUrlConfirmation(state: AppViewState) {
   const description = t("channels.gatewayUrlConfirmation.subtitle");
 
   return html`
-    <openclaw-modal-dialog
+    <KENUXA OPS-modal-dialog
       label=${title}
       description=${description}
       @modal-cancel=${() => state.handleGatewayUrlCancel()}
@@ -39,6 +39,6 @@ export function renderGatewayUrlConfirmation(state: AppViewState) {
           </button>
         </div>
       </div>
-    </openclaw-modal-dialog>
+    </KENUXA OPS-modal-dialog>
   `;
 }

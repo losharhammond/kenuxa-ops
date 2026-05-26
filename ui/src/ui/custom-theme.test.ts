@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+﻿import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   createImportedCustomThemeFixture as createImportedTheme,
   createTweakcnThemePayload as createTweakcnPayload,
@@ -284,7 +284,7 @@ describe("custom theme import helpers", () => {
     syncCustomThemeStyleTag(theme);
 
     expect(appendChild).toHaveBeenCalledWith(style);
-    expect(style.id).toBe("openclaw-custom-theme");
+    expect(style.id).toBe("KENUXA OPS-custom-theme");
     expect(style.textContent).toBe(buildCustomThemeStyles(theme));
 
     vi.stubGlobal("document", {

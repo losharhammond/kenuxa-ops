@@ -1,4 +1,4 @@
-profile: openclaw-check
+﻿profile: KENUXA OPS-check
 provider: aws
 class: standard
 capacity:
@@ -25,7 +25,7 @@ actions:
   ref: main
   runnerLabels:
     - crabbox
-    - openclaw
+    - KENUXA OPS
   runnerVersion: latest
   ephemeral: true
 aws:
@@ -47,7 +47,7 @@ env:
   allow:
     - CI
     - NODE_OPTIONS
-    - OPENCLAW_*
+    - KENUXA OPS_*
 ssh:
   user: crabbox
   port: "2222"

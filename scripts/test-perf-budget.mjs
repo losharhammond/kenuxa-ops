@@ -1,4 +1,4 @@
-import { floatFlag, parseFlagArgs, readEnvNumber, stringFlag } from "./lib/arg-utils.mjs";
+﻿import { floatFlag, parseFlagArgs, readEnvNumber, stringFlag } from "./lib/arg-utils.mjs";
 import { formatMs } from "./lib/vitest-report-cli-utils.mjs";
 import { readJsonFile, runVitestJsonReport } from "./test-report-utils.mjs";
 
@@ -7,9 +7,9 @@ function parseArgs(argv) {
     argv,
     {
       config: "test/vitest/vitest.unit.config.ts",
-      maxWallMs: readEnvNumber("OPENCLAW_TEST_PERF_MAX_WALL_MS"),
-      baselineWallMs: readEnvNumber("OPENCLAW_TEST_PERF_BASELINE_WALL_MS"),
-      maxRegressionPct: readEnvNumber("OPENCLAW_TEST_PERF_MAX_REGRESSION_PCT") ?? 10,
+      maxWallMs: readEnvNumber("KENUXA OPS_TEST_PERF_MAX_WALL_MS"),
+      baselineWallMs: readEnvNumber("KENUXA OPS_TEST_PERF_BASELINE_WALL_MS"),
+      maxRegressionPct: readEnvNumber("KENUXA OPS_TEST_PERF_MAX_REGRESSION_PCT") ?? 10,
     },
     [
       stringFlag("--config", "config"),
@@ -24,7 +24,7 @@ const opts = parseArgs(process.argv.slice(2));
 const startedAt = process.hrtime.bigint();
 const reportPath = runVitestJsonReport({
   config: opts.config,
-  prefix: "openclaw-vitest-perf",
+  prefix: "KENUXA OPS-vitest-perf",
 });
 const elapsedMs = Number(process.hrtime.bigint() - startedAt) / 1_000_000;
 

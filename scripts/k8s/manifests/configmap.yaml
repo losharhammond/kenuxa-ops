@@ -1,11 +1,11 @@
-apiVersion: v1
+﻿apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: openclaw-config
+  name: KENUXA OPS-config
   labels:
-    app: openclaw
+    app: KENUXA OPS
 data:
-  openclaw.json: |
+  KENUXA OPS.json: |
     {
       "gateway": {
         "mode": "local",
@@ -20,19 +20,19 @@ data:
       },
       "agents": {
         "defaults": {
-          "workspace": "~/.openclaw/workspace"
+          "workspace": "~/.KENUXA OPS/workspace"
         },
         "list": [
           {
             "id": "default",
-            "name": "OpenClaw Assistant",
-            "workspace": "~/.openclaw/workspace"
+            "name": "KENUXA OPS Assistant",
+            "workspace": "~/.KENUXA OPS/workspace"
           }
         ]
       },
       "cron": { "enabled": false }
     }
   AGENTS.md: |
-    # OpenClaw Assistant
+    # KENUXA OPS Assistant
 
     You are a helpful AI assistant running in Kubernetes.

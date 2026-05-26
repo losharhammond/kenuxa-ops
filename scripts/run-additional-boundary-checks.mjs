@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 import { spawn } from "node:child_process";
 import { performance } from "node:perf_hooks";
 
@@ -257,13 +257,13 @@ function resolveCliShardSpec(args, env) {
   if (inlineShard) {
     return inlineShard.slice("--shard=".length);
   }
-  return env.OPENCLAW_ADDITIONAL_BOUNDARY_SHARD ?? "";
+  return env.KENUXA OPS_ADDITIONAL_BOUNDARY_SHARD ?? "";
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   const concurrency = resolveConcurrency(
-    process.env.OPENCLAW_ADDITIONAL_BOUNDARY_CONCURRENCY ??
-      process.env.OPENCLAW_EXTENSION_BOUNDARY_CONCURRENCY,
+    process.env.KENUXA OPS_ADDITIONAL_BOUNDARY_CONCURRENCY ??
+      process.env.KENUXA OPS_EXTENSION_BOUNDARY_CONCURRENCY,
   );
   const shards = parseShardSelection(resolveCliShardSpec(process.argv.slice(2), process.env));
   const checks = selectChecksForShard(BOUNDARY_CHECKS, shards);

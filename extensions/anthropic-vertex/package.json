@@ -1,10 +1,10 @@
-{
-  "name": "@openclaw/anthropic-vertex-provider",
+﻿{
+  "name": "@KENUXA OPS/anthropic-vertex-provider",
   "version": "2026.5.26",
-  "description": "OpenClaw Anthropic Vertex provider plugin",
+  "description": "KENUXA OPS Anthropic Vertex provider plugin",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openclaw/openclaw"
+    "url": "https://github.com/KENUXA OPS/KENUXA OPS"
   },
   "type": "module",
   "dependencies": {
@@ -13,14 +13,14 @@
     "@earendil-works/pi-ai": "0.75.5"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ],
     "install": {
-      "npmSpec": "@openclaw/anthropic-vertex-provider",
+      "npmSpec": "@KENUXA OPS/anthropic-vertex-provider",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.5.12-beta.1"
     },
@@ -28,7 +28,7 @@
       "pluginApi": ">=2026.5.26"
     },
     "build": {
-      "openclawVersion": "2026.5.26",
+      "KENUXA OPSVersion": "2026.5.26",
       "bundledDist": false
     },
     "release": {

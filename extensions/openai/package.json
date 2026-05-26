@@ -1,17 +1,17 @@
-{
-  "name": "@openclaw/openai-provider",
+﻿{
+  "name": "@KENUXA OPS/openai-provider",
   "version": "2026.5.26",
   "private": true,
-  "description": "OpenClaw OpenAI provider plugins",
+  "description": "KENUXA OPS OpenAI provider plugins",
   "type": "module",
   "dependencies": {
     "@earendil-works/pi-ai": "0.75.5",
     "ws": "8.21.0"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ]

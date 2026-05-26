@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+﻿import { existsSync } from "node:fs";
 import { createRequire } from "node:module";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -44,7 +44,7 @@ export default {
     alias: {
       "@a2ui/lit": a2uiLitIndex,
       "@a2ui/lit/ui": a2uiLitUi,
-      "@openclaw/a2ui-theme-context": a2uiThemeContext,
+      "@KENUXA OPS/a2ui-theme-context": a2uiThemeContext,
       "@lit/context": resolveUiDependency("@lit/context"),
       "@lit/context/": resolveUiDependency("@lit/context/"),
       "@lit-labs/signals": resolveUiDependency("@lit-labs/signals"),

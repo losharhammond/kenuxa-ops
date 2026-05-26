@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { RELEASE_METADATA_PATHS } from "./changed-lanes.mjs";
@@ -7,7 +7,7 @@ const VERSION_ONLY_TEXT_PATHS = new Set([
   "apps/android/app/build.gradle.kts",
   "apps/ios/Config/Version.xcconfig",
   "apps/ios/version.json",
-  "apps/macos/Sources/OpenClaw/Resources/Info.plist",
+  "apps/macos/Sources/KENUXA OPS/Resources/Info.plist",
 ]);
 
 function normalizePath(input) {
@@ -108,8 +108,8 @@ function stableJson(value) {
 
 function normalizeVersionText(raw) {
   return raw
-    .replace(/\b20\d{2}\.\d{1,2}\.\d{1,2}(?:-beta\.\d+|-\d+)?\b/gu, "<OPENCLAW_VERSION>")
-    .replace(/\b20\d{6}(?:\d{2})?\b/gu, "<OPENCLAW_BUILD>");
+    .replace(/\b20\d{2}\.\d{1,2}\.\d{1,2}(?:-beta\.\d+|-\d+)?\b/gu, "<KENUXA OPS_VERSION>")
+    .replace(/\b20\d{6}(?:\d{2})?\b/gu, "<KENUXA OPS_BUILD>");
 }
 
 function fail(message) {

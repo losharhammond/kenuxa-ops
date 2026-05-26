@@ -1,4 +1,4 @@
-name: OpenGrep — PR Diff
+﻿name: OpenGrep — PR Diff
 
 # Runs the high-precision OpenGrep rule super-config against only first-party
 # source paths changed by a pull request. Keeping PR scans diff-scoped makes
@@ -73,7 +73,7 @@ jobs:
 
       - name: Run opengrep on PR diff
         env:
-          OPENCLAW_OPENGREP_BASE_REF: ${{ github.event.pull_request.base.sha }}...HEAD
+          KENUXA OPS_OPENGREP_BASE_REF: ${{ github.event.pull_request.base.sha }}...HEAD
         # Findings from precise rules block this workflow. Pull requests scan
         # changed first-party source paths only so findings stay attributable to
         # the PR diff. Test/fixture/QA path exclusions live in `.semgrepignore`

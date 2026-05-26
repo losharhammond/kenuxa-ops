@@ -1,4 +1,4 @@
-import { LitElement, css, html, nothing } from "lit";
+﻿import { LitElement, css, html, nothing } from "lit";
 import { property, query } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 
@@ -12,7 +12,7 @@ const FOCUSABLE_SELECTOR = [
   "[tabindex]:not([tabindex='-1'])",
 ].join(",");
 
-export class OpenClawModalDialog extends LitElement {
+export class KENUXA OPSModalDialog extends LitElement {
   @property() label = "";
   @property() description = "";
 
@@ -97,8 +97,8 @@ export class OpenClawModalDialog extends LitElement {
   }
 
   override render() {
-    const labelId = this.label ? "openclaw-modal-dialog-label" : "";
-    const descriptionId = this.description ? "openclaw-modal-dialog-description" : "";
+    const labelId = this.label ? "KENUXA OPS-modal-dialog-label" : "";
+    const descriptionId = this.description ? "KENUXA OPS-modal-dialog-description" : "";
     return html`
       <dialog
         role="dialog"
@@ -268,12 +268,12 @@ export class OpenClawModalDialog extends LitElement {
   }
 }
 
-if (!customElements.get("openclaw-modal-dialog")) {
-  customElements.define("openclaw-modal-dialog", OpenClawModalDialog);
+if (!customElements.get("KENUXA OPS-modal-dialog")) {
+  customElements.define("KENUXA OPS-modal-dialog", KENUXA OPSModalDialog);
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    "openclaw-modal-dialog": OpenClawModalDialog;
+    "KENUXA OPS-modal-dialog": KENUXA OPSModalDialog;
   }
 }

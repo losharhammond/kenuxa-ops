@@ -1,16 +1,16 @@
-{
-  "name": "@openclaw/fireworks-provider",
+﻿{
+  "name": "@KENUXA OPS/fireworks-provider",
   "version": "2026.5.26",
   "private": true,
-  "description": "OpenClaw Fireworks provider plugin",
+  "description": "KENUXA OPS Fireworks provider plugin",
   "type": "module",
   "dependencies": {
     "@earendil-works/pi-ai": "0.75.5"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ]

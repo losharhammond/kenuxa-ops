@@ -1,26 +1,26 @@
-{
-  "name": "@openclaw/qa-matrix",
+﻿{
+  "name": "@KENUXA OPS/qa-matrix",
   "version": "2026.5.26",
   "private": true,
-  "description": "OpenClaw Matrix QA runner plugin",
+  "description": "KENUXA OPS Matrix QA runner plugin",
   "type": "module",
   "dependencies": {
     "undici": "8.3.0"
   },
   "devDependencies": {
-    "@openclaw/matrix": "workspace:*",
-    "@openclaw/plugin-sdk": "workspace:*",
-    "openclaw": "workspace:*"
+    "@KENUXA OPS/matrix": "workspace:*",
+    "@KENUXA OPS/plugin-sdk": "workspace:*",
+    "KENUXA OPS": "workspace:*"
   },
   "peerDependencies": {
-    "openclaw": ">=2026.5.26"
+    "KENUXA OPS": ">=2026.5.26"
   },
   "peerDependenciesMeta": {
-    "openclaw": {
+    "KENUXA OPS": {
       "optional": true
     }
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ],

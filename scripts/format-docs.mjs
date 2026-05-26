@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 import { execFileSync, spawnSync } from "node:child_process";
 import fs from "node:fs";
@@ -55,7 +55,7 @@ function repairFiles(root, files) {
 }
 
 function copyDocsToTemp(files) {
-  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-docs-format-"));
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "KENUXA OPS-docs-format-"));
   for (const relativePath of files) {
     const source = path.join(ROOT, relativePath);
     const target = path.join(tempRoot, relativePath);

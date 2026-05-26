@@ -1,10 +1,10 @@
-{
-  "name": "@openclaw/diagnostics-otel",
+﻿{
+  "name": "@KENUXA OPS/diagnostics-otel",
   "version": "2026.5.26",
-  "description": "OpenClaw diagnostics OpenTelemetry exporter",
+  "description": "KENUXA OPS diagnostics OpenTelemetry exporter",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openclaw/openclaw"
+    "url": "https://github.com/KENUXA OPS/KENUXA OPS"
   },
   "type": "module",
   "dependencies": {
@@ -21,15 +21,15 @@
     "@opentelemetry/semantic-conventions": "1.41.1"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ],
     "install": {
-      "clawhubSpec": "clawhub:@openclaw/diagnostics-otel",
-      "npmSpec": "@openclaw/diagnostics-otel",
+      "clawhubSpec": "clawhub:@KENUXA OPS/diagnostics-otel",
+      "npmSpec": "@KENUXA OPS/diagnostics-otel",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.4.25"
     },
@@ -37,7 +37,7 @@
       "pluginApi": ">=2026.5.26"
     },
     "build": {
-      "openclawVersion": "2026.5.26"
+      "KENUXA OPSVersion": "2026.5.26"
     },
     "release": {
       "publishToClawHub": true,

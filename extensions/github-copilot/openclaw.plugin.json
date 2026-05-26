@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "github-copilot",
   "activation": {
     "onStartup": false
@@ -185,7 +185,7 @@
     },
     "discovery.enabled": {
       "label": "Enable Discovery",
-      "help": "When false, OpenClaw keeps the GitHub Copilot plugin available but skips implicit startup discovery from ambient Copilot credentials."
+      "help": "When false, KENUXA OPS keeps the GitHub Copilot plugin available but skips implicit startup discovery from ambient Copilot credentials."
     }
   }
 }

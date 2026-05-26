@@ -1,4 +1,4 @@
-import { spawnSync } from "node:child_process";
+﻿import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import {
   booleanFlag,
@@ -55,16 +55,16 @@ const opts = parseFlagArgs(
   {
     baseline: CLI_STARTUP_BENCH_FIXTURE_PATH,
     report: "",
-    entry: "openclaw.mjs",
+    entry: "KENUXA OPS.mjs",
     preset: "all",
     runs: 1,
     warmup: 0,
     timeoutMs: 30_000,
     maxDurationRegressionPct:
-      readEnvNumber("OPENCLAW_STARTUP_BENCH_MAX_DURATION_REGRESSION_PCT") ?? 20,
+      readEnvNumber("KENUXA OPS_STARTUP_BENCH_MAX_DURATION_REGRESSION_PCT") ?? 20,
     maxFirstOutputRegressionPct:
-      readEnvNumber("OPENCLAW_STARTUP_BENCH_MAX_FIRST_OUTPUT_REGRESSION_PCT") ?? 20,
-    maxRssRegressionPct: readEnvNumber("OPENCLAW_STARTUP_BENCH_MAX_RSS_REGRESSION_PCT") ?? 20,
+      readEnvNumber("KENUXA OPS_STARTUP_BENCH_MAX_FIRST_OUTPUT_REGRESSION_PCT") ?? 20,
+    maxRssRegressionPct: readEnvNumber("KENUXA OPS_STARTUP_BENCH_MAX_RSS_REGRESSION_PCT") ?? 20,
     skipBaseline: false,
   },
   [

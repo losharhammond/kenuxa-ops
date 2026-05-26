@@ -1,4 +1,4 @@
-import { normalizeChatAutoScrollMode, type ChatAutoScrollMode } from "./storage.ts";
+﻿import { normalizeChatAutoScrollMode, type ChatAutoScrollMode } from "./storage.ts";
 
 /** Distance (px) from the bottom within which we consider the user "near bottom". */
 const NEAR_BOTTOM_THRESHOLD = 450;
@@ -270,7 +270,7 @@ export function exportLogs(lines: string[], label: string) {
   const anchor = document.createElement("a");
   const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-");
   anchor.href = url;
-  anchor.download = `openclaw-logs-${label}-${stamp}.log`;
+  anchor.download = `KENUXA OPS-logs-${label}-${stamp}.log`;
   anchor.click();
   URL.revokeObjectURL(url);
 }

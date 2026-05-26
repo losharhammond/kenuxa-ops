@@ -1,4 +1,4 @@
-import fs from "node:fs";
+﻿import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import {
@@ -27,7 +27,7 @@ function shouldCopyBundledPluginMetadata(id, env, buildablePluginDirs) {
   if (!NON_PACKAGED_BUNDLED_PLUGIN_DIRS.has(id)) {
     return true;
   }
-  return env.OPENCLAW_BUILD_PRIVATE_QA === "1";
+  return env.KENUXA OPS_BUILD_PRIVATE_QA === "1";
 }
 
 export function rewritePackageExtensions(entries) {
@@ -78,7 +78,7 @@ function collectTopLevelPublicSurfaceEntries(pluginDir) {
 
 function isManifestlessBundledRuntimeSupportPackage(params) {
   const packageName = typeof params.packageJson?.name === "string" ? params.packageJson.name : "";
-  if (packageName !== `@openclaw/${params.dirName}`) {
+  if (packageName !== `@KENUXA OPS/${params.dirName}`) {
     return false;
   }
   return params.topLevelPublicSurfaceEntries.length > 0;
@@ -254,7 +254,7 @@ export function copyBundledPluginMetadata(params = {}) {
     }
 
     const pluginDir = path.join(extensionsRoot, dirent.name);
-    const manifestPath = path.join(pluginDir, "openclaw.plugin.json");
+    const manifestPath = path.join(pluginDir, "KENUXA OPS.plugin.json");
     const distPluginDir = path.join(distExtensionsRoot, dirent.name);
     const packageJsonPath = path.join(pluginDir, "package.json");
     const packageJson = fs.existsSync(packageJsonPath)
@@ -280,7 +280,7 @@ export function copyBundledPluginMetadata(params = {}) {
 
     sourcePluginDirs.add(dirent.name);
 
-    const distManifestPath = path.join(distPluginDir, "openclaw.plugin.json");
+    const distManifestPath = path.join(distPluginDir, "KENUXA OPS.plugin.json");
     const distPackageJsonPath = path.join(distPluginDir, "package.json");
     if (!fs.existsSync(manifestPath) && !isManifestlessSupportPackage) {
       removePathIfExists(distPluginDir);
@@ -313,12 +313,12 @@ export function copyBundledPluginMetadata(params = {}) {
       removeFileIfExists(distPackageJsonPath);
       continue;
     }
-    if (packageJson.openclaw && "extensions" in packageJson.openclaw) {
-      packageJson.openclaw = {
-        ...packageJson.openclaw,
-        extensions: rewritePackageExtensions(packageJson.openclaw.extensions),
-        ...(typeof packageJson.openclaw.setupEntry === "string"
-          ? { setupEntry: rewritePackageEntry(packageJson.openclaw.setupEntry) }
+    if (packageJson.KENUXA OPS && "extensions" in packageJson.KENUXA OPS) {
+      packageJson.KENUXA OPS = {
+        ...packageJson.KENUXA OPS,
+        extensions: rewritePackageExtensions(packageJson.KENUXA OPS.extensions),
+        ...(typeof packageJson.KENUXA OPS.setupEntry === "string"
+          ? { setupEntry: rewritePackageEntry(packageJson.KENUXA OPS.setupEntry) }
           : {}),
       };
     }

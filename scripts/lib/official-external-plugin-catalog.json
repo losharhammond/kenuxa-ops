@@ -1,28 +1,28 @@
-{
+﻿{
   "entries": [
     {
-      "name": "@openclaw/acpx",
-      "description": "OpenClaw ACP runtime backend",
+      "name": "@KENUXA OPS/acpx",
+      "description": "KENUXA OPS ACP runtime backend",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "KENUXA OPS": {
         "plugin": {
           "id": "acpx",
           "label": "ACPX Runtime"
         },
         "install": {
-          "npmSpec": "@openclaw/acpx",
+          "npmSpec": "@KENUXA OPS/acpx",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.25"
         }
       }
     },
     {
-      "name": "@openclaw/brave-plugin",
-      "description": "OpenClaw Brave plugin",
+      "name": "@KENUXA OPS/brave-plugin",
+      "description": "KENUXA OPS Brave plugin",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "KENUXA OPS": {
         "plugin": {
           "id": "brave",
           "label": "Brave"
@@ -37,13 +37,13 @@
             "envVars": ["BRAVE_API_KEY"],
             "placeholder": "BSA...",
             "signupUrl": "https://api-dashboard.search.brave.com/app/keys",
-            "docsUrl": "https://docs.openclaw.ai/tools/brave-search",
+            "docsUrl": "https://docs.KENUXA OPS.ai/tools/brave-search",
             "credentialPath": "plugins.entries.brave.config.webSearch.apiKey",
             "autoDetectOrder": 10
           }
         ],
         "install": {
-          "npmSpec": "@openclaw/brave-plugin",
+          "npmSpec": "@KENUXA OPS/brave-plugin",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.10",
           "allowInvalidConfigRecovery": true
@@ -51,138 +51,138 @@
       }
     },
     {
-      "name": "@openclaw/diagnostics-otel",
-      "description": "OpenClaw diagnostics OpenTelemetry exporter",
+      "name": "@KENUXA OPS/diagnostics-otel",
+      "description": "KENUXA OPS diagnostics OpenTelemetry exporter",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "KENUXA OPS": {
         "plugin": {
           "id": "diagnostics-otel",
           "label": "Diagnostics OpenTelemetry"
         },
         "install": {
-          "clawhubSpec": "clawhub:@openclaw/diagnostics-otel",
-          "npmSpec": "@openclaw/diagnostics-otel",
+          "clawhubSpec": "clawhub:@KENUXA OPS/diagnostics-otel",
+          "npmSpec": "@KENUXA OPS/diagnostics-otel",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.25"
         }
       }
     },
     {
-      "name": "@openclaw/diagnostics-prometheus",
-      "description": "OpenClaw diagnostics Prometheus exporter",
+      "name": "@KENUXA OPS/diagnostics-prometheus",
+      "description": "KENUXA OPS diagnostics Prometheus exporter",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "KENUXA OPS": {
         "plugin": {
           "id": "diagnostics-prometheus",
           "label": "Diagnostics Prometheus"
         },
         "install": {
-          "clawhubSpec": "clawhub:@openclaw/diagnostics-prometheus",
-          "npmSpec": "@openclaw/diagnostics-prometheus",
+          "clawhubSpec": "clawhub:@KENUXA OPS/diagnostics-prometheus",
+          "npmSpec": "@KENUXA OPS/diagnostics-prometheus",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.25"
         }
       }
     },
     {
-      "name": "@openclaw/diffs",
-      "description": "OpenClaw diff viewer plugin",
+      "name": "@KENUXA OPS/diffs",
+      "description": "KENUXA OPS diff viewer plugin",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "KENUXA OPS": {
         "plugin": {
           "id": "diffs",
           "label": "Diffs"
         },
         "install": {
-          "npmSpec": "@openclaw/diffs",
+          "npmSpec": "@KENUXA OPS/diffs",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.30"
         }
       }
     },
     {
-      "name": "@openclaw/google-meet",
-      "description": "OpenClaw Google Meet participant plugin",
+      "name": "@KENUXA OPS/google-meet",
+      "description": "KENUXA OPS Google Meet participant plugin",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "KENUXA OPS": {
         "plugin": {
           "id": "google-meet",
           "label": "Google Meet"
         },
         "install": {
-          "npmSpec": "@openclaw/google-meet",
+          "npmSpec": "@KENUXA OPS/google-meet",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.20"
         }
       }
     },
     {
-      "name": "@openclaw/lobster",
+      "name": "@KENUXA OPS/lobster",
       "description": "Lobster workflow tool plugin (typed pipelines + resumable approvals)",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "KENUXA OPS": {
         "plugin": {
           "id": "lobster",
           "label": "Lobster"
         },
         "install": {
-          "npmSpec": "@openclaw/lobster",
+          "npmSpec": "@KENUXA OPS/lobster",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.25"
         }
       }
     },
     {
-      "name": "@openclaw/memory-lancedb",
-      "description": "OpenClaw LanceDB-backed long-term memory plugin with auto-recall/capture",
+      "name": "@KENUXA OPS/memory-lancedb",
+      "description": "KENUXA OPS LanceDB-backed long-term memory plugin with auto-recall/capture",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "KENUXA OPS": {
         "plugin": {
           "id": "memory-lancedb",
           "label": "Memory LanceDB"
         },
         "install": {
-          "npmSpec": "@openclaw/memory-lancedb",
+          "npmSpec": "@KENUXA OPS/memory-lancedb",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.10"
         }
       }
     },
     {
-      "name": "@openclaw/openshell-sandbox",
-      "description": "OpenClaw OpenShell sandbox backend",
+      "name": "@KENUXA OPS/openshell-sandbox",
+      "description": "KENUXA OPS OpenShell sandbox backend",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "KENUXA OPS": {
         "plugin": {
           "id": "openshell",
           "label": "OpenShell Sandbox"
         },
         "install": {
-          "npmSpec": "@openclaw/openshell-sandbox",
+          "npmSpec": "@KENUXA OPS/openshell-sandbox",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.5.12-beta.1"
         }
       }
     },
     {
-      "name": "@openclaw/voice-call",
-      "description": "OpenClaw voice-call plugin",
+      "name": "@KENUXA OPS/voice-call",
+      "description": "KENUXA OPS voice-call plugin",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "KENUXA OPS": {
         "plugin": {
           "id": "voice-call",
           "label": "Voice Call"
         },
         "install": {
-          "npmSpec": "@openclaw/voice-call",
+          "npmSpec": "@KENUXA OPS/voice-call",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.10"
         }

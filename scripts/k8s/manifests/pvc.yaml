@@ -1,9 +1,9 @@
-apiVersion: v1
+﻿apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: openclaw-home-pvc
+  name: KENUXA OPS-home-pvc
   labels:
-    app: openclaw
+    app: KENUXA OPS
 spec:
   accessModes:
     - ReadWriteOnce

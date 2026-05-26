@@ -1,4 +1,4 @@
-packages:
+﻿packages:
   - .
   - ui
   - packages/*
@@ -7,8 +7,8 @@ packages:
 minimumReleaseAge: 2880
 
 minimumReleaseAgeExclude:
-  - "@openclaw/fs-safe@0.3.0"
-  - "@openclaw/proxyline@0.3.3"
+  - "@KENUXA OPS/fs-safe@0.3.0"
+  - "@KENUXA OPS/proxyline@0.3.3"
   - "acpx"
   - "tokenjuice"
   - "@agentclientprotocol/sdk"
@@ -18,7 +18,7 @@ minimumReleaseAgeExclude:
   - "hono"
   - "libopus-wasm@0.0.1"
   - "libsignal@6.0.0"
-  - "openclaw"
+  - "KENUXA OPS"
   - "protobufjs"
   - "vite"
   - "@cloudflare/workers-types"
@@ -89,7 +89,7 @@ overrides:
   uuid: 14.0.0
 
 allowBuilds:
-  "@openclaw/fs-safe": true
+  "@KENUXA OPS/fs-safe": true
   "@google/genai": true
   "@lydell/node-pty": true
   "@matrix-org/matrix-sdk-crypto-nodejs": true
@@ -104,8 +104,8 @@ allowBuilds:
   node-llama-cpp: true
   protobufjs: true
   tree-sitter-bash: false
-  openclaw: true
-  "@openclaw/proxyline": true
+  KENUXA OPS: true
+  "@KENUXA OPS/proxyline": true
   rastermill: true
 
 packageExtensions:

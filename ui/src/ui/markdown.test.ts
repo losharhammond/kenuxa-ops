@@ -1,4 +1,4 @@
-import { render } from "lit";
+﻿import { render } from "lit";
 import { describe, expect, it, vi } from "vitest";
 import { i18n } from "../i18n/index.ts";
 import { md, toSanitizedMarkdownHtml } from "./markdown.ts";
@@ -200,9 +200,9 @@ describe("toSanitizedMarkdownHtml", () => {
     });
 
     it("links http:// URLs", () => {
-      const html = toSanitizedMarkdownHtml("Visit http://github.com/openclaw");
+      const html = toSanitizedMarkdownHtml("Visit http://github.com/KENUXA OPS");
       expect(html).toBe(
-        '<p>Visit <a href="http://github.com/openclaw" rel="noreferrer noopener" target="_blank">http://github.com/openclaw</a></p>\n',
+        '<p>Visit <a href="http://github.com/KENUXA OPS" rel="noreferrer noopener" target="_blank">http://github.com/KENUXA OPS</a></p>\n',
       );
     });
 
@@ -247,9 +247,9 @@ describe("toSanitizedMarkdownHtml", () => {
     });
 
     it("does NOT rewrite explicit markdown links with CJK display text", () => {
-      const html = toSanitizedMarkdownHtml("[OpenClaw中文](https://docs.openclaw.ai)");
+      const html = toSanitizedMarkdownHtml("[KENUXA OPS中文](https://docs.KENUXA OPS.ai)");
       expect(html).toBe(
-        '<p><a href="https://docs.openclaw.ai" rel="noreferrer noopener" target="_blank">OpenClaw中文</a></p>\n',
+        '<p><a href="https://docs.KENUXA OPS.ai" rel="noreferrer noopener" target="_blank">KENUXA OPS中文</a></p>\n',
       );
     });
 
@@ -572,7 +572,7 @@ PY
 
     it("strips href from host-local absolute file paths", () => {
       const html = toSanitizedMarkdownHtml(
-        "[report.docx](/Users/test/.openclaw/data/skills/output/report.docx)",
+        "[report.docx](/Users/test/.KENUXA OPS/data/skills/output/report.docx)",
       );
       expect(html).toBe("<p><a>report.docx</a></p>\n");
     });

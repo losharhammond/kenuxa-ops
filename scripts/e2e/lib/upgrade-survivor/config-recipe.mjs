@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
@@ -111,7 +111,7 @@ const scenarioConfigSteps = new Map([
       {
         id: "logging-file",
         intent: "logging",
-        argv: ["config", "set", "logging.file", "~/openclaw-upgrade-survivor/gateway.jsonl"],
+        argv: ["config", "set", "logging.file", "~/KENUXA OPS-upgrade-survivor/gateway.jsonl"],
       },
     ],
   ],
@@ -155,7 +155,7 @@ const recipe = [
 ];
 
 function selectedScenario() {
-  return process.env.OPENCLAW_UPGRADE_SURVIVOR_SCENARIO || "base";
+  return process.env.KENUXA OPS_UPGRADE_SURVIVOR_SCENARIO || "base";
 }
 
 function adaptStepForBaseline(step, baselineVersion, summary) {
@@ -197,28 +197,28 @@ function adaptStepForBaseline(step, baselineVersion, summary) {
   return step;
 }
 
-export function resolveUpgradeSurvivorOpenClawCommand(argv, params = {}) {
+export function resolveUpgradeSurvivorKENUXA OPSCommand(argv, params = {}) {
   const platform = params.platform ?? process.platform;
   if (platform === "win32") {
     const comSpec = params.comSpec ?? process.env.ComSpec ?? "cmd.exe";
     return {
       command: comSpec,
-      args: ["/d", "/s", "/c", buildCmdExeCommandLine("openclaw.cmd", argv)],
-      commandLabel: ["openclaw", ...argv].join(" "),
+      args: ["/d", "/s", "/c", buildCmdExeCommandLine("KENUXA OPS.cmd", argv)],
+      commandLabel: ["KENUXA OPS", ...argv].join(" "),
       shell: false,
       windowsVerbatimArguments: true,
     };
   }
   return {
-    command: "openclaw",
+    command: "KENUXA OPS",
     args: argv,
-    commandLabel: ["openclaw", ...argv].join(" "),
+    commandLabel: ["KENUXA OPS", ...argv].join(" "),
     shell: false,
   };
 }
 
-function runOpenClaw(step) {
-  const invocation = resolveUpgradeSurvivorOpenClawCommand(step.argv);
+function runKENUXA OPS(step) {
+  const invocation = resolveUpgradeSurvivorKENUXA OPSCommand(step.argv);
   const result = spawnSync(invocation.command, invocation.args, {
     encoding: "utf8",
     env: process.env,
@@ -268,7 +268,7 @@ function applyRecipe() {
     if (!adaptedStep) {
       continue;
     }
-    const outcome = runOpenClaw(adaptedStep);
+    const outcome = runKENUXA OPS(adaptedStep);
     summary.steps.push(outcome);
     writeJson(summaryPath, summary);
     if (!outcome.ok) {

@@ -1,19 +1,19 @@
-services:
+﻿services:
   - type: web
-    name: openclaw
+    name: KENUXA OPS
     runtime: docker
     plan: starter
     healthCheckPath: /health
     envVars:
-      - key: OPENCLAW_GATEWAY_PORT
+      - key: KENUXA OPS_GATEWAY_PORT
         value: "8080"
-      - key: OPENCLAW_STATE_DIR
-        value: /data/.openclaw
-      - key: OPENCLAW_WORKSPACE_DIR
+      - key: KENUXA OPS_STATE_DIR
+        value: /data/.KENUXA OPS
+      - key: KENUXA OPS_WORKSPACE_DIR
         value: /data/workspace
-      - key: OPENCLAW_GATEWAY_TOKEN
+      - key: KENUXA OPS_GATEWAY_TOKEN
         generateValue: true
     disk:
-      name: openclaw-data
+      name: KENUXA OPS-data
       mountPath: /data
       sizeGB: 1

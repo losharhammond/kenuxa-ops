@@ -1,14 +1,14 @@
-{
-  "name": "@openclaw/media-understanding-core",
+﻿{
+  "name": "@KENUXA OPS/media-understanding-core",
   "version": "2026.5.26",
   "private": true,
-  "description": "OpenClaw media understanding runtime package",
+  "description": "KENUXA OPS media understanding runtime package",
   "type": "module",
   "dependencies": {
     "@silvia-odwyer/photon-node": "0.3.4"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*"
   },
-  "openclaw": {}
+  "KENUXA OPS": {}
 }

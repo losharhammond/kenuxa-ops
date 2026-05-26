@@ -1,7 +1,7 @@
-[
+﻿[
   {
-    "source": "OpenClaw",
-    "target": "OpenClaw"
+    "source": "KENUXA OPS",
+    "target": "KENUXA OPS"
   },
   {
     "source": "iMessage",
@@ -48,12 +48,12 @@
     "target": "Mantis"
   },
   {
-    "source": "OpenClaw App SDK",
-    "target": "OpenClaw 应用 SDK"
+    "source": "KENUXA OPS App SDK",
+    "target": "KENUXA OPS 应用 SDK"
   },
   {
-    "source": "OpenClaw App SDK API design",
-    "target": "OpenClaw 应用 SDK API 设计"
+    "source": "KENUXA OPS App SDK API design",
+    "target": "KENUXA OPS 应用 SDK API 设计"
   },
   {
     "source": "Message lifecycle refactor",

@@ -1,4 +1,4 @@
-import fs from "node:fs";
+﻿import fs from "node:fs";
 import path from "node:path";
 import {
   assertAgentReplyContainsMarker,
@@ -11,13 +11,13 @@ const readJson = (file) => JSON.parse(fs.readFileSync(file, "utf8"));
 
 function assertOnboardState() {
   const home = process.argv[3];
-  const stateDir = path.join(home, ".openclaw");
-  const configPath = path.join(stateDir, "openclaw.json");
+  const stateDir = path.join(home, ".KENUXA OPS");
+  const configPath = path.join(stateDir, "KENUXA OPS.json");
   const agentDir = path.join(stateDir, "agents", "main", "agent");
   const authPath = path.join(agentDir, "auth-profiles.json");
 
   if (!fs.existsSync(configPath)) {
-    throw new Error("onboard did not write openclaw.json");
+    throw new Error("onboard did not write KENUXA OPS.json");
   }
   if (!fs.existsSync(agentDir)) {
     throw new Error("onboard did not create main agent dir");
@@ -29,14 +29,14 @@ function assertOnboardState() {
   if (!authRaw.includes("OPENAI_API_KEY")) {
     throw new Error("auth profile did not persist OPENAI_API_KEY env ref");
   }
-  if (authRaw.includes("sk-openclaw-npm-onboard-e2e")) {
+  if (authRaw.includes("sk-KENUXA OPS-npm-onboard-e2e")) {
     throw new Error("auth profile persisted the raw OpenAI test key");
   }
 }
 
 function configureMockModel() {
   const mockPort = Number(process.argv[3]);
-  const configPath = path.join(process.env.HOME, ".openclaw", "openclaw.json");
+  const configPath = path.join(process.env.HOME, ".KENUXA OPS", "KENUXA OPS.json");
   const cfg = readJson(configPath);
   applyMockOpenAiModelConfig(cfg, { mockPort });
   fs.writeFileSync(configPath, `${JSON.stringify(cfg, null, 2)}\n`);
@@ -48,7 +48,7 @@ function assertChannelConfig() {
   if (expectedTokens.length === 0) {
     throw new Error("assert-channel-config requires at least one expected token");
   }
-  const configPath = path.join(process.env.HOME, ".openclaw", "openclaw.json");
+  const configPath = path.join(process.env.HOME, ".KENUXA OPS", "KENUXA OPS.json");
   const cfg = readJson(configPath);
   const entry = cfg.channels?.[channel];
   if (!entry || entry.enabled === false) {
@@ -87,7 +87,7 @@ function assertStatusSurfaces() {
 function assertAgentTurn() {
   const marker = process.argv[3];
   const logPath = process.argv[4];
-  assertAgentReplyContainsMarker(marker, "/tmp/openclaw-agent.combined");
+  assertAgentReplyContainsMarker(marker, "/tmp/KENUXA OPS-agent.combined");
   assertOpenAiRequestLogUsed(logPath);
 }
 

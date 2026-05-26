@@ -1,13 +1,13 @@
-{
-  "name": "@openclaw/inworld-speech",
+﻿{
+  "name": "@KENUXA OPS/inworld-speech",
   "version": "2026.5.26",
   "private": true,
-  "description": "OpenClaw Inworld speech plugin",
+  "description": "KENUXA OPS Inworld speech plugin",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ]

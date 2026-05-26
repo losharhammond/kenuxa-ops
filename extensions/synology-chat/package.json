@@ -1,16 +1,16 @@
-{
-  "name": "@openclaw/synology-chat",
+﻿{
+  "name": "@KENUXA OPS/synology-chat",
   "version": "2026.5.26",
-  "description": "Synology Chat channel plugin for OpenClaw",
+  "description": "Synology Chat channel plugin for KENUXA OPS",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openclaw/openclaw"
+    "url": "https://github.com/KENUXA OPS/KENUXA OPS"
   },
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ],
@@ -21,11 +21,11 @@
       "selectionLabel": "Synology Chat (Webhook)",
       "docsPath": "/channels/synology-chat",
       "docsLabel": "synology-chat",
-      "blurb": "Connect your Synology NAS Chat to OpenClaw with full agent capabilities.",
+      "blurb": "Connect your Synology NAS Chat to KENUXA OPS with full agent capabilities.",
       "order": 90
     },
     "install": {
-      "npmSpec": "@openclaw/synology-chat",
+      "npmSpec": "@KENUXA OPS/synology-chat",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.4.10"
     },
@@ -33,7 +33,7 @@
       "pluginApi": ">=2026.5.26"
     },
     "build": {
-      "openclawVersion": "2026.5.26"
+      "KENUXA OPSVersion": "2026.5.26"
     },
     "release": {
       "publishToClawHub": true,

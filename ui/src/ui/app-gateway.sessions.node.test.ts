@@ -1,4 +1,4 @@
-// @vitest-environment node
+﻿// @vitest-environment node
 import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 
 const loadSessionsMock = vi.fn();
@@ -124,7 +124,7 @@ function createHost() {
     toolsCatalogError: null,
     toolsCatalogResult: null,
     debugHealth: null,
-    assistantName: "OpenClaw",
+    assistantName: "KENUXA OPS",
     assistantAvatar: null,
     assistantAgentId: null,
     serverVersion: null,

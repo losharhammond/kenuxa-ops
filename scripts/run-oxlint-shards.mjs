@@ -1,4 +1,4 @@
-import { spawn, spawnSync } from "node:child_process";
+﻿import { spawn, spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import {
@@ -71,7 +71,7 @@ export function createWindowsExtensionShards({
 }
 
 export function resolveWindowsExtensionChunkSize(env = process.env) {
-  const rawValue = env.OPENCLAW_OXLINT_WINDOWS_EXTENSION_CHUNK_SIZE;
+  const rawValue = env.KENUXA OPS_OXLINT_WINDOWS_EXTENSION_CHUNK_SIZE;
   if (rawValue === undefined) {
     return DEFAULT_WINDOWS_EXTENSION_CHUNK_SIZE;
   }
@@ -121,7 +121,7 @@ export async function main(extraArgs = process.argv.slice(2), runtimeEnv = proce
       env,
     });
   const releaseLock =
-    env.OPENCLAW_OXLINT_SKIP_LOCK === "1"
+    env.KENUXA OPS_OXLINT_SKIP_LOCK === "1"
       ? () => {}
       : shouldAcquireParentLock
         ? acquireLocalHeavyCheckLockSync({
@@ -153,7 +153,7 @@ export async function main(extraArgs = process.argv.slice(2), runtimeEnv = proce
     if ((prepareResult.status ?? 1) !== 0) {
       process.exitCode = prepareResult.status ?? 1;
     } else {
-      const runSerial = env.OPENCLAW_OXLINT_SHARDS_SERIAL === "1" || process.platform === "win32";
+      const runSerial = env.KENUXA OPS_OXLINT_SHARDS_SERIAL === "1" || process.platform === "win32";
       const results = runSerial
         ? await runShardsSerial({ entries: shards, env, extraArgs, runner })
         : await Promise.all(shards.map((shard) => runShard({ env, extraArgs, runner, shard })));
@@ -182,8 +182,8 @@ async function runShard({ env, extraArgs, runner, shard }) {
     stdio: "inherit",
     env: {
       ...env,
-      OPENCLAW_OXLINT_SKIP_LOCK: "1",
-      OPENCLAW_OXLINT_SKIP_PREPARE: "1",
+      KENUXA OPS_OXLINT_SKIP_LOCK: "1",
+      KENUXA OPS_OXLINT_SKIP_PREPARE: "1",
     },
   });
 

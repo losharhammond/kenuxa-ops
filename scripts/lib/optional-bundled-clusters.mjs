@@ -1,4 +1,4 @@
-const optionalBundledClusters = [
+﻿const optionalBundledClusters = [
   "acpx",
   "diagnostics-otel",
   "diffs",
@@ -15,7 +15,7 @@ const optionalBundledClusters = [
 
 export const optionalBundledClusterSet = new Set(optionalBundledClusters);
 
-const OPTIONAL_BUNDLED_BUILD_ENV = "OPENCLAW_INCLUDE_OPTIONAL_BUNDLED";
+const OPTIONAL_BUNDLED_BUILD_ENV = "KENUXA OPS_INCLUDE_OPTIONAL_BUNDLED";
 
 function isOptionalBundledCluster(cluster) {
   return optionalBundledClusterSet.has(cluster);
@@ -29,8 +29,8 @@ function shouldIncludeOptionalBundledClusters(env = process.env) {
 
 function hasReleasedBundledInstall(packageJson) {
   return (
-    typeof packageJson?.openclaw?.install?.npmSpec === "string" &&
-    packageJson.openclaw.install.npmSpec.trim().length > 0
+    typeof packageJson?.KENUXA OPS?.install?.npmSpec === "string" &&
+    packageJson.KENUXA OPS.install.npmSpec.trim().length > 0
   );
 }
 

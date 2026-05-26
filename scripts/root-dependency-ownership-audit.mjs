@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 import fs from "node:fs";
 import path from "node:path";
@@ -170,7 +170,7 @@ function collectInternalizedBundledExtensionRuntimeDependencies(repoRoot, rootPa
       continue;
     }
     const packageJsonPath = path.join(extensionsRoot, entry.name, "package.json");
-    const manifestPath = path.join(extensionsRoot, entry.name, "openclaw.plugin.json");
+    const manifestPath = path.join(extensionsRoot, entry.name, "KENUXA OPS.plugin.json");
     if (!fs.existsSync(packageJsonPath) || !fs.existsSync(manifestPath)) {
       continue;
     }

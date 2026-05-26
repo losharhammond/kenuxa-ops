@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 import fs from "node:fs";
 import path from "node:path";
@@ -65,7 +65,7 @@ const POISON_TEXT_PATTERNS = [
     message: "Leaked tool-call input payload.",
   },
   {
-    pattern: /<\/?openclaw_docs_i18n_input>/iu,
+    pattern: /<\/?KENUXA OPS_docs_i18n_input>/iu,
     message: "Leaked docs i18n prompt wrapper.",
   },
   {

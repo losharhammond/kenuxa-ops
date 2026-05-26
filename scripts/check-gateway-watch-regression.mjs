@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 import { spawn, spawnSync } from "node:child_process";
 import fs from "node:fs";
@@ -29,15 +29,15 @@ const DEFAULTS = {
 };
 
 const WATCH_GATEWAY_SKIP_ENV = {
-  OPENCLAW_DISABLE_BONJOUR: "1",
-  OPENCLAW_SKIP_ACPX_RUNTIME: "1",
-  OPENCLAW_SKIP_ACPX_RUNTIME_PROBE: "1",
-  OPENCLAW_SKIP_BROWSER_CONTROL_SERVER: "1",
-  OPENCLAW_SKIP_CANVAS_HOST: "1",
-  OPENCLAW_SKIP_CHANNELS: "1",
-  OPENCLAW_SKIP_CRON: "1",
-  OPENCLAW_SKIP_GMAIL_WATCHER: "1",
-  OPENCLAW_TEST_MINIMAL_GATEWAY: "1",
+  KENUXA OPS_DISABLE_BONJOUR: "1",
+  KENUXA OPS_SKIP_ACPX_RUNTIME: "1",
+  KENUXA OPS_SKIP_ACPX_RUNTIME_PROBE: "1",
+  KENUXA OPS_SKIP_BROWSER_CONTROL_SERVER: "1",
+  KENUXA OPS_SKIP_CANVAS_HOST: "1",
+  KENUXA OPS_SKIP_CHANNELS: "1",
+  KENUXA OPS_SKIP_CRON: "1",
+  KENUXA OPS_SKIP_GMAIL_WATCHER: "1",
+  KENUXA OPS_TEST_MINIMAL_GATEWAY: "1",
   NODE_ENV: "test",
 };
 
@@ -378,15 +378,15 @@ async function allocateLoopbackPort() {
 
 function buildTimedWatchCommand(pidFilePath, timeFilePath, isolatedHomeDir, port) {
   const shellSource = [
-    'echo "$$" > "$OPENCLAW_WATCH_PID_FILE"',
-    'mkdir -p "$OPENCLAW_HOME/.openclaw"',
-    `printf '%s\n' '{"gateway":{"controlUi":{"enabled":false}},"plugins":{"enabled":false}}' > "$OPENCLAW_HOME/.openclaw/openclaw.json"`,
+    'echo "$$" > "$KENUXA OPS_WATCH_PID_FILE"',
+    'mkdir -p "$KENUXA OPS_HOME/.KENUXA OPS"',
+    `printf '%s\n' '{"gateway":{"controlUi":{"enabled":false}},"plugins":{"enabled":false}}' > "$KENUXA OPS_HOME/.KENUXA OPS/KENUXA OPS.json"`,
     `exec node scripts/watch-node.mjs gateway --force --allow-unconfigured --port ${String(port)} --token watch-regression-token`,
   ].join("\n");
   const env = {
-    OPENCLAW_WATCH_PID_FILE: pidFilePath,
+    KENUXA OPS_WATCH_PID_FILE: pidFilePath,
     HOME: isolatedHomeDir,
-    OPENCLAW_HOME: isolatedHomeDir,
+    KENUXA OPS_HOME: isolatedHomeDir,
     ...WATCH_GATEWAY_SKIP_ENV,
   };
 
@@ -437,7 +437,7 @@ function parseTimingFile(timeFilePath) {
 async function runTimedWatch(options, outputDir) {
   const pidFilePath = path.join(outputDir, "watch.pid");
   const timeFilePath = path.join(outputDir, "watch.time.log");
-  const isolatedHomeDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-gateway-watch-"));
+  const isolatedHomeDir = fs.mkdtempSync(path.join(os.tmpdir(), "KENUXA OPS-gateway-watch-"));
   fs.writeFileSync(path.join(outputDir, "watch.home.txt"), `${isolatedHomeDir}\n`, "utf8");
   const stdoutPath = path.join(outputDir, "watch.stdout.log");
   const stderrPath = path.join(outputDir, "watch.stderr.log");

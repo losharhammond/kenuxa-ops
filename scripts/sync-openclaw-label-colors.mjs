@@ -1,7 +1,7 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 import { execFileSync } from "node:child_process";
 
-const REPO = "openclaw/openclaw";
+const REPO = "KENUXA OPS/KENUXA OPS";
 const APPLY = process.argv.includes("--apply");
 
 const COLORS = {
@@ -242,7 +242,7 @@ function fetchLabels() {
   let cursor = null;
   for (;;) {
     const query = `query($cursor:String) {
-      repository(owner:"openclaw", name:"openclaw") {
+      repository(owner:"KENUXA OPS", name:"KENUXA OPS") {
         labels(first:100, after:$cursor, orderBy:{field:NAME,direction:ASC}) {
           nodes { name color description }
           pageInfo { hasNextPage endCursor }

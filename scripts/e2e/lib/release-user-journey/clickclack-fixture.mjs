@@ -1,10 +1,10 @@
-import crypto from "node:crypto";
+﻿import crypto from "node:crypto";
 import fs from "node:fs";
 import http from "node:http";
 
 const port = Number(process.env.CLICKCLACK_FIXTURE_PORT ?? 44181);
 const token = process.env.CLICKCLACK_FIXTURE_TOKEN ?? "clickclack-release-token";
-const statePath = process.env.CLICKCLACK_FIXTURE_STATE ?? "/tmp/openclaw-clickclack-fixture.json";
+const statePath = process.env.CLICKCLACK_FIXTURE_STATE ?? "/tmp/KENUXA OPS-clickclack-fixture.json";
 const workspace = {
   id: "ws_release",
   name: "Release Workspace",
@@ -21,8 +21,8 @@ const channel = {
 const botUser = {
   id: "usr_bot",
   kind: "bot",
-  display_name: "OpenClaw Bot",
-  handle: "openclaw",
+  display_name: "KENUXA OPS Bot",
+  handle: "KENUXA OPS",
   avatar_url: "",
   created_at: new Date(0).toISOString(),
 };

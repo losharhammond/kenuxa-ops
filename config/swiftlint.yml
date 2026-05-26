@@ -1,4 +1,4 @@
-# SwiftLint configuration adapted from Peekaboo defaults (Swift 6 friendly)
+﻿# SwiftLint configuration adapted from Peekaboo defaults (Swift 6 friendly)
 
 included:
   - ../apps/macos/Sources
@@ -18,9 +18,9 @@ excluded:
   - ../coverage
   - "*.playground"
   # Generated (protocol-gen-swift.ts)
-  - ../apps/macos/Sources/OpenClawProtocol/GatewayModels.swift
+  - ../apps/macos/Sources/KENUXA OPSProtocol/GatewayModels.swift
   # Generated (generate-host-env-security-policy-swift.mjs)
-  - ../apps/macos/Sources/OpenClaw/HostEnvSecurityPolicy.generated.swift
+  - ../apps/macos/Sources/KENUXA OPS/HostEnvSecurityPolicy.generated.swift
 
 analyzer_rules:
   - unused_declaration

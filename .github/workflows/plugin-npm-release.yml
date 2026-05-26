@@ -1,4 +1,4 @@
-name: Plugin NPM Release
+﻿name: Plugin NPM Release
 
 on:
   push:
@@ -33,7 +33,7 @@ on:
         required: false
         type: string
       release_publish_run_id:
-        description: Approved OpenClaw Release Publish workflow run id
+        description: Approved KENUXA OPS Release Publish workflow run id
         required: false
         type: string
 
@@ -200,11 +200,11 @@ jobs:
             exit 0
           fi
           if [[ "${GITHUB_ACTOR}" != "github-actions[bot]" ]]; then
-            echo "Plugin npm publish must be dispatched by the OpenClaw Release Publish workflow, not directly by ${GITHUB_ACTOR}." >&2
+            echo "Plugin npm publish must be dispatched by the KENUXA OPS Release Publish workflow, not directly by ${GITHUB_ACTOR}." >&2
             exit 1
           fi
           RUN_JSON="$(gh run view "$RELEASE_PUBLISH_RUN_ID" --repo "$GITHUB_REPOSITORY" --json workflowName,headBranch,event,status,conclusion,url)"
-          printf '%s' "$RUN_JSON" | node -e 'const fs = require("node:fs"); const run = JSON.parse(fs.readFileSync(0, "utf8")); const checks = [["workflowName", "OpenClaw Release Publish"], ["headBranch", process.env.EXPECTED_WORKFLOW_BRANCH], ["event", "workflow_dispatch"]]; for (const [key, expected] of checks) { if (run[key] !== expected) { console.error(`Referenced release publish run ${process.env.RELEASE_PUBLISH_RUN_ID} must have ${key}=${expected}, got ${run[key] ?? "<missing>"}.`); process.exit(1); } } if (run.status !== "in_progress") { console.error(`Referenced release publish run ${process.env.RELEASE_PUBLISH_RUN_ID} must still be in_progress, got ${run.status ?? "<missing>"}.`); process.exit(1); } if (run.conclusion) { console.error(`Referenced release publish run ${process.env.RELEASE_PUBLISH_RUN_ID} already concluded ${run.conclusion}.`); process.exit(1); } console.log(`Using release publish approval run ${process.env.RELEASE_PUBLISH_RUN_ID}: ${run.url}`);'
+          printf '%s' "$RUN_JSON" | node -e 'const fs = require("node:fs"); const run = JSON.parse(fs.readFileSync(0, "utf8")); const checks = [["workflowName", "KENUXA OPS Release Publish"], ["headBranch", process.env.EXPECTED_WORKFLOW_BRANCH], ["event", "workflow_dispatch"]]; for (const [key, expected] of checks) { if (run[key] !== expected) { console.error(`Referenced release publish run ${process.env.RELEASE_PUBLISH_RUN_ID} must have ${key}=${expected}, got ${run[key] ?? "<missing>"}.`); process.exit(1); } } if (run.status !== "in_progress") { console.error(`Referenced release publish run ${process.env.RELEASE_PUBLISH_RUN_ID} must still be in_progress, got ${run.status ?? "<missing>"}.`); process.exit(1); } if (run.conclusion) { console.error(`Referenced release publish run ${process.env.RELEASE_PUBLISH_RUN_ID} already concluded ${run.conclusion}.`); process.exit(1); } console.log(`Using release publish approval run ${process.env.RELEASE_PUBLISH_RUN_ID}: ${run.url}`);'
 
   preview_plugin_pack:
     needs: preview_plugins_npm

@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 import { spawn, spawnSync } from "node:child_process";
 import fs from "node:fs";
@@ -11,12 +11,12 @@ import {
   pruneBundledPluginSourceNodeModules,
 } from "./postinstall-bundled-plugins.mjs";
 
-const logLevel = process.env.OPENCLAW_BUILD_VERBOSE ? "info" : "warn";
+const logLevel = process.env.KENUXA OPS_BUILD_VERBOSE ? "info" : "warn";
 const extraArgs = process.argv.slice(2);
 const INEFFECTIVE_DYNAMIC_IMPORT_MARKER = "[INEFFECTIVE_DYNAMIC_IMPORT]";
 const UNRESOLVED_IMPORT_RE = /\[UNRESOLVED_IMPORT\]/;
 const ANSI_ESCAPE_RE = new RegExp(String.raw`\u001B\[[0-9;]*m`, "g");
-const DEPENDENCY_PATH_MARKERS = ["node_modules/", "openclaw-pnpm-node-modules/"];
+const DEPENDENCY_PATH_MARKERS = ["node_modules/", "KENUXA OPS-pnpm-node-modules/"];
 const HASHED_ROOT_JS_RE = /^(?<base>.+)-[A-Za-z0-9_-]+\.js$/u;
 const DEFAULT_CAPTURE_BYTES = 8 * 1024 * 1024;
 const DEFAULT_HEARTBEAT_MS = 30_000;
@@ -301,7 +301,7 @@ export function resolveTsdownBuildInvocation(params = {}) {
     "--no-clean",
     ...extraArgs,
   ];
-  if (env.OPENCLAW_BUILD_ALL_NO_PNPM === "1") {
+  if (env.KENUXA OPS_BUILD_ALL_NO_PNPM === "1") {
     return {
       command: params.nodeExecPath ?? process.execPath,
       args: ["node_modules/tsdown/dist/run.mjs", ...tsdownArgs],
@@ -337,9 +337,9 @@ export async function runTsdownBuildInvocation(invocation, params = {}) {
   const stderr = params.stderr ?? process.stderr;
   const env = params.env ?? process.env;
   const scanner = params.scanner ?? createTsdownOutputScanner();
-  const timeoutMs = parsePositiveInteger(env.OPENCLAW_TSDOWN_TIMEOUT_MS);
+  const timeoutMs = parsePositiveInteger(env.KENUXA OPS_TSDOWN_TIMEOUT_MS);
   const heartbeatMs =
-    parseNonNegativeInteger(env.OPENCLAW_TSDOWN_HEARTBEAT_MS) ?? DEFAULT_HEARTBEAT_MS;
+    parseNonNegativeInteger(env.KENUXA OPS_TSDOWN_HEARTBEAT_MS) ?? DEFAULT_HEARTBEAT_MS;
   let timedOut = false;
   let settled = false;
   let lastOutputAt = Date.now();

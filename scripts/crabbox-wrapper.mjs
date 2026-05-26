@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 import { spawn, spawnSync } from "node:child_process";
 import {
   accessSync,
@@ -16,7 +16,7 @@ import { fileURLToPath } from "node:url";
 import { resolvePathEnvKey } from "./windows-cmd-helpers.mjs";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const ignoreRepoBinary = process.env.OPENCLAW_CRABBOX_WRAPPER_IGNORE_REPO_BINARY === "1";
+const ignoreRepoBinary = process.env.KENUXA OPS_CRABBOX_WRAPPER_IGNORE_REPO_BINARY === "1";
 const repoLocal = ignoreRepoBinary ? null : resolveCrabboxBinary(process.env, process.platform);
 const pathLocal = resolvePathBinary("crabbox", process.env, process.platform);
 const binary =
@@ -1100,11 +1100,11 @@ function remoteGitBootstrapForChangedGate(changedGateBase) {
   return [
     "if ! git rev-parse --git-dir >/dev/null 2>&1; then",
     "git init -q;",
-    "git remote add origin https://github.com/openclaw/openclaw.git 2>/dev/null || git remote set-url origin https://github.com/openclaw/openclaw.git;",
+    "git remote add origin https://github.com/KENUXA OPS/KENUXA OPS.git 2>/dev/null || git remote set-url origin https://github.com/KENUXA OPS/KENUXA OPS.git;",
     `git fetch -q --depth=1 origin ${quotedBase}:refs/remotes/origin/main;`,
     "git reset --mixed --quiet refs/remotes/origin/main;",
     "git add -A;",
-    "if ! git diff --cached --quiet; then git -c user.name=OpenClaw -c user.email=ci@openclaw.local commit -q --no-gpg-sign -m remote-changed-gate-tree; fi;",
+    "if ! git diff --cached --quiet; then git -c user.name=KENUXA OPS -c user.email=ci@KENUXA OPS.local commit -q --no-gpg-sign -m remote-changed-gate-tree; fi;",
     "fi",
   ].join(" ");
 }
@@ -1155,10 +1155,10 @@ function injectRemoteChangedGateGitBootstrap(commandArgs, changedGateBase) {
 }
 
 function remoteAwsMacosJsBootstrap() {
-  const nodeVersion = process.env.OPENCLAW_CRABBOX_MACOS_NODE_VERSION?.trim() || "24.15.0";
+  const nodeVersion = process.env.KENUXA OPS_CRABBOX_MACOS_NODE_VERSION?.trim() || "24.15.0";
   return [
-    "openclaw_crabbox_bootstrap_macos_js() {",
-    'tool_root="${OPENCLAW_CRABBOX_MACOS_TOOLCHAIN_DIR:-$HOME/.openclaw-crabbox-toolchain}";',
+    "KENUXA OPS_crabbox_bootstrap_macos_js() {",
+    'tool_root="${KENUXA OPS_CRABBOX_MACOS_TOOLCHAIN_DIR:-$HOME/.KENUXA OPS-crabbox-toolchain}";',
     'pnpm_home="${PNPM_HOME:-$tool_root/pnpm-home}";',
     `node_version=${shellQuote(nodeVersion)};`,
     'arch="$(uname -m)";',
@@ -1188,7 +1188,7 @@ function remoteAwsMacosJsBootstrap() {
     "node --version >&2;",
     "pnpm --version >&2;",
     "};",
-    "openclaw_crabbox_bootstrap_macos_js",
+    "KENUXA OPS_crabbox_bootstrap_macos_js",
   ].join(" ");
 }
 
@@ -1269,7 +1269,7 @@ function prepareAwsMacosScriptStdinBootstrap(commandArgs, providerName) {
     return { args: commandArgs, cleanup: () => {}, prepared: false };
   }
 
-  const scriptRoot = mkdtempSync(resolve(tmpdir(), "openclaw-crabbox-macos-script-"));
+  const scriptRoot = mkdtempSync(resolve(tmpdir(), "KENUXA OPS-crabbox-macos-script-"));
   const scriptPath = resolve(scriptRoot, "script.sh");
   const script = readFileSync(0, "utf8");
   writeFileSync(scriptPath, createAwsMacosScriptStdinWrapper(script), "utf8");
@@ -1288,9 +1288,9 @@ function createAwsMacosScriptStdinWrapper(script) {
   const delimiter = uniqueHereDocDelimiter(script);
   return [
     `${remoteAwsMacosJsBootstrap()} || exit $?`,
-    'tmp_script="$(mktemp "${TMPDIR:-/tmp}/openclaw-crabbox-script.XXXXXX")" || exit $?',
-    'cleanup_openclaw_crabbox_script() { rm -f "$tmp_script"; }',
-    "trap cleanup_openclaw_crabbox_script EXIT",
+    'tmp_script="$(mktemp "${TMPDIR:-/tmp}/KENUXA OPS-crabbox-script.XXXXXX")" || exit $?',
+    'cleanup_KENUXA OPS_crabbox_script() { rm -f "$tmp_script"; }',
+    "trap cleanup_KENUXA OPS_crabbox_script EXIT",
     `cat >"$tmp_script" <<'${delimiter}'`,
     script.endsWith("\n") ? script.slice(0, -1) : script,
     delimiter,
@@ -1303,7 +1303,7 @@ function createAwsMacosScriptStdinWrapper(script) {
 function uniqueHereDocDelimiter(script) {
   let index = 0;
   for (;;) {
-    const delimiter = `OPENCLAW_CRABBOX_SCRIPT_${index}`;
+    const delimiter = `KENUXA OPS_CRABBOX_SCRIPT_${index}`;
     if (!new RegExp(`^${delimiter}$`, "mu").test(script)) {
       return delimiter;
     }
@@ -1336,7 +1336,7 @@ function shouldUseFullCheckoutForCleanSparseRemoteSync(commandArgs, providerName
 }
 
 function prepareFullCheckoutForSync(options = {}) {
-  const dir = mkdtempSync(resolve(tmpdir(), "openclaw-crabbox-sync-"));
+  const dir = mkdtempSync(resolve(tmpdir(), "KENUXA OPS-crabbox-sync-"));
   let active = false;
   const add = gitOutput(["worktree", "add", "--detach", dir, "HEAD"]);
   if (add.status !== 0) {
@@ -1571,7 +1571,7 @@ if (
       ? `pnpm crabbox:hydrate -- --id ${id}`
       : "pnpm crabbox:warmup, then pnpm crabbox:hydrate -- --id <id>";
     console.error(
-      `[crabbox] warning: provider=aws raw boxes may lack Node/Corepack/pnpm for ${runtimeEntrypoint}; hydrate first (${hydrate}) or pass --provider blacksmith-testbox for OpenClaw CI-like proof; not switching providers automatically`,
+      `[crabbox] warning: provider=aws raw boxes may lack Node/Corepack/pnpm for ${runtimeEntrypoint}; hydrate first (${hydrate}) or pass --provider blacksmith-testbox for KENUXA OPS CI-like proof; not switching providers automatically`,
     );
   }
 }
@@ -1584,7 +1584,7 @@ if (
 ) {
   childEnv.CRABBOX_LOCAL_CONTAINER_DOCKER_SOCKET = "1";
   console.error(
-    "[crabbox] provider=docker enabling host Docker socket pass-through for OpenClaw Docker tests",
+    "[crabbox] provider=docker enabling host Docker socket pass-through for KENUXA OPS Docker tests",
   );
 }
 if (
@@ -1593,9 +1593,9 @@ if (
   !childEnv.CRABBOX_LOCAL_CONTAINER_WORK_ROOT &&
   !hasOption(normalizedArgs, "--local-container-work-root")
 ) {
-  childEnv.CRABBOX_LOCAL_CONTAINER_WORK_ROOT = "/tmp/openclaw-crabbox-docker-work";
+  childEnv.CRABBOX_LOCAL_CONTAINER_WORK_ROOT = "/tmp/KENUXA OPS-crabbox-docker-work";
   console.error(
-    "[crabbox] provider=docker using short host-visible work root for OpenClaw Docker tests",
+    "[crabbox] provider=docker using short host-visible work root for KENUXA OPS Docker tests",
   );
 }
 

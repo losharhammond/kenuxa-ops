@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "memory-lancedb",
   "commandAliases": [{ "name": "ltm" }],
   "activation": {
@@ -40,7 +40,7 @@
     },
     "dbPath": {
       "label": "Database Path",
-      "placeholder": "~/.openclaw/memory/lancedb",
+      "placeholder": "~/.KENUXA OPS/memory/lancedb",
       "advanced": true
     },
     "autoCapture": {

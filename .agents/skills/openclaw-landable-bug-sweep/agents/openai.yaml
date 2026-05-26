@@ -1,4 +1,4 @@
-interface:
-  display_name: "OpenClaw Landable Bug Sweep"
+﻿interface:
+  display_name: "KENUXA OPS Landable Bug Sweep"
   short_description: "Find five small non-SDK landable bugfix PRs"
-  default_prompt: "Use $openclaw-landable-bug-sweep to find or repair five small high-confidence non-SDK-boundary OpenClaw bugfix PRs and get them landable."
+  default_prompt: "Use $KENUXA OPS-landable-bug-sweep to find or repair five small high-confidence non-SDK-boundary KENUXA OPS bugfix PRs and get them landable."

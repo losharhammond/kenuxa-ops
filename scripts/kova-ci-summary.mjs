@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
@@ -14,7 +14,7 @@ const keyMetricIds = [
   "peakRssMb",
   "resourcePeakGatewayRssMb",
   "cpuPercentMax",
-  "openclawEventLoopMaxMs",
+  "KENUXA OPSEventLoopMaxMs",
   "agentTurnP95Ms",
   "coldAgentTurnMs",
   "warmAgentTurnMs",
@@ -46,7 +46,7 @@ function renderSummary(report, options) {
       .map(([status, count]) => `${status}: ${value(count)}`)
       .join(", ") || "unknown";
 
-  lines.push(`# OpenClaw Performance Report`);
+  lines.push(`# KENUXA OPS Performance Report`);
   lines.push("");
   lines.push(`- Lane: ${options.lane}`);
   lines.push(`- Run: ${value(report.runId)}`);

@@ -1,4 +1,4 @@
-import fs from "node:fs";
+﻿import fs from "node:fs";
 import path from "node:path";
 import { buildCmdExeCommandLine, resolvePathEnvKey } from "./windows-cmd-helpers.mjs";
 
@@ -71,7 +71,7 @@ export function resolveNpmRunner(params = {}) {
     throw new Error(
       `failed to resolve a toolchain-local npm next to ${execPath}. ` +
         `Checked: ${expectedPaths.join(", ")}. ` +
-        "OpenClaw refuses to shell out to bare npm on Windows; install a Node.js toolchain that bundles npm or run with a matching Node installation.",
+        "KENUXA OPS refuses to shell out to bare npm on Windows; install a Node.js toolchain that bundles npm or run with a matching Node installation.",
     );
   }
   const pathKey = resolvePathEnvKey(env);

@@ -1,4 +1,4 @@
-import { html, nothing } from "lit";
+﻿import { html, nothing } from "lit";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import { t } from "../../i18n/index.ts";
 import type {
@@ -22,8 +22,8 @@ type DiaryEntryNav = {
   page: number;
 };
 
-const DIARY_START_RE = /<!--\s*openclaw:dreaming:diary:start\s*-->/;
-const DIARY_END_RE = /<!--\s*openclaw:dreaming:diary:end\s*-->/;
+const DIARY_START_RE = /<!--\s*KENUXA OPS:dreaming:diary:start\s*-->/;
+const DIARY_END_RE = /<!--\s*KENUXA OPS:dreaming:diary:end\s*-->/;
 
 function parseDiaryEntries(raw: string): DiaryEntry[] {
   // Extract content between diary markers, or use full content.

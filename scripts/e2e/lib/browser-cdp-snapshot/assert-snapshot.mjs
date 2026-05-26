@@ -1,4 +1,4 @@
-import fs from "node:fs";
+﻿import fs from "node:fs";
 
 const snapshotPath = process.argv[2] ?? "/tmp/browser-cdp-snapshot.txt";
 const snapshot = fs.readFileSync(snapshotPath, "utf8");
@@ -6,7 +6,7 @@ const snapshot = fs.readFileSync(snapshotPath, "utf8");
 for (const needle of [
   'button "Save"',
   'link "Docs"',
-  "https://docs.openclaw.ai/browser-cdp-live",
+  "https://docs.KENUXA OPS.ai/browser-cdp-live",
   'generic "Clickable Card"',
   "cursor:pointer",
   'Iframe "Child"',

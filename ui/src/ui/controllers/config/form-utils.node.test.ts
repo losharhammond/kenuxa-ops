@@ -1,4 +1,4 @@
-// @vitest-environment node
+﻿// @vitest-environment node
 import { describe, expect, it } from "vitest";
 import type { JsonSchema } from "../../views/config-form.shared.ts";
 import { coerceFormValues } from "./form-coerce.ts";
@@ -142,7 +142,7 @@ describe("sanitizeRedactedFormForSubmit", () => {
       gateway: {
         mode: "remote",
         remote: {
-          token: "__OPENCLAW_REDACTED__",
+          token: "__KENUXA OPS_REDACTED__",
         },
       },
     };
@@ -150,7 +150,7 @@ describe("sanitizeRedactedFormForSubmit", () => {
       gateway: {
         mode: "remote",
         remote: {
-          token: "__OPENCLAW_REDACTED__",
+          token: "__KENUXA OPS_REDACTED__",
         },
       },
     };
@@ -173,7 +173,7 @@ describe("sanitizeRedactedFormForSubmit", () => {
       gateway: {
         mode: "remote",
         remote: {
-          token: "__OPENCLAW_REDACTED__",
+          token: "__KENUXA OPS_REDACTED__",
         },
       },
     };
@@ -183,7 +183,7 @@ describe("sanitizeRedactedFormForSubmit", () => {
       sanitizeRedactedFormForSubmit(
         form,
         originalForm,
-        '{\n  gateway: {\n    mode: "remote",\n    remote: {\n      token: "__OPENCLAW_REDACTED__"\n    }\n  }\n}\n',
+        '{\n  gateway: {\n    mode: "remote",\n    remote: {\n      token: "__KENUXA OPS_REDACTED__"\n    }\n  }\n}\n',
       ),
     ).toEqual(form);
   });
@@ -192,7 +192,7 @@ describe("sanitizeRedactedFormForSubmit", () => {
     const form = {
       gateway: {
         remote: {
-          token: "__OPENCLAW_REDACTED__",
+          token: "__KENUXA OPS_REDACTED__",
         },
       },
     };
@@ -216,7 +216,7 @@ describe("sanitizeRedactedFormForSubmit", () => {
       gateway: {
         remote: {
           nested: {
-            token: "__OPENCLAW_REDACTED__",
+            token: "__KENUXA OPS_REDACTED__",
           },
         },
       },
@@ -235,7 +235,7 @@ describe("sanitizeRedactedFormForSubmit", () => {
     const form = {
       channels: {
         slack: {
-          tokens: ["__OPENCLAW_REDACTED__", "second-token"],
+          tokens: ["__KENUXA OPS_REDACTED__", "second-token"],
         },
       },
     };
@@ -254,7 +254,7 @@ describe("sanitizeRedactedFormForSubmit", () => {
     const form = {
       gateway: {
         remote: {
-          token: "__OPENCLAW_REDACTED__",
+          token: "__KENUXA OPS_REDACTED__",
         },
       },
     };

@@ -1,4 +1,4 @@
-// @vitest-environment jsdom
+﻿// @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   REALTIME_VOICE_AGENT_CONSULT_TOOL_NAME,
@@ -95,7 +95,7 @@ describe("WebRtcSdpRealtimeTalkTransport", () => {
         clientSecret: "client-secret-123",
         offerUrl: "https://api.openai.com/v1/realtime/calls",
         offerHeaders: {
-          originator: "openclaw",
+          originator: "KENUXA OPS",
           version: "2026.3.22",
         },
       },
@@ -112,7 +112,7 @@ describe("WebRtcSdpRealtimeTalkTransport", () => {
       method: "POST",
       body: "offer-sdp",
       headers: {
-        originator: "openclaw",
+        originator: "KENUXA OPS",
         version: "2026.3.22",
         Authorization: "Bearer client-secret-123",
         "Content-Type": "application/sdp",
@@ -349,7 +349,7 @@ describe("WebRtcSdpRealtimeTalkTransport", () => {
           mode: "status",
           sessionKey: "main",
           active: true,
-          message: "OpenClaw is working in read (running).",
+          message: "KENUXA OPS is working in read (running).",
           speak: true,
           show: true,
           suppress: false,
@@ -413,7 +413,7 @@ describe("WebRtcSdpRealtimeTalkTransport", () => {
         content: [
           {
             type: "input_text",
-            text: expect.stringContaining('Status: "OpenClaw is working in read (running)."'),
+            text: expect.stringContaining('Status: "KENUXA OPS is working in read (running)."'),
           },
         ],
       },
@@ -437,7 +437,7 @@ describe("WebRtcSdpRealtimeTalkTransport", () => {
           mode: "status",
           sessionKey: "main",
           active: true,
-          message: "OpenClaw is working in read (running).",
+          message: "KENUXA OPS is working in read (running).",
           speak: true,
           show: true,
           suppress: false,
@@ -506,7 +506,7 @@ describe("WebRtcSdpRealtimeTalkTransport", () => {
         content: [
           {
             type: "input_text",
-            text: expect.stringContaining('Status: "OpenClaw is working in read (running)."'),
+            text: expect.stringContaining('Status: "KENUXA OPS is working in read (running)."'),
           },
         ],
       },
@@ -635,7 +635,7 @@ describe("WebRtcSdpRealtimeTalkTransport", () => {
           sessionKey: "main",
           active: true,
           aborted: true,
-          message: "Cancelled the active OpenClaw run.",
+          message: "Cancelled the active KENUXA OPS run.",
           speak: true,
           show: true,
           suppress: false,

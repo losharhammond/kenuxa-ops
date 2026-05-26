@@ -1,4 +1,4 @@
-name: OpenClaw NPM Release
+﻿name: KENUXA OPS NPM Release
 
 on:
   workflow_dispatch:
@@ -21,7 +21,7 @@ on:
         required: false
         type: string
       release_publish_run_id:
-        description: Approved OpenClaw Release Publish workflow run id
+        description: Approved KENUXA OPS Release Publish workflow run id
         required: false
         type: string
       npm_dist_tag:
@@ -35,7 +35,7 @@ on:
           - latest
 
 concurrency:
-  group: ${{ github.event_name == 'workflow_dispatch' && inputs.preflight_only && format('openclaw-npm-release-{0}-{1}-preflight', inputs.tag, inputs.npm_dist_tag) || github.event_name == 'workflow_dispatch' && format('openclaw-npm-release-{0}-{1}-publish-{2}', inputs.tag, inputs.npm_dist_tag, github.run_id) || format('openclaw-npm-release-{0}', github.ref) }}
+  group: ${{ github.event_name == 'workflow_dispatch' && inputs.preflight_only && format('KENUXA OPS-npm-release-{0}-{1}-preflight', inputs.tag, inputs.npm_dist_tag) || github.event_name == 'workflow_dispatch' && format('KENUXA OPS-npm-release-{0}-{1}-publish-{2}', inputs.tag, inputs.npm_dist_tag, github.run_id) || format('KENUXA OPS-npm-release-{0}', github.ref) }}
   cancel-in-progress: ${{ github.event_name == 'workflow_dispatch' && inputs.preflight_only && inputs.npm_dist_tag == 'alpha' }}
 
 env:
@@ -45,11 +45,11 @@ env:
 jobs:
   # PLEASE DON'T ADD LONG-RUNNING OR FLAKY CHECKS TO THE npm RELEASE PATH.
   # KEEP THIS WORKFLOW SHORT AND DETERMINISTIC OR IT CAN GET STUCK AND JEOPARDIZE THE RELEASE.
-  # RELEASE-TIME LIVE OR END-TO-END VALIDATION BELONGS IN openclaw-release-checks.yml.
+  # RELEASE-TIME LIVE OR END-TO-END VALIDATION BELONGS IN KENUXA OPS-release-checks.yml.
   # SECURITY NOTE: TOKEN-BASED npm dist-tag mutation moved to
-  # openclaw/releases-private/.github/workflows/openclaw-npm-dist-tags.yml
+  # KENUXA OPS/releases-private/.github/workflows/KENUXA OPS-npm-dist-tags.yml
   # so this public workflow can stay focused on OIDC publish only.
-  preflight_openclaw_npm:
+  preflight_KENUXA OPS_npm:
     if: ${{ inputs.preflight_only }}
     runs-on: ubuntu-latest
     permissions:
@@ -126,30 +126,30 @@ jobs:
           set -euo pipefail
           PACKAGE_VERSION=$(node -p "require('./package.json').version")
 
-          if npm view "openclaw@${PACKAGE_VERSION}" version >/dev/null 2>&1; then
+          if npm view "KENUXA OPS@${PACKAGE_VERSION}" version >/dev/null 2>&1; then
             if [[ "${PREFLIGHT_ONLY}" == "true" ]]; then
-              echo "openclaw@${PACKAGE_VERSION} is already published on npm; continuing because preflight_only=true."
+              echo "KENUXA OPS@${PACKAGE_VERSION} is already published on npm; continuing because preflight_only=true."
               exit 0
             fi
-            echo "openclaw@${PACKAGE_VERSION} is already published on npm."
+            echo "KENUXA OPS@${PACKAGE_VERSION} is already published on npm."
             exit 1
           fi
 
-          echo "Publishing openclaw@${PACKAGE_VERSION}"
+          echo "Publishing KENUXA OPS@${PACKAGE_VERSION}"
 
       - name: Check
         env:
-          OPENCLAW_LOCAL_CHECK: "0"
+          KENUXA OPS_LOCAL_CHECK: "0"
         run: pnpm check
 
       - name: Check test types
         env:
-          OPENCLAW_LOCAL_CHECK: "0"
+          KENUXA OPS_LOCAL_CHECK: "0"
         run: pnpm check:test-types
 
       - name: Check architecture
         env:
-          OPENCLAW_LOCAL_CHECK: "0"
+          KENUXA OPS_LOCAL_CHECK: "0"
         run: pnpm check:architecture
 
       - name: Build
@@ -161,11 +161,11 @@ jobs:
       - name: Validate release metadata
         if: ${{ inputs.preflight_run_id == '' }}
         env:
-          OPENCLAW_NPM_RELEASE_SKIP_PACK_CHECK: "1"
+          KENUXA OPS_NPM_RELEASE_SKIP_PACK_CHECK: "1"
           RELEASE_REF: ${{ inputs.tag }}
           PREFLIGHT_ONLY: ${{ inputs.preflight_only }}
           WORKFLOW_REF_NAME: ${{ github.ref_name }}
-          OPENCLAW_NPM_PUBLISH_TAG: ${{ inputs.npm_dist_tag }}
+          KENUXA OPS_NPM_PUBLISH_TAG: ${{ inputs.npm_dist_tag }}
         run: |
           set -euo pipefail
           RELEASE_SHA=$(git rev-parse HEAD)
@@ -189,11 +189,11 @@ jobs:
           fi
           RELEASE_MAIN_REF="${RELEASE_BRANCH_REF}"
           export RELEASE_MAIN_REF
-          pnpm release:openclaw:npm:check
+          pnpm release:KENUXA OPS:npm:check
 
       # KEEP THIS LANE LIMITED TO FAST, REPEATABLE RELEASE READINESS CHECKS.
       # IF A CHECK CAN TAKE A LONG TIME, NEEDS LIVE CREDENTIALS, OR IS KNOWN TO BE FLAKY,
-      # IT BELONGS IN openclaw-release-checks.yml INSTEAD OF BLOCKING npm PUBLISH.
+      # IT BELONGS IN KENUXA OPS-release-checks.yml INSTEAD OF BLOCKING npm PUBLISH.
       - name: Verify release contents
         run: pnpm release:check
 
@@ -207,14 +207,14 @@ jobs:
           node scripts/generate-dependency-release-evidence.mjs \
             --release-ref "$RELEASE_REF" \
             --npm-dist-tag "$RELEASE_NPM_DIST_TAG" \
-            --output-dir "$RUNNER_TEMP/openclaw-release-dependency-evidence" \
+            --output-dir "$RUNNER_TEMP/KENUXA OPS-release-dependency-evidence" \
             --github-output "$GITHUB_OUTPUT" \
             --github-step-summary "$GITHUB_STEP_SUMMARY"
 
       - name: Pack prepared npm tarball
         id: packed_tarball
         env:
-          OPENCLAW_PREPACK_PREPARED: "1"
+          KENUXA OPS_PREPACK_PREPARED: "1"
           RELEASE_REF: ${{ inputs.tag }}
           RELEASE_NPM_DIST_TAG: ${{ inputs.npm_dist_tag }}
           DEPENDENCY_EVIDENCE_DIR: ${{ steps.dependency_evidence.outputs.dir }}
@@ -290,7 +290,7 @@ jobs:
           fi
           TARBALL_NAME="$(basename "$PACK_PATH")"
           TARBALL_SHA256="$(sha256sum "$PACK_PATH" | awk '{print $1}')"
-          ARTIFACT_DIR="$RUNNER_TEMP/openclaw-npm-preflight"
+          ARTIFACT_DIR="$RUNNER_TEMP/KENUXA OPS-npm-preflight"
           rm -rf "$ARTIFACT_DIR"
           mkdir -p "$ARTIFACT_DIR"
           cp "$PACK_PATH" "$ARTIFACT_DIR/"
@@ -306,7 +306,7 @@ jobs:
             releaseTag: process.env.RELEASE_TAG,
             releaseSha: process.env.RELEASE_SHA,
             npmDistTag: process.env.RELEASE_NPM_DIST_TAG,
-            packageName: "openclaw",
+            packageName: "KENUXA OPS",
             packageVersion: process.env.PACKAGE_VERSION,
             tarballName: process.env.TARBALL_NAME,
             tarballSha256: process.env.TARBALL_SHA256,
@@ -333,12 +333,12 @@ jobs:
             exit 1
           fi
           PACKAGE_VERSION="$(node -p "require('./package.json').version")"
-          node --import tsx scripts/openclaw-npm-prepublish-verify.ts "$TARBALL_PATH" "$PACKAGE_VERSION"
+          node --import tsx scripts/KENUXA OPS-npm-prepublish-verify.ts "$TARBALL_PATH" "$PACKAGE_VERSION"
 
       - name: Upload dependency release evidence
         uses: actions/upload-artifact@v7
         with:
-          name: openclaw-release-dependency-evidence-${{ inputs.tag }}
+          name: KENUXA OPS-release-dependency-evidence-${{ inputs.tag }}
           path: ${{ steps.dependency_evidence.outputs.dir }}
           if-no-files-found: error
 
@@ -346,14 +346,14 @@ jobs:
         if: ${{ steps.packed_tarball.outputs.release_tag != inputs.tag }}
         uses: actions/upload-artifact@v7
         with:
-          name: openclaw-release-dependency-evidence-${{ steps.packed_tarball.outputs.release_tag }}
+          name: KENUXA OPS-release-dependency-evidence-${{ steps.packed_tarball.outputs.release_tag }}
           path: ${{ steps.dependency_evidence.outputs.dir }}
           if-no-files-found: error
 
       - name: Upload prepared npm publish bundle
         uses: actions/upload-artifact@v7
         with:
-          name: openclaw-npm-preflight-${{ inputs.tag }}
+          name: KENUXA OPS-npm-preflight-${{ inputs.tag }}
           path: ${{ steps.packed_tarball.outputs.dir }}
           if-no-files-found: error
 
@@ -361,7 +361,7 @@ jobs:
         if: ${{ steps.packed_tarball.outputs.release_tag != inputs.tag }}
         uses: actions/upload-artifact@v7
         with:
-          name: openclaw-npm-preflight-${{ steps.packed_tarball.outputs.release_tag }}
+          name: KENUXA OPS-npm-preflight-${{ steps.packed_tarball.outputs.release_tag }}
           path: ${{ steps.packed_tarball.outputs.dir }}
           if-no-files-found: error
 
@@ -410,7 +410,7 @@ jobs:
             fi
           fi
           if [[ -z "${RELEASE_PUBLISH_RUN_ID// }" && "${GITHUB_ACTOR}" == "github-actions[bot]" ]]; then
-            echo "Workflow-dispatched real publish requires release_publish_run_id from the approved OpenClaw Release Publish workflow." >&2
+            echo "Workflow-dispatched real publish requires release_publish_run_id from the approved KENUXA OPS Release Publish workflow." >&2
             exit 1
           fi
 
@@ -423,20 +423,20 @@ jobs:
           set -euo pipefail
           if [[ -z "${RELEASE_PUBLISH_RUN_ID// }" ]]; then
             if [[ "${GITHUB_ACTOR}" == "github-actions[bot]" ]]; then
-              echo "OpenClaw npm publish dispatched by another workflow must include release_publish_run_id." >&2
+              echo "KENUXA OPS npm publish dispatched by another workflow must include release_publish_run_id." >&2
               exit 1
             fi
-            echo "Direct OpenClaw npm publish; relying on this workflow's npm-release environment approval."
+            echo "Direct KENUXA OPS npm publish; relying on this workflow's npm-release environment approval."
             exit 0
           fi
           if [[ "${GITHUB_ACTOR}" != "github-actions[bot]" ]]; then
-            echo "OpenClaw npm publish must be dispatched by the OpenClaw Release Publish workflow, not directly by ${GITHUB_ACTOR}." >&2
+            echo "KENUXA OPS npm publish must be dispatched by the KENUXA OPS Release Publish workflow, not directly by ${GITHUB_ACTOR}." >&2
             exit 1
           fi
           RUN_JSON="$(gh run view "$RELEASE_PUBLISH_RUN_ID" --repo "$GITHUB_REPOSITORY" --json workflowName,headBranch,event,status,conclusion,url)"
-          printf '%s' "$RUN_JSON" | node -e 'const fs = require("node:fs"); const run = JSON.parse(fs.readFileSync(0, "utf8")); const checks = [["workflowName", "OpenClaw Release Publish"], ["headBranch", process.env.EXPECTED_WORKFLOW_BRANCH], ["event", "workflow_dispatch"]]; for (const [key, expected] of checks) { if (run[key] !== expected) { console.error(`Referenced release publish run ${process.env.RELEASE_PUBLISH_RUN_ID} must have ${key}=${expected}, got ${run[key] ?? "<missing>"}.`); process.exit(1); } } if (run.status !== "in_progress") { console.error(`Referenced release publish run ${process.env.RELEASE_PUBLISH_RUN_ID} must still be in_progress, got ${run.status ?? "<missing>"}.`); process.exit(1); } if (run.conclusion) { console.error(`Referenced release publish run ${process.env.RELEASE_PUBLISH_RUN_ID} already concluded ${run.conclusion}.`); process.exit(1); } console.log(`Using release publish approval run ${process.env.RELEASE_PUBLISH_RUN_ID}: ${run.url}`);'
+          printf '%s' "$RUN_JSON" | node -e 'const fs = require("node:fs"); const run = JSON.parse(fs.readFileSync(0, "utf8")); const checks = [["workflowName", "KENUXA OPS Release Publish"], ["headBranch", process.env.EXPECTED_WORKFLOW_BRANCH], ["event", "workflow_dispatch"]]; for (const [key, expected] of checks) { if (run[key] !== expected) { console.error(`Referenced release publish run ${process.env.RELEASE_PUBLISH_RUN_ID} must have ${key}=${expected}, got ${run[key] ?? "<missing>"}.`); process.exit(1); } } if (run.status !== "in_progress") { console.error(`Referenced release publish run ${process.env.RELEASE_PUBLISH_RUN_ID} must still be in_progress, got ${run.status ?? "<missing>"}.`); process.exit(1); } if (run.conclusion) { console.error(`Referenced release publish run ${process.env.RELEASE_PUBLISH_RUN_ID} already concluded ${run.conclusion}.`); process.exit(1); } console.log(`Using release publish approval run ${process.env.RELEASE_PUBLISH_RUN_ID}: ${run.url}`);'
 
-  publish_openclaw_npm:
+  publish_KENUXA OPS_npm:
     # KEEP THE REAL RELEASE/PUBLISH PATH ON A GITHUB-HOSTED RUNNER.
     # npm trusted publishing + provenance requires this to stay on ubuntu-latest.
     needs: [validate_publish_request]
@@ -506,12 +506,12 @@ jobs:
           set -euo pipefail
           PACKAGE_VERSION=$(node -p "require('./package.json').version")
 
-          if npm view "openclaw@${PACKAGE_VERSION}" version >/dev/null 2>&1; then
-            echo "openclaw@${PACKAGE_VERSION} is already published on npm."
+          if npm view "KENUXA OPS@${PACKAGE_VERSION}" version >/dev/null 2>&1; then
+            echo "KENUXA OPS@${PACKAGE_VERSION} is already published on npm."
             exit 1
           fi
 
-          echo "Publishing openclaw@${PACKAGE_VERSION}"
+          echo "Publishing KENUXA OPS@${PACKAGE_VERSION}"
 
       - name: Verify preflight run metadata
         env:
@@ -520,7 +520,7 @@ jobs:
         run: |
           set -euo pipefail
           RUN_JSON="$(gh run view "$PREFLIGHT_RUN_ID" --repo "$GITHUB_REPOSITORY" --json workflowName,headBranch,event,conclusion,url)"
-          printf '%s' "$RUN_JSON" | node -e 'const fs = require("node:fs"); const run = JSON.parse(fs.readFileSync(0, "utf8")); const checks = [["workflowName", "OpenClaw NPM Release"], ["event", "workflow_dispatch"], ["conclusion", "success"]]; for (const [key, expected] of checks) { if (run[key] !== expected) { console.error(`Referenced npm preflight run ${process.env.PREFLIGHT_RUN_ID} must have ${key}=${expected}, got ${run[key] ?? "<missing>"}.`); process.exit(1); } } console.log(`Using npm preflight run ${process.env.PREFLIGHT_RUN_ID} from ${run.headBranch}: ${run.url}`);'
+          printf '%s' "$RUN_JSON" | node -e 'const fs = require("node:fs"); const run = JSON.parse(fs.readFileSync(0, "utf8")); const checks = [["workflowName", "KENUXA OPS NPM Release"], ["event", "workflow_dispatch"], ["conclusion", "success"]]; for (const [key, expected] of checks) { if (run[key] !== expected) { console.error(`Referenced npm preflight run ${process.env.PREFLIGHT_RUN_ID} must have ${key}=${expected}, got ${run[key] ?? "<missing>"}.`); process.exit(1); } } console.log(`Using npm preflight run ${process.env.PREFLIGHT_RUN_ID} from ${run.headBranch}: ${run.url}`);'
 
       - name: Verify full release validation run metadata
         if: ${{ inputs.full_release_validation_run_id != '' }}
@@ -542,7 +542,7 @@ jobs:
 
           download_preflight_artifact() {
             local preferred_name fallback_name
-            preferred_name="openclaw-npm-preflight-${RELEASE_TAG}"
+            preferred_name="KENUXA OPS-npm-preflight-${RELEASE_TAG}"
             rm -rf preflight-tarball
             mkdir -p preflight-tarball
 
@@ -571,9 +571,9 @@ jobs:
             echo "::warning::${preferred_name} not found; checking run artifacts for a single compatible preflight artifact."
             mapfile -t matches < <(gh api -X GET "repos/${GITHUB_REPOSITORY}/actions/runs/${PREFLIGHT_RUN_ID}/artifacts" \
               --jq '.artifacts[] | select(.expired != true) | .name' |
-              grep '^openclaw-npm-preflight-' || true)
+              grep '^KENUXA OPS-npm-preflight-' || true)
             if [[ "${#matches[@]}" != "1" ]]; then
-              echo "Expected ${preferred_name}, or exactly one openclaw-npm-preflight-* fallback artifact in run ${PREFLIGHT_RUN_ID}." >&2
+              echo "Expected ${preferred_name}, or exactly one KENUXA OPS-npm-preflight-* fallback artifact in run ${PREFLIGHT_RUN_ID}." >&2
               printf 'Available preflight candidates:\n' >&2
               printf -- '- %s\n' "${matches[@]:-<none>}" >&2
               exit 1
@@ -598,7 +598,7 @@ jobs:
       - name: Validate release tag and package metadata
         if: ${{ inputs.preflight_run_id == '' }}
         env:
-          OPENCLAW_NPM_RELEASE_SKIP_PACK_CHECK: "1"
+          KENUXA OPS_NPM_RELEASE_SKIP_PACK_CHECK: "1"
           RELEASE_TAG: ${{ inputs.tag }}
           WORKFLOW_REF_NAME: ${{ github.ref_name }}
         run: |
@@ -609,7 +609,7 @@ jobs:
           # Fetch the workflow branch so merge-base ancestry checks keep working
           # for older tagged commits contained in a release branch.
           git fetch --no-tags origin "+refs/heads/${WORKFLOW_REF_NAME}:refs/remotes/origin/${WORKFLOW_REF_NAME}"
-          pnpm release:openclaw:npm:check
+          pnpm release:KENUXA OPS:npm:check
 
       - name: Verify prepared tarball provenance
         env:
@@ -692,8 +692,8 @@ jobs:
 
       - name: Publish
         env:
-          OPENCLAW_PREPACK_PREPARED: "1"
-          OPENCLAW_NPM_PUBLISH_TAG: ${{ inputs.npm_dist_tag }}
+          KENUXA OPS_PREPACK_PREPARED: "1"
+          KENUXA OPS_NPM_PUBLISH_TAG: ${{ inputs.npm_dist_tag }}
           PUBLISH_TARBALL_PATH: ${{ steps.publish_tarball.outputs.path }}
         run: |
           set -euo pipefail
@@ -701,4 +701,4 @@ jobs:
           if [[ -n "${publish_target}" ]]; then
             publish_target="./${publish_target}"
           fi
-          bash scripts/openclaw-npm-publish.sh --publish "${publish_target}"
+          bash scripts/KENUXA OPS-npm-publish.sh --publish "${publish_target}"

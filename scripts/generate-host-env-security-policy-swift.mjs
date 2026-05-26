@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -21,7 +21,7 @@ const outputPath = path.join(
   "apps",
   "macos",
   "Sources",
-  "OpenClaw",
+  "KENUXA OPS",
   "HostEnvSecurityPolicy.generated.swift",
 );
 

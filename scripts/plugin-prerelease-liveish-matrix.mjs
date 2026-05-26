@@ -1,4 +1,4 @@
-const LIVEISH_INPUTS = Object.freeze([
+﻿const LIVEISH_INPUTS = Object.freeze([
   {
     probe: "provider-openai",
     env: ["OPENAI_API_KEY", "OPENAI_BASE_URL"],
@@ -17,19 +17,19 @@ const LIVEISH_INPUTS = Object.freeze([
   },
   {
     probe: "channel-telegram",
-    env: ["TELEGRAM_BOT_TOKEN", "OPENCLAW_TELEGRAM_BOT_TOKEN"],
+    env: ["TELEGRAM_BOT_TOKEN", "KENUXA OPS_TELEGRAM_BOT_TOKEN"],
   },
   {
     probe: "channel-discord",
-    env: ["DISCORD_TOKEN", "OPENCLAW_DISCORD_TOKEN"],
+    env: ["DISCORD_TOKEN", "KENUXA OPS_DISCORD_TOKEN"],
   },
   {
     probe: "channel-slack",
-    env: ["SLACK_BOT_TOKEN", "OPENCLAW_SLACK_BOT_TOKEN"],
+    env: ["SLACK_BOT_TOKEN", "KENUXA OPS_SLACK_BOT_TOKEN"],
   },
   {
     probe: "channel-whatsapp",
-    env: ["WHATSAPP_ACCESS_TOKEN", "OPENCLAW_WHATSAPP_ACCESS_TOKEN"],
+    env: ["WHATSAPP_ACCESS_TOKEN", "KENUXA OPS_WHATSAPP_ACCESS_TOKEN"],
   },
 ]);
 

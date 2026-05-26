@@ -1,4 +1,4 @@
-import { html, nothing } from "lit";
+﻿import { html, nothing } from "lit";
 import { t } from "../../i18n/index.ts";
 import { getUsageCacheRefreshTitle } from "../usage-cache-status.ts";
 import { extractQueryTerms, filterSessionsByQuery } from "../usage-helpers.ts";
@@ -484,7 +484,7 @@ export function renderUsage(props: UsageProps) {
                     class="usage-export-item"
                     @click=${() =>
                       downloadTextFile(
-                        `openclaw-usage-sessions-${exportStamp}.csv`,
+                        `KENUXA OPS-usage-sessions-${exportStamp}.csv`,
                         buildSessionsCsv(filteredSessions),
                         "text/csv",
                       )}
@@ -496,7 +496,7 @@ export function renderUsage(props: UsageProps) {
                     class="usage-export-item"
                     @click=${() =>
                       downloadTextFile(
-                        `openclaw-usage-daily-${exportStamp}.csv`,
+                        `KENUXA OPS-usage-daily-${exportStamp}.csv`,
                         buildDailyCsv(filteredDaily),
                         "text/csv",
                       )}
@@ -508,7 +508,7 @@ export function renderUsage(props: UsageProps) {
                     class="usage-export-item"
                     @click=${() =>
                       downloadTextFile(
-                        `openclaw-usage-${exportStamp}.json`,
+                        `KENUXA OPS-usage-${exportStamp}.json`,
                         JSON.stringify(
                           {
                             totals: displayTotals,

@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 // Validates the npm tarball Docker E2E lanes install.
 // This is intentionally tarball-only: the check proves Docker lanes consume the
 // prebuilt package artifact with dist inventory, not a source checkout.
@@ -15,7 +15,7 @@ import {
 } from "./lib/package-dist-imports.mjs";
 
 function usage() {
-  return "Usage: node scripts/check-openclaw-package-tarball.mjs <openclaw.tgz>";
+  return "Usage: node scripts/check-KENUXA OPS-package-tarball.mjs <KENUXA OPS.tgz>";
 }
 
 function fail(message) {
@@ -28,10 +28,10 @@ if (!tarball || process.argv.length > 3) {
   fail(usage());
 }
 if (!fs.existsSync(tarball)) {
-  fail(`OpenClaw package tarball does not exist: ${tarball}`);
+  fail(`KENUXA OPS package tarball does not exist: ${tarball}`);
 }
 
-const phaseTimingsEnabled = process.env.OPENCLAW_PACKAGE_TARBALL_CHECK_TIMINGS !== "0";
+const phaseTimingsEnabled = process.env.KENUXA OPS_PACKAGE_TARBALL_CHECK_TIMINGS !== "0";
 function runPhase(label, action) {
   const startedAt = performance.now();
   try {
@@ -39,7 +39,7 @@ function runPhase(label, action) {
   } finally {
     if (phaseTimingsEnabled) {
       const durationMs = Math.round(performance.now() - startedAt);
-      console.error(`check-openclaw-package-tarball: ${label} completed in ${durationMs}ms`);
+      console.error(`check-KENUXA OPS-package-tarball: ${label} completed in ${durationMs}ms`);
     }
   }
 }
@@ -54,7 +54,7 @@ if (list.status !== 0) {
   fail(`tar -tf failed for ${tarball}: ${list.stderr || list.status}`);
 }
 
-const extractDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-package-tarball-"));
+const extractDir = fs.mkdtempSync(path.join(os.tmpdir(), "KENUXA OPS-package-tarball-"));
 try {
   const extract = runPhase("tar extract", () =>
     spawnSync("tar", ["-xf", tarball, "-C", extractDir], {
@@ -207,16 +207,16 @@ if (!entrySet.has("npm-shrinkwrap.json")) {
   try {
     const shrinkwrap = JSON.parse(readTarEntry("npm-shrinkwrap.json"));
     const rootPackage = shrinkwrap.packages?.[""];
-    if (shrinkwrap.name !== "openclaw") {
-      errors.push("npm-shrinkwrap.json root name must be openclaw");
+    if (shrinkwrap.name !== "KENUXA OPS") {
+      errors.push("npm-shrinkwrap.json root name must be KENUXA OPS");
     }
     if (shrinkwrap.version !== packageVersion) {
       errors.push(
         `npm-shrinkwrap.json version ${shrinkwrap.version ?? "<missing>"} does not match package.json version ${packageVersion || "<missing>"}`,
       );
     }
-    if (!rootPackage || rootPackage.name !== "openclaw") {
-      errors.push("npm-shrinkwrap.json packages root must name openclaw");
+    if (!rootPackage || rootPackage.name !== "KENUXA OPS") {
+      errors.push("npm-shrinkwrap.json packages root must name KENUXA OPS");
     }
     if (rootPackage?.version !== packageVersion) {
       errors.push(
@@ -315,11 +315,11 @@ errors.push(
 
 if (errors.length > 0) {
   fs.rmSync(extractDir, { recursive: true, force: true });
-  fail(`OpenClaw package tarball integrity failed:\n${errors.join("\n")}`);
+  fail(`KENUXA OPS package tarball integrity failed:\n${errors.join("\n")}`);
 }
 
 for (const warning of warnings) {
-  console.warn(`OpenClaw package tarball integrity warning: ${warning}`);
+  console.warn(`KENUXA OPS package tarball integrity warning: ${warning}`);
 }
 fs.rmSync(extractDir, { recursive: true, force: true });
-console.log("OpenClaw package tarball integrity passed.");
+console.log("KENUXA OPS package tarball integrity passed.");

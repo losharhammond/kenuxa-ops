@@ -1,4 +1,4 @@
-import { html, nothing } from "lit";
+﻿import { html, nothing } from "lit";
 import { formatApprovalDisplayPath } from "../../../../src/infra/approval-display-paths.ts";
 import { t } from "../../i18n/index.ts";
 import type { AppViewState } from "../app-view-state.ts";
@@ -131,7 +131,7 @@ export function renderExecApprovalPrompt(state: AppViewState) {
     }
   };
   return html`
-    <openclaw-modal-dialog label=${title} description=${remaining} @modal-cancel=${handleCancel}>
+    <KENUXA OPS-modal-dialog label=${title} description=${remaining} @modal-cancel=${handleCancel}>
       <div class="exec-approval-card">
         <div class="exec-approval-header">
           <div>
@@ -172,6 +172,6 @@ export function renderExecApprovalPrompt(state: AppViewState) {
           </button>
         </div>
       </div>
-    </openclaw-modal-dialog>
+    </KENUXA OPS-modal-dialog>
   `;
 }

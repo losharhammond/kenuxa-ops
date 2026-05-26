@@ -1,11 +1,11 @@
-{
-  "name": "@openclaw/brave-plugin",
+﻿{
+  "name": "@KENUXA OPS/brave-plugin",
   "version": "2026.5.26",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
-      "name": "@openclaw/brave-plugin",
+      "name": "@KENUXA OPS/brave-plugin",
       "version": "2026.5.26"
     }
   }

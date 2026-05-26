@@ -1,16 +1,16 @@
-{
-  "name": "@openclaw/llm-task",
+﻿{
+  "name": "@KENUXA OPS/llm-task",
   "version": "2026.5.26",
   "private": true,
-  "description": "OpenClaw JSON-only LLM task plugin",
+  "description": "KENUXA OPS JSON-only LLM task plugin",
   "type": "module",
   "dependencies": {
     "typebox": "1.1.38"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ]

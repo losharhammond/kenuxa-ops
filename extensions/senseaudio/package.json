@@ -1,13 +1,13 @@
-{
-  "name": "@openclaw/senseaudio-provider",
+﻿{
+  "name": "@KENUXA OPS/senseaudio-provider",
   "version": "2026.5.26",
   "private": true,
-  "description": "OpenClaw SenseAudio media-understanding provider",
+  "description": "KENUXA OPS SenseAudio media-understanding provider",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ]

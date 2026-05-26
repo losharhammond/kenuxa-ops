@@ -1,13 +1,13 @@
-{
-  "name": "@openclaw/nvidia-provider",
+﻿{
+  "name": "@KENUXA OPS/nvidia-provider",
   "version": "2026.5.26",
   "private": true,
-  "description": "OpenClaw NVIDIA provider plugin",
+  "description": "KENUXA OPS NVIDIA provider plugin",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ]

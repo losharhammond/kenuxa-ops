@@ -1,16 +1,16 @@
-{
-  "name": "@openclaw/tavily-plugin",
+﻿{
+  "name": "@KENUXA OPS/tavily-plugin",
   "version": "2026.5.26",
   "private": true,
-  "description": "OpenClaw Tavily plugin",
+  "description": "KENUXA OPS Tavily plugin",
   "type": "module",
   "dependencies": {
     "typebox": "1.1.38"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ]

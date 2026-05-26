@@ -1,4 +1,4 @@
-process.env.OPENCLAW_TEST_PROJECTS_SERIAL = "1";
-process.env.OPENCLAW_VITEST_MAX_WORKERS = "1";
+﻿process.env.KENUXA OPS_TEST_PROJECTS_SERIAL = "1";
+process.env.KENUXA OPS_VITEST_MAX_WORKERS = "1";
 
 await import("./test-projects.mjs");

@@ -1,13 +1,13 @@
-{
-  "name": "@openclaw/admin-http-rpc",
+﻿{
+  "name": "@KENUXA OPS/admin-http-rpc",
   "version": "2026.5.26",
   "private": true,
-  "description": "OpenClaw admin HTTP RPC endpoint",
+  "description": "KENUXA OPS admin HTTP RPC endpoint",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ]

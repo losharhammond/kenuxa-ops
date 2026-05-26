@@ -1,4 +1,4 @@
-import fs from "node:fs";
+﻿import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { build } from "tsdown";
@@ -17,7 +17,7 @@ function readJsonFile(filePath) {
 }
 
 export function isPublishablePluginPackage(packageJson) {
-  return packageJson.openclaw?.release?.publishToNpm === true;
+  return packageJson.KENUXA OPS?.release?.publishToNpm === true;
 }
 
 function normalizePackageEntry(value) {
@@ -61,7 +61,7 @@ function getRecord(value) {
 function createNeverBundleDependencyMatcher(packageJson) {
   const externalDependencies = collectExternalDependencyNames(packageJson);
   return (id) => {
-    if (id === "openclaw" || id.startsWith("openclaw/")) {
+    if (id === "KENUXA OPS" || id.startsWith("KENUXA OPS/")) {
       return true;
     }
     for (const dependency of externalDependencies) {
@@ -116,8 +116,8 @@ export function resolvePluginNpmRuntimePackageFiles(plan) {
       : [],
   );
   merged.add("dist/**");
-  if (packageRelativePathExists(plan.packageDir, "openclaw.plugin.json")) {
-    merged.add("openclaw.plugin.json");
+  if (packageRelativePathExists(plan.packageDir, "KENUXA OPS.plugin.json")) {
+    merged.add("KENUXA OPS.plugin.json");
   }
   if (packageRelativePathExists(plan.packageDir, "npm-shrinkwrap.json")) {
     merged.add("npm-shrinkwrap.json");
@@ -134,7 +134,7 @@ export function resolvePluginNpmRuntimePackageFiles(plan) {
   return [...merged];
 }
 
-function normalizeOpenClawPeerRange(value) {
+function normalizeKENUXA OPSPeerRange(value) {
   const normalized = normalizePackageEntry(value);
   if (!normalized) {
     return "";
@@ -144,35 +144,35 @@ function normalizeOpenClawPeerRange(value) {
     : `>=${normalized}`;
 }
 
-function resolveOpenClawPeerRange(packageJson, rootPackageJson) {
+function resolveKENUXA OPSPeerRange(packageJson, rootPackageJson) {
   return (
-    normalizeOpenClawPeerRange(packageJson.openclaw?.compat?.pluginApi) ||
-    normalizeOpenClawPeerRange(packageJson.peerDependencies?.openclaw) ||
-    normalizeOpenClawPeerRange(packageJson.openclaw?.build?.openclawVersion) ||
-    normalizeOpenClawPeerRange(rootPackageJson?.version) ||
-    normalizeOpenClawPeerRange(packageJson.version)
+    normalizeKENUXA OPSPeerRange(packageJson.KENUXA OPS?.compat?.pluginApi) ||
+    normalizeKENUXA OPSPeerRange(packageJson.peerDependencies?.KENUXA OPS) ||
+    normalizeKENUXA OPSPeerRange(packageJson.KENUXA OPS?.build?.KENUXA OPSVersion) ||
+    normalizeKENUXA OPSPeerRange(rootPackageJson?.version) ||
+    normalizeKENUXA OPSPeerRange(packageJson.version)
   );
 }
 
 export function resolvePluginNpmRuntimePackagePeerMetadata(plan) {
-  const openclawPeerRange = resolveOpenClawPeerRange(plan.packageJson, plan.rootPackageJson);
-  if (!openclawPeerRange) {
+  const KENUXA OPSPeerRange = resolveKENUXA OPSPeerRange(plan.packageJson, plan.rootPackageJson);
+  if (!KENUXA OPSPeerRange) {
     throw new Error(
-      `cannot infer openclaw peerDependency range for ${plan.pluginDir}; set openclaw.compat.pluginApi or package version`,
+      `cannot infer KENUXA OPS peerDependency range for ${plan.pluginDir}; set KENUXA OPS.compat.pluginApi or package version`,
     );
   }
   const existingPeerDependencies = getStringRecord(plan.packageJson.peerDependencies);
   const existingPeerDependenciesMeta = getRecord(plan.packageJson.peerDependenciesMeta);
-  const existingOpenClawMeta = getRecord(existingPeerDependenciesMeta.openclaw);
+  const existingKENUXA OPSMeta = getRecord(existingPeerDependenciesMeta.KENUXA OPS);
   return {
     peerDependencies: {
       ...existingPeerDependencies,
-      openclaw: openclawPeerRange,
+      KENUXA OPS: KENUXA OPSPeerRange,
     },
     peerDependenciesMeta: {
       ...existingPeerDependenciesMeta,
-      openclaw: {
-        ...existingOpenClawMeta,
+      KENUXA OPS: {
+        ...existingKENUXA OPSMeta,
         optional: true,
       },
     },
@@ -224,15 +224,15 @@ export function resolvePluginNpmRuntimeBuildPlan(params) {
     sourceEntries,
     entry,
     outDir: path.join(packageDir, "dist"),
-    runtimeExtensions: (Array.isArray(packageJson.openclaw?.extensions)
-      ? packageJson.openclaw.extensions
+    runtimeExtensions: (Array.isArray(packageJson.KENUXA OPS?.extensions)
+      ? packageJson.KENUXA OPS.extensions
       : []
     )
       .map(normalizePackageEntry)
       .filter(Boolean)
       .map(toPackageRuntimeEntry),
-    runtimeSetupEntry: normalizePackageEntry(packageJson.openclaw?.setupEntry)
-      ? toPackageRuntimeEntry(packageJson.openclaw.setupEntry)
+    runtimeSetupEntry: normalizePackageEntry(packageJson.KENUXA OPS?.setupEntry)
+      ? toPackageRuntimeEntry(packageJson.KENUXA OPS.setupEntry)
       : undefined,
   };
   return {

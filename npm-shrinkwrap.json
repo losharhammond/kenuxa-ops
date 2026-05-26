@@ -1,11 +1,11 @@
-{
-  "name": "openclaw",
+﻿{
+  "name": "KENUXA OPS",
   "version": "2026.5.26",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
-      "name": "openclaw",
+      "name": "KENUXA OPS",
       "version": "2026.5.26",
       "hasInstallScript": true,
       "license": "MIT",
@@ -24,8 +24,8 @@
         "@lydell/node-pty": "1.2.0-beta.12",
         "@modelcontextprotocol/sdk": "1.29.0",
         "@mozilla/readability": "0.6.0",
-        "@openclaw/fs-safe": "0.3.0",
-        "@openclaw/proxyline": "0.3.3",
+        "@KENUXA OPS/fs-safe": "0.3.0",
+        "@KENUXA OPS/proxyline": "0.3.3",
         "@silvia-odwyer/photon-node": "0.3.4",
         "chalk": "5.6.2",
         "chokidar": "5.0.0",
@@ -63,7 +63,7 @@
         "zod": "4.4.3"
       },
       "bin": {
-        "openclaw": "openclaw.mjs"
+        "KENUXA OPS": "KENUXA OPS.mjs"
       },
       "engines": {
         "node": ">=22.19.0"
@@ -1395,9 +1395,9 @@
       ],
       "license": "MIT"
     },
-    "node_modules/@openclaw/fs-safe": {
+    "node_modules/@KENUXA OPS/fs-safe": {
       "version": "0.3.0",
-      "resolved": "https://registry.npmjs.org/@openclaw/fs-safe/-/fs-safe-0.3.0.tgz",
+      "resolved": "https://registry.npmjs.org/@KENUXA OPS/fs-safe/-/fs-safe-0.3.0.tgz",
       "integrity": "sha512-uIBE441CIt1kIURoP9qRGKZ8LkGyfD9ZzeESjwAd29ZPWtghws/5GR3Pjb67jKdcJHP1I6roNXcvnhzAU7lHlA==",
       "license": "MIT",
       "engines": {
@@ -1408,9 +1408,9 @@
         "tar": "7.5.13"
       }
     },
-    "node_modules/@openclaw/proxyline": {
+    "node_modules/@KENUXA OPS/proxyline": {
       "version": "0.3.3",
-      "resolved": "https://registry.npmjs.org/@openclaw/proxyline/-/proxyline-0.3.3.tgz",
+      "resolved": "https://registry.npmjs.org/@KENUXA OPS/proxyline/-/proxyline-0.3.3.tgz",
       "integrity": "sha512-sftHnW69NHQqLjCxBTvQ8f/eQl+peZ5pHCBQtuTWBbeuYRHZ0/GXVTmw/O/YKsShMbqPWhJB0UYtPPdvCUSS8w==",
       "license": "MIT",
       "engines": {

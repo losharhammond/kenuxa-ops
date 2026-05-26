@@ -1,4 +1,4 @@
-import { html, nothing } from "lit";
+﻿import { html, nothing } from "lit";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import { until } from "lit/directives/until.js";
 import { getSafeLocalStorage } from "../../local-storage.ts";
@@ -615,7 +615,7 @@ function renderMessageMeta(meta: GroupMeta | null) {
   `;
 }
 
-const SKIP_DELETE_CONFIRM_KEY = "openclaw:skipDeleteConfirm";
+const SKIP_DELETE_CONFIRM_KEY = "kenuxa-ops:skipDeleteConfirm";
 const DELETE_CONFIRM_VIEWPORT_MARGIN_PX = 8;
 const DELETE_CONFIRM_TRIGGER_GAP_PX = 6;
 
@@ -864,7 +864,7 @@ function renderReplyPill(replyTarget: NormalizedMessage["replyTarget"]) {
 
 function isLocalAssistantAttachmentSource(source: string): boolean {
   const trimmed = source.trim();
-  if (/^\/(?:__openclaw__|media|api\/chat\/media\/outgoing)\//.test(trimmed)) {
+  if (/^\/(?:__KENUXA OPS__|media|api\/chat\/media\/outgoing)\//.test(trimmed)) {
     return false;
   }
   return (
@@ -968,7 +968,7 @@ function buildAssistantAttachmentUrl(
   if (normalizedMediaTicket) {
     params.set("mediaTicket", normalizedMediaTicket);
   }
-  return `${normalizedBasePath}/__openclaw__/assistant-media?${params.toString()}`;
+  return `${normalizedBasePath}/__KENUXA OPS__/assistant-media?${params.toString()}`;
 }
 
 function isManagedOutgoingImageSource(source: string): boolean {
@@ -1031,7 +1031,7 @@ async function resolveManagedOutgoingImageBlobUrl(
         headers.set("Authorization", `Bearer ${authToken}`);
       }
       if (requesterSessionKey) {
-        headers.set("x-openclaw-requester-session-key", requesterSessionKey);
+        headers.set("x-KENUXA OPS-requester-session-key", requesterSessionKey);
       }
       const res = await fetch(fetchUrl, {
         method: "GET",

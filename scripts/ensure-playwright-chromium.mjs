@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 import { spawnSync as spawnSyncImpl } from "node:child_process";
 import { existsSync as existsSyncImpl, realpathSync } from "node:fs";
 import { dirname, resolve } from "node:path";
@@ -45,9 +45,9 @@ export function ensurePlaywrightChromium(options = {}) {
     return 0;
   }
 
-  if (env.OPENCLAW_UI_E2E_ALLOW_MISSING_CHROMIUM === "1") {
+  if (env.KENUXA OPS_UI_E2E_ALLOW_MISSING_CHROMIUM === "1") {
     log(
-      `[ui-e2e] Playwright Chromium is missing at ${executablePath}; OPENCLAW_UI_E2E_ALLOW_MISSING_CHROMIUM=1 leaves the lane skipped.`,
+      `[ui-e2e] Playwright Chromium is missing at ${executablePath}; KENUXA OPS_UI_E2E_ALLOW_MISSING_CHROMIUM=1 leaves the lane skipped.`,
     );
     return 0;
   }

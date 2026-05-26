@@ -1,4 +1,4 @@
-import { render } from "lit";
+﻿import { render } from "lit";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { i18n } from "../../i18n/index.ts";
 import { createStorageMock } from "../../test-helpers/storage.ts";
@@ -68,8 +68,8 @@ describe("renderDebug", () => {
     const callout = container.querySelector(".callout");
     expect(callout?.className).toBe("callout warn");
     expect(normalizedText(callout)).toBe(
-      "安全审计: 1 个警告 · 2 条信息. 运行 openclaw security audit --deep 查看详情。",
+      "安全审计: 1 个警告 · 2 条信息. 运行 KENUXA OPS security audit --deep 查看详情。",
     );
-    expect(command.textContent).toBe("openclaw security audit --deep");
+    expect(command.textContent).toBe("KENUXA OPS security audit --deep");
   });
 });

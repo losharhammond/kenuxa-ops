@@ -1,4 +1,4 @@
-import { spawnSync } from "node:child_process";
+﻿import { spawnSync } from "node:child_process";
 import { parseFlagArgs, stringFlag, intFlag } from "./lib/arg-utils.mjs";
 
 const CLI_STARTUP_BENCH_FIXTURE_PATH = "test/fixtures/cli-startup-bench.json";
@@ -12,7 +12,7 @@ if (process.argv.slice(2).includes("--help")) {
       "",
       "Options:",
       "  --out <path>          Output path (default: test/fixtures/cli-startup-bench.json)",
-      "  --entry <path>        CLI entry to benchmark (default: openclaw.mjs)",
+      "  --entry <path>        CLI entry to benchmark (default: KENUXA OPS.mjs)",
       "  --preset <name>       startup | real | all (default: all)",
       "  --runs <n>            Measured runs per case (default: 5)",
       "  --warmup <n>          Warmup runs per case (default: 1)",
@@ -30,7 +30,7 @@ const opts = parseFlagArgs(
   process.argv.slice(2),
   {
     out: CLI_STARTUP_BENCH_FIXTURE_PATH,
-    entry: "openclaw.mjs",
+    entry: "KENUXA OPS.mjs",
     preset: "all",
     runs: 5,
     warmup: 1,

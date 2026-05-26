@@ -1,4 +1,4 @@
-name: OpenClaw Release Publish
+﻿name: KENUXA OPS Release Publish
 
 on:
   workflow_dispatch:
@@ -8,11 +8,11 @@ on:
         required: true
         type: string
       preflight_run_id:
-        description: Successful OpenClaw NPM Release preflight run id, required when publish_openclaw_npm=true
+        description: Successful KENUXA OPS NPM Release preflight run id, required when publish_KENUXA OPS_npm=true
         required: false
         type: string
       full_release_validation_run_id:
-        description: Successful Full Release Validation run id for this tag/SHA, required when publish_openclaw_npm=true
+        description: Successful Full Release Validation run id for this tag/SHA, required when publish_KENUXA OPS_npm=true
         required: false
         type: string
       npm_telegram_run_id:
@@ -20,7 +20,7 @@ on:
         required: false
         type: string
       npm_dist_tag:
-        description: npm dist-tag for the OpenClaw package
+        description: npm dist-tag for the KENUXA OPS package
         required: true
         default: beta
         type: choice
@@ -29,7 +29,7 @@ on:
           - beta
           - latest
       plugin_publish_scope:
-        description: Plugin publish scope to run before OpenClaw publish
+        description: Plugin publish scope to run before KENUXA OPS publish
         required: true
         default: all-publishable
         type: choice
@@ -40,8 +40,8 @@ on:
         description: Comma-separated plugin package names when plugin_publish_scope=selected
         required: false
         type: string
-      publish_openclaw_npm:
-        description: Publish the OpenClaw npm package after plugin npm succeeds; ClawHub may still run
+      publish_KENUXA OPS_npm:
+        description: Publish the KENUXA OPS npm package after plugin npm succeeds; ClawHub may still run
         required: true
         default: true
         type: boolean
@@ -65,7 +65,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: openclaw-release-publish-${{ inputs.tag }}
+  group: KENUXA OPS-release-publish-${{ inputs.tag }}
   cancel-in-progress: false
 
 env:
@@ -86,7 +86,7 @@ jobs:
           RELEASE_TAG: ${{ inputs.tag }}
           PREFLIGHT_RUN_ID: ${{ inputs.preflight_run_id }}
           FULL_RELEASE_VALIDATION_RUN_ID: ${{ inputs.full_release_validation_run_id }}
-          PUBLISH_OPENCLAW_NPM: ${{ inputs.publish_openclaw_npm && 'true' || 'false' }}
+          PUBLISH_KENUXA OPS_NPM: ${{ inputs.publish_KENUXA OPS_npm && 'true' || 'false' }}
           PLUGIN_PUBLISH_SCOPE: ${{ inputs.plugin_publish_scope }}
           PLUGINS: ${{ inputs.plugins }}
           RELEASE_NPM_DIST_TAG: ${{ inputs.npm_dist_tag }}
@@ -99,27 +99,27 @@ jobs:
             exit 1
           fi
           if [[ "${RELEASE_TAG}" == *"-alpha."* && "${RELEASE_NPM_DIST_TAG}" != "alpha" ]]; then
-            echo "Alpha prerelease tags must publish OpenClaw to npm dist-tag alpha." >&2
+            echo "Alpha prerelease tags must publish KENUXA OPS to npm dist-tag alpha." >&2
             exit 1
           fi
           if [[ "${RELEASE_TAG}" == *"-beta."* && "${RELEASE_NPM_DIST_TAG}" != "beta" ]]; then
-            echo "Beta prerelease tags must publish OpenClaw to npm dist-tag beta." >&2
+            echo "Beta prerelease tags must publish KENUXA OPS to npm dist-tag beta." >&2
             exit 1
           fi
-          if [[ "${PUBLISH_OPENCLAW_NPM}" == "true" && -z "${PREFLIGHT_RUN_ID}" ]]; then
-            echo "publish_openclaw_npm=true requires preflight_run_id." >&2
+          if [[ "${PUBLISH_KENUXA OPS_NPM}" == "true" && -z "${PREFLIGHT_RUN_ID}" ]]; then
+            echo "publish_KENUXA OPS_npm=true requires preflight_run_id." >&2
             exit 1
           fi
-          if [[ "${PUBLISH_OPENCLAW_NPM}" == "true" && -z "${FULL_RELEASE_VALIDATION_RUN_ID}" ]]; then
-            echo "publish_openclaw_npm=true requires full_release_validation_run_id." >&2
+          if [[ "${PUBLISH_KENUXA OPS_NPM}" == "true" && -z "${FULL_RELEASE_VALIDATION_RUN_ID}" ]]; then
+            echo "publish_KENUXA OPS_npm=true requires full_release_validation_run_id." >&2
             exit 1
           fi
           tideclaw_alpha_publish=false
           if [[ "${RELEASE_TAG}" == *"-alpha."* && "${RELEASE_NPM_DIST_TAG}" == "alpha" && "${WORKFLOW_REF}" =~ ^refs/heads/tideclaw/alpha/[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{4}Z$ ]]; then
             tideclaw_alpha_publish=true
           fi
-          if [[ "${PUBLISH_OPENCLAW_NPM}" == "true" && "${WORKFLOW_REF}" != "refs/heads/main" && ! "${WORKFLOW_REF}" =~ ^refs/heads/release/[0-9]{4}\.[1-9][0-9]*\.[1-9][0-9]*$ && "${tideclaw_alpha_publish}" != "true" ]]; then
-            echo "publish_openclaw_npm=true requires dispatching this workflow from main, release/YYYY.M.D, or a Tideclaw alpha branch for alpha prereleases." >&2
+          if [[ "${PUBLISH_KENUXA OPS_NPM}" == "true" && "${WORKFLOW_REF}" != "refs/heads/main" && ! "${WORKFLOW_REF}" =~ ^refs/heads/release/[0-9]{4}\.[1-9][0-9]*\.[1-9][0-9]*$ && "${tideclaw_alpha_publish}" != "true" ]]; then
+            echo "publish_KENUXA OPS_npm=true requires dispatching this workflow from main, release/YYYY.M.D, or a Tideclaw alpha branch for alpha prereleases." >&2
             exit 1
           fi
           if [[ "${PLUGIN_PUBLISH_SCOPE}" == "selected" && -z "${PLUGINS}" ]]; then
@@ -138,9 +138,9 @@ jobs:
               ;;
           esac
 
-      - name: Download OpenClaw npm preflight manifest
+      - name: Download KENUXA OPS npm preflight manifest
         id: preflight_artifact
-        if: ${{ inputs.publish_openclaw_npm }}
+        if: ${{ inputs.publish_KENUXA OPS_npm }}
         env:
           GH_TOKEN: ${{ github.token }}
           PREFLIGHT_RUN_ID: ${{ inputs.preflight_run_id }}
@@ -148,8 +148,8 @@ jobs:
         run: |
           set -euo pipefail
 
-          preferred_name="openclaw-npm-preflight-${RELEASE_TAG}"
-          preflight_dir="${RUNNER_TEMP}/openclaw-npm-preflight-manifest"
+          preferred_name="KENUXA OPS-npm-preflight-${RELEASE_TAG}"
+          preflight_dir="${RUNNER_TEMP}/KENUXA OPS-npm-preflight-manifest"
           rm -rf "${preflight_dir}"
           mkdir -p "${preflight_dir}"
 
@@ -178,9 +178,9 @@ jobs:
           echo "::warning::${preferred_name} not found; checking run artifacts for a single compatible preflight artifact."
           mapfile -t matches < <(gh api -X GET "repos/${GITHUB_REPOSITORY}/actions/runs/${PREFLIGHT_RUN_ID}/artifacts" \
             --jq '.artifacts[] | select(.expired != true) | .name' |
-            grep '^openclaw-npm-preflight-' || true)
+            grep '^KENUXA OPS-npm-preflight-' || true)
           if [[ "${#matches[@]}" != "1" ]]; then
-            echo "Expected ${preferred_name}, or exactly one openclaw-npm-preflight-* fallback artifact in run ${PREFLIGHT_RUN_ID}." >&2
+            echo "Expected ${preferred_name}, or exactly one KENUXA OPS-npm-preflight-* fallback artifact in run ${PREFLIGHT_RUN_ID}." >&2
             printf 'Available preflight candidates:\n' >&2
             printf -- '- %s\n' "${matches[@]:-<none>}" >&2
             exit 1
@@ -190,7 +190,7 @@ jobs:
           echo "name=${fallback_name}" >> "$GITHUB_OUTPUT"
 
       - name: Download full release validation manifest
-        if: ${{ inputs.publish_openclaw_npm }}
+        if: ${{ inputs.publish_KENUXA OPS_npm }}
         uses: actions/download-artifact@v8
         with:
           name: full-release-validation-${{ inputs.full_release_validation_run_id }}
@@ -210,19 +210,19 @@ jobs:
         id: ref
         run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
-      - name: Validate OpenClaw npm preflight manifest
+      - name: Validate KENUXA OPS npm preflight manifest
         id: manifest
-        if: ${{ inputs.publish_openclaw_npm }}
+        if: ${{ inputs.publish_KENUXA OPS_npm }}
         env:
           RELEASE_TAG: ${{ inputs.tag }}
           RELEASE_NPM_DIST_TAG: ${{ inputs.npm_dist_tag }}
           EXPECTED_SHA: ${{ steps.ref.outputs.sha }}
         run: |
           set -euo pipefail
-          preflight_dir="${RUNNER_TEMP}/openclaw-npm-preflight-manifest"
+          preflight_dir="${RUNNER_TEMP}/KENUXA OPS-npm-preflight-manifest"
           manifest="${preflight_dir}/preflight-manifest.json"
           if [[ ! -f "$manifest" ]]; then
-            echo "OpenClaw npm preflight manifest is missing." >&2
+            echo "KENUXA OPS npm preflight manifest is missing." >&2
             ls -la "$preflight_dir" >&2 || true
             exit 1
           fi
@@ -255,7 +255,7 @@ jobs:
           echo "sha=$release_sha" >> "$GITHUB_OUTPUT"
 
       - name: Validate full release validation manifest
-        if: ${{ inputs.publish_openclaw_npm }}
+        if: ${{ inputs.publish_KENUXA OPS_npm }}
         env:
           GH_TOKEN: ${{ github.token }}
           FULL_RELEASE_VALIDATION_RUN_ID: ${{ inputs.full_release_validation_run_id }}
@@ -343,7 +343,7 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
   publish:
-    name: Publish plugins, then OpenClaw
+    name: Publish plugins, then KENUXA OPS
     needs: [resolve_release_target]
     runs-on: ubuntu-latest
     timeout-minutes: 60
@@ -372,11 +372,11 @@ jobs:
           RELEASE_NPM_DIST_TAG: ${{ inputs.npm_dist_tag }}
           PLUGIN_PUBLISH_SCOPE: ${{ inputs.plugin_publish_scope }}
           PLUGINS: ${{ inputs.plugins }}
-          PUBLISH_OPENCLAW_NPM: ${{ inputs.publish_openclaw_npm && 'true' || 'false' }}
+          PUBLISH_KENUXA OPS_NPM: ${{ inputs.publish_KENUXA OPS_npm && 'true' || 'false' }}
           WAIT_FOR_CLAWHUB: ${{ inputs.wait_for_clawhub && 'true' || 'false' }}
           PREFLIGHT_ARTIFACT_NAME: ${{ needs.resolve_release_target.outputs.preflight_artifact_name }}
           NPM_TELEGRAM_RUN_ID: ${{ inputs.npm_telegram_run_id }}
-          POSTPUBLISH_EVIDENCE_DIR: ${{ runner.temp }}/openclaw-release-postpublish-evidence
+          POSTPUBLISH_EVIDENCE_DIR: ${{ runner.temp }}/KENUXA OPS-release-postpublish-evidence
         run: |
           set -euo pipefail
 
@@ -645,7 +645,7 @@ jobs:
             if [[ "${notes_version}" =~ ^([0-9]{4}\.[1-9][0-9]*\.[1-9][0-9]*)-(alpha|beta)\.[1-9][0-9]*$ ]]; then
               notes_version="${BASH_REMATCH[1]}"
             fi
-            title="openclaw ${release_version}"
+            title="KENUXA OPS ${release_version}"
             changelog_file="${RUNNER_TEMP}/CHANGELOG.md"
             notes_file="${RUNNER_TEMP}/release-notes.md"
 
@@ -694,10 +694,10 @@ jobs:
           upload_dependency_evidence_release_asset() {
             local release_version download_dir asset_path asset_name artifact_name
             release_version="${RELEASE_TAG#v}"
-            download_dir="${RUNNER_TEMP}/openclaw-release-dependency-evidence-asset"
-            asset_name="openclaw-${release_version}-dependency-evidence.zip"
+            download_dir="${RUNNER_TEMP}/KENUXA OPS-release-dependency-evidence-asset"
+            asset_name="KENUXA OPS-${release_version}-dependency-evidence.zip"
             asset_path="${RUNNER_TEMP}/${asset_name}"
-            artifact_name="${PREFLIGHT_ARTIFACT_NAME:-openclaw-npm-preflight-${RELEASE_TAG}}"
+            artifact_name="${PREFLIGHT_ARTIFACT_NAME:-KENUXA OPS-npm-preflight-${RELEASE_TAG}}"
 
             rm -rf "${download_dir}" "${asset_path}"
             mkdir -p "${download_dir}"
@@ -707,7 +707,7 @@ jobs:
               --dir "${download_dir}"
 
             if [[ ! -d "${download_dir}/dependency-evidence" ]]; then
-              echo "Dependency evidence is missing from OpenClaw npm preflight artifact." >&2
+              echo "Dependency evidence is missing from KENUXA OPS npm preflight artifact." >&2
               find "${download_dir}" -maxdepth 2 -type f -print >&2 || true
               exit 1
             fi
@@ -737,7 +737,7 @@ jobs:
               --workflow-ref "${CHILD_WORKFLOW_REF}"
               --full-release-validation-run "${FULL_RELEASE_VALIDATION_RUN_ID}"
               --plugin-npm-run "${plugin_npm_run_id}"
-              --openclaw-npm-run "${openclaw_npm_run_id}"
+              --KENUXA OPS-npm-run "${KENUXA OPS_npm_run_id}"
               --evidence-out "${evidence_path}"
             )
             if [[ "${WAIT_FOR_CLAWHUB}" == "true" ]]; then
@@ -765,8 +765,8 @@ jobs:
             release_version="${RELEASE_TAG#v}"
             body_file="${RUNNER_TEMP}/release-body.md"
             notes_file="${RUNNER_TEMP}/release-notes-with-proof.md"
-            tarball="$(npm view "openclaw@${release_version}" dist.tarball --json | jq -r '.')"
-            integrity="$(npm view "openclaw@${release_version}" dist.integrity --json | jq -r '.')"
+            tarball="$(npm view "KENUXA OPS@${release_version}" dist.tarball --json | jq -r '.')"
+            integrity="$(npm view "KENUXA OPS@${release_version}" dist.integrity --json | jq -r '.')"
             gh release view "${RELEASE_TAG}" --repo "$GITHUB_REPOSITORY" --json body --jq .body > "${body_file}"
 
             if [[ -n "${NPM_TELEGRAM_RUN_ID// }" ]]; then
@@ -791,7 +791,7 @@ jobs:
               PREFLIGHT_RUN_ID="${PREFLIGHT_RUN_ID}" \
               FULL_RELEASE_VALIDATION_RUN_ID="${FULL_RELEASE_VALIDATION_RUN_ID}" \
               PLUGIN_NPM_RUN_ID="${plugin_npm_run_id}" \
-              OPENCLAW_NPM_RUN_ID="${openclaw_npm_run_id}" \
+              KENUXA OPS_NPM_RUN_ID="${KENUXA OPS_npm_run_id}" \
               CLAWHUB_LINE="${clawhub_line}" \
               TELEGRAM_LINE="${telegram_line}" \
               node --input-type=module <<'NODE'
@@ -807,16 +807,16 @@ jobs:
           const section = [
             "### Release verification",
             "",
-            `- npm package: https://www.npmjs.com/package/openclaw/v/${process.env.RELEASE_VERSION}`,
+            `- npm package: https://www.npmjs.com/package/KENUXA OPS/v/${process.env.RELEASE_VERSION}`,
             `- registry tarball: ${process.env.RELEASE_TARBALL}`,
             `- integrity: \`${process.env.RELEASE_INTEGRITY}\``,
-            `- full release CI report: https://github.com/openclaw/releases-private/blob/main/evidence/${process.env.RELEASE_VERSION}/release-evidence.md`,
+            `- full release CI report: https://github.com/KENUXA OPS/releases-private/blob/main/evidence/${process.env.RELEASE_VERSION}/release-evidence.md`,
             `- release publish: https://github.com/${process.env.RELEASE_REPO}/actions/runs/${process.env.RELEASE_PUBLISH_RUN_ID}`,
             `- npm preflight: https://github.com/${process.env.RELEASE_REPO}/actions/runs/${process.env.PREFLIGHT_RUN_ID}`,
             `- full release validation: https://github.com/${process.env.RELEASE_REPO}/actions/runs/${process.env.FULL_RELEASE_VALIDATION_RUN_ID}`,
             `- plugin npm publish: https://github.com/${process.env.RELEASE_REPO}/actions/runs/${process.env.PLUGIN_NPM_RUN_ID}`,
             process.env.CLAWHUB_LINE,
-            `- OpenClaw npm publish: https://github.com/${process.env.RELEASE_REPO}/actions/runs/${process.env.OPENCLAW_NPM_RUN_ID}`,
+            `- KENUXA OPS npm publish: https://github.com/${process.env.RELEASE_REPO}/actions/runs/${process.env.KENUXA OPS_NPM_RUN_ID}`,
             process.env.TELEGRAM_LINE,
           ].join("\n");
 
@@ -836,10 +836,10 @@ jobs:
             echo "- Release SHA: \`${TARGET_SHA}\`"
             echo "- Release approval: this workflow job"
             echo "- Plugin npm and ClawHub publish: dispatched in parallel"
-            if [[ "${PUBLISH_OPENCLAW_NPM}" == "true" ]]; then
-              echo "- OpenClaw npm publish: starts after plugin npm succeeds"
+            if [[ "${PUBLISH_KENUXA OPS_NPM}" == "true" ]]; then
+              echo "- KENUXA OPS npm publish: starts after plugin npm succeeds"
             else
-              echo "- OpenClaw npm publish: skipped by input"
+              echo "- KENUXA OPS npm publish: skipped by input"
             fi
             if [[ "${WAIT_FOR_CLAWHUB}" == "true" ]]; then
               echo "- Workflow completion waits for ClawHub"
@@ -868,18 +868,18 @@ jobs:
             exit 1
           fi
 
-          openclaw_npm_run_id=""
-          if [[ "${PUBLISH_OPENCLAW_NPM}" == "true" ]]; then
-            openclaw_npm_run_id="$(dispatch_workflow openclaw-npm-release.yml \
+          KENUXA OPS_npm_run_id=""
+          if [[ "${PUBLISH_KENUXA OPS_NPM}" == "true" ]]; then
+            KENUXA OPS_npm_run_id="$(dispatch_workflow KENUXA OPS-npm-release.yml \
               -f tag="${RELEASE_TAG}" \
               -f preflight_only=false \
               -f preflight_run_id="${PREFLIGHT_RUN_ID}" \
               -f full_release_validation_run_id="${FULL_RELEASE_VALIDATION_RUN_ID}" \
               -f release_publish_run_id="${GITHUB_RUN_ID}" \
               -f npm_dist_tag="${RELEASE_NPM_DIST_TAG}")"
-            echo "- OpenClaw npm run ID: \`${openclaw_npm_run_id}\`" >> "$GITHUB_STEP_SUMMARY"
+            echo "- KENUXA OPS npm run ID: \`${KENUXA OPS_npm_run_id}\`" >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "- OpenClaw npm publish: skipped by input" >> "$GITHUB_STEP_SUMMARY"
+            echo "- KENUXA OPS npm publish: skipped by input" >> "$GITHUB_STEP_SUMMARY"
           fi
 
           clawhub_result=""
@@ -899,27 +899,27 @@ jobs:
             echo "- plugin-clawhub-release.yml: publish not awaited (${plugin_clawhub_run_id})" >> "$GITHUB_STEP_SUMMARY"
           fi
 
-          openclaw_result=""
-          openclaw_pid=""
-          if [[ -n "${openclaw_npm_run_id}" ]]; then
-            openclaw_result="$RUNNER_TEMP/openclaw-npm-result.txt"
+          KENUXA OPS_result=""
+          KENUXA OPS_pid=""
+          if [[ -n "${KENUXA OPS_npm_run_id}" ]]; then
+            KENUXA OPS_result="$RUNNER_TEMP/KENUXA OPS-npm-result.txt"
             wait_run_pid=""
-            wait_for_run_background openclaw-npm-release.yml "${openclaw_npm_run_id}" "${openclaw_result}"
-            openclaw_pid="${wait_run_pid}"
+            wait_for_run_background KENUXA OPS-npm-release.yml "${KENUXA OPS_npm_run_id}" "${KENUXA OPS_result}"
+            KENUXA OPS_pid="${wait_run_pid}"
           fi
 
           failed=0
-          openclaw_failed=0
-          if [[ -n "${openclaw_pid}" ]] && ! wait "${openclaw_pid}"; then
+          KENUXA OPS_failed=0
+          if [[ -n "${KENUXA OPS_pid}" ]] && ! wait "${KENUXA OPS_pid}"; then
             failed=1
-            openclaw_failed=1
+            KENUXA OPS_failed=1
           fi
-          if [[ -n "${openclaw_result}" && -f "${openclaw_result}" && "$(cat "${openclaw_result}")" != "success" ]]; then
+          if [[ -n "${KENUXA OPS_result}" && -f "${KENUXA OPS_result}" && "$(cat "${KENUXA OPS_result}")" != "success" ]]; then
             failed=1
-            openclaw_failed=1
+            KENUXA OPS_failed=1
           fi
 
-          if [[ -n "${openclaw_npm_run_id}" && "${openclaw_failed}" == "0" ]]; then
+          if [[ -n "${KENUXA OPS_npm_run_id}" && "${KENUXA OPS_failed}" == "0" ]]; then
             create_or_update_github_release
             upload_dependency_evidence_release_asset
           fi
@@ -931,7 +931,7 @@ jobs:
             failed=1
           fi
 
-          if [[ "${failed}" == "0" && -n "${openclaw_npm_run_id}" ]]; then
+          if [[ "${failed}" == "0" && -n "${KENUXA OPS_npm_run_id}" ]]; then
             verify_published_release
             append_release_proof_to_github_release
           fi
@@ -943,6 +943,6 @@ jobs:
         if: ${{ always() }}
         uses: actions/upload-artifact@v7
         with:
-          name: openclaw-release-postpublish-evidence-${{ inputs.tag }}
-          path: ${{ runner.temp }}/openclaw-release-postpublish-evidence
+          name: KENUXA OPS-release-postpublish-evidence-${{ inputs.tag }}
+          path: ${{ runner.temp }}/KENUXA OPS-release-postpublish-evidence
           if-no-files-found: ignore

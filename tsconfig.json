@@ -1,4 +1,4 @@
-{
+﻿{
   "compilerOptions": {
     "allowImportingTsExtensions": true,
     "allowSyntheticDefaultImports": true,
@@ -24,14 +24,14 @@
     "useDefineForClassFields": false,
     "verbatimModuleSyntax": true,
     "paths": {
-      "openclaw/extension-api": ["./src/extensionAPI.ts"],
-      "openclaw/plugin-sdk": ["./src/plugin-sdk/index.ts"],
-      "openclaw/plugin-sdk/*": ["./src/plugin-sdk/*.ts"],
-      "@openclaw/sdk": ["./packages/sdk/src/index.ts"],
-      "@openclaw/plugin-sdk": ["./src/plugin-sdk/index.ts"],
-      "@openclaw/plugin-sdk/*": ["./src/plugin-sdk/*.ts"],
-      "openclaw/plugin-sdk/account-id": ["./src/plugin-sdk/account-id.ts"],
-      "@openclaw/*": ["./extensions/*"]
+      "KENUXA OPS/extension-api": ["./src/extensionAPI.ts"],
+      "KENUXA OPS/plugin-sdk": ["./src/plugin-sdk/index.ts"],
+      "KENUXA OPS/plugin-sdk/*": ["./src/plugin-sdk/*.ts"],
+      "@KENUXA OPS/sdk": ["./packages/sdk/src/index.ts"],
+      "@KENUXA OPS/plugin-sdk": ["./src/plugin-sdk/index.ts"],
+      "@KENUXA OPS/plugin-sdk/*": ["./src/plugin-sdk/*.ts"],
+      "KENUXA OPS/plugin-sdk/account-id": ["./src/plugin-sdk/account-id.ts"],
+      "@KENUXA OPS/*": ["./extensions/*"]
     }
   },
   "include": ["src/**/*", "ui/**/*", "extensions/**/*", "packages/**/*"],

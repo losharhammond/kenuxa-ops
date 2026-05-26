@@ -1,13 +1,13 @@
-{
-  "name": "@openclaw/sglang-provider",
+﻿{
+  "name": "@KENUXA OPS/sglang-provider",
   "version": "2026.5.26",
   "private": true,
-  "description": "OpenClaw SGLang provider plugin",
+  "description": "KENUXA OPS SGLang provider plugin",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ]

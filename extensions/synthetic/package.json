@@ -1,13 +1,13 @@
-{
-  "name": "@openclaw/synthetic-provider",
+﻿{
+  "name": "@KENUXA OPS/synthetic-provider",
   "version": "2026.5.26",
   "private": true,
-  "description": "OpenClaw Synthetic provider plugin",
+  "description": "KENUXA OPS Synthetic provider plugin",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ]

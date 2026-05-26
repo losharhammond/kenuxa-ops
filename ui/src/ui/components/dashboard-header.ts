@@ -1,4 +1,4 @@
-import { LitElement, html, nothing } from "lit";
+﻿import { LitElement, html, nothing } from "lit";
 import { property } from "lit/decorators.js";
 import { pathForTab, titleForTab, type Tab } from "../navigation.js";
 
@@ -40,7 +40,7 @@ export class DashboardHeader extends LitElement {
             href=${pathForTab("overview", this.basePath)}
             @click=${this.handleOverviewClick}
           >
-            OpenClaw
+            KENUXA OPS
           </a>
           ${agentLabel
             ? html`

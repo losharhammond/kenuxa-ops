@@ -1,4 +1,4 @@
-/* @vitest-environment jsdom */
+﻿/* @vitest-environment jsdom */
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -8,7 +8,7 @@ const { realtimeTalkCtor, startMock, stopMock } = vi.hoisted(() => ({
   stopMock: vi.fn(),
 }));
 
-describe("OpenClawApp Talk controls", () => {
+describe("KenuxaOpsApp Talk controls", () => {
   beforeEach(() => {
     vi.resetModules();
     vi.doMock("./chat/realtime-talk.ts", () => ({
@@ -27,8 +27,8 @@ describe("OpenClawApp Talk controls", () => {
   });
 
   it("retries Talk immediately when the previous session is already in error state", async () => {
-    const { OpenClawApp } = await import("./app.ts");
-    const app = Object.create(OpenClawApp.prototype) as {
+    const { KenuxaOpsApp } = await import("./app.ts");
+    const app = Object.create(KenuxaOpsApp.prototype) as {
       client: unknown;
       connected: boolean;
       lastError: string | null;
@@ -54,7 +54,7 @@ describe("OpenClawApp Talk controls", () => {
       sessionKey: { value: "main", writable: true },
     });
 
-    await OpenClawApp.prototype.toggleRealtimeTalk.call(app as never);
+    await KenuxaOpsApp.prototype.toggleRealtimeTalk.call(app as never);
 
     expect(staleStop).toHaveBeenCalledOnce();
     expect(realtimeTalkCtor).toHaveBeenCalledOnce();
@@ -67,8 +67,8 @@ describe("OpenClawApp Talk controls", () => {
   });
 
   it("accumulates Talk transcripts as ordered conversation turns", async () => {
-    const { OpenClawApp } = await import("./app.ts");
-    const app = Object.create(OpenClawApp.prototype) as {
+    const { KenuxaOpsApp } = await import("./app.ts");
+    const app = Object.create(KenuxaOpsApp.prototype) as {
       client: unknown;
       connected: boolean;
       lastError: string | null;
@@ -93,7 +93,7 @@ describe("OpenClawApp Talk controls", () => {
       sessionKey: { value: "main", writable: true },
     });
 
-    await OpenClawApp.prototype.toggleRealtimeTalk.call(app as never);
+    await KenuxaOpsApp.prototype.toggleRealtimeTalk.call(app as never);
     const callbacks = realtimeTalkCtor.mock.calls[0]?.[2] as
       | {
           onTranscript?: (entry: {

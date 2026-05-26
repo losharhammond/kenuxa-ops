@@ -1,4 +1,4 @@
-import { spawnSync } from "node:child_process";
+﻿import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -16,7 +16,7 @@ function collectTrackedBundledPluginSourceCandidates(repoRoot) {
     [
       "ls-files",
       "--",
-      ":(glob)extensions/*/openclaw.plugin.json",
+      ":(glob)extensions/*/KENUXA OPS.plugin.json",
       ":(glob)extensions/*/package.json",
     ],
     {
@@ -32,7 +32,7 @@ function collectTrackedBundledPluginSourceCandidates(repoRoot) {
   const candidatesByDir = new Map();
   for (const rawLine of result.stdout.split("\n")) {
     const line = rawLine.trim().replaceAll("\\", "/");
-    const match = /^extensions\/([^/]+)\/(openclaw\.plugin\.json|package\.json)$/u.exec(line);
+    const match = /^extensions\/([^/]+)\/(KENUXA OPS\.plugin\.json|package\.json)$/u.exec(line);
     if (!match?.[1] || !match[2]) {
       continue;
     }
@@ -42,7 +42,7 @@ function collectTrackedBundledPluginSourceCandidates(repoRoot) {
       packageJsonPath: null,
       pluginDir: path.join(repoRoot, "extensions", match[1]),
     };
-    if (match[2] === "openclaw.plugin.json") {
+    if (match[2] === "KENUXA OPS.plugin.json") {
       current.manifestPath = path.join(repoRoot, line);
     } else {
       current.packageJsonPath = path.join(repoRoot, line);
@@ -66,7 +66,7 @@ function collectBundledPluginSourceCandidatesFromDirectory(repoRoot) {
     .filter((dirent) => dirent.isDirectory())
     .map((dirent) => {
       const pluginDir = path.join(extensionsRoot, dirent.name);
-      const manifestPath = path.join(pluginDir, "openclaw.plugin.json");
+      const manifestPath = path.join(pluginDir, "KENUXA OPS.plugin.json");
       const packageJsonPath = path.join(pluginDir, "package.json");
       return {
         dirName: dirent.name,

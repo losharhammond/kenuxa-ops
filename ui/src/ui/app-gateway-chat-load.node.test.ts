@@ -1,4 +1,4 @@
-// @vitest-environment node
+﻿// @vitest-environment node
 import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { connectGateway } from "./app-gateway.ts";
 import type { GatewayHelloOk } from "./gateway.ts";
@@ -154,7 +154,7 @@ function createHost(tab: Tab) {
     healthResult: null,
     healthError: null,
     debugHealth: null,
-    assistantName: "OpenClaw",
+    assistantName: "KENUXA OPS",
     assistantAvatar: null,
     assistantAgentId: null,
     serverVersion: null,

@@ -1,4 +1,4 @@
-import { execFileSync } from "node:child_process";
+﻿import { execFileSync } from "node:child_process";
 import { pathToFileURL } from "node:url";
 
 const DEFAULT_LABELS = ["duplicate", "close:duplicate", "dedupe:child"];
@@ -33,7 +33,7 @@ export function parseArgs(argv, env = process.env) {
     duplicates: [],
     labels: DEFAULT_LABELS,
     landedPr: undefined,
-    repo: env.GITHUB_REPOSITORY || "openclaw/openclaw",
+    repo: env.GITHUB_REPOSITORY || "KENUXA OPS/KENUXA OPS",
   };
 
   for (let index = 0; index < argv.length; index += 1) {

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Message normalization utilities for chat rendering.
  */
 
@@ -51,7 +51,7 @@ function isRenderableAssistantAttachment(url: string): boolean {
   return (
     /^https?:\/\//i.test(trimmed) ||
     /^data:(?:image|audio|video)\//i.test(trimmed) ||
-    /^\/(?:__openclaw__|media)\//.test(trimmed) ||
+    /^\/(?:__KENUXA OPS__|media)\//.test(trimmed) ||
     trimmed.startsWith("file://") ||
     trimmed.startsWith("~") ||
     trimmed.startsWith("/") ||
@@ -67,7 +67,7 @@ function shouldPreserveRelativeAssistantAttachment(url: string): boolean {
   return (
     !/^https?:\/\//i.test(trimmed) &&
     !/^data:(?:image|audio|video)\//i.test(trimmed) &&
-    !/^\/(?:__openclaw__|media)\//.test(trimmed) &&
+    !/^\/(?:__KENUXA OPS__|media)\//.test(trimmed) &&
     !trimmed.startsWith("file://") &&
     !trimmed.startsWith("~") &&
     !trimmed.startsWith("/") &&

@@ -1,6 +1,6 @@
-{
-  "name": "OpenClaw Control",
-  "short_name": "OpenClaw",
+﻿{
+  "name": "KENUXA OPS",
+  "short_name": "KENUXA OPS",
   "description": "Multi-channel AI gateway control panel",
   "start_url": "./",
   "display": "standalone",

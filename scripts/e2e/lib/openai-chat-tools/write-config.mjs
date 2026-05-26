@@ -1,4 +1,4 @@
-import fs from "node:fs";
+﻿import fs from "node:fs";
 import path from "node:path";
 
 function requireEnv(name) {
@@ -9,18 +9,18 @@ function requireEnv(name) {
   return value;
 }
 
-const configPath = requireEnv("OPENCLAW_CONFIG_PATH");
-const stateDir = requireEnv("OPENCLAW_STATE_DIR");
-const workspaceDir = requireEnv("OPENCLAW_TEST_WORKSPACE_DIR");
-const modelRef = requireEnv("OPENCLAW_OPENAI_CHAT_TOOLS_MODEL");
-const token = requireEnv("OPENCLAW_GATEWAY_TOKEN");
+const configPath = requireEnv("KENUXA OPS_CONFIG_PATH");
+const stateDir = requireEnv("KENUXA OPS_STATE_DIR");
+const workspaceDir = requireEnv("KENUXA OPS_TEST_WORKSPACE_DIR");
+const modelRef = requireEnv("KENUXA OPS_OPENAI_CHAT_TOOLS_MODEL");
+const token = requireEnv("KENUXA OPS_GATEWAY_TOKEN");
 const timeoutSeconds = Number.parseInt(
-  process.env.OPENCLAW_OPENAI_CHAT_TOOLS_TIMEOUT_SECONDS ?? "180",
+  process.env.KENUXA OPS_OPENAI_CHAT_TOOLS_TIMEOUT_SECONDS ?? "180",
   10,
 );
 const [providerId, modelId] = modelRef.split("/");
 if (providerId !== "openai" || !modelId) {
-  throw new Error(`OPENCLAW_OPENAI_CHAT_TOOLS_MODEL must be openai/*, got ${modelRef}`);
+  throw new Error(`KENUXA OPS_OPENAI_CHAT_TOOLS_MODEL must be openai/*, got ${modelRef}`);
 }
 
 const config = {

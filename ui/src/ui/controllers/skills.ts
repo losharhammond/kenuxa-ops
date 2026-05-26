@@ -1,4 +1,4 @@
-import type { GatewayBrowserClient } from "../gateway.ts";
+﻿import type { GatewayBrowserClient } from "../gateway.ts";
 import type { SkillStatusReport } from "../types.ts";
 
 export type ClawHubSearchResult = {
@@ -170,7 +170,7 @@ export async function saveSkillApiKey(state: SkillsState, skillKey: string) {
     await client.request("skills.update", { skillKey, apiKey });
     return {
       kind: "success",
-      message: `API key saved — stored in openclaw.json (skills.entries.${skillKey})`,
+      message: `API key saved — stored in KENUXA OPS.json (skills.entries.${skillKey})`,
     };
   });
 }

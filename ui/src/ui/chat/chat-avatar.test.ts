@@ -1,4 +1,4 @@
-/* @vitest-environment jsdom */
+﻿/* @vitest-environment jsdom */
 
 import { render } from "lit";
 import { describe, expect, it, vi } from "vitest";
@@ -62,7 +62,7 @@ describe("renderChatAvatar", () => {
   it("uses the assistant fallback while authenticated avatar routes are loading", () => {
     const avatar = renderAvatar([
       "assistant",
-      { avatar: "/avatar/main", name: "OpenClaw" },
+      { avatar: "/avatar/main", name: "KENUXA OPS" },
       undefined,
       "",
       "session-token",

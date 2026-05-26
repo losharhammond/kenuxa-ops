@@ -1,4 +1,4 @@
-interface:
-  display_name: "QA Test OpenClaw"
+﻿interface:
+  display_name: "QA Test KENUXA OPS"
   short_description: "Run and debug qa-lab and qa-channel scenarios"
-  default_prompt: "Use $openclaw-qa-testing to run or extend the OpenClaw QA suite with qa-lab and qa-channel, using regular openai/gpt-5.4 in fast mode for live OpenAI runs."
+  default_prompt: "Use $KENUXA OPS-qa-testing to run or extend the KENUXA OPS QA suite with qa-lab and qa-channel, using regular openai/gpt-5.4 in fast mode for live OpenAI runs."

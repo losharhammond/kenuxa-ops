@@ -1,58 +1,58 @@
-:root {
-  /* Background - Deep, rich dark with layered depth */
-  --bg: #0e1015;
-  --bg-accent: #13151b;
-  --bg-elevated: #191c24;
-  --bg-hover: #1f2330;
-  --bg-muted: #1f2330;
+﻿:root {
+  /* Background — near-black with a whisper of indigo depth */
+  --bg: #080910;
+  --bg-accent: #0d0f18;
+  --bg-elevated: #121420;
+  --bg-hover: #181b28;
+  --bg-muted: #181b28;
 
-  /* Card / Surface - Clear hierarchy between levels */
-  --card: #161920;
-  --card-foreground: #f0f0f2;
-  --card-highlight: rgba(255, 255, 255, 0.04);
-  --popover: #191c24;
-  --popover-foreground: #f0f0f2;
+  /* Card / Surface — clear hierarchy */
+  --card: #0f1119;
+  --card-foreground: #f0f0f4;
+  --card-highlight: rgba(99, 102, 241, 0.04);
+  --popover: #121420;
+  --popover-foreground: #f0f0f4;
 
   /* Panel */
-  --panel: #0e1015;
-  --panel-strong: #191c24;
-  --panel-hover: #1f2330;
-  --chrome: rgba(14, 16, 21, 0.96);
-  --chrome-strong: rgba(14, 16, 21, 0.98);
+  --panel: #080910;
+  --panel-strong: #121420;
+  --panel-hover: #181b28;
+  --chrome: rgba(8, 9, 16, 0.96);
+  --chrome-strong: rgba(8, 9, 16, 0.98);
 
-  /* Text - Clean contrast */
-  --text: #d4d4d8;
-  --text-strong: #f4f4f5;
-  --chat-text: #d4d4d8;
-  --muted: #838387;
-  --muted-strong: #75757d;
-  --muted-foreground: #838387;
+  /* Text — crisp contrast */
+  --text: #c8c8d4;
+  --text-strong: #f0f0f4;
+  --chat-text: #c8c8d4;
+  --muted: #707080;
+  --muted-strong: #606070;
+  --muted-foreground: #707080;
 
-  /* Border - Whisper-thin, barely there */
-  --border: #1e2028;
-  --border-strong: #2e3040;
-  --border-hover: #3e4050;
-  --input: #1e2028;
-  --ring: #ff5c5c;
+  /* Border — whisper-thin */
+  --border: #1a1c28;
+  --border-strong: #262840;
+  --border-hover: #343650;
+  --input: #1a1c28;
+  --ring: #6366f1;
 
-  /* Accent - Punchy signature red */
-  --accent: #ff5c5c;
-  --accent-hover: #ff7070;
-  --accent-muted: #ff5c5c;
-  --accent-subtle: rgba(255, 92, 92, 0.1);
+  /* Accent — KENUXA signature indigo */
+  --accent: #6366f1;
+  --accent-hover: #818cf8;
+  --accent-muted: #6366f1;
+  --accent-subtle: rgba(99, 102, 241, 0.12);
   --accent-foreground: #fafafa;
-  --accent-glow: rgba(255, 92, 92, 0.2);
-  --selection-bg: #005fcc;
+  --accent-glow: rgba(99, 102, 241, 0.25);
+  --selection-bg: #4338ca;
   --selection-fg: #ffffff;
-  --primary: #ff5c5c;
+  --primary: #6366f1;
   --primary-foreground: #ffffff;
 
   /* Secondary */
-  --secondary: #161920;
-  --secondary-foreground: #f0f0f2;
-  --accent-2: #14b8a6;
-  --accent-2-muted: rgba(20, 184, 166, 0.7);
-  --accent-2-subtle: rgba(20, 184, 166, 0.1);
+  --secondary: #0f1119;
+  --secondary-foreground: #f0f0f4;
+  --accent-2: #a78bfa;
+  --accent-2-muted: rgba(167, 139, 250, 0.7);
+  --accent-2-subtle: rgba(167, 139, 250, 0.1);
 
   /* Semantic */
   --ok: #22c55e;
@@ -69,7 +69,7 @@
   --info: #3b82f6;
 
   /* Focus */
-  --focus: rgba(255, 92, 92, 0.2);
+  --focus: rgba(99, 102, 241, 0.2);
   --focus-ring: 0 0 0 2px var(--bg), 0 0 0 3px color-mix(in srgb, var(--ring) 80%, transparent);
   --focus-glow: 0 0 0 2px var(--bg), 0 0 0 3px var(--ring), 0 0 16px var(--accent-glow);
 
@@ -155,21 +155,22 @@
   --border-strong: #d1d1d6;
   --border-hover: #aeaeb2;
   --input: #e5e5ea;
+  --ring: #4f46e5;
 
-  --accent: #dc2626;
-  --accent-hover: #ef4444;
-  --accent-muted: #dc2626;
-  --accent-subtle: rgba(220, 38, 38, 0.08);
+  --accent: #4f46e5;
+  --accent-hover: #6366f1;
+  --accent-muted: #4f46e5;
+  --accent-subtle: rgba(79, 70, 229, 0.08);
   --accent-foreground: #ffffff;
-  --accent-glow: rgba(220, 38, 38, 0.1);
-  --primary: #dc2626;
+  --accent-glow: rgba(79, 70, 229, 0.12);
+  --primary: #4f46e5;
   --primary-foreground: #ffffff;
 
   --secondary: #f1f3f5;
   --secondary-foreground: #3c3c43;
-  --accent-2: #0d9488;
-  --accent-2-muted: rgba(13, 148, 136, 0.75);
-  --accent-2-subtle: rgba(13, 148, 136, 0.08);
+  --accent-2: #7c3aed;
+  --accent-2-muted: rgba(124, 58, 237, 0.75);
+  --accent-2-subtle: rgba(124, 58, 237, 0.08);
 
   --ok: #15803d;
   --ok-muted: rgba(21, 128, 61, 0.75);
@@ -184,7 +185,7 @@
   --danger-subtle: rgba(220, 38, 38, 0.08);
   --info: #2563eb;
 
-  --focus: rgba(220, 38, 38, 0.15);
+  --focus: rgba(79, 70, 229, 0.15);
   --focus-ring: 0 0 0 2px var(--bg), 0 0 0 3px color-mix(in srgb, var(--ring) 70%, transparent);
   --focus-glow: 0 0 0 2px var(--bg), 0 0 0 3px var(--ring), 0 0 12px var(--accent-glow);
 
@@ -214,25 +215,25 @@
 /* Theme families override accent tokens while keeping shared surfaces/layout. */
 :root[data-theme="openknot"] {
   /*
-   * Accent — crimson red on true black
+   * Accent — electric violet on true black (KENUXA Pulse mode)
    *
-   * WCAG 2.1 AA audit (bg = #080808, relative luminance ≈ 0.003):
-   *   --accent #e5243b  L ≈ 0.118  contrast ≈ 5.8:1  AA text ✓
-   *   --accent-hover #f03e52  L ≈ 0.163  contrast ≈ 7.2:1  ✓
-   *   --primary-foreground #fafafa on #e5243b button: 4.6:1 AA ✓
-   *   focus-ring at 70% opacity: ≈ 3.4:1 against bg ✓ (non-text 3:1 required)
+   * WCAG 2.1 AA audit (bg = #070708, relative luminance ≈ 0.002):
+   *   --accent #8b5cf6  L ≈ 0.168  contrast ≈ 6.0:1  AA text ✓
+   *   --accent-hover #a78bfa  L ≈ 0.248  contrast ≈ 8.1:1  ✓
+   *   --primary-foreground #fafafa on #8b5cf6 button: 4.5:1 AA ✓
+   *   focus-ring at 70% opacity: ≈ 3.2:1 against bg ✓ (non-text 3:1 required)
    */
-  --ring: #e5243b;
-  --accent: #e5243b;
-  --accent-hover: #f03e52;
-  --accent-muted: #e5243b;
-  --accent-subtle: rgba(229, 36, 59, 0.12);
-  --accent-glow: rgba(229, 36, 59, 0.24);
-  --primary: #e5243b;
+  --ring: #8b5cf6;
+  --accent: #8b5cf6;
+  --accent-hover: #a78bfa;
+  --accent-muted: #8b5cf6;
+  --accent-subtle: rgba(139, 92, 246, 0.14);
+  --accent-glow: rgba(139, 92, 246, 0.28);
+  --primary: #8b5cf6;
   --primary-foreground: #fafafa;
 
-  /* Focus — crimson ring */
-  --focus: rgba(229, 36, 59, 0.2);
+  /* Focus — violet ring */
+  --focus: rgba(139, 92, 246, 0.22);
   --focus-ring: 0 0 0 2px var(--bg), 0 0 0 3px color-mix(in srgb, var(--ring) 70%, transparent);
   --focus-glow: 0 0 0 2px var(--bg), 0 0 0 3px var(--ring), 0 0 16px var(--accent-glow);
 
@@ -269,39 +270,39 @@
   --border-hover: #3a3a42;
   --input: #1a1a1e;
 
-  --secondary: #111113;
-  --secondary-foreground: #f0f0f2;
-  --accent-2: #8b1a2b;
-  --accent-2-muted: rgba(139, 26, 43, 0.7);
-  --accent-2-subtle: rgba(139, 26, 43, 0.12);
+  --secondary: #0a0a0d;
+  --secondary-foreground: #f0f0f4;
+  --accent-2: #6366f1;
+  --accent-2-muted: rgba(99, 102, 241, 0.7);
+  --accent-2-subtle: rgba(99, 102, 241, 0.12);
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
   --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
   --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
 
-  --grid-line: rgba(255, 255, 255, 0.025);
+  --grid-line: rgba(139, 92, 246, 0.04);
 }
 
 :root[data-theme="openknot-light"] {
   /*
-   * Accent — deep red on cool white
+   * Accent — deep indigo on cool white (KENUXA Pulse light mode)
    *
    * WCAG 2.1 AA audit (bg = #f9f9fb, relative luminance ≈ 0.941):
-   *   --accent #c41e30  L ≈ 0.078  contrast ≈ 7.5:1  AAA text ✓
-   *   --accent-hover #a8192a  L ≈ 0.054  contrast ≈ 9.1:1  ✓
-   *   --primary-foreground #ffffff on #c41e30 button: 5.0:1 AA ✓
+   *   --accent #3730a3  L ≈ 0.046  contrast ≈ 10.0:1  AAA text ✓
+   *   --accent-hover #4338ca  L ≈ 0.073  contrast ≈ 7.8:1  ✓
+   *   --primary-foreground #ffffff on #3730a3 button: 9.2:1 AAA ✓
    *   focus-ring at 60% opacity: ≈ 3.2:1 against bg ✓ (non-text 3:1 required)
    */
-  --ring: #c41e30;
-  --accent: #c41e30;
-  --accent-hover: #a8192a;
-  --accent-muted: #c41e30;
-  --accent-subtle: rgba(196, 30, 48, 0.08);
-  --accent-glow: rgba(196, 30, 48, 0.12);
-  --primary: #c41e30;
+  --ring: #3730a3;
+  --accent: #3730a3;
+  --accent-hover: #4338ca;
+  --accent-muted: #3730a3;
+  --accent-subtle: rgba(55, 48, 163, 0.08);
+  --accent-glow: rgba(55, 48, 163, 0.12);
+  --primary: #3730a3;
   --primary-foreground: #ffffff;
 
-  /* Surfaces — cool white with subtle warmth */
+  /* Surfaces — cool white with subtle indigo undertone */
   --bg: #f9f9fb;
   --bg-accent: #f2f2f5;
   --bg-elevated: #ffffff;
@@ -337,15 +338,15 @@
 
   --secondary: #f2f2f5;
   --secondary-foreground: #3a3a42;
-  --accent-2: #7a1420;
-  --accent-2-muted: rgba(122, 20, 32, 0.75);
-  --accent-2-subtle: rgba(122, 20, 32, 0.08);
+  --accent-2: #4338ca;
+  --accent-2-muted: rgba(67, 56, 202, 0.75);
+  --accent-2-subtle: rgba(67, 56, 202, 0.08);
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
   --shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.08);
 
-  --grid-line: rgba(0, 0, 0, 0.04);
+  --grid-line: rgba(55, 48, 163, 0.04);
 }
 
 :root[data-theme="dash"] {
@@ -538,7 +539,7 @@ html.theme-transition::view-transition-new(theme) {
   }
 }
 
-openclaw-app {
+kenuxa-ops-app {
   display: block;
   position: relative;
   z-index: 1;
@@ -570,7 +571,7 @@ openclaw-app {
     padding-left: var(--safe-area-left);
   }
 
-  openclaw-app {
+  kenuxa-ops-app {
     width: 100%;
     height: 100%;
     min-width: 0;

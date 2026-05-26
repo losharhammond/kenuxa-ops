@@ -1,4 +1,4 @@
-import { pathToFileURL } from "node:url";
+﻿import { pathToFileURL } from "node:url";
 
 const allowedLifecyclePackageManagers = new Set(["pnpm", "npm", "yarn", "bun"]);
 
@@ -44,9 +44,9 @@ export function createPackageManagerWarningMessage(packageManager) {
   }
 
   return [
-    `[openclaw] warning: detected ${packageManager} for install lifecycle.`,
-    "[openclaw] this repo works best with pnpm; npm-compatible installs are slower and much larger here.",
-    "[openclaw] prefer: corepack pnpm install",
+    `[KENUXA OPS] warning: detected ${packageManager} for install lifecycle.`,
+    "[KENUXA OPS] this repo works best with pnpm; npm-compatible installs are slower and much larger here.",
+    "[KENUXA OPS] prefer: corepack pnpm install",
   ].join("\n");
 }
 

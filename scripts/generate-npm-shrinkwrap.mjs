@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 import { execFileSync } from "node:child_process";
 import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -424,7 +424,7 @@ function normalizeNpmVersionDrift(lockfile) {
 }
 
 function generateShrinkwrap(packageDir) {
-  const tempDir = mkdtempSync(path.join(tmpdir(), "openclaw-shrinkwrap-"));
+  const tempDir = mkdtempSync(path.join(tmpdir(), "KENUXA OPS-shrinkwrap-"));
   try {
     const packageJson = JSON.parse(readFileSync(path.join(packageDir, "package.json"), "utf8"));
     const shrinkwrapOverrides = readShrinkwrapOverrides();
@@ -511,7 +511,7 @@ function listPublishablePluginPackageDirs() {
         return false;
       }
       const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf8"));
-      return packageJson.openclaw?.release?.publishToNpm === true;
+      return packageJson.KENUXA OPS?.release?.publishToNpm === true;
     })
     .toSorted((left, right) => left.localeCompare(right));
 }

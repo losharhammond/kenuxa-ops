@@ -1,11 +1,11 @@
-{
-  "name": "@openclaw/acpx",
+﻿{
+  "name": "@KENUXA OPS/acpx",
   "version": "2026.5.26",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
-      "name": "@openclaw/acpx",
+      "name": "@KENUXA OPS/acpx",
       "version": "2026.5.26",
       "dependencies": {
         "@agentclientprotocol/claude-agent-acp": "0.37.0",

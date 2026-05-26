@@ -1,4 +1,4 @@
-/* @vitest-environment jsdom */
+﻿/* @vitest-environment jsdom */
 
 import { render } from "lit";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -175,7 +175,7 @@ vi.mock("../controllers/sessions.ts", () => ({
 vi.mock("./agents-utils.ts", () => ({
   isRenderableControlUiAvatarUrl: (value: string) =>
     /^data:image\//i.test(value) || (value.startsWith("/") && !value.startsWith("//")),
-  agentLogoUrl: () => "/openclaw-logo.svg",
+  agentLogoUrl: () => "/KENUXA OPS-logo.svg",
   assistantAvatarFallbackUrl: () => "apple-touch-icon.png",
   resolveChatAvatarRenderUrl: (
     candidate: string | null | undefined,

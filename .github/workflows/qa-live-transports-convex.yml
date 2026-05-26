@@ -1,4 +1,4 @@
-name: QA-Lab - All Lanes
+﻿name: QA-Lab - All Lanes
 
 on:
   schedule:
@@ -51,9 +51,9 @@ concurrency:
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
   NODE_VERSION: "24.x"
-  OPENCLAW_CI_OPENAI_MODEL: ${{ vars.OPENCLAW_CI_OPENAI_MODEL || 'openai/gpt-5.5' }}
-  OPENCLAW_BUILD_PRIVATE_QA: "1"
-  OPENCLAW_ENABLE_PRIVATE_QA_CLI: "1"
+  KENUXA OPS_CI_OPENAI_MODEL: ${{ vars.KENUXA OPS_CI_OPENAI_MODEL || 'openai/gpt-5.5' }}
+  KENUXA OPS_BUILD_PRIVATE_QA: "1"
+  KENUXA OPS_ENABLE_PRIVATE_QA_CLI: "1"
 
 jobs:
   authorize_actor:
@@ -162,13 +162,13 @@ jobs:
     timeout-minutes: 30
     env:
       QA_PARITY_CONCURRENCY: "1"
-      OPENCLAW_QA_TRANSPORT_READY_TIMEOUT_MS: "180000"
+      KENUXA OPS_QA_TRANSPORT_READY_TIMEOUT_MS: "180000"
       OPENAI_API_KEY: ""
       ANTHROPIC_API_KEY: ""
-      OPENCLAW_LIVE_OPENAI_KEY: ""
-      OPENCLAW_LIVE_ANTHROPIC_KEY: ""
-      OPENCLAW_LIVE_GEMINI_KEY: ""
-      OPENCLAW_LIVE_SETUP_TOKEN_VALUE: ""
+      KENUXA OPS_LIVE_OPENAI_KEY: ""
+      KENUXA OPS_LIVE_ANTHROPIC_KEY: ""
+      KENUXA OPS_LIVE_GEMINI_KEY: ""
+      KENUXA OPS_LIVE_SETUP_TOKEN_VALUE: ""
     steps:
       - name: Checkout selected ref
         uses: actions/checkout@v6
@@ -190,17 +190,17 @@ jobs:
 
       - name: Run OpenAI candidate lane
         run: |
-          pnpm openclaw qa suite \
+          pnpm KENUXA OPS qa suite \
             --provider-mode mock-openai \
             --parity-pack agentic \
             --concurrency "${QA_PARITY_CONCURRENCY}" \
-            --model "${OPENCLAW_CI_OPENAI_MODEL}" \
+            --model "${KENUXA OPS_CI_OPENAI_MODEL}" \
             --alt-model openai/gpt-5.5-alt \
             --output-dir .artifacts/qa-e2e/openai-candidate
 
       - name: Run Opus 4.7 lane
         run: |
-          pnpm openclaw qa suite \
+          pnpm KENUXA OPS qa suite \
             --provider-mode mock-openai \
             --parity-pack agentic \
             --concurrency "${QA_PARITY_CONCURRENCY}" \
@@ -210,11 +210,11 @@ jobs:
 
       - name: Generate parity report
         run: |
-          pnpm openclaw qa parity-report \
+          pnpm KENUXA OPS qa parity-report \
             --repo-root . \
             --candidate-summary .artifacts/qa-e2e/openai-candidate/qa-suite-summary.json \
             --baseline-summary .artifacts/qa-e2e/anthropic-baseline/qa-suite-summary.json \
-            --candidate-label "${OPENCLAW_CI_OPENAI_MODEL}" \
+            --candidate-label "${KENUXA OPS_CI_OPENAI_MODEL}" \
             --baseline-label anthropic/claude-opus-4-7 \
             --output-dir .artifacts/qa-e2e/parity
 
@@ -236,8 +236,8 @@ jobs:
     environment: qa-live-shared
     env:
       QA_PARITY_CONCURRENCY: "1"
-      OPENCLAW_QA_TRANSPORT_READY_TIMEOUT_MS: "180000"
-      OPENCLAW_QA_REDACT_PUBLIC_METADATA: "1"
+      KENUXA OPS_QA_TRANSPORT_READY_TIMEOUT_MS: "180000"
+      KENUXA OPS_QA_REDACT_PUBLIC_METADATA: "1"
     steps:
       - name: Checkout selected ref
         uses: actions/checkout@v6
@@ -274,21 +274,21 @@ jobs:
         shell: bash
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENCLAW_LIVE_OPENAI_KEY: ${{ secrets.OPENAI_API_KEY }}
+          KENUXA OPS_LIVE_OPENAI_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           set -euo pipefail
 
           output_dir=".artifacts/qa-e2e/runtime-token-efficiency-live-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
           echo "output_dir=${output_dir}" >> "$GITHUB_OUTPUT"
 
-          pnpm openclaw qa suite \
+          pnpm KENUXA OPS qa suite \
             --repo-root . \
             --provider-mode live-frontier \
             --runtime-parity-tier standard \
             --runtime-parity-tier live-only \
             --concurrency "${QA_PARITY_CONCURRENCY}" \
-            --model "${OPENCLAW_CI_OPENAI_MODEL}" \
-            --alt-model "${OPENCLAW_CI_OPENAI_MODEL}" \
+            --model "${KENUXA OPS_CI_OPENAI_MODEL}" \
+            --alt-model "${KENUXA OPS_CI_OPENAI_MODEL}" \
             --runtime-pair pi,codex \
             --fast \
             --allow-failures \
@@ -300,7 +300,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          pnpm openclaw qa parity-report \
+          pnpm KENUXA OPS qa parity-report \
             --repo-root . \
             --runtime-axis \
             --token-efficiency \
@@ -360,8 +360,8 @@ jobs:
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           INPUT_MATRIX_PROFILE: ${{ github.event_name == 'workflow_dispatch' && inputs.matrix_profile || 'fast' }}
-          OPENCLAW_QA_REDACT_PUBLIC_METADATA: "1"
-          OPENCLAW_QA_MATRIX_NO_REPLY_WINDOW_MS: "3000"
+          KENUXA OPS_QA_REDACT_PUBLIC_METADATA: "1"
+          KENUXA OPS_QA_MATRIX_NO_REPLY_WINDOW_MS: "3000"
         run: |
           set -euo pipefail
 
@@ -372,16 +372,16 @@ jobs:
             --repo-root . \
             --output-dir "${output_dir}" \
             --provider-mode live-frontier \
-            --model "${OPENCLAW_CI_OPENAI_MODEL}" \
-            --alt-model "${OPENCLAW_CI_OPENAI_MODEL}" \
+            --model "${KENUXA OPS_CI_OPENAI_MODEL}" \
+            --alt-model "${KENUXA OPS_CI_OPENAI_MODEL}" \
             --profile "${INPUT_MATRIX_PROFILE}" \
             --fast
           )
-          if pnpm openclaw qa matrix --help 2>/dev/null | grep -F -q -- "--fail-fast"; then
+          if pnpm KENUXA OPS qa matrix --help 2>/dev/null | grep -F -q -- "--fail-fast"; then
             matrix_args+=(--fail-fast)
           fi
 
-          pnpm openclaw qa matrix "${matrix_args[@]}"
+          pnpm KENUXA OPS qa matrix "${matrix_args[@]}"
 
       - name: Upload Matrix QA artifacts
         if: always()
@@ -444,8 +444,8 @@ jobs:
         shell: bash
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENCLAW_QA_REDACT_PUBLIC_METADATA: "1"
-          OPENCLAW_QA_MATRIX_NO_REPLY_WINDOW_MS: "3000"
+          KENUXA OPS_QA_REDACT_PUBLIC_METADATA: "1"
+          KENUXA OPS_QA_MATRIX_NO_REPLY_WINDOW_MS: "3000"
         run: |
           set -euo pipefail
 
@@ -456,16 +456,16 @@ jobs:
             --repo-root . \
             --output-dir "${output_dir}" \
             --provider-mode live-frontier \
-            --model "${OPENCLAW_CI_OPENAI_MODEL}" \
-            --alt-model "${OPENCLAW_CI_OPENAI_MODEL}" \
+            --model "${KENUXA OPS_CI_OPENAI_MODEL}" \
+            --alt-model "${KENUXA OPS_CI_OPENAI_MODEL}" \
             --profile "${{ matrix.profile }}" \
             --fast
           )
-          if pnpm openclaw qa matrix --help 2>/dev/null | grep -F -q -- "--fail-fast"; then
+          if pnpm KENUXA OPS qa matrix --help 2>/dev/null | grep -F -q -- "--fail-fast"; then
             matrix_args+=(--fail-fast)
           fi
 
-          pnpm openclaw qa matrix "${matrix_args[@]}"
+          pnpm KENUXA OPS qa matrix "${matrix_args[@]}"
 
       - name: Upload Matrix QA shard artifacts
         if: always()
@@ -499,8 +499,8 @@ jobs:
       - name: Validate required QA credential env
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENCLAW_QA_CONVEX_SITE_URL: ${{ secrets.OPENCLAW_QA_CONVEX_SITE_URL }}
-          OPENCLAW_QA_CONVEX_SECRET_CI: ${{ secrets.OPENCLAW_QA_CONVEX_SECRET_CI }}
+          KENUXA OPS_QA_CONVEX_SITE_URL: ${{ secrets.KENUXA OPS_QA_CONVEX_SITE_URL }}
+          KENUXA OPS_QA_CONVEX_SECRET_CI: ${{ secrets.KENUXA OPS_QA_CONVEX_SECRET_CI }}
         shell: bash
         run: |
           set -euo pipefail
@@ -514,8 +514,8 @@ jobs:
           }
 
           require_var OPENAI_API_KEY
-          require_var OPENCLAW_QA_CONVEX_SITE_URL
-          require_var OPENCLAW_QA_CONVEX_SECRET_CI
+          require_var KENUXA OPS_QA_CONVEX_SITE_URL
+          require_var KENUXA OPS_QA_CONVEX_SECRET_CI
 
       - name: Build private QA runtime
         env:
@@ -527,10 +527,10 @@ jobs:
         shell: bash
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENCLAW_QA_CONVEX_SITE_URL: ${{ secrets.OPENCLAW_QA_CONVEX_SITE_URL }}
-          OPENCLAW_QA_CONVEX_SECRET_CI: ${{ secrets.OPENCLAW_QA_CONVEX_SECRET_CI }}
-          OPENCLAW_QA_REDACT_PUBLIC_METADATA: "1"
-          OPENCLAW_QA_TELEGRAM_CAPTURE_CONTENT: "1"
+          KENUXA OPS_QA_CONVEX_SITE_URL: ${{ secrets.KENUXA OPS_QA_CONVEX_SITE_URL }}
+          KENUXA OPS_QA_CONVEX_SECRET_CI: ${{ secrets.KENUXA OPS_QA_CONVEX_SECRET_CI }}
+          KENUXA OPS_QA_REDACT_PUBLIC_METADATA: "1"
+          KENUXA OPS_QA_TELEGRAM_CAPTURE_CONTENT: "1"
           INPUT_SCENARIO: ${{ github.event_name == 'workflow_dispatch' && inputs.scenario || '' }}
         run: |
           set -euo pipefail
@@ -550,12 +550,12 @@ jobs:
 
           echo "output_dir=${output_dir}" >> "$GITHUB_OUTPUT"
 
-          pnpm openclaw qa telegram \
+          pnpm KENUXA OPS qa telegram \
             --repo-root . \
             --output-dir "${output_dir}" \
             --provider-mode live-frontier \
-            --model "${OPENCLAW_CI_OPENAI_MODEL}" \
-            --alt-model "${OPENCLAW_CI_OPENAI_MODEL}" \
+            --model "${KENUXA OPS_CI_OPENAI_MODEL}" \
+            --alt-model "${KENUXA OPS_CI_OPENAI_MODEL}" \
             --fast \
             --credential-source convex \
             --credential-role ci \
@@ -593,8 +593,8 @@ jobs:
       - name: Validate required QA credential env
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENCLAW_QA_CONVEX_SITE_URL: ${{ secrets.OPENCLAW_QA_CONVEX_SITE_URL }}
-          OPENCLAW_QA_CONVEX_SECRET_CI: ${{ secrets.OPENCLAW_QA_CONVEX_SECRET_CI }}
+          KENUXA OPS_QA_CONVEX_SITE_URL: ${{ secrets.KENUXA OPS_QA_CONVEX_SITE_URL }}
+          KENUXA OPS_QA_CONVEX_SECRET_CI: ${{ secrets.KENUXA OPS_QA_CONVEX_SECRET_CI }}
         shell: bash
         run: |
           set -euo pipefail
@@ -608,8 +608,8 @@ jobs:
           }
 
           require_var OPENAI_API_KEY
-          require_var OPENCLAW_QA_CONVEX_SITE_URL
-          require_var OPENCLAW_QA_CONVEX_SECRET_CI
+          require_var KENUXA OPS_QA_CONVEX_SITE_URL
+          require_var KENUXA OPS_QA_CONVEX_SECRET_CI
 
       - name: Build private QA runtime
         env:
@@ -621,10 +621,10 @@ jobs:
         shell: bash
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENCLAW_QA_CONVEX_SITE_URL: ${{ secrets.OPENCLAW_QA_CONVEX_SITE_URL }}
-          OPENCLAW_QA_CONVEX_SECRET_CI: ${{ secrets.OPENCLAW_QA_CONVEX_SECRET_CI }}
-          OPENCLAW_QA_REDACT_PUBLIC_METADATA: "1"
-          OPENCLAW_QA_DISCORD_CAPTURE_CONTENT: "1"
+          KENUXA OPS_QA_CONVEX_SITE_URL: ${{ secrets.KENUXA OPS_QA_CONVEX_SITE_URL }}
+          KENUXA OPS_QA_CONVEX_SECRET_CI: ${{ secrets.KENUXA OPS_QA_CONVEX_SECRET_CI }}
+          KENUXA OPS_QA_REDACT_PUBLIC_METADATA: "1"
+          KENUXA OPS_QA_DISCORD_CAPTURE_CONTENT: "1"
           INPUT_SCENARIO: ${{ github.event_name == 'workflow_dispatch' && inputs.discord_scenario || '' }}
         run: |
           set -euo pipefail
@@ -644,7 +644,7 @@ jobs:
 
           echo "output_dir=${output_dir}" >> "$GITHUB_OUTPUT"
 
-          pnpm openclaw qa discord \
+          pnpm KENUXA OPS qa discord \
             --repo-root . \
             --output-dir "${output_dir}" \
             --provider-mode live-frontier \
@@ -690,8 +690,8 @@ jobs:
       - name: Validate required QA credential env
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENCLAW_QA_CONVEX_SITE_URL: ${{ secrets.OPENCLAW_QA_CONVEX_SITE_URL }}
-          OPENCLAW_QA_CONVEX_SECRET_CI: ${{ secrets.OPENCLAW_QA_CONVEX_SECRET_CI }}
+          KENUXA OPS_QA_CONVEX_SITE_URL: ${{ secrets.KENUXA OPS_QA_CONVEX_SITE_URL }}
+          KENUXA OPS_QA_CONVEX_SECRET_CI: ${{ secrets.KENUXA OPS_QA_CONVEX_SECRET_CI }}
         shell: bash
         run: |
           set -euo pipefail
@@ -705,8 +705,8 @@ jobs:
           }
 
           require_var OPENAI_API_KEY
-          require_var OPENCLAW_QA_CONVEX_SITE_URL
-          require_var OPENCLAW_QA_CONVEX_SECRET_CI
+          require_var KENUXA OPS_QA_CONVEX_SITE_URL
+          require_var KENUXA OPS_QA_CONVEX_SECRET_CI
 
       - name: Build private QA runtime
         env:
@@ -718,10 +718,10 @@ jobs:
         shell: bash
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENCLAW_QA_CONVEX_SITE_URL: ${{ secrets.OPENCLAW_QA_CONVEX_SITE_URL }}
-          OPENCLAW_QA_CONVEX_SECRET_CI: ${{ secrets.OPENCLAW_QA_CONVEX_SECRET_CI }}
-          OPENCLAW_QA_REDACT_PUBLIC_METADATA: "1"
-          OPENCLAW_QA_WHATSAPP_CAPTURE_CONTENT: "1"
+          KENUXA OPS_QA_CONVEX_SITE_URL: ${{ secrets.KENUXA OPS_QA_CONVEX_SITE_URL }}
+          KENUXA OPS_QA_CONVEX_SECRET_CI: ${{ secrets.KENUXA OPS_QA_CONVEX_SECRET_CI }}
+          KENUXA OPS_QA_REDACT_PUBLIC_METADATA: "1"
+          KENUXA OPS_QA_WHATSAPP_CAPTURE_CONTENT: "1"
           INPUT_SCENARIO: ${{ github.event_name == 'workflow_dispatch' && inputs.whatsapp_scenario || '' }}
         run: |
           set -euo pipefail
@@ -741,12 +741,12 @@ jobs:
 
           echo "output_dir=${output_dir}" >> "$GITHUB_OUTPUT"
 
-          pnpm openclaw qa whatsapp \
+          pnpm KENUXA OPS qa whatsapp \
             --repo-root . \
             --output-dir "${output_dir}" \
             --provider-mode live-frontier \
-            --model "${OPENCLAW_CI_OPENAI_MODEL}" \
-            --alt-model "${OPENCLAW_CI_OPENAI_MODEL}" \
+            --model "${KENUXA OPS_CI_OPENAI_MODEL}" \
+            --alt-model "${KENUXA OPS_CI_OPENAI_MODEL}" \
             --fast \
             --credential-source convex \
             --credential-role ci \
@@ -784,8 +784,8 @@ jobs:
       - name: Validate required QA credential env
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENCLAW_QA_CONVEX_SITE_URL: ${{ secrets.OPENCLAW_QA_CONVEX_SITE_URL }}
-          OPENCLAW_QA_CONVEX_SECRET_CI: ${{ secrets.OPENCLAW_QA_CONVEX_SECRET_CI }}
+          KENUXA OPS_QA_CONVEX_SITE_URL: ${{ secrets.KENUXA OPS_QA_CONVEX_SITE_URL }}
+          KENUXA OPS_QA_CONVEX_SECRET_CI: ${{ secrets.KENUXA OPS_QA_CONVEX_SECRET_CI }}
         shell: bash
         run: |
           set -euo pipefail
@@ -799,8 +799,8 @@ jobs:
           }
 
           require_var OPENAI_API_KEY
-          require_var OPENCLAW_QA_CONVEX_SITE_URL
-          require_var OPENCLAW_QA_CONVEX_SECRET_CI
+          require_var KENUXA OPS_QA_CONVEX_SITE_URL
+          require_var KENUXA OPS_QA_CONVEX_SECRET_CI
 
       - name: Build private QA runtime
         env:
@@ -812,10 +812,10 @@ jobs:
         shell: bash
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENCLAW_QA_CONVEX_SITE_URL: ${{ secrets.OPENCLAW_QA_CONVEX_SITE_URL }}
-          OPENCLAW_QA_CONVEX_SECRET_CI: ${{ secrets.OPENCLAW_QA_CONVEX_SECRET_CI }}
-          OPENCLAW_QA_REDACT_PUBLIC_METADATA: "1"
-          OPENCLAW_QA_SLACK_CAPTURE_CONTENT: "1"
+          KENUXA OPS_QA_CONVEX_SITE_URL: ${{ secrets.KENUXA OPS_QA_CONVEX_SITE_URL }}
+          KENUXA OPS_QA_CONVEX_SECRET_CI: ${{ secrets.KENUXA OPS_QA_CONVEX_SECRET_CI }}
+          KENUXA OPS_QA_REDACT_PUBLIC_METADATA: "1"
+          KENUXA OPS_QA_SLACK_CAPTURE_CONTENT: "1"
           INPUT_SCENARIO: ${{ github.event_name == 'workflow_dispatch' && inputs.slack_scenario || '' }}
         run: |
           set -euo pipefail
@@ -835,12 +835,12 @@ jobs:
 
           echo "output_dir=${output_dir}" >> "$GITHUB_OUTPUT"
 
-          pnpm openclaw qa slack \
+          pnpm KENUXA OPS qa slack \
             --repo-root . \
             --output-dir "${output_dir}" \
             --provider-mode live-frontier \
-            --model "${OPENCLAW_CI_OPENAI_MODEL}" \
-            --alt-model "${OPENCLAW_CI_OPENAI_MODEL}" \
+            --model "${KENUXA OPS_CI_OPENAI_MODEL}" \
+            --alt-model "${KENUXA OPS_CI_OPENAI_MODEL}" \
             --fast \
             --credential-source convex \
             --credential-role ci \

@@ -1,4 +1,4 @@
-lockfileVersion: '9.0'
+﻿lockfileVersion: '9.0'
 
 settings:
   autoInstallPeers: true
@@ -82,10 +82,10 @@ importers:
       '@mozilla/readability':
         specifier: 0.6.0
         version: 0.6.0
-      '@openclaw/fs-safe':
+      '@KENUXA OPS/fs-safe':
         specifier: 0.3.0
         version: 0.3.0
-      '@openclaw/proxyline':
+      '@KENUXA OPS/proxyline':
         specifier: 0.3.3
         version: 0.3.3(undici@8.3.0)
       '@silvia-odwyer/photon-node':
@@ -283,19 +283,19 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/admin-http-rpc:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/alibaba:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -317,7 +317,7 @@ importers:
         specifier: 4.5.4
         version: 4.5.4
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -333,7 +333,7 @@ importers:
         specifier: 0.75.5
         version: 0.75.5(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))(ws@8.21.0)(zod@4.4.3)
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -343,7 +343,7 @@ importers:
         specifier: 0.75.5
         version: 0.75.5(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))(ws@8.21.0)(zod@4.4.3)
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -359,19 +359,19 @@ importers:
         specifier: 0.75.5
         version: 0.75.5(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))(ws@8.21.0)(zod@4.4.3)
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/arcee:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/azure-speech:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -381,13 +381,13 @@ importers:
         specifier: 1.3.8
         version: 1.3.8
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/brave:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -412,7 +412,7 @@ importers:
         specifier: 8.21.0
         version: 8.21.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
       undici:
@@ -421,7 +421,7 @@ importers:
 
   extensions/byteplus:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -446,19 +446,19 @@ importers:
         specifier: 8.21.0
         version: 8.21.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/cerebras:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/chutes:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -471,16 +471,16 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      KENUXA OPS:
         specifier: workspace:*
         version: link:../..
 
   extensions/cloudflare-ai-gateway:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -502,37 +502,37 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/comfy:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/copilot-proxy:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/deepgram:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/deepinfra:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/deepseek:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -572,13 +572,13 @@ importers:
         specifier: 1.41.1
         version: 1.41.1
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/diagnostics-prometheus:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -600,7 +600,7 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -631,10 +631,10 @@ importers:
         specifier: 8.21.0
         version: 8.21.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      KENUXA OPS:
         specifier: workspace:*
         version: link:../..
 
@@ -647,31 +647,31 @@ importers:
         specifier: 5.7.284
         version: 5.7.284
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/duckduckgo:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/elevenlabs:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/exa:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/fal:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -687,10 +687,10 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      KENUXA OPS:
         specifier: workspace:*
         version: link:../..
 
@@ -703,7 +703,7 @@ importers:
         specifier: 1.1.38
         version: 1.1.38
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -713,7 +713,7 @@ importers:
         specifier: 1.1.38
         version: 1.1.38
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -723,7 +723,7 @@ importers:
         specifier: 0.75.5
         version: 0.75.5(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))(ws@8.21.0)(zod@4.4.3)
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -736,7 +736,7 @@ importers:
       '@earendil-works/pi-ai':
         specifier: 0.75.5
         version: 0.75.5(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))(ws@8.21.0)(zod@4.4.3)
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -752,7 +752,7 @@ importers:
         specifier: 10.6.2
         version: 10.6.2
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -765,10 +765,10 @@ importers:
         specifier: 1.1.38
         version: 1.1.38
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      KENUXA OPS:
         specifier: workspace:*
         version: link:../..
 
@@ -784,46 +784,46 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      KENUXA OPS:
         specifier: workspace:*
         version: link:../..
 
   extensions/gradium:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/groq:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/huggingface:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/image-generation-core:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/imessage:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/inworld:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -833,13 +833,13 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/kilocode:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -849,7 +849,7 @@ importers:
         specifier: 0.75.5
         version: 0.75.5(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))(ws@8.21.0)(zod@4.4.3)
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -862,16 +862,16 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      KENUXA OPS:
         specifier: workspace:*
         version: link:../..
 
   extensions/litellm:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -881,7 +881,7 @@ importers:
         specifier: 1.1.38
         version: 1.1.38
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -900,7 +900,7 @@ importers:
         specifier: 1.1.38
         version: 1.1.38
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -931,10 +931,10 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      KENUXA OPS:
         specifier: workspace:*
         version: link:../..
 
@@ -947,10 +947,10 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      KENUXA OPS:
         specifier: workspace:*
         version: link:../..
 
@@ -960,7 +960,7 @@ importers:
         specifier: 0.3.4
         version: 0.3.4
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -970,7 +970,7 @@ importers:
         specifier: 1.1.38
         version: 1.1.38
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -986,10 +986,10 @@ importers:
         specifier: 1.1.38
         version: 1.1.38
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      KENUXA OPS:
         specifier: workspace:*
         version: link:../..
 
@@ -1008,7 +1008,7 @@ importers:
         specifier: 1.1.38
         version: 1.1.38
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1024,10 +1024,10 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      KENUXA OPS:
         specifier: workspace:*
         version: link:../..
 
@@ -1037,22 +1037,22 @@ importers:
         specifier: 1.2.10
         version: 1.2.10
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/microsoft-foundry:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/migrate-claude:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      KENUXA OPS:
         specifier: workspace:*
         version: link:../..
 
@@ -1062,28 +1062,28 @@ importers:
         specifier: 2.9.0
         version: 2.9.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      KENUXA OPS:
         specifier: workspace:*
         version: link:../..
 
   extensions/minimax:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/mistral:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/moonshot:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1111,13 +1111,13 @@ importers:
         specifier: 1.1.38
         version: 1.1.38
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
       '@types/jsonwebtoken':
         specifier: 9.0.10
         version: 9.0.10
-      openclaw:
+      KENUXA OPS:
         specifier: workspace:*
         version: link:../..
 
@@ -1127,10 +1127,10 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      KENUXA OPS:
         specifier: workspace:*
         version: link:../..
 
@@ -1143,16 +1143,16 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      KENUXA OPS:
         specifier: workspace:*
         version: link:../..
 
   extensions/nvidia:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1171,10 +1171,10 @@ importers:
         specifier: 2.9.0
         version: 2.9.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      KENUXA OPS:
         specifier: workspace:*
         version: link:../..
 
@@ -1187,13 +1187,13 @@ importers:
         specifier: 1.1.38
         version: 1.1.38
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/open-prose:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1206,25 +1206,25 @@ importers:
         specifier: 8.21.0
         version: 8.21.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/opencode:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/opencode-go:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/openrouter:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1234,13 +1234,13 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/perplexity:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1250,10 +1250,10 @@ importers:
         specifier: 2.2.3
         version: 2.2.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      KENUXA OPS:
         specifier: workspace:*
         version: link:../..
 
@@ -1266,10 +1266,10 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      KENUXA OPS:
         specifier: workspace:*
         version: link:../..
 
@@ -1291,19 +1291,19 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/discord':
+      '@KENUXA OPS/discord':
         specifier: workspace:*
         version: link:../discord
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      '@openclaw/slack':
+      '@KENUXA OPS/slack':
         specifier: workspace:*
         version: link:../slack
-      '@openclaw/whatsapp':
+      '@KENUXA OPS/whatsapp':
         specifier: workspace:*
         version: link:../whatsapp
-      openclaw:
+      KENUXA OPS:
         specifier: workspace:*
         version: link:../..
 
@@ -1313,19 +1313,19 @@ importers:
         specifier: 8.3.0
         version: 8.3.0
     devDependencies:
-      '@openclaw/matrix':
+      '@KENUXA OPS/matrix':
         specifier: workspace:*
         version: link:../matrix
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      KENUXA OPS:
         specifier: workspace:*
         version: link:../..
 
   extensions/qianfan:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1347,43 +1347,43 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
       '@types/ws':
         specifier: 8.18.1
         version: 8.18.1
-      openclaw:
+      KENUXA OPS:
         specifier: workspace:*
         version: link:../..
 
   extensions/qwen:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/runway:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/searxng:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/senseaudio:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/sglang:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1393,7 +1393,7 @@ importers:
         specifier: 8.21.0
         version: 8.21.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1403,7 +1403,7 @@ importers:
         specifier: 1.1.38
         version: 1.1.38
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1428,22 +1428,22 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      KENUXA OPS:
         specifier: workspace:*
         version: link:../..
 
   extensions/speech-core:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/stepfun:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1453,13 +1453,13 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/synthetic:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1469,7 +1469,7 @@ importers:
         specifier: 1.1.38
         version: 1.1.38
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1491,13 +1491,13 @@ importers:
         specifier: 8.3.0
         version: 8.3.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/tencent:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1519,16 +1519,16 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      KENUXA OPS:
         specifier: workspace:*
         version: link:../..
 
   extensions/together:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1538,13 +1538,13 @@ importers:
         specifier: 0.7.1
         version: 0.7.1
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/tts-local-cli:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1563,31 +1563,31 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/venice:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/vercel-ai-gateway:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/video-generation-core:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/vllm:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1606,28 +1606,28 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      KENUXA OPS:
         specifier: workspace:*
         version: link:../..
 
   extensions/volcengine:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/voyage:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/vydra:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1640,7 +1640,7 @@ importers:
         specifier: 0.18.12
         version: 0.18.12
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1650,7 +1650,7 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1669,10 +1669,10 @@ importers:
         specifier: 1.1.38
         version: 1.1.38
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      KENUXA OPS:
         specifier: workspace:*
         version: link:../..
 
@@ -1685,7 +1685,7 @@ importers:
         specifier: 1.1.38
         version: 1.1.38
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
       ws:
@@ -1694,13 +1694,13 @@ importers:
 
   extensions/xiaomi:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/zai:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1710,10 +1710,10 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      KENUXA OPS:
         specifier: workspace:*
         version: link:../..
 
@@ -1729,10 +1729,10 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@KENUXA OPS/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      KENUXA OPS:
         specifier: workspace:*
         version: link:../..
 
@@ -3100,11 +3100,11 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@openclaw/fs-safe@0.3.0':
+  '@KENUXA OPS/fs-safe@0.3.0':
     resolution: {integrity: sha512-uIBE441CIt1kIURoP9qRGKZ8LkGyfD9ZzeESjwAd29ZPWtghws/5GR3Pjb67jKdcJHP1I6roNXcvnhzAU7lHlA==}
     engines: {node: '>=20.11'}
 
-  '@openclaw/proxyline@0.3.3':
+  '@KENUXA OPS/proxyline@0.3.3':
     resolution: {integrity: sha512-sftHnW69NHQqLjCxBTvQ8f/eQl+peZ5pHCBQtuTWBbeuYRHZ0/GXVTmw/O/YKsShMbqPWhJB0UYtPPdvCUSS8w==}
     engines: {node: '>=22.19.0'}
     peerDependencies:
@@ -8805,12 +8805,12 @@ snapshots:
   '@openai/codex@0.133.0-win32-x64':
     optional: true
 
-  '@openclaw/fs-safe@0.3.0':
+  '@KENUXA OPS/fs-safe@0.3.0':
     optionalDependencies:
       jszip: 3.10.1
       tar: 7.5.15
 
-  '@openclaw/proxyline@0.3.3(undici@8.3.0)':
+  '@KENUXA OPS/proxyline@0.3.3(undici@8.3.0)':
     dependencies:
       undici: 8.3.0
 

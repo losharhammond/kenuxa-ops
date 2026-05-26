@@ -1,4 +1,4 @@
-import path from "node:path";
+﻿import path from "node:path";
 import { BUNDLED_PLUGIN_ROOT_DIR } from "../../scripts/lib/bundled-plugin-paths.mjs";
 
 export const unitTestIncludePatterns = [
@@ -11,8 +11,8 @@ export const boundaryTestFiles = [
   "src/infra/boundary-path.test.ts",
   "src/infra/git-root.test.ts",
   "src/infra/home-dir.test.ts",
-  "src/infra/openclaw-exec-env.test.ts",
-  "src/infra/openclaw-root.test.ts",
+  "src/infra/KENUXA OPS-exec-env.test.ts",
+  "src/infra/KENUXA OPS-root.test.ts",
   "src/infra/package-json.test.ts",
   "src/infra/path-env.test.ts",
   "src/infra/stable-node-path.test.ts",
@@ -60,8 +60,8 @@ export const unitTestAdditionalExcludePatterns = [
   "src/infra/boundary-path.test.ts",
   "src/infra/git-root.test.ts",
   "src/infra/home-dir.test.ts",
-  "src/infra/openclaw-exec-env.test.ts",
-  "src/infra/openclaw-root.test.ts",
+  "src/infra/KENUXA OPS-exec-env.test.ts",
+  "src/infra/KENUXA OPS-root.test.ts",
   "src/infra/package-json.test.ts",
   "src/infra/path-env.test.ts",
   "src/infra/stable-node-path.test.ts",
@@ -78,7 +78,7 @@ const sharedBaseExcludePatterns = [
   "apps/macos/.build/**",
   "**/node_modules/**",
   "**/vendor/**",
-  "dist/OpenClaw.app/**",
+  "dist/KENUXA OPS.app/**",
   "**/*.live.test.ts",
   "**/*.e2e.test.ts",
 ];

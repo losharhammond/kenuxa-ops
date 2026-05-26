@@ -1,11 +1,11 @@
-{
-  "name": "@openclaw/diagnostics-otel",
+﻿{
+  "name": "@KENUXA OPS/diagnostics-otel",
   "version": "2026.5.26",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
-      "name": "@openclaw/diagnostics-otel",
+      "name": "@KENUXA OPS/diagnostics-otel",
       "version": "2026.5.26",
       "dependencies": {
         "@opentelemetry/api": "1.9.1",

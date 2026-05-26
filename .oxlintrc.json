@@ -1,4 +1,4 @@
-{
+﻿{
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": ["unicorn", "typescript", "oxc"],
   "categories": {
@@ -190,7 +190,7 @@
     "src/canvas-host/a2ui/a2ui.bundle.js",
     "vendor/",
     "**/.cache/**",
-    "**/.openclaw-runtime-deps-copy-*/**",
+    "**/.KENUXA OPS-runtime-deps-copy-*/**",
     "**/build/**",
     "**/coverage/**",
     "**/dist/**",

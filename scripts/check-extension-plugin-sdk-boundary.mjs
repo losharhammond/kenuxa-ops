@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 import { promises as fs } from "node:fs";
 import path from "node:path";
@@ -137,7 +137,7 @@ function classifyReason(mode, kind, resolvedPath, specifier) {
         : "imports";
   if (mode === "relative-outside-package") {
     if (resolvedPath?.startsWith("src/plugin-sdk/")) {
-      return `${verb} plugin-sdk via relative path; use openclaw/plugin-sdk/<subpath>`;
+      return `${verb} plugin-sdk via relative path; use KENUXA OPS/plugin-sdk/<subpath>`;
     }
     if (resolvedPath?.startsWith("src/")) {
       return `${verb} core src path via relative path outside the extension package`;

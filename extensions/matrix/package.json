@@ -1,10 +1,10 @@
-{
-  "name": "@openclaw/matrix",
+﻿{
+  "name": "@KENUXA OPS/matrix",
   "version": "2026.5.26",
-  "description": "OpenClaw Matrix channel plugin",
+  "description": "KENUXA OPS Matrix channel plugin",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openclaw/openclaw"
+    "url": "https://github.com/KENUXA OPS/KENUXA OPS"
   },
   "type": "module",
   "dependencies": {
@@ -18,18 +18,18 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*",
-    "openclaw": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*",
+    "KENUXA OPS": "workspace:*"
   },
   "peerDependencies": {
-    "openclaw": ">=2026.5.26"
+    "KENUXA OPS": ">=2026.5.26"
   },
   "peerDependenciesMeta": {
-    "openclaw": {
+    "KENUXA OPS": {
       "optional": true
     }
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ],
@@ -80,8 +80,8 @@
       }
     },
     "install": {
-      "clawhubSpec": "clawhub:@openclaw/matrix",
-      "npmSpec": "@openclaw/matrix",
+      "clawhubSpec": "clawhub:@KENUXA OPS/matrix",
+      "npmSpec": "@KENUXA OPS/matrix",
       "defaultChoice": "clawhub",
       "minHostVersion": ">=2026.4.10",
       "allowInvalidConfigRecovery": true
@@ -90,7 +90,7 @@
       "pluginApi": ">=2026.5.26"
     },
     "build": {
-      "openclawVersion": "2026.5.26"
+      "KENUXA OPSVersion": "2026.5.26"
     },
     "release": {
       "publishToClawHub": true,

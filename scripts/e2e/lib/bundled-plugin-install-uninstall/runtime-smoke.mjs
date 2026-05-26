@@ -1,4 +1,4 @@
-import childProcess from "node:child_process";
+﻿import childProcess from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -8,17 +8,17 @@ import { fileURLToPath } from "node:url";
 
 const TOKEN = "bundled-plugin-runtime-smoke-token";
 const OUTPUT_CAPTURE_CHARS = readPositiveInt(
-  process.env.OPENCLAW_BUNDLED_PLUGIN_RUNTIME_OUTPUT_CHARS,
+  process.env.KENUXA OPS_BUNDLED_PLUGIN_RUNTIME_OUTPUT_CHARS,
   1024 * 1024,
 );
-const WATCHDOG_MS = readPositiveInt(process.env.OPENCLAW_BUNDLED_PLUGIN_RUNTIME_WATCHDOG_MS, 1000);
+const WATCHDOG_MS = readPositiveInt(process.env.KENUXA OPS_BUNDLED_PLUGIN_RUNTIME_WATCHDOG_MS, 1000);
 const READY_TIMEOUT_MS = readPositiveInt(
-  process.env.OPENCLAW_BUNDLED_PLUGIN_RUNTIME_READY_MS,
+  process.env.KENUXA OPS_BUNDLED_PLUGIN_RUNTIME_READY_MS,
   900000,
 );
-const RPC_TIMEOUT_MS = readPositiveInt(process.env.OPENCLAW_BUNDLED_PLUGIN_RUNTIME_RPC_MS, 60000);
+const RPC_TIMEOUT_MS = readPositiveInt(process.env.KENUXA OPS_BUNDLED_PLUGIN_RUNTIME_RPC_MS, 60000);
 const RPC_READY_TIMEOUT_MS = readPositiveInt(
-  process.env.OPENCLAW_BUNDLED_PLUGIN_RUNTIME_RPC_READY_MS,
+  process.env.KENUXA OPS_BUNDLED_PLUGIN_RUNTIME_RPC_READY_MS,
   210000,
 );
 
@@ -39,10 +39,10 @@ function writeJson(file, value) {
 function manifestPath(pluginDir, pluginRoot) {
   const candidates = [
     ...(isNonEmptyString(pluginRoot)
-      ? [path.join(pluginRoot, "openclaw.plugin.json")]
+      ? [path.join(pluginRoot, "KENUXA OPS.plugin.json")]
       : []),
-    path.join(process.cwd(), "dist", "extensions", pluginDir, "openclaw.plugin.json"),
-    path.join(process.cwd(), "dist-runtime", "extensions", pluginDir, "openclaw.plugin.json"),
+    path.join(process.cwd(), "dist", "extensions", pluginDir, "KENUXA OPS.plugin.json"),
+    path.join(process.cwd(), "dist-runtime", "extensions", pluginDir, "KENUXA OPS.plugin.json"),
   ];
   return candidates.find((candidate) => fs.existsSync(candidate)) ?? candidates[0];
 }
@@ -57,7 +57,7 @@ function loadManifest(pluginDir, pluginRoot) {
 
 function configPathFromEnv(env = process.env) {
   return (
-    env.OPENCLAW_CONFIG_PATH || path.join(env.HOME || os.homedir(), ".openclaw", "openclaw.json")
+    env.KENUXA OPS_CONFIG_PATH || path.join(env.HOME || os.homedir(), ".KENUXA OPS", "KENUXA OPS.json")
   );
 }
 
@@ -219,9 +219,9 @@ function startGateway(params) {
       env: {
         ...process.env,
         ...params.env,
-        OPENCLAW_NO_ONBOARD: "1",
-        OPENCLAW_SKIP_CHANNELS: params.skipChannels ? "1" : "0",
-        OPENCLAW_SKIP_PROVIDERS: "0",
+        KENUXA OPS_NO_ONBOARD: "1",
+        KENUXA OPS_SKIP_CHANNELS: params.skipChannels ? "1" : "0",
+        KENUXA OPS_SKIP_PROVIDERS: "0",
       },
       stdio: ["ignore", log, log],
       detached: false,
@@ -326,7 +326,7 @@ async function assertReadyzProbe(options) {
 }
 
 async function rpcCall(method, params, options) {
-  const rpcStateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-plugin-runtime-rpc-"));
+  const rpcStateDir = fs.mkdtempSync(path.join(os.tmpdir(), "KENUXA OPS-plugin-runtime-rpc-"));
   const args = [
     options.entrypoint,
     "gateway",
@@ -346,8 +346,8 @@ async function rpcCall(method, params, options) {
     env: {
       ...process.env,
       ...options.env,
-      OPENCLAW_NO_ONBOARD: "1",
-      OPENCLAW_STATE_DIR: rpcStateDir,
+      KENUXA OPS_NO_ONBOARD: "1",
+      KENUXA OPS_STATE_DIR: rpcStateDir,
     },
   });
   return unwrapRpcPayload(parseJsonOutput(stdout));
@@ -421,14 +421,14 @@ async function smokePlugin(pluginId, pluginDir, requiresConfig, pluginIndex, plu
     console.log(`Runtime smoke skipped for ${pluginId}: plugin requires config`);
     return;
   }
-  const entrypoint = process.env.OPENCLAW_ENTRY;
+  const entrypoint = process.env.KENUXA OPS_ENTRY;
   if (!entrypoint) {
-    throw new Error("missing OPENCLAW_ENTRY");
+    throw new Error("missing KENUXA OPS_ENTRY");
   }
   const manifest = loadManifest(pluginDir, pluginRoot);
   const plan = buildPluginPlan(manifest);
   const port =
-    readPositiveInt(process.env.OPENCLAW_BUNDLED_PLUGIN_RUNTIME_PORT_BASE, 19000) + pluginIndex * 3;
+    readPositiveInt(process.env.KENUXA OPS_BUNDLED_PLUGIN_RUNTIME_PORT_BASE, 19000) + pluginIndex * 3;
   const config = ensureGatewayConfig(activateSmokePlugin(readConfig(), pluginId), port);
   if (plan.speechProviders[0]) {
     const provider = plan.speechProviders[0];
@@ -448,7 +448,7 @@ async function smokePlugin(pluginId, pluginDir, requiresConfig, pluginIndex, plu
   }
   writeConfig(config);
 
-  const logPath = `/tmp/openclaw-plugin-runtime-${pluginIndex}-${pluginId}.log`;
+  const logPath = `/tmp/KENUXA OPS-plugin-runtime-${pluginIndex}-${pluginId}.log`;
   const child = startGateway({
     entrypoint,
     port,
@@ -644,9 +644,9 @@ async function assertNoPackageManagerChildren(pid) {
 }
 
 async function smokeTtsGlobalDisable(pluginId, pluginDir, provider, pluginIndex, pluginRoot) {
-  const entrypoint = process.env.OPENCLAW_ENTRY;
+  const entrypoint = process.env.KENUXA OPS_ENTRY;
   if (!entrypoint) {
-    throw new Error("missing OPENCLAW_ENTRY");
+    throw new Error("missing KENUXA OPS_ENTRY");
   }
   const manifest = loadManifest(pluginDir, pluginRoot);
   const plan = buildPluginPlan(manifest);
@@ -656,7 +656,7 @@ async function smokeTtsGlobalDisable(pluginId, pluginDir, provider, pluginIndex,
     return;
   }
   const port =
-    readPositiveInt(process.env.OPENCLAW_BUNDLED_PLUGIN_RUNTIME_PORT_BASE, 19000) +
+    readPositiveInt(process.env.KENUXA OPS_BUNDLED_PLUGIN_RUNTIME_PORT_BASE, 19000) +
     pluginIndex * 3 +
     1;
   const env = createIsolatedStateEnv(`tts-disabled-${pluginId}`);
@@ -676,7 +676,7 @@ async function smokeTtsGlobalDisable(pluginId, pluginDir, provider, pluginIndex,
     ),
     env,
   );
-  const logPath = `/tmp/openclaw-plugin-runtime-${pluginIndex}-${pluginId}-tts-disabled.log`;
+  const logPath = `/tmp/KENUXA OPS-plugin-runtime-${pluginIndex}-${pluginId}-tts-disabled.log`;
   const child = startGateway({ entrypoint, port, logPath, env, skipChannels: true });
   try {
     await waitForReady({ child, port, logPath });
@@ -701,16 +701,16 @@ async function smokeTtsGlobalDisable(pluginId, pluginDir, provider, pluginIndex,
 }
 
 async function smokeOpenAiTts(pluginIndex) {
-  const entrypoint = process.env.OPENCLAW_ENTRY;
+  const entrypoint = process.env.KENUXA OPS_ENTRY;
   if (!entrypoint) {
-    throw new Error("missing OPENCLAW_ENTRY");
+    throw new Error("missing KENUXA OPS_ENTRY");
   }
   if (!process.env.OPENAI_API_KEY) {
     console.log("OpenAI key-backed TTS smoke skipped: OPENAI_API_KEY is not set");
     return;
   }
   const port =
-    readPositiveInt(process.env.OPENCLAW_BUNDLED_PLUGIN_RUNTIME_PORT_BASE, 19000) +
+    readPositiveInt(process.env.KENUXA OPS_BUNDLED_PLUGIN_RUNTIME_PORT_BASE, 19000) +
     pluginIndex * 3 +
     2;
   const env = createIsolatedStateEnv("tts-openai-live");
@@ -739,7 +739,7 @@ async function smokeOpenAiTts(pluginIndex) {
     ),
     env,
   );
-  const logPath = `/tmp/openclaw-plugin-runtime-${pluginIndex}-openai-tts-live.log`;
+  const logPath = `/tmp/KENUXA OPS-plugin-runtime-${pluginIndex}-openai-tts-live.log`;
   const child = startGateway({ entrypoint, port, logPath, env, skipChannels: true });
   try {
     await waitForReady({ child, port, logPath });
@@ -763,18 +763,18 @@ async function smokeOpenAiTts(pluginIndex) {
 }
 
 export function createIsolatedStateEnv(label) {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), `openclaw-${label}-`));
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), `KENUXA OPS-${label}-`));
   const home = path.join(root, "home");
-  const stateDir = path.join(home, ".openclaw");
-  const configPath = path.join(stateDir, "openclaw.json");
+  const stateDir = path.join(home, ".KENUXA OPS");
+  const configPath = path.join(stateDir, "KENUXA OPS.json");
   fs.mkdirSync(stateDir, { recursive: true });
   return {
     ...process.env,
     HOME: home,
     USERPROFILE: home,
-    OPENCLAW_HOME: home,
-    OPENCLAW_STATE_DIR: stateDir,
-    OPENCLAW_CONFIG_PATH: configPath,
+    KENUXA OPS_HOME: home,
+    KENUXA OPS_STATE_DIR: stateDir,
+    KENUXA OPS_CONFIG_PATH: configPath,
   };
 }
 

@@ -1,7 +1,7 @@
-import fs from "node:fs";
+﻿import fs from "node:fs";
 
-const logPath = process.env.OPENCLAW_CONFIG_RELOAD_LOG_PATH ?? "/tmp/config-reload-e2e.log";
-const deadlineMs = Date.now() + Number(process.env.OPENCLAW_CONFIG_RELOAD_LOG_TIMEOUT_MS ?? 30_000);
+const logPath = process.env.KENUXA OPS_CONFIG_RELOAD_LOG_PATH ?? "/tmp/config-reload-e2e.log";
+const deadlineMs = Date.now() + Number(process.env.KENUXA OPS_CONFIG_RELOAD_LOG_TIMEOUT_MS ?? 30_000);
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 

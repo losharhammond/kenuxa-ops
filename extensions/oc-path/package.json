@@ -1,8 +1,8 @@
-{
-  "name": "@openclaw/oc-path",
+﻿{
+  "name": "@KENUXA OPS/oc-path",
   "version": "2026.5.26",
   "private": true,
-  "description": "OpenClaw oc:// workspace path plugin",
+  "description": "KENUXA OPS oc:// workspace path plugin",
   "type": "module",
   "dependencies": {
     "commander": "14.0.3",
@@ -11,18 +11,18 @@
     "yaml": "2.9.0"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*",
-    "openclaw": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*",
+    "KENUXA OPS": "workspace:*"
   },
   "peerDependencies": {
-    "openclaw": ">=2026.5.26"
+    "KENUXA OPS": ">=2026.5.26"
   },
   "peerDependenciesMeta": {
-    "openclaw": {
+    "KENUXA OPS": {
       "optional": true
     }
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ]

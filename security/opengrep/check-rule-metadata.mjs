@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 import { promises as fs } from "node:fs";
 import * as path from "node:path";
 import { parseDocument } from "yaml";
@@ -86,7 +86,7 @@ export function validateRuleMetadata(rules) {
 
     const advisoryUrl = String(metadata["advisory-url"] ?? "");
     const expectedGhsaUrl = GHSA_RE.test(advisoryId)
-      ? `https://github.com/openclaw/openclaw/security/advisories/${advisoryId}`
+      ? `https://github.com/KENUXA OPS/KENUXA OPS/security/advisories/${advisoryId}`
       : "";
     if (!hasNonEmptyString(advisoryUrl)) {
       violations.push(`${label}: missing metadata.advisory-url`);

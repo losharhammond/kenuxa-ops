@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 import fs from "node:fs";
 import path from "node:path";
@@ -6,20 +6,20 @@ import { fileURLToPath } from "node:url";
 
 export const FORBIDDEN_CHANGELOG_THANKS_HANDLES = [
   "codex",
-  "openclaw",
+  "KENUXA OPS",
   "steipete",
   "clawsweeper",
-  "openclaw-clawsweeper",
+  "KENUXA OPS-clawsweeper",
   "clawsweeper[bot]",
-  "openclaw-clawsweeper[bot]",
+  "KENUXA OPS-clawsweeper[bot]",
 ];
 export const FORBIDDEN_CHANGELOG_THANKS_HANDLE_PREFIXES = ["app/"];
 export const FORBIDDEN_CHANGELOG_THANKS_HANDLE_SUFFIXES = ["[bot]"];
 export const CHANGELOG_THANKS_REQUIRE_HUMAN_CREDIT_HANDLES = [
   "clawsweeper",
-  "openclaw-clawsweeper",
+  "KENUXA OPS-clawsweeper",
   "clawsweeper[bot]",
-  "openclaw-clawsweeper[bot]",
+  "KENUXA OPS-clawsweeper[bot]",
 ];
 export const CHANGELOG_THANKS_REQUIRE_HUMAN_CREDIT_HANDLE_PREFIXES = ["app/"];
 export const CHANGELOG_THANKS_REQUIRE_HUMAN_CREDIT_HANDLE_SUFFIXES = ["[bot]"];

@@ -1,17 +1,17 @@
-{
-  "name": "@openclaw/github-copilot-provider",
+﻿{
+  "name": "@KENUXA OPS/github-copilot-provider",
   "version": "2026.5.26",
   "private": true,
-  "description": "OpenClaw GitHub Copilot provider plugin",
+  "description": "KENUXA OPS GitHub Copilot provider plugin",
   "type": "module",
   "dependencies": {
     "@clack/prompts": "1.4.0"
   },
   "devDependencies": {
     "@earendil-works/pi-ai": "0.75.5",
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ]

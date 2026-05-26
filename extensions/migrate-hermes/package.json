@@ -1,25 +1,25 @@
-{
-  "name": "@openclaw/migrate-hermes",
+﻿{
+  "name": "@KENUXA OPS/migrate-hermes",
   "version": "2026.5.26",
   "private": true,
-  "description": "Hermes to OpenClaw migration provider",
+  "description": "Hermes to KENUXA OPS migration provider",
   "type": "module",
   "dependencies": {
     "yaml": "2.9.0"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*",
-    "openclaw": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*",
+    "KENUXA OPS": "workspace:*"
   },
   "peerDependencies": {
-    "openclaw": ">=2026.5.26"
+    "KENUXA OPS": ">=2026.5.26"
   },
   "peerDependenciesMeta": {
-    "openclaw": {
+    "KENUXA OPS": {
       "optional": true
     }
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ]

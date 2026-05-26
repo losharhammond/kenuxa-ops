@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 import assert from "node:assert/strict";
 /**
  * Live repro for limit/CLI numeric fixes (PR #82679). Run: pnpm exec tsx scripts/repro/limit-edge-case-live-proof.mjs
@@ -40,7 +40,7 @@ async function main() {
   assert.equal(zeroPhases.length, 0);
   console.log("getRecentDiagnosticPhases(0).length =", zeroPhases.length);
 
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-proof-"));
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "KENUXA OPS-proof-"));
   const sessionFile = path.join(root, "s.jsonl");
   fs.writeFileSync(
     sessionFile,

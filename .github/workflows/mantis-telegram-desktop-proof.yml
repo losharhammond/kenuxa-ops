@@ -1,4 +1,4 @@
-name: Mantis Telegram Desktop Proof
+﻿name: Mantis Telegram Desktop Proof
 
 on:
   issue_comment:
@@ -45,8 +45,8 @@ permissions:
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
   NODE_VERSION: "24.x"
-  OPENCLAW_BUILD_PRIVATE_QA: "1"
-  OPENCLAW_ENABLE_PRIVATE_QA_CLI: "1"
+  KENUXA OPS_BUILD_PRIVATE_QA: "1"
+  KENUXA OPS_ENABLE_PRIVATE_QA_CLI: "1"
   CRABBOX_REF: main
   CRABBOX_CAPACITY_REGIONS: eu-west-1,eu-west-2,eu-central-1,us-east-1,us-west-2
   MANTIS_OUTPUT_DIR: .artifacts/qa-e2e/mantis/telegram-desktop-proof
@@ -67,8 +67,8 @@ jobs:
           github.event.issue.pull_request &&
           contains(github.event.issue.labels.*.name, 'mantis: telegram-visible-proof') &&
           (
-            contains(github.event.comment.body, '@openclaw-mantis') ||
-            contains(github.event.comment.body, '/openclaw-mantis')
+            contains(github.event.comment.body, '@KENUXA OPS-mantis') ||
+            contains(github.event.comment.body, '/KENUXA OPS-mantis')
           )
         )
       }}
@@ -155,7 +155,7 @@ jobs:
             if (eventName === "issue_comment") {
               const normalized = body.toLowerCase();
               const requestedDesktopProof =
-                (normalized.includes("@openclaw-mantis") || normalized.includes("/openclaw-mantis")) &&
+                (normalized.includes("@KENUXA OPS-mantis") || normalized.includes("/KENUXA OPS-mantis")) &&
                 (normalized.includes("desktop proof") ||
                   normalized.includes("desktop-proof") ||
                   normalized.includes("telegram desktop") ||
@@ -371,7 +371,7 @@ jobs:
           install_dir="${RUNNER_TEMP}/crabbox"
           mkdir -p "$install_dir/src"
           git init "$install_dir/src"
-          git -C "$install_dir/src" remote add origin https://github.com/openclaw/crabbox.git
+          git -C "$install_dir/src" remote add origin https://github.com/KENUXA OPS/crabbox.git
           git -C "$install_dir/src" fetch --depth 1 origin "$CRABBOX_REF"
           git -C "$install_dir/src" checkout --detach FETCH_HEAD
           go build -C "$install_dir/src" -o "$install_dir/crabbox" ./cmd/crabbox
@@ -384,14 +384,14 @@ jobs:
         run: |
           set -euo pipefail
           test -f scripts/e2e/telegram-user-driver.py
-          cat >"${RUNNER_TEMP}/openclaw-telegram-user-crabbox-proof" <<'EOF'
+          cat >"${RUNNER_TEMP}/KENUXA OPS-telegram-user-crabbox-proof" <<'EOF'
           #!/usr/bin/env bash
           set -euo pipefail
           exec node --import tsx "${GITHUB_WORKSPACE}/scripts/e2e/telegram-user-crabbox-proof.ts" "$@"
           EOF
-          chmod 0755 "${RUNNER_TEMP}/openclaw-telegram-user-crabbox-proof"
-          sudo install -m 0755 "${RUNNER_TEMP}/openclaw-telegram-user-crabbox-proof" /usr/local/bin/openclaw-telegram-user-crabbox-proof
-          /usr/local/bin/openclaw-telegram-user-crabbox-proof --help >/dev/null
+          chmod 0755 "${RUNNER_TEMP}/KENUXA OPS-telegram-user-crabbox-proof"
+          sudo install -m 0755 "${RUNNER_TEMP}/KENUXA OPS-telegram-user-crabbox-proof" /usr/local/bin/KENUXA OPS-telegram-user-crabbox-proof
+          /usr/local/bin/KENUXA OPS-telegram-user-crabbox-proof --help >/dev/null
           media_tools="${RUNNER_TEMP}/mantis-media-tools"
           install -d "$media_tools"
           curl --fail --location --retry 3 --retry-delay 2 \
@@ -407,11 +407,11 @@ jobs:
 
       - name: Ensure agent key exists
         env:
-          OPENAI_API_KEY: ${{ secrets.OPENCLAW_MANTIS_AGENT_OPENAI_API_KEY || secrets.OPENAI_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.KENUXA OPS_MANTIS_AGENT_OPENAI_API_KEY || secrets.OPENAI_API_KEY }}
         run: |
           set -euo pipefail
           if [ -z "${OPENAI_API_KEY:-}" ]; then
-            echo "Missing OPENCLAW_MANTIS_AGENT_OPENAI_API_KEY or OPENAI_API_KEY secret." >&2
+            echo "Missing KENUXA OPS_MANTIS_AGENT_OPENAI_API_KEY or OPENAI_API_KEY secret." >&2
             exit 1
           fi
 
@@ -425,8 +425,8 @@ jobs:
             printf '%s\n' 'Defaults env_keep += "BASELINE_REF BASELINE_SHA CANDIDATE_REF CANDIDATE_SHA"'
             printf '%s\n' 'Defaults env_keep += "CRABBOX_ACCESS_CLIENT_ID CRABBOX_ACCESS_CLIENT_SECRET CRABBOX_COORDINATOR CRABBOX_COORDINATOR_TOKEN CRABBOX_LEASE_ID CRABBOX_PROVIDER CRABBOX_CAPACITY_REGIONS"'
             printf '%s\n' 'Defaults env_keep += "GH_TOKEN MANTIS_CANDIDATE_TRUST MANTIS_INSTRUCTIONS MANTIS_OUTPUT_DIR MANTIS_PR_NUMBER"'
-            printf '%s\n' 'Defaults env_keep += "OPENCLAW_BUILD_PRIVATE_QA OPENCLAW_ENABLE_PRIVATE_QA_CLI OPENCLAW_QA_CONVEX_SECRET_CI OPENCLAW_QA_CONVEX_SITE_URL OPENCLAW_QA_CREDENTIAL_OWNER_ID OPENCLAW_QA_MANTIS_CRABBOX_COORDINATOR OPENCLAW_QA_MANTIS_CRABBOX_COORDINATOR_TOKEN"'
-            printf '%s\n' 'Defaults env_keep += "OPENCLAW_TELEGRAM_USER_CRABBOX_BIN OPENCLAW_TELEGRAM_USER_CRABBOX_PROVIDER OPENCLAW_TELEGRAM_USER_DRIVER_SCRIPT OPENCLAW_TELEGRAM_USER_PROOF_CMD"'
+            printf '%s\n' 'Defaults env_keep += "KENUXA OPS_BUILD_PRIVATE_QA KENUXA OPS_ENABLE_PRIVATE_QA_CLI KENUXA OPS_QA_CONVEX_SECRET_CI KENUXA OPS_QA_CONVEX_SITE_URL KENUXA OPS_QA_CREDENTIAL_OWNER_ID KENUXA OPS_QA_MANTIS_CRABBOX_COORDINATOR KENUXA OPS_QA_MANTIS_CRABBOX_COORDINATOR_TOKEN"'
+            printf '%s\n' 'Defaults env_keep += "KENUXA OPS_TELEGRAM_USER_CRABBOX_BIN KENUXA OPS_TELEGRAM_USER_CRABBOX_PROVIDER KENUXA OPS_TELEGRAM_USER_DRIVER_SCRIPT KENUXA OPS_TELEGRAM_USER_PROOF_CMD"'
           } | sudo tee /etc/sudoers.d/mantis-codex-env >/dev/null
           sudo chmod 0440 /etc/sudoers.d/mantis-codex-env
           codex_home="/tmp/mantis-codex-home-${GITHUB_RUN_ID}"
@@ -450,8 +450,8 @@ jobs:
           CANDIDATE_SHA: ${{ needs.validate_refs.outputs.candidate_revision }}
           CRABBOX_ACCESS_CLIENT_ID: ${{ secrets.CRABBOX_ACCESS_CLIENT_ID }}
           CRABBOX_ACCESS_CLIENT_SECRET: ${{ secrets.CRABBOX_ACCESS_CLIENT_SECRET }}
-          CRABBOX_COORDINATOR: ${{ secrets.CRABBOX_COORDINATOR || secrets.OPENCLAW_QA_MANTIS_CRABBOX_COORDINATOR }}
-          CRABBOX_COORDINATOR_TOKEN: ${{ secrets.CRABBOX_COORDINATOR_TOKEN || secrets.OPENCLAW_QA_MANTIS_CRABBOX_COORDINATOR_TOKEN }}
+          CRABBOX_COORDINATOR: ${{ secrets.CRABBOX_COORDINATOR || secrets.KENUXA OPS_QA_MANTIS_CRABBOX_COORDINATOR }}
+          CRABBOX_COORDINATOR_TOKEN: ${{ secrets.CRABBOX_COORDINATOR_TOKEN || secrets.KENUXA OPS_QA_MANTIS_CRABBOX_COORDINATOR_TOKEN }}
           CRABBOX_CAPACITY_REGIONS: ${{ env.CRABBOX_CAPACITY_REGIONS }}
           CRABBOX_LEASE_ID: ${{ needs.resolve_request.outputs.lease_id }}
           CRABBOX_PROVIDER: ${{ needs.resolve_request.outputs.crabbox_provider }}
@@ -460,19 +460,19 @@ jobs:
           MANTIS_INSTRUCTIONS: ${{ needs.resolve_request.outputs.instructions }}
           MANTIS_OUTPUT_DIR: ${{ env.MANTIS_OUTPUT_DIR }}
           MANTIS_PR_NUMBER: ${{ needs.resolve_request.outputs.pr_number }}
-          OPENCLAW_QA_CONVEX_SECRET_CI: ${{ secrets.OPENCLAW_QA_CONVEX_SECRET_CI }}
-          OPENCLAW_QA_CONVEX_SITE_URL: ${{ secrets.OPENCLAW_QA_CONVEX_SITE_URL }}
-          OPENCLAW_QA_CREDENTIAL_OWNER_ID: mantis-telegram-desktop-${{ github.run_id }}-${{ github.run_attempt }}
-          OPENCLAW_QA_MANTIS_CRABBOX_COORDINATOR: ${{ secrets.OPENCLAW_QA_MANTIS_CRABBOX_COORDINATOR }}
-          OPENCLAW_QA_MANTIS_CRABBOX_COORDINATOR_TOKEN: ${{ secrets.OPENCLAW_QA_MANTIS_CRABBOX_COORDINATOR_TOKEN }}
-          OPENCLAW_TELEGRAM_USER_CRABBOX_BIN: /usr/local/bin/crabbox
-          OPENCLAW_TELEGRAM_USER_CRABBOX_PROVIDER: ${{ needs.resolve_request.outputs.crabbox_provider }}
-          OPENCLAW_TELEGRAM_USER_DRIVER_SCRIPT: ${{ github.workspace }}/scripts/e2e/telegram-user-driver.py
-          OPENCLAW_TELEGRAM_USER_PROOF_CMD: /usr/local/bin/openclaw-telegram-user-crabbox-proof
+          KENUXA OPS_QA_CONVEX_SECRET_CI: ${{ secrets.KENUXA OPS_QA_CONVEX_SECRET_CI }}
+          KENUXA OPS_QA_CONVEX_SITE_URL: ${{ secrets.KENUXA OPS_QA_CONVEX_SITE_URL }}
+          KENUXA OPS_QA_CREDENTIAL_OWNER_ID: mantis-telegram-desktop-${{ github.run_id }}-${{ github.run_attempt }}
+          KENUXA OPS_QA_MANTIS_CRABBOX_COORDINATOR: ${{ secrets.KENUXA OPS_QA_MANTIS_CRABBOX_COORDINATOR }}
+          KENUXA OPS_QA_MANTIS_CRABBOX_COORDINATOR_TOKEN: ${{ secrets.KENUXA OPS_QA_MANTIS_CRABBOX_COORDINATOR_TOKEN }}
+          KENUXA OPS_TELEGRAM_USER_CRABBOX_BIN: /usr/local/bin/crabbox
+          KENUXA OPS_TELEGRAM_USER_CRABBOX_PROVIDER: ${{ needs.resolve_request.outputs.crabbox_provider }}
+          KENUXA OPS_TELEGRAM_USER_DRIVER_SCRIPT: ${{ github.workspace }}/scripts/e2e/telegram-user-driver.py
+          KENUXA OPS_TELEGRAM_USER_PROOF_CMD: /usr/local/bin/KENUXA OPS-telegram-user-crabbox-proof
         with:
-          openai-api-key: ${{ secrets.OPENCLAW_MANTIS_AGENT_OPENAI_API_KEY || secrets.OPENAI_API_KEY }}
+          openai-api-key: ${{ secrets.KENUXA OPS_MANTIS_AGENT_OPENAI_API_KEY || secrets.OPENAI_API_KEY }}
           prompt-file: .github/codex/prompts/mantis-telegram-desktop-proof.md
-          model: ${{ vars.OPENCLAW_CI_OPENAI_MODEL_BARE }}
+          model: ${{ vars.KENUXA OPS_CI_OPENAI_MODEL_BARE }}
           effort: medium
           sandbox: danger-full-access
           codex-args: '["-c","service_tier=\"fast\""]'
@@ -485,8 +485,8 @@ jobs:
         if: ${{ always() }}
         env:
           CRABBOX_PROVIDER: ${{ needs.resolve_request.outputs.crabbox_provider }}
-          OPENCLAW_QA_CONVEX_SECRET_CI: ${{ secrets.OPENCLAW_QA_CONVEX_SECRET_CI }}
-          OPENCLAW_QA_CONVEX_SITE_URL: ${{ secrets.OPENCLAW_QA_CONVEX_SITE_URL }}
+          KENUXA OPS_QA_CONVEX_SECRET_CI: ${{ secrets.KENUXA OPS_QA_CONVEX_SECRET_CI }}
+          KENUXA OPS_QA_CONVEX_SITE_URL: ${{ secrets.KENUXA OPS_QA_CONVEX_SITE_URL }}
         shell: bash
         run: |
           set -euo pipefail
@@ -504,10 +504,10 @@ jobs:
               continue
             fi
             if ! sudo -u codex env \
-              OPENCLAW_QA_CONVEX_SECRET_CI="$OPENCLAW_QA_CONVEX_SECRET_CI" \
-              OPENCLAW_QA_CONVEX_SITE_URL="$OPENCLAW_QA_CONVEX_SITE_URL" \
-              OPENCLAW_TELEGRAM_USER_CRABBOX_BIN=/usr/local/bin/crabbox \
-              OPENCLAW_TELEGRAM_USER_CRABBOX_PROVIDER="$CRABBOX_PROVIDER" \
+              KENUXA OPS_QA_CONVEX_SECRET_CI="$KENUXA OPS_QA_CONVEX_SECRET_CI" \
+              KENUXA OPS_QA_CONVEX_SITE_URL="$KENUXA OPS_QA_CONVEX_SITE_URL" \
+              KENUXA OPS_TELEGRAM_USER_CRABBOX_BIN=/usr/local/bin/crabbox \
+              KENUXA OPS_TELEGRAM_USER_CRABBOX_PROVIDER="$CRABBOX_PROVIDER" \
               node --import tsx "$GITHUB_WORKSPACE/scripts/e2e/telegram-user-crabbox-proof.ts" \
                 finish --session "$session_file" --preview-crop telegram-window; then
               status=1
@@ -519,8 +519,8 @@ jobs:
               continue
             fi
             if ! sudo -u codex env \
-              OPENCLAW_QA_CONVEX_SECRET_CI="$OPENCLAW_QA_CONVEX_SECRET_CI" \
-              OPENCLAW_QA_CONVEX_SITE_URL="$OPENCLAW_QA_CONVEX_SITE_URL" \
+              KENUXA OPS_QA_CONVEX_SECRET_CI="$KENUXA OPS_QA_CONVEX_SECRET_CI" \
+              KENUXA OPS_QA_CONVEX_SITE_URL="$KENUXA OPS_QA_CONVEX_SITE_URL" \
               node --import tsx "$GITHUB_WORKSPACE/scripts/e2e/telegram-user-credential.ts" \
                 release --lease-file "$lease_file"; then
               status=1
@@ -572,9 +572,9 @@ jobs:
           ARTIFACT_URL: ${{ steps.upload_artifact.outputs.artifact-url }}
           GH_TOKEN: ${{ steps.mantis_app_token.outputs.token }}
           MANTIS_ARTIFACT_R2_ACCESS_KEY_ID: ${{ secrets.MANTIS_ARTIFACT_R2_ACCESS_KEY_ID }}
-          MANTIS_ARTIFACT_R2_BUCKET: openclaw-crabbox-artifacts
+          MANTIS_ARTIFACT_R2_BUCKET: KENUXA OPS-crabbox-artifacts
           MANTIS_ARTIFACT_R2_ENDPOINT: ${{ vars.MANTIS_ARTIFACT_R2_ENDPOINT }}
-          MANTIS_ARTIFACT_R2_PUBLIC_BASE_URL: https://artifacts.openclaw.ai
+          MANTIS_ARTIFACT_R2_PUBLIC_BASE_URL: https://artifacts.KENUXA OPS.ai
           MANTIS_ARTIFACT_R2_REGION: auto
           MANTIS_ARTIFACT_R2_SECRET_ACCESS_KEY: ${{ secrets.MANTIS_ARTIFACT_R2_SECRET_ACCESS_KEY }}
           REQUEST_SOURCE: ${{ needs.resolve_request.outputs.request_source }}
@@ -672,9 +672,9 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.mantis_app_token.outputs.token }}
           MANTIS_ARTIFACT_R2_ACCESS_KEY_ID: ${{ secrets.MANTIS_ARTIFACT_R2_ACCESS_KEY_ID }}
-          MANTIS_ARTIFACT_R2_BUCKET: openclaw-crabbox-artifacts
+          MANTIS_ARTIFACT_R2_BUCKET: KENUXA OPS-crabbox-artifacts
           MANTIS_ARTIFACT_R2_ENDPOINT: ${{ vars.MANTIS_ARTIFACT_R2_ENDPOINT }}
-          MANTIS_ARTIFACT_R2_PUBLIC_BASE_URL: https://artifacts.openclaw.ai
+          MANTIS_ARTIFACT_R2_PUBLIC_BASE_URL: https://artifacts.KENUXA OPS.ai
           MANTIS_ARTIFACT_R2_REGION: auto
           MANTIS_ARTIFACT_R2_SECRET_ACCESS_KEY: ${{ secrets.MANTIS_ARTIFACT_R2_SECRET_ACCESS_KEY }}
           REQUEST_SOURCE: ${{ needs.resolve_request.outputs.request_source }}

@@ -1,4 +1,4 @@
-import fs from "node:fs";
+﻿import fs from "node:fs";
 import path from "node:path";
 import JSON5 from "json5";
 import {
@@ -6,7 +6,7 @@ import {
   collectBundledPluginBuildEntries,
 } from "./bundled-plugin-build-entries.mjs";
 
-const MANIFEST_NAMES = ["openclaw.plugin.json", "openclaw.plugin.json5"];
+const MANIFEST_NAMES = ["KENUXA OPS.plugin.json", "KENUXA OPS.plugin.json5"];
 const ANSI_PATTERN = new RegExp(String.raw`\u001B\[[0-9;]*m`, "gu");
 
 function isPlainObject(value) {
@@ -351,7 +351,7 @@ function collectQaBaselineRegressionObservations(rows, thresholds = {}) {
 function buildGauntletPrebuildEnv(env, options = {}) {
   const buildIds = new Set(normalizeStringArray(options.buildIds));
   const runtimeOnlyPrebuildEnv = options.skipDeclarationBuild
-    ? { OPENCLAW_RUN_NODE_SKIP_DTS_BUILD: "1" }
+    ? { KENUXA OPS_RUN_NODE_SKIP_DTS_BUILD: "1" }
     : {};
   const hasRuntimeOnlyPrebuildEnv = Object.keys(runtimeOnlyPrebuildEnv).length > 0;
   if (options.includePrivateQa) {
@@ -367,7 +367,7 @@ function buildGauntletPrebuildEnv(env, options = {}) {
           ...runtimeOnlyPrebuildEnv,
           ...(buildIds.size > 0
             ? {
-                OPENCLAW_BUNDLED_PLUGIN_BUILD_IDS: [...buildIds]
+                KENUXA OPS_BUNDLED_PLUGIN_BUILD_IDS: [...buildIds]
                   .toSorted((left, right) => left.localeCompare(right))
                   .join(","),
               }
@@ -377,11 +377,11 @@ function buildGauntletPrebuildEnv(env, options = {}) {
   return {
     ...env,
     ...runtimeOnlyPrebuildEnv,
-    OPENCLAW_BUILD_PRIVATE_QA: "1",
-    OPENCLAW_ENABLE_PRIVATE_QA_CLI: "1",
+    KENUXA OPS_BUILD_PRIVATE_QA: "1",
+    KENUXA OPS_ENABLE_PRIVATE_QA_CLI: "1",
     ...(buildIds.size > 0
       ? {
-          OPENCLAW_BUNDLED_PLUGIN_BUILD_IDS: [...buildIds]
+          KENUXA OPS_BUNDLED_PLUGIN_BUILD_IDS: [...buildIds]
             .toSorted((left, right) => left.localeCompare(right))
             .join(","),
         }

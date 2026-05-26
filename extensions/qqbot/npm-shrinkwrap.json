@@ -1,11 +1,11 @@
-{
-  "name": "@openclaw/qqbot",
+﻿{
+  "name": "@KENUXA OPS/qqbot",
   "version": "2026.5.26",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
-      "name": "@openclaw/qqbot",
+      "name": "@KENUXA OPS/qqbot",
       "version": "2026.5.26",
       "dependencies": {
         "@tencent-connect/qqbot-connector": "1.1.0",
@@ -15,10 +15,10 @@
         "zod": "4.4.3"
       },
       "peerDependencies": {
-        "openclaw": ">=2026.5.26"
+        "KENUXA OPS": ">=2026.5.26"
       },
       "peerDependenciesMeta": {
-        "openclaw": {
+        "KENUXA OPS": {
           "optional": true
         }
       }

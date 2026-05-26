@@ -1,4 +1,4 @@
-import fs from "node:fs";
+﻿import fs from "node:fs";
 import path from "node:path";
 import {
   assertAgentReplyContainsMarker,
@@ -37,8 +37,8 @@ function pathsEqual(left, right) {
 
 function configPath() {
   return (
-    process.env.OPENCLAW_CONFIG_PATH ??
-    path.join(process.env.HOME ?? "", ".openclaw", "openclaw.json")
+    process.env.KENUXA OPS_CONFIG_PATH ??
+    path.join(process.env.HOME ?? "", ".KENUXA OPS", "KENUXA OPS.json")
   );
 }
 
@@ -53,21 +53,21 @@ function writeConfig(cfg) {
 }
 
 function installRecords() {
-  const recordsPath = path.join(process.env.HOME ?? "", ".openclaw", "plugins", "installs.json");
+  const recordsPath = path.join(process.env.HOME ?? "", ".KENUXA OPS", "plugins", "installs.json");
   const records = fs.existsSync(recordsPath) ? readJson(recordsPath) : {};
   return records.installRecords ?? records.records ?? {};
 }
 
 function assertOnboard() {
   const home = process.argv[3];
-  const stateDir = path.join(home, ".openclaw");
+  const stateDir = path.join(home, ".KENUXA OPS");
   const authPath = path.join(stateDir, "agents", "main", "agent", "auth-profiles.json");
-  assert(fs.existsSync(configPath()), "onboard did not write openclaw.json");
+  assert(fs.existsSync(configPath()), "onboard did not write KENUXA OPS.json");
   const stateRaw =
     fs.readFileSync(configPath(), "utf8") +
     (fs.existsSync(authPath) ? fs.readFileSync(authPath, "utf8") : "");
   assert(
-    !stateRaw.includes("sk-openclaw-release-user-journey"),
+    !stateRaw.includes("sk-KENUXA OPS-release-user-journey"),
     "onboard persisted raw OpenAI key",
   );
 }

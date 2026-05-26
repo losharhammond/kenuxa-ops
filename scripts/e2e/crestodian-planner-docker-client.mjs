@@ -1,4 +1,4 @@
-// Crestodian planner Docker harness.
+﻿// Crestodian planner Docker harness.
 // Imports packaged dist modules so the Docker lane verifies the npm tarball,
 // while this small test driver stays mounted from the checkout.
 import fs from "node:fs/promises";
@@ -54,13 +54,13 @@ async function installFakeClaudeCli(fakeBinDir, promptLogPath) {
 
 async function main() {
   const stateDir =
-    process.env.OPENCLAW_STATE_DIR ??
-    (await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-crestodian-planner-")));
-  const configPath = process.env.OPENCLAW_CONFIG_PATH ?? path.join(stateDir, "openclaw.json");
+    process.env.KENUXA OPS_STATE_DIR ??
+    (await fs.mkdtemp(path.join(os.tmpdir(), "KENUXA OPS-crestodian-planner-")));
+  const configPath = process.env.KENUXA OPS_CONFIG_PATH ?? path.join(stateDir, "KENUXA OPS.json");
   const fakeBinDir = path.join(stateDir, "fake-bin");
   const promptLogPath = path.join(stateDir, "fake-claude-prompt.jsonl");
-  process.env.OPENCLAW_STATE_DIR = stateDir;
-  process.env.OPENCLAW_CONFIG_PATH = configPath;
+  process.env.KENUXA OPS_STATE_DIR = stateDir;
+  process.env.KENUXA OPS_CONFIG_PATH = configPath;
   process.env.PATH = `${fakeBinDir}:${process.env.PATH ?? ""}`;
   await fs.rm(stateDir, { recursive: true, force: true });
   await fs.mkdir(stateDir, { recursive: true });
@@ -101,7 +101,7 @@ async function main() {
   const promptLine = await fs.readFile(promptLogPath, "utf8");
   assert(promptLine.includes("User request:"), "fake Claude CLI did not receive planner prompt");
   assert(
-    promptLine.includes("OpenClaw docs:"),
+    promptLine.includes("KENUXA OPS docs:"),
     "planner prompt did not include docs reference context",
   );
 

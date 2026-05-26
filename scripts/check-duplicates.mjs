@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -18,7 +18,7 @@ const targets = [
   "security",
   "test",
   "skills",
-  "openclaw.mjs",
+  "KENUXA OPS.mjs",
   "config/knip.config.ts",
   "tsdown.config.ts",
   "vitest.config.ts",

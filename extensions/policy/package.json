@@ -1,25 +1,25 @@
-{
-  "name": "@openclaw/policy",
+﻿{
+  "name": "@KENUXA OPS/policy",
   "version": "2026.5.26",
   "private": true,
-  "description": "OpenClaw policy doctor checks for workspace conformance",
+  "description": "KENUXA OPS policy doctor checks for workspace conformance",
   "type": "module",
   "dependencies": {
     "json5": "2.2.3"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*",
-    "openclaw": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*",
+    "KENUXA OPS": "workspace:*"
   },
   "peerDependencies": {
-    "openclaw": ">=2026.5.26"
+    "KENUXA OPS": ">=2026.5.26"
   },
   "peerDependenciesMeta": {
-    "openclaw": {
+    "KENUXA OPS": {
       "optional": true
     }
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ]

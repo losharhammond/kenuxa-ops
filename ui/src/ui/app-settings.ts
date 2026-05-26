@@ -1,4 +1,4 @@
-import { roleScopesAllow } from "../../../src/shared/operator-scope-compat.js";
+﻿import { roleScopesAllow } from "../../../src/shared/operator-scope-compat.js";
 import { t } from "../i18n/index.ts";
 import { refreshChat } from "./app-chat.ts";
 import {
@@ -200,7 +200,7 @@ export let warnQueryToken = false;
 
 declare global {
   interface Window {
-    __OPENCLAW_NATIVE_CONTROL_AUTH__?: {
+    __KENUXA_OPS_NATIVE_AUTH__?: {
       gatewayUrl?: string | null;
       token?: string | null;
       password?: string | null;
@@ -209,14 +209,14 @@ declare global {
 }
 
 function applyNativeControlAuth(host: SettingsHost) {
-  const nativeAuth = window["__OPENCLAW_NATIVE_CONTROL_AUTH__"];
+  const nativeAuth = window["__KENUXA_OPS_NATIVE_AUTH__"];
   if (!nativeAuth) {
     return;
   }
   try {
-    delete window["__OPENCLAW_NATIVE_CONTROL_AUTH__"];
+    delete window["__KENUXA_OPS_NATIVE_AUTH__"];
   } catch {
-    window["__OPENCLAW_NATIVE_CONTROL_AUTH__"] = undefined;
+    window["__KENUXA_OPS_NATIVE_AUTH__"] = undefined;
   }
 
   const gatewayUrl = normalizeOptionalString(nativeAuth.gatewayUrl);
@@ -267,7 +267,7 @@ export function applySettingsFromUrl(host: SettingsHost) {
     if (queryToken != null) {
       warnQueryToken = true;
       console.warn(
-        "[openclaw] Auth token passed as query parameter (?token=). Use URL fragment instead: #token=<token>. Query parameters may appear in server logs.",
+        "[KENUXA OPS] Auth token passed as query parameter (?token=). Use URL fragment instead: #token=<token>. Query parameters may appear in server logs.",
       );
     }
     if (token && gatewayUrlChanged) {
@@ -490,7 +490,7 @@ export function inferBasePath() {
   if (typeof window === "undefined") {
     return "";
   }
-  const configured = window["__OPENCLAW_CONTROL_UI_BASE_PATH__"];
+  const configured = window["__KENUXA_OPS_BASE_PATH__"];
   const normalizedConfigured = normalizeOptionalString(configured);
   if (normalizedConfigured) {
     return normalizeBasePath(normalizedConfigured);
@@ -834,7 +834,7 @@ function buildAttentionItems(host: SettingsAppHost) {
       title: "Missing operator.read scope",
       description:
         "This connection does not have the operator.read scope. Some features may be unavailable.",
-      href: "https://docs.openclaw.ai/web/dashboard",
+      href: "https://docs.KENUXA OPS.ai/web/dashboard",
       external: true,
     });
   }

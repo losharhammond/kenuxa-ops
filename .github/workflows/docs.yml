@@ -1,4 +1,4 @@
-name: Docs
+﻿name: Docs
 
 on:
   push:
@@ -39,12 +39,12 @@ jobs:
       - name: Checkout ClawHub docs source
         uses: actions/checkout@v6
         with:
-          repository: openclaw/clawhub
+          repository: KENUXA OPS/clawhub
           path: clawhub-source
           fetch-depth: 1
           persist-credentials: false
 
       - name: Check docs
         env:
-          OPENCLAW_DOCS_SYNC_CLAWHUB_REPO: ${{ github.workspace }}/clawhub-source
+          KENUXA OPS_DOCS_SYNC_CLAWHUB_REPO: ${{ github.workspace }}/clawhub-source
         run: pnpm check:docs

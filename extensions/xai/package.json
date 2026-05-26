@@ -1,18 +1,18 @@
-{
-  "name": "@openclaw/xai-plugin",
+﻿{
+  "name": "@KENUXA OPS/xai-plugin",
   "version": "2026.5.26",
   "private": true,
-  "description": "OpenClaw xAI plugin",
+  "description": "KENUXA OPS xAI plugin",
   "type": "module",
   "dependencies": {
     "@earendil-works/pi-ai": "0.75.5",
     "typebox": "1.1.38"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*",
+    "@KENUXA OPS/plugin-sdk": "workspace:*",
     "ws": "8.21.0"
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ]

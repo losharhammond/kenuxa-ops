@@ -1,11 +1,11 @@
-{
-  "name": "@openclaw/anthropic-vertex-provider",
+﻿{
+  "name": "@KENUXA OPS/anthropic-vertex-provider",
   "version": "2026.5.26",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
-      "name": "@openclaw/anthropic-vertex-provider",
+      "name": "@KENUXA OPS/anthropic-vertex-provider",
       "version": "2026.5.26",
       "dependencies": {
         "@anthropic-ai/vertex-sdk": "0.16.1",

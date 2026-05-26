@@ -1,13 +1,13 @@
-apiVersion: v1
+﻿apiVersion: v1
 kind: Service
 metadata:
-  name: openclaw
+  name: KENUXA OPS
   labels:
-    app: openclaw
+    app: KENUXA OPS
 spec:
   type: ClusterIP
   selector:
-    app: openclaw
+    app: KENUXA OPS
   ports:
     - name: gateway
       port: 18789

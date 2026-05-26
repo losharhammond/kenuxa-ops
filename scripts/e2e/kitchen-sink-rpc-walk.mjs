@@ -1,4 +1,4 @@
-import childProcess from "node:child_process";
+﻿import childProcess from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -7,8 +7,8 @@ import { setTimeout as delay } from "node:timers/promises";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const PLUGIN_SPEC =
-  process.env.OPENCLAW_KITCHEN_SINK_NPM_SPEC || "npm:@openclaw/kitchen-sink@latest";
-const PLUGIN_ID = process.env.OPENCLAW_KITCHEN_SINK_PLUGIN_ID || "openclaw-kitchen-sink-fixture";
+  process.env.KENUXA OPS_KITCHEN_SINK_NPM_SPEC || "npm:@KENUXA OPS/kitchen-sink@latest";
+const PLUGIN_ID = process.env.KENUXA OPS_KITCHEN_SINK_PLUGIN_ID || "KENUXA OPS-kitchen-sink-fixture";
 const CHANNEL_ID = "kitchen-sink-channel";
 const CHANNEL_ACCOUNT_ID = "local";
 const TOKEN = "kitchen-sink-rpc-token";
@@ -17,19 +17,19 @@ const EXPECTED_COMMANDS = ["kitchen", "kitchen-sink"];
 const EXPECTED_TOOLS = ["kitchen_sink_text", "kitchen_sink_search", "kitchen_sink_image_job"];
 const EXPECTED_PROVIDERS = ["kitchen-sink-provider", "kitchen-sink-llm"];
 const EXPECTED_SPEECH_PROVIDERS = ["kitchen-sink-speech", "kitchen-sink-speech-provider"];
-const READY_TIMEOUT_MS = readPositiveInt(process.env.OPENCLAW_KITCHEN_SINK_RPC_READY_MS, 240000);
+const READY_TIMEOUT_MS = readPositiveInt(process.env.KENUXA OPS_KITCHEN_SINK_RPC_READY_MS, 240000);
 const COMMAND_TIMEOUT_MS = readPositiveInt(
-  process.env.OPENCLAW_KITCHEN_SINK_RPC_COMMAND_MS,
+  process.env.KENUXA OPS_KITCHEN_SINK_RPC_COMMAND_MS,
   180000,
 );
 const INSTALL_TIMEOUT_MS = readPositiveInt(
-  process.env.OPENCLAW_KITCHEN_SINK_RPC_INSTALL_MS,
+  process.env.KENUXA OPS_KITCHEN_SINK_RPC_INSTALL_MS,
   Math.max(COMMAND_TIMEOUT_MS, 600000),
 );
-const RPC_TIMEOUT_MS = readPositiveInt(process.env.OPENCLAW_KITCHEN_SINK_RPC_CALL_MS, 60000);
-const MAX_RSS_MIB = readPositiveInt(process.env.OPENCLAW_KITCHEN_SINK_MAX_RSS_MIB, 2048);
+const RPC_TIMEOUT_MS = readPositiveInt(process.env.KENUXA OPS_KITCHEN_SINK_RPC_CALL_MS, 60000);
+const MAX_RSS_MIB = readPositiveInt(process.env.KENUXA OPS_KITCHEN_SINK_MAX_RSS_MIB, 2048);
 const OUTPUT_CAPTURE_CHARS = readPositiveInt(
-  process.env.OPENCLAW_KITCHEN_SINK_OUTPUT_CAPTURE_CHARS,
+  process.env.KENUXA OPS_KITCHEN_SINK_OUTPUT_CAPTURE_CHARS,
   1024 * 1024,
 );
 const DEFAULT_PORT = 19000 + Math.floor(Math.random() * 1000);
@@ -41,12 +41,12 @@ function readPositiveInt(raw, fallback) {
   return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback;
 }
 
-function resolveOpenClawRunner() {
-  if (process.env.OPENCLAW_ENTRY) {
+function resolveKENUXA OPSRunner() {
+  if (process.env.KENUXA OPS_ENTRY) {
     return {
       command: "node",
-      baseArgs: [process.env.OPENCLAW_ENTRY],
-      label: process.env.OPENCLAW_ENTRY,
+      baseArgs: [process.env.KENUXA OPS_ENTRY],
+      label: process.env.KENUXA OPS_ENTRY,
     };
   }
   for (const candidate of ["dist/index.mjs", "dist/index.js"]) {
@@ -55,13 +55,13 @@ function resolveOpenClawRunner() {
       return { command: "node", baseArgs: [resolved], label: resolved };
     }
   }
-  return { pnpm: true, baseArgs: ["openclaw"], label: "pnpm openclaw" };
+  return { pnpm: true, baseArgs: ["KENUXA OPS"], label: "pnpm KENUXA OPS" };
 }
 
 export function makeEnv() {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-kitchen-sink-rpc-"));
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "KENUXA OPS-kitchen-sink-rpc-"));
   const home = path.join(root, "home");
-  const stateDir = path.join(home, ".openclaw");
+  const stateDir = path.join(home, ".KENUXA OPS");
   fs.mkdirSync(stateDir, { recursive: true });
   return {
     root,
@@ -69,13 +69,13 @@ export function makeEnv() {
       ...process.env,
       HOME: home,
       USERPROFILE: home,
-      OPENCLAW_HOME: home,
-      OPENCLAW_STATE_DIR: stateDir,
-      OPENCLAW_CONFIG_PATH: path.join(stateDir, "openclaw.json"),
-      OPENCLAW_NO_ONBOARD: "1",
-      OPENCLAW_SKIP_PROVIDERS: "0",
-      OPENCLAW_KITCHEN_SINK_PERSONALITY:
-        process.env.OPENCLAW_KITCHEN_SINK_PERSONALITY || "conformance",
+      KENUXA OPS_HOME: home,
+      KENUXA OPS_STATE_DIR: stateDir,
+      KENUXA OPS_CONFIG_PATH: path.join(stateDir, "KENUXA OPS.json"),
+      KENUXA OPS_NO_ONBOARD: "1",
+      KENUXA OPS_SKIP_PROVIDERS: "0",
+      KENUXA OPS_KITCHEN_SINK_PERSONALITY:
+        process.env.KENUXA OPS_KITCHEN_SINK_PERSONALITY || "conformance",
     },
   };
 }
@@ -185,8 +185,8 @@ function runCommand(command, args, options = {}) {
   });
 }
 
-async function runOpenClaw(runner, args, env, options = {}) {
-  const command = await resolveOpenClawCommand(runner, args, env, {
+async function runKENUXA OPS(runner, args, env, options = {}) {
+  const command = await resolveKENUXA OPSCommand(runner, args, env, {
     stdio: ["ignore", "pipe", "pipe"],
   });
   return runCommand(command.command, command.args, {
@@ -196,7 +196,7 @@ async function runOpenClaw(runner, args, env, options = {}) {
   });
 }
 
-async function resolveOpenClawCommand(runner, args, env, options = {}) {
+async function resolveKENUXA OPSCommand(runner, args, env, options = {}) {
   if (runner.pnpm) {
     const { createPnpmRunnerSpawnSpec } = await import("../pnpm-runner.mjs");
     return createPnpmRunnerSpawnSpec({
@@ -287,8 +287,8 @@ async function rpcCall(method, params, options) {
   const module = await loadCallGatewayModule(options.runner);
   const payload = module
     ? await module.callGateway({
-        config: readJson(options.env.OPENCLAW_CONFIG_PATH),
-        configPath: options.env.OPENCLAW_CONFIG_PATH,
+        config: readJson(options.env.KENUXA OPS_CONFIG_PATH),
+        configPath: options.env.KENUXA OPS_CONFIG_PATH,
         url: `ws://127.0.0.1:${options.port}`,
         token: TOKEN,
         method,
@@ -301,7 +301,7 @@ async function rpcCall(method, params, options) {
 }
 
 async function loadCallGatewayModule(runner) {
-  if (!usesBuiltOpenClawEntry(runner)) {
+  if (!usesBuiltKENUXA OPSEntry(runner)) {
     return null;
   }
   callGatewayModulePromise ??= importCallGatewayModule();
@@ -321,7 +321,7 @@ async function importCallGatewayModule() {
 }
 
 async function rpcCallViaCli(method, params, options) {
-  const { stdout } = await runOpenClaw(
+  const { stdout } = await runKENUXA OPS(
     options.runner,
     [
       "gateway",
@@ -353,12 +353,12 @@ export function findDistCallGatewayModuleFiles(cwd = process.cwd()) {
     : [];
 }
 
-export function usesBuiltOpenClawEntry(runner, cwd = process.cwd(), env = process.env) {
+export function usesBuiltKENUXA OPSEntry(runner, cwd = process.cwd(), env = process.env) {
   if (runner?.pnpm || !runner?.baseArgs?.[0]) {
     return false;
   }
   const entry = runner.baseArgs[0];
-  if (env.OPENCLAW_ENTRY && entry === env.OPENCLAW_ENTRY) {
+  if (env.KENUXA OPS_ENTRY && entry === env.KENUXA OPS_ENTRY) {
     return true;
   }
   const relative = path.relative(path.resolve(cwd, "dist"), path.resolve(cwd, entry));
@@ -440,7 +440,7 @@ export async function fetchJson(url, options = {}) {
 }
 
 function configureKitchenSink(env, port) {
-  const configPath = env.OPENCLAW_CONFIG_PATH;
+  const configPath = env.KENUXA OPS_CONFIG_PATH;
   const config = fs.existsSync(configPath) ? readJson(configPath) : {};
   config.gateway = {
     ...config.gateway,
@@ -463,7 +463,7 @@ function configureKitchenSink(env, port) {
         enabled: true,
         config: {
           ...config.plugins?.entries?.[PLUGIN_ID]?.config,
-          personality: env.OPENCLAW_KITCHEN_SINK_PERSONALITY,
+          personality: env.KENUXA OPS_KITCHEN_SINK_PERSONALITY,
         },
         hooks: {
           ...config.plugins?.entries?.[PLUGIN_ID]?.hooks,
@@ -499,7 +499,7 @@ function configureKitchenSink(env, port) {
 
 async function startGateway(runner, port, env, logPath) {
   const log = fs.openSync(logPath, "w");
-  const command = await resolveOpenClawCommand(
+  const command = await resolveKENUXA OPSCommand(
     runner,
     ["gateway", "--port", String(port), "--bind", "loopback", "--allow-unconfigured"],
     env,
@@ -720,7 +720,7 @@ async function samplePosixProcessTree(pid, run, commandLineNeedles) {
       ),
     );
     const gatewayTitleMatches = descendants.filter((row) =>
-      row.command.toLowerCase().includes("openclaw-gateway"),
+      row.command.toLowerCase().includes("KENUXA OPS-gateway"),
     );
     const selected = selectPeakRssProcess(
       commandMatches.length > 0
@@ -1000,11 +1000,11 @@ function isNonEmptyString(value) {
 }
 
 export async function main() {
-  let runner = resolveOpenClawRunner();
-  const port = readPositiveInt(process.env.OPENCLAW_KITCHEN_SINK_RPC_PORT, DEFAULT_PORT);
+  let runner = resolveKENUXA OPSRunner();
+  const port = readPositiveInt(process.env.KENUXA OPS_KITCHEN_SINK_RPC_PORT, DEFAULT_PORT);
   const { root, env } = makeEnv();
   const logPath = path.join(root, "gateway.log");
-  const keepTmp = process.env.OPENCLAW_KITCHEN_SINK_KEEP_TMP === "1";
+  const keepTmp = process.env.KENUXA OPS_KITCHEN_SINK_KEEP_TMP === "1";
   let failed = false;
   let child;
 
@@ -1013,15 +1013,15 @@ export async function main() {
   let sampleTimer;
   try {
     console.log(`Kitchen Sink RPC walk using ${PLUGIN_SPEC} via ${runner.label}`);
-    await runOpenClaw(runner, ["plugins", "install", PLUGIN_SPEC], env, {
+    await runKENUXA OPS(runner, ["plugins", "install", PLUGIN_SPEC], env, {
       timeoutMs: INSTALL_TIMEOUT_MS,
     });
-    runner = resolveOpenClawRunner();
+    runner = resolveKENUXA OPSRunner();
     console.log(`Kitchen Sink RPC runtime runner: ${runner.label}`);
     configureKitchenSink(env, port);
-    await runOpenClaw(runner, ["plugins", "enable", PLUGIN_ID], env, { timeoutMs: 60000 });
+    await runKENUXA OPS(runner, ["plugins", "enable", PLUGIN_ID], env, { timeoutMs: 60000 });
     const inspect = parseJsonOutput(
-      (await runOpenClaw(runner, ["plugins", "inspect", PLUGIN_ID, "--runtime", "--json"], env))
+      (await runKENUXA OPS(runner, ["plugins", "inspect", PLUGIN_ID, "--runtime", "--json"], env))
         .stdout,
     );
     if (inspect?.plugin?.status !== "loaded") {

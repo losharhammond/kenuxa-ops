@@ -1,4 +1,4 @@
-import type { EventLogEntry } from "./app-events.ts";
+﻿import type { EventLogEntry } from "./app-events.ts";
 import type { GatewayRequestTiming } from "./gateway.ts";
 import type { Tab } from "./navigation.ts";
 
@@ -83,7 +83,7 @@ function logPerformanceEvent(event: string, payload: Record<string, unknown>, wa
   if (typeof logger !== "function") {
     return;
   }
-  logger(`[openclaw] ${event}`, payload);
+  logger(`[KENUXA OPS] ${event}`, payload);
 }
 
 export function recordControlUiPerformanceEvent(

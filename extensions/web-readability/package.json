@@ -1,17 +1,17 @@
-{
-  "name": "@openclaw/web-readability-plugin",
+﻿{
+  "name": "@KENUXA OPS/web-readability-plugin",
   "version": "2026.5.26",
   "private": true,
-  "description": "OpenClaw local Readability web extraction plugin",
+  "description": "KENUXA OPS local Readability web extraction plugin",
   "type": "module",
   "dependencies": {
     "@mozilla/readability": "0.6.0",
     "linkedom": "0.18.12"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ]

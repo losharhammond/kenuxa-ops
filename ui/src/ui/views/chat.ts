@@ -1,4 +1,4 @@
-import { html, nothing, type TemplateResult } from "lit";
+﻿import { html, nothing, type TemplateResult } from "lit";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { ref } from "lit/directives/ref.js";
 import { repeat } from "lit/directives/repeat.js";
@@ -1536,7 +1536,7 @@ export function renderChat(props: ChatProps) {
                   ? props.realtimeTalkTranscript
                   : null) ??
                 (props.realtimeTalkStatus === "thinking"
-                  ? "Asking OpenClaw..."
+                  ? "Asking KENUXA OPS..."
                   : props.realtimeTalkStatus === "connecting"
                     ? "Connecting Talk..."
                     : "Talk live")}

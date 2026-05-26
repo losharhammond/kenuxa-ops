@@ -1,11 +1,11 @@
-{
-  "name": "@openclaw/diffs",
+﻿{
+  "name": "@KENUXA OPS/diffs",
   "version": "2026.5.26",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
-      "name": "@openclaw/diffs",
+      "name": "@KENUXA OPS/diffs",
       "version": "2026.5.26",
       "dependencies": {
         "@pierre/diffs": "1.2.2",

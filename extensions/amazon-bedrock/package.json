@@ -1,10 +1,10 @@
-{
-  "name": "@openclaw/amazon-bedrock-provider",
+﻿{
+  "name": "@KENUXA OPS/amazon-bedrock-provider",
   "version": "2026.5.26",
-  "description": "OpenClaw Amazon Bedrock provider plugin",
+  "description": "KENUXA OPS Amazon Bedrock provider plugin",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openclaw/openclaw"
+    "url": "https://github.com/KENUXA OPS/KENUXA OPS"
   },
   "type": "module",
   "dependencies": {
@@ -15,14 +15,14 @@
     "@smithy/shared-ini-file-loader": "4.5.4"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ],
     "install": {
-      "npmSpec": "@openclaw/amazon-bedrock-provider",
+      "npmSpec": "@KENUXA OPS/amazon-bedrock-provider",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.5.12-beta.1"
     },
@@ -30,7 +30,7 @@
       "pluginApi": ">=2026.5.26"
     },
     "build": {
-      "openclawVersion": "2026.5.26",
+      "KENUXA OPSVersion": "2026.5.26",
       "bundledDist": false
     },
     "release": {

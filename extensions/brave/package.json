@@ -1,21 +1,21 @@
-{
-  "name": "@openclaw/brave-plugin",
+﻿{
+  "name": "@KENUXA OPS/brave-plugin",
   "version": "2026.5.26",
-  "description": "OpenClaw Brave plugin",
+  "description": "KENUXA OPS Brave plugin",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openclaw/openclaw"
+    "url": "https://github.com/KENUXA OPS/KENUXA OPS"
   },
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ],
     "install": {
-      "npmSpec": "@openclaw/brave-plugin",
+      "npmSpec": "@KENUXA OPS/brave-plugin",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.4.10",
       "allowInvalidConfigRecovery": true
@@ -24,7 +24,7 @@
       "pluginApi": ">=2026.5.26"
     },
     "build": {
-      "openclawVersion": "2026.5.26"
+      "KENUXA OPSVersion": "2026.5.26"
     },
     "release": {
       "publishToClawHub": true,

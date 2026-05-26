@@ -1,4 +1,4 @@
-import path from "node:path";
+﻿import path from "node:path";
 import {
   BUNDLED_PLUGIN_PATH_PREFIX,
   BUNDLED_PLUGIN_ROOT_DIR,
@@ -7,7 +7,7 @@ import {
 export const runNodeSourceRoots = ["src", BUNDLED_PLUGIN_ROOT_DIR];
 export const runNodeConfigFiles = ["tsconfig.json", "package.json", "tsdown.config.ts"];
 export const runNodeWatchedPaths = [...runNodeSourceRoots, ...runNodeConfigFiles];
-export const extensionRestartMetadataFiles = new Set(["openclaw.plugin.json", "package.json"]);
+export const extensionRestartMetadataFiles = new Set(["KENUXA OPS.plugin.json", "package.json"]);
 
 const ignoredRunNodeRepoPathPatterns = [
   /^extensions\/[^/]+\/src\/host\/.+\/\.bundle\.hash$/u,

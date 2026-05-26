@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 import { spawnSync as defaultSpawnSync } from "node:child_process";
 import fs from "node:fs";
@@ -212,7 +212,7 @@ async function runGatewayCpuScenarios(options, params = {}) {
 
   if (!options.skipQa) {
     const qaCommand = pnpmCommand([
-      "openclaw",
+      "KENUXA OPS",
       "qa",
       "suite",
       "--provider-mode",

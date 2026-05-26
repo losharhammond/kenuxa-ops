@@ -1,10 +1,10 @@
-{
-  "name": "@openclaw/twitch",
+﻿{
+  "name": "@KENUXA OPS/twitch",
   "version": "2026.5.26",
-  "description": "OpenClaw Twitch channel plugin",
+  "description": "KENUXA OPS Twitch channel plugin",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openclaw/openclaw"
+    "url": "https://github.com/KENUXA OPS/KENUXA OPS"
   },
   "type": "module",
   "dependencies": {
@@ -14,15 +14,15 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ],
     "setupEntry": "./setup-entry.ts",
     "install": {
-      "npmSpec": "@openclaw/twitch",
+      "npmSpec": "@KENUXA OPS/twitch",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.4.10"
     },
@@ -30,7 +30,7 @@
       "pluginApi": ">=2026.5.26"
     },
     "build": {
-      "openclawVersion": "2026.5.26"
+      "KENUXA OPSVersion": "2026.5.26"
     },
     "channel": {
       "id": "twitch",

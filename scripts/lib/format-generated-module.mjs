@@ -1,4 +1,4 @@
-import { spawnSync } from "node:child_process";
+﻿import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -32,7 +32,7 @@ export function formatGeneratedModule(source, { repoRoot, outputPath, errorLabel
     resolvedRepoRoot,
     path.isAbsolute(outputPath) ? path.relative(resolvedRepoRoot, outputPath) : outputPath,
   );
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-generated-format-"));
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "KENUXA OPS-generated-format-"));
   const tempOutputPath = path.join(tempDir, path.basename(resolvedOutputPath));
 
   try {

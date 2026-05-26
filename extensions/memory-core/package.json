@@ -1,8 +1,8 @@
-{
-  "name": "@openclaw/memory-core",
+﻿{
+  "name": "@KENUXA OPS/memory-core",
   "version": "2026.5.26",
   "private": true,
-  "description": "OpenClaw core memory search plugin",
+  "description": "KENUXA OPS core memory search plugin",
   "type": "module",
   "dependencies": {
     "chokidar": "5.0.0",
@@ -10,18 +10,18 @@
     "typebox": "1.1.38"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*",
-    "openclaw": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*",
+    "KENUXA OPS": "workspace:*"
   },
   "peerDependencies": {
-    "openclaw": ">=2026.5.26"
+    "KENUXA OPS": ">=2026.5.26"
   },
   "peerDependenciesMeta": {
-    "openclaw": {
+    "KENUXA OPS": {
       "optional": true
     }
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ]

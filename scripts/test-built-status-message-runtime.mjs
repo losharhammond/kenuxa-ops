@@ -1,4 +1,4 @@
-import assert from "node:assert/strict";
+﻿import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
@@ -58,7 +58,7 @@ function listFindBuiltStatusMessageRuntimeFiles(distDir) {
 async function main() {
   const { packageRoot } = parsePackageRootArg(
     process.argv.slice(2),
-    "OPENCLAW_STATUS_MESSAGE_RUNTIME_ROOT",
+    "KENUXA OPS_STATUS_MESSAGE_RUNTIME_ROOT",
   );
   const runtimePath = findBuiltStatusMessageRuntimePath(path.join(packageRoot, "dist"));
   const runtimeModule = await import(pathToFileURL(runtimePath).href);

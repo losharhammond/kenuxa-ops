@@ -1,8 +1,8 @@
-{
-  "name": "@openclaw/memory-wiki",
+﻿{
+  "name": "@KENUXA OPS/memory-wiki",
   "version": "2026.5.26",
   "private": true,
-  "description": "OpenClaw persistent wiki plugin",
+  "description": "KENUXA OPS persistent wiki plugin",
   "type": "module",
   "dependencies": {
     "typebox": "1.1.38",
@@ -10,18 +10,18 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*",
-    "openclaw": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*",
+    "KENUXA OPS": "workspace:*"
   },
   "peerDependencies": {
-    "openclaw": ">=2026.5.26"
+    "KENUXA OPS": ">=2026.5.26"
   },
   "peerDependenciesMeta": {
-    "openclaw": {
+    "KENUXA OPS": {
       "optional": true
     }
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ]

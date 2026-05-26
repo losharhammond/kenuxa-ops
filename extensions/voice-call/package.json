@@ -1,10 +1,10 @@
-{
-  "name": "@openclaw/voice-call",
+﻿{
+  "name": "@KENUXA OPS/voice-call",
   "version": "2026.5.26",
-  "description": "OpenClaw voice-call plugin",
+  "description": "KENUXA OPS voice-call plugin",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openclaw/openclaw"
+    "url": "https://github.com/KENUXA OPS/KENUXA OPS"
   },
   "type": "module",
   "dependencies": {
@@ -14,23 +14,23 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*",
-    "openclaw": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*",
+    "KENUXA OPS": "workspace:*"
   },
   "peerDependencies": {
-    "openclaw": ">=2026.5.26"
+    "KENUXA OPS": ">=2026.5.26"
   },
   "peerDependenciesMeta": {
-    "openclaw": {
+    "KENUXA OPS": {
       "optional": true
     }
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ],
     "install": {
-      "npmSpec": "@openclaw/voice-call",
+      "npmSpec": "@KENUXA OPS/voice-call",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.4.10"
     },
@@ -38,7 +38,7 @@
       "pluginApi": ">=2026.5.26"
     },
     "build": {
-      "openclawVersion": "2026.5.26"
+      "KENUXA OPSVersion": "2026.5.26"
     },
     "release": {
       "publishToClawHub": true,

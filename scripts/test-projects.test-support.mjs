@@ -1,4 +1,4 @@
-import { spawnSync } from "node:child_process";
+﻿import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -230,8 +230,8 @@ const UI_VITEST_CONFIG = "test/vitest/vitest.ui.config.ts";
 const UI_E2E_VITEST_CONFIG = "test/vitest/vitest.ui-e2e.config.ts";
 const UTILS_VITEST_CONFIG = "test/vitest/vitest.utils.config.ts";
 const WIZARD_VITEST_CONFIG = "test/vitest/vitest.wizard.config.ts";
-const INCLUDE_FILE_ENV_KEY = "OPENCLAW_VITEST_INCLUDE_FILE";
-const FS_MODULE_CACHE_PATH_ENV_KEY = "OPENCLAW_VITEST_FS_MODULE_CACHE_PATH";
+const INCLUDE_FILE_ENV_KEY = "KENUXA OPS_VITEST_INCLUDE_FILE";
+const FS_MODULE_CACHE_PATH_ENV_KEY = "KENUXA OPS_VITEST_FS_MODULE_CACHE_PATH";
 const CHANGED_ARGS_PATTERN = /^--changed(?:=(.+))?$/u;
 const VITEST_CONFIG_BY_KIND = {
   acp: ACP_VITEST_CONFIG,
@@ -323,7 +323,7 @@ const VITEST_CONFIG_BY_KIND = {
 const BROAD_CHANGED_FALLBACK_PATTERNS = [
   /^package\.json$/u,
   /^pnpm-lock\.yaml$/u,
-  /^test\/setup(?:\.shared|\.extensions|-openclaw-runtime)?\.ts$/u,
+  /^test\/setup(?:\.shared|\.extensions|-KENUXA OPS-runtime)?\.ts$/u,
   /^vitest(?:\..+)?\.(?:config\.ts|paths\.mjs)$/u,
   /^test\/vitest\/vitest\.(?:config|shared\.config|scoped-config|performance-config)\.ts$/u,
   /^test\/helpers\//u,
@@ -347,7 +347,7 @@ const TOOLING_SOURCE_TEST_TARGETS = new Map([
     ["test/scripts/check-deadcode-unused-files.test.ts"],
   ],
   ["scripts/lib/live-docker-stage.sh", ["test/scripts/live-docker-stage.test.ts"]],
-  ["scripts/lib/openclaw-test-state.mjs", ["test/scripts/openclaw-test-state.test.ts"]],
+  ["scripts/lib/KENUXA OPS-test-state.mjs", ["test/scripts/KENUXA OPS-test-state.test.ts"]],
   ["scripts/lib/vitest-local-scheduling.mjs", ["test/scripts/vitest-local-scheduling.test.ts"]],
   [
     "scripts/mantis/build-telegram-evidence.mjs",
@@ -406,7 +406,7 @@ const TOOLING_TEST_TARGETS = new Map([
     ["test/scripts/check-deadcode-unused-files.test.ts"],
   ],
   ["test/scripts/live-docker-stage.test.ts", ["test/scripts/live-docker-stage.test.ts"]],
-  ["test/scripts/openclaw-test-state.test.ts", ["test/scripts/openclaw-test-state.test.ts"]],
+  ["test/scripts/KENUXA OPS-test-state.test.ts", ["test/scripts/KENUXA OPS-test-state.test.ts"]],
   [
     "test/scripts/mantis-publish-pr-evidence.test.ts",
     ["test/scripts/mantis-publish-pr-evidence.test.ts"],
@@ -461,7 +461,7 @@ const TEST_HELPER_NORMALIZE_TEXT_TARGETS = [
 ];
 const SOURCE_TEST_TARGETS = new Map([
   ...PRECISE_SOURCE_TEST_TARGETS,
-  ["src/test-utils/openclaw-test-state.ts", ["src/test-utils/openclaw-test-state.test.ts"]],
+  ["src/test-utils/KENUXA OPS-test-state.ts", ["src/test-utils/KENUXA OPS-test-state.test.ts"]],
   [
     "src/channels/plugins/contracts/test-helpers/manifest.ts",
     [
@@ -568,9 +568,9 @@ const SOURCE_ROOTS_FOR_IMPORT_GRAPH = ["src", "extensions", "packages", "ui/src"
 const IMPORTABLE_FILE_EXTENSIONS = [".ts", ".tsx", ".mts", ".cts"];
 const IMPORT_SPECIFIER_PATTERN =
   /\b(?:import|export)\s+(?:type\s+)?(?:[^'"]*?\s+from\s+)?["']([^"']+)["']|\bimport\s*\(\s*["']([^"']+)["']\s*\)/gu;
-const BROAD_CHANGED_ENV_KEY = "OPENCLAW_TEST_CHANGED_BROAD";
-const VITEST_NO_OUTPUT_TIMEOUT_ENV_KEY = "OPENCLAW_VITEST_NO_OUTPUT_TIMEOUT_MS";
-const VITEST_NO_OUTPUT_RETRY_ENV_KEY = "OPENCLAW_VITEST_NO_OUTPUT_RETRY";
+const BROAD_CHANGED_ENV_KEY = "KENUXA OPS_TEST_CHANGED_BROAD";
+const VITEST_NO_OUTPUT_TIMEOUT_ENV_KEY = "KENUXA OPS_VITEST_NO_OUTPUT_TIMEOUT_MS";
+const VITEST_NO_OUTPUT_RETRY_ENV_KEY = "KENUXA OPS_VITEST_NO_OUTPUT_RETRY";
 export const DEFAULT_TEST_PROJECTS_VITEST_NO_OUTPUT_TIMEOUT_MS = "300000";
 const GATEWAY_SERVER_FULL_SUITE_TARGET_CHUNK_COUNT = 4;
 const GATEWAY_SERVER_BACKED_HTTP_TEST_TARGETS = new Set([
@@ -1819,14 +1819,14 @@ export function buildFullSuiteVitestRunPlans(args, cwd = process.cwd()) {
       },
     ];
   }
-  const parallelShardCount = Number.parseInt(process.env.OPENCLAW_TEST_PROJECTS_PARALLEL ?? "", 10);
+  const parallelShardCount = Number.parseInt(process.env.KENUXA OPS_TEST_PROJECTS_PARALLEL ?? "", 10);
   const expandToProjectConfigs =
-    process.env.OPENCLAW_TEST_PROJECTS_LEAF_SHARDS === "1" ||
+    process.env.KENUXA OPS_TEST_PROJECTS_LEAF_SHARDS === "1" ||
     (Number.isFinite(parallelShardCount) && parallelShardCount > 1) ||
     shouldUseLocalFullSuiteParallelByDefault(process.env);
   return fullSuiteVitestShards.flatMap((shard) => {
     if (
-      process.env.OPENCLAW_TEST_SKIP_FULL_EXTENSIONS_SHARD === "1" &&
+      process.env.KENUXA OPS_TEST_SKIP_FULL_EXTENSIONS_SHARD === "1" &&
       shard.config === FULL_EXTENSIONS_VITEST_CONFIG
     ) {
       return [];
@@ -1865,7 +1865,7 @@ export function shouldUseLocalFullSuiteParallelByDefault(env = process.env) {
     return false;
   }
   return (
-    env.OPENCLAW_TEST_PROJECTS_SERIAL !== "1" && env.CI !== "true" && env.GITHUB_ACTIONS !== "true"
+    env.KENUXA OPS_TEST_PROJECTS_SERIAL !== "1" && env.CI !== "true" && env.GITHUB_ACTIONS !== "true"
   );
 }
 
@@ -1876,18 +1876,18 @@ function parsePositiveInt(value) {
 
 function hasConservativeVitestWorkerBudget(env) {
   const workerBudget = parsePositiveInt(
-    env.OPENCLAW_VITEST_MAX_WORKERS ?? env.OPENCLAW_TEST_WORKERS,
+    env.KENUXA OPS_VITEST_MAX_WORKERS ?? env.KENUXA OPS_TEST_WORKERS,
   );
   return workerBudget !== null && workerBudget <= 1;
 }
 
 export function resolveParallelFullSuiteConcurrency(specCount, env, hostInfo) {
   env ??= process.env;
-  const override = parsePositiveInt(env.OPENCLAW_TEST_PROJECTS_PARALLEL);
+  const override = parsePositiveInt(env.KENUXA OPS_TEST_PROJECTS_PARALLEL);
   if (override !== null) {
     return Math.min(override, specCount);
   }
-  if (env.OPENCLAW_TEST_PROJECTS_SERIAL === "1") {
+  if (env.KENUXA OPS_TEST_PROJECTS_SERIAL === "1") {
     return 1;
   }
   if (isCiLikeEnv(env)) {
@@ -1897,7 +1897,7 @@ export function resolveParallelFullSuiteConcurrency(specCount, env, hostInfo) {
     return 1;
   }
   if (
-    env.OPENCLAW_TEST_PROJECTS_LEAF_SHARDS !== "1" &&
+    env.KENUXA OPS_TEST_PROJECTS_LEAF_SHARDS !== "1" &&
     !shouldUseLocalFullSuiteParallelByDefault(env)
   ) {
     return 1;
@@ -1982,7 +1982,7 @@ export function createVitestRunSpecs(args, params = {}) {
     const includeFilePath = plan.includePatterns
       ? path.join(
           params.tempDir ?? os.tmpdir(),
-          `openclaw-vitest-include-${process.pid}-${Date.now()}-${index}.json`,
+          `KENUXA OPS-vitest-include-${process.pid}-${Date.now()}-${index}.json`,
         )
       : null;
     return {
@@ -2036,11 +2036,11 @@ function filterPlansForContractIncludeFile(plans, env) {
 }
 
 export function shouldAcquireLocalHeavyCheckLock(runSpecs, env = process.env) {
-  if (env.OPENCLAW_TEST_HEAVY_CHECK_LOCK_HELD === "1") {
+  if (env.KENUXA OPS_TEST_HEAVY_CHECK_LOCK_HELD === "1") {
     return false;
   }
 
-  if (env.OPENCLAW_TEST_PROJECTS_FORCE_LOCK === "1") {
+  if (env.KENUXA OPS_TEST_PROJECTS_FORCE_LOCK === "1") {
     return true;
   }
 

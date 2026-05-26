@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
  * Live repro for WebChat auto-TTS fix (PR #82701).
  * Run: pnpm exec tsx scripts/repro/webchat-auto-tts-live-proof.mjs
@@ -51,7 +51,7 @@ async function main() {
   });
   setActivePluginRegistry(pluginRegistry.registry);
 
-  const prefsPath = path.join(os.tmpdir(), `openclaw-webchat-tts-proof-${process.pid}.json`);
+  const prefsPath = path.join(os.tmpdir(), `KENUXA OPS-webchat-tts-proof-${process.pid}.json`);
   const cfg = {
     messages: {
       tts: {

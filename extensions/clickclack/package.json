@@ -1,8 +1,8 @@
-{
-  "name": "@openclaw/clickclack",
+﻿{
+  "name": "@KENUXA OPS/clickclack",
   "version": "2026.5.26",
   "private": true,
-  "description": "OpenClaw ClickClack channel plugin",
+  "description": "KENUXA OPS ClickClack channel plugin",
   "type": "module",
   "exports": {
     ".": "./index.ts",
@@ -14,18 +14,18 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*",
-    "openclaw": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*",
+    "KENUXA OPS": "workspace:*"
   },
   "peerDependencies": {
-    "openclaw": ">=2026.5.26"
+    "KENUXA OPS": ">=2026.5.26"
   },
   "peerDependenciesMeta": {
-    "openclaw": {
+    "KENUXA OPS": {
       "optional": true
     }
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ],

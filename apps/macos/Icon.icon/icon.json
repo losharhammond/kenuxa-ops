@@ -1,4 +1,4 @@
-{
+﻿{
   "fill" : {
     "automatic-gradient" : "extended-srgb:0.00000,0.53333,1.00000,1.00000"
   },
@@ -6,8 +6,8 @@
     {
       "layers" : [
         {
-          "image-name" : "openclaw-mac.png",
-          "name" : "openclaw-mac",
+          "image-name" : "KENUXA OPS-mac.png",
+          "name" : "KENUXA OPS-mac",
           "position" : {
             "scale" : 1.07,
             "translation-in-points" : [

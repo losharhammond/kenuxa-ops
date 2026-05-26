@@ -1,22 +1,22 @@
-{
-  "name": "@openclaw/migrate-claude",
+﻿{
+  "name": "@KENUXA OPS/migrate-claude",
   "version": "2026.5.26",
   "private": true,
-  "description": "Claude to OpenClaw migration provider",
+  "description": "Claude to KENUXA OPS migration provider",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*",
-    "openclaw": "workspace:*"
+    "@KENUXA OPS/plugin-sdk": "workspace:*",
+    "KENUXA OPS": "workspace:*"
   },
   "peerDependencies": {
-    "openclaw": ">=2026.5.26"
+    "KENUXA OPS": ">=2026.5.26"
   },
   "peerDependenciesMeta": {
-    "openclaw": {
+    "KENUXA OPS": {
       "optional": true
     }
   },
-  "openclaw": {
+  "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ]

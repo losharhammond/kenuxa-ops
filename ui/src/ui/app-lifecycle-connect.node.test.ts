@@ -1,4 +1,4 @@
-// @vitest-environment node
+﻿// @vitest-environment node
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const { applySettingsFromUrlMock, connectGatewayMock, loadBootstrapMock } = vi.hoisted(() => ({
@@ -64,7 +64,7 @@ function createHost() {
     connectGeneration: 0,
     connected: false,
     tab: "chat",
-    assistantName: "OpenClaw",
+    assistantName: "KENUXA OPS",
     assistantAvatar: null,
     assistantAgentId: null,
     serverVersion: null,

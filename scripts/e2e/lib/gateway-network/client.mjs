@@ -1,4 +1,4 @@
-import { WebSocket } from "ws";
+﻿import { WebSocket } from "ws";
 import { PROTOCOL_VERSION } from "../../../../dist/gateway/protocol/index.js";
 
 const url = process.env.GW_URL;
@@ -8,8 +8,8 @@ if (!url || !token) {
 }
 
 const deadlineMs = Number.parseInt(
-  process.env.OPENCLAW_GATEWAY_NETWORK_CLIENT_CONNECT_TIMEOUT_MS ??
-    process.env.OPENCLAW_GATEWAY_NETWORK_CONNECT_READY_TIMEOUT_MS ??
+  process.env.KENUXA OPS_GATEWAY_NETWORK_CLIENT_CONNECT_TIMEOUT_MS ??
+    process.env.KENUXA OPS_GATEWAY_NETWORK_CONNECT_READY_TIMEOUT_MS ??
     "80000",
   10,
 );

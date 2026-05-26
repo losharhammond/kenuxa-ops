@@ -1,4 +1,4 @@
-import { html, nothing } from "lit";
+﻿import { html, nothing } from "lit";
 import { t } from "../../i18n/index.ts";
 import type { EventLogEntry } from "../app-events.ts";
 import { formatEventPayload } from "../presenter.ts";
@@ -60,7 +60,7 @@ export function renderDebug(props: DebugProps) {
                     ? ` · ${t("debug.security.info", { count: String(info) })}`
                     : ""}.
                   ${t("debug.security.runPrefix")}
-                  <span class="mono">openclaw security audit --deep</span>
+                  <span class="mono">KENUXA OPS security audit --deep</span>
                   ${t("debug.security.runSuffix")}
                 </div>`
               : nothing}

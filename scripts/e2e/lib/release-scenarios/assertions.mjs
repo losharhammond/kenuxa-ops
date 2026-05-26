@@ -1,4 +1,4 @@
-import fs from "node:fs";
+﻿import fs from "node:fs";
 import path from "node:path";
 import {
   assertAgentReplyContainsMarker,
@@ -20,8 +20,8 @@ function readJson(file) {
 
 function configPath() {
   return (
-    process.env.OPENCLAW_CONFIG_PATH ??
-    path.join(process.env.HOME ?? "", ".openclaw", "openclaw.json")
+    process.env.KENUXA OPS_CONFIG_PATH ??
+    path.join(process.env.HOME ?? "", ".KENUXA OPS", "KENUXA OPS.json")
   );
 }
 
@@ -32,7 +32,7 @@ function writeConfig(cfg) {
 function authProfilesPath() {
   return path.join(
     process.env.HOME ?? "",
-    ".openclaw",
+    ".KENUXA OPS",
     "agents",
     "main",
     "agent",
@@ -57,7 +57,7 @@ function assertOpenAiEnvRef() {
   const state = readStateText();
   assert(state.includes("OPENAI_API_KEY"), "OpenAI env ref was not persisted");
   assert(!state.includes(rawKey), "raw OpenAI key was persisted");
-  assert(fs.existsSync(configPath()), "openclaw.json missing");
+  assert(fs.existsSync(configPath()), "KENUXA OPS.json missing");
 }
 
 function assertAgentTurn() {
@@ -96,7 +96,7 @@ function assertImageDescribe() {
   assert(payload.ok === true, `image describe failed: ${JSON.stringify(payload)}`);
   assert(payload.capability === "image.describe", "wrong image describe capability");
   const output = payload.outputs?.[0];
-  assert(output?.text?.includes("OPENCLAW_E2E_OK"), "image description marker missing");
+  assert(output?.text?.includes("KENUXA OPS_E2E_OK"), "image description marker missing");
   assert(output.provider === "openai", `unexpected image provider: ${output?.provider}`);
   const requestLog = fs.existsSync(requestLogPath) ? fs.readFileSync(requestLogPath, "utf8") : "";
   assert(requestLog.includes("/v1/responses"), "image describe did not hit Responses API");
@@ -128,14 +128,14 @@ function assertPluginUninstalled() {
   const pluginId = process.argv[3];
   const cliRoot = process.argv[4];
   const cfg = readJson(configPath());
-  const recordsPath = path.join(process.env.HOME ?? "", ".openclaw", "plugins", "installs.json");
+  const recordsPath = path.join(process.env.HOME ?? "", ".KENUXA OPS", "plugins", "installs.json");
   const records = fs.existsSync(recordsPath) ? readJson(recordsPath) : {};
   const installRecords = records.installRecords ?? records.records ?? {};
   assert(!installRecords[pluginId], `install record still present for ${pluginId}`);
   assert(!cfg.plugins?.entries?.[pluginId], `plugin config entry still present for ${pluginId}`);
   const managedRoot = path.join(
     process.env.HOME ?? "",
-    ".openclaw",
+    ".KENUXA OPS",
     "plugins",
     "installed",
     pluginId,

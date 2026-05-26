@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+﻿import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   buildGoogleLiveUrl,
   GoogleLiveRealtimeTalkTransport,
@@ -380,7 +380,7 @@ describe("GoogleLiveRealtimeTalkTransport", () => {
           mode: "status",
           sessionKey: "main",
           active: true,
-          message: "OpenClaw is working in read (running).",
+          message: "KENUXA OPS is working in read (running).",
           speak: true,
           show: true,
           suppress: false,
@@ -439,7 +439,7 @@ describe("GoogleLiveRealtimeTalkTransport", () => {
             role: "user",
             parts: [
               {
-                text: expect.stringContaining('Status: "OpenClaw is working in read (running)."'),
+                text: expect.stringContaining('Status: "KENUXA OPS is working in read (running)."'),
               },
             ],
           },
@@ -546,7 +546,7 @@ describe("GoogleLiveRealtimeTalkTransport", () => {
           sessionKey: "main",
           active: true,
           aborted: true,
-          message: "Cancelled the active OpenClaw run.",
+          message: "Cancelled the active KENUXA OPS run.",
           speak: true,
           show: true,
           suppress: false,

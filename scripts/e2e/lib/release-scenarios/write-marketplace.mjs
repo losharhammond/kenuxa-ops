@@ -1,4 +1,4 @@
-import fs from "node:fs";
+﻿import fs from "node:fs";
 import path from "node:path";
 
 const [root, alias, ...plugins] = process.argv.slice(2);
@@ -32,7 +32,7 @@ fs.writeFileSync(
     {
       [alias]: {
         installLocation: root,
-        source: { type: "github", repo: "openclaw/release-fixture-marketplace" },
+        source: { type: "github", repo: "KENUXA OPS/release-fixture-marketplace" },
       },
     },
     null,

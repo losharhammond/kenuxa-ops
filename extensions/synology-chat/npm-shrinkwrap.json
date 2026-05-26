@@ -1,11 +1,11 @@
-{
-  "name": "@openclaw/synology-chat",
+﻿{
+  "name": "@KENUXA OPS/synology-chat",
   "version": "2026.5.26",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
-      "name": "@openclaw/synology-chat",
+      "name": "@KENUXA OPS/synology-chat",
       "version": "2026.5.26",
       "dependencies": {
         "zod": "4.4.3"

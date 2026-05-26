@@ -1,4 +1,4 @@
-import { bytesToBase64, floatToPcm16 } from "./realtime-talk-audio.ts";
+﻿import { bytesToBase64, floatToPcm16 } from "./realtime-talk-audio.ts";
 import { RealtimeTalkPcmOutputQueue } from "./realtime-talk-pcm-output.ts";
 import {
   REALTIME_VOICE_AGENT_CONSULT_TOOL_NAME,
@@ -270,7 +270,7 @@ export class GatewayRelayRealtimeTalkTransport implements RealtimeTalkTransport 
             status: "working",
             tool: REALTIME_VOICE_AGENT_CONSULT_TOOL_NAME,
             message:
-              "Tell the person briefly that you are checking, then wait for the final OpenClaw result before answering with the actual result.",
+              "Tell the person briefly that you are checking, then wait for the final KENUXA OPS result before answering with the actual result.",
           },
           { willContinue: true },
         );

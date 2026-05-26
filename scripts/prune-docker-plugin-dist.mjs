@@ -1,4 +1,4 @@
-import fs from "node:fs";
+﻿import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { collectRootPackageExcludedExtensionDirs } from "./lib/bundled-plugin-build-entries.mjs";
@@ -153,8 +153,8 @@ function pruneNodeModulesForOmittedPlugins(repoRoot, bundledPluginDir, omittedPl
 export function pruneDockerPluginDist(params = {}) {
   const repoRoot = params.cwd ?? params.repoRoot ?? process.cwd();
   const env = params.env ?? process.env;
-  const bundledPluginDir = env.OPENCLAW_BUNDLED_PLUGIN_DIR ?? "extensions";
-  const keepPluginIds = parseDockerPluginKeepList(env.OPENCLAW_EXTENSIONS);
+  const bundledPluginDir = env.KENUXA OPS_BUNDLED_PLUGIN_DIR ?? "extensions";
+  const keepPluginIds = parseDockerPluginKeepList(env.KENUXA OPS_EXTENSIONS);
   const excludedPluginIds = collectRootPackageExcludedExtensionDirs({ cwd: repoRoot });
   const omittedPluginIds = new Set([...excludedPluginIds].filter((pluginId) => !keepPluginIds.has(pluginId)));
   const removed = [];

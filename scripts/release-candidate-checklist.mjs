@@ -1,10 +1,10 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { basename, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const DEFAULT_REPO = "openclaw/openclaw";
+const DEFAULT_REPO = "KENUXA OPS/KENUXA OPS";
 const DEFAULT_PROVIDER = "openai";
 const DEFAULT_MODE = "both";
 const DEFAULT_RELEASE_PROFILE = "beta";
@@ -17,14 +17,14 @@ function usage() {
 
 Dispatches or consumes release validation runs, validates the prepared npm tarball,
 builds plugin publish plans, writes a green evidence bundle, then prints the exact
-OpenClaw Release Publish command only after everything is green.
+KENUXA OPS Release Publish command only after everything is green.
 
 Options:
   --tag <tag>                         Release tag to validate.
   --workflow-ref <ref>                Workflow branch/ref. Default: current branch.
   --repo <owner/repo>                 GitHub repo. Default: ${DEFAULT_REPO}
   --full-release-run <id>             Reuse successful Full Release Validation run.
-  --npm-preflight-run <id>            Reuse successful OpenClaw NPM Release preflight run.
+  --npm-preflight-run <id>            Reuse successful KENUXA OPS NPM Release preflight run.
   --skip-dispatch                     Require both run ids; do not dispatch workflows.
   --skip-local-generated-check        Do not run local generated release baseline checks before dispatch.
   --skip-parallels                   Do not run local Parallels fresh/update beta smoke.
@@ -455,7 +455,7 @@ export function buildPublishCommand(options) {
     ["full_release_validation_run_id", options.fullReleaseRunId],
     ["npm_dist_tag", options.npmDistTag],
     ["plugin_publish_scope", options.pluginPublishScope],
-    ["publish_openclaw_npm", "true"],
+    ["publish_KENUXA OPS_npm", "true"],
     ["release_profile", options.releaseProfile],
     ["wait_for_clawhub", "false"],
   ];
@@ -469,7 +469,7 @@ export function buildPublishCommand(options) {
     "gh",
     "workflow",
     "run",
-    "openclaw-release-publish.yml",
+    "KENUXA OPS-release-publish.yml",
     "--repo",
     options.repo,
     "--ref",
@@ -547,7 +547,7 @@ async function runTelegramIfNeeded(options, artifactName) {
   const workflowFile = "npm-telegram-beta-e2e.yml";
   const before = beforeRunIds(options.repo, workflowFile);
   const dispatchedRunId = dispatchWorkflow(options.repo, workflowFile, options.workflowRef, {
-    package_spec: `openclaw@${options.tag.replace(/^v/u, "")}`,
+    package_spec: `KENUXA OPS@${options.tag.replace(/^v/u, "")}`,
     package_label: options.tag,
     package_artifact_name: artifactName,
     package_artifact_run_id: options.npmPreflightRunId,
@@ -594,7 +594,7 @@ async function main() {
   }
 
   if (!options.npmPreflightRunId && !options.skipDispatch) {
-    const workflowFile = "openclaw-npm-release.yml";
+    const workflowFile = "KENUXA OPS-npm-release.yml";
     const before = beforeRunIds(options.repo, workflowFile);
     const dispatchedRunId = dispatchWorkflow(options.repo, workflowFile, options.workflowRef, {
       tag: options.tag,
@@ -603,7 +603,7 @@ async function main() {
     });
     options.npmPreflightRunId =
       dispatchedRunId ||
-      (await findNewRunId(options.repo, workflowFile, "OpenClaw NPM Release", before));
+      (await findNewRunId(options.repo, workflowFile, "KENUXA OPS NPM Release", before));
   }
 
   const fullRun = await waitForSuccessfulRun(options.repo, options.fullReleaseRunId, {
@@ -611,7 +611,7 @@ async function main() {
     workflowRef: options.workflowRef,
   });
   const npmRun = await waitForSuccessfulRun(options.repo, options.npmPreflightRunId, {
-    workflowName: "OpenClaw NPM Release",
+    workflowName: "KENUXA OPS NPM Release",
     workflowRef: options.workflowRef,
   });
   if (fullRun.headSha !== targetSha || npmRun.headSha !== targetSha) {
@@ -625,8 +625,8 @@ async function main() {
   const npmArtifactName = downloadResolvedArtifact(
     options.repo,
     options.npmPreflightRunId,
-    `openclaw-npm-preflight-${options.tag}`,
-    "openclaw-npm-preflight-",
+    `KENUXA OPS-npm-preflight-${options.tag}`,
+    "KENUXA OPS-npm-preflight-",
     npmDir,
   );
   const fullArtifactName = downloadResolvedArtifact(

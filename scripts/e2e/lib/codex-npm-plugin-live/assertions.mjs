@@ -1,17 +1,17 @@
-import fs from "node:fs";
+﻿import fs from "node:fs";
 import path from "node:path";
 
 const command = process.argv[2];
 const readJson = (file) => JSON.parse(fs.readFileSync(file, "utf8"));
 const allowBetaCompatDiagnostics =
-  process.env.OPENCLAW_CODEX_NPM_PLUGIN_ALLOW_BETA_COMPAT_DIAGNOSTICS === "1";
+  process.env.KENUXA OPS_CODEX_NPM_PLUGIN_ALLOW_BETA_COMPAT_DIAGNOSTICS === "1";
 
 function stateDir() {
-  return process.env.OPENCLAW_STATE_DIR || path.join(process.env.HOME, ".openclaw");
+  return process.env.KENUXA OPS_STATE_DIR || path.join(process.env.HOME, ".KENUXA OPS");
 }
 
 function configPath() {
-  return process.env.OPENCLAW_CONFIG_PATH || path.join(stateDir(), "openclaw.json");
+  return process.env.KENUXA OPS_CONFIG_PATH || path.join(stateDir(), "KENUXA OPS.json");
 }
 
 function realPathMaybe(filePath) {
@@ -122,9 +122,9 @@ function normalizePluginSpec(spec) {
 }
 
 function assertPlugin() {
-  const spec = process.argv[3] || "npm:@openclaw/codex";
-  const list = readJson("/tmp/openclaw-codex-plugins-list.json");
-  const inspect = readJson("/tmp/openclaw-codex-plugin-inspect.json");
+  const spec = process.argv[3] || "npm:@KENUXA OPS/codex";
+  const list = readJson("/tmp/KENUXA OPS-codex-plugins-list.json");
+  const inspect = readJson("/tmp/KENUXA OPS-codex-plugin-inspect.json");
   const plugin = (list.plugins || []).find((entry) => entry.id === "codex");
   if (!plugin) {
     throw new Error("codex plugin not found in plugins list --json output");
@@ -227,19 +227,19 @@ function assertNpmDeps() {
   const installPath = codexInstallPath();
   const pluginPackageJson = path.join(installPath, "package.json");
   if (!fs.existsSync(pluginPackageJson)) {
-    throw new Error(`missing npm-installed @openclaw/codex package.json: ${pluginPackageJson}`);
+    throw new Error(`missing npm-installed @KENUXA OPS/codex package.json: ${pluginPackageJson}`);
   }
   assertPathInside(npmRoot, installPath, "codex plugin install path");
   assertPathInside(npmRoot, pluginPackageJson, "codex plugin package");
 
   const pluginPackage = readJson(pluginPackageJson);
-  if (pluginPackage.name !== "@openclaw/codex") {
+  if (pluginPackage.name !== "@KENUXA OPS/codex") {
     throw new Error(`unexpected codex package name: ${pluginPackage.name}`);
   }
 
   const openAiCodexPackageJson = findPackageJson("@openai/codex");
   if (!openAiCodexPackageJson) {
-    throw new Error("missing @openai/codex dependency under .openclaw/npm");
+    throw new Error("missing @openai/codex dependency under .KENUXA OPS/npm");
   }
   assertPathInside(npmRoot, openAiCodexPackageJson, "@openai/codex dependency");
 
@@ -285,7 +285,7 @@ function printCodexBin() {
 
 function assertPreflight() {
   const marker = process.argv[3];
-  const output = fs.readFileSync("/tmp/openclaw-codex-preflight.log", "utf8");
+  const output = fs.readFileSync("/tmp/KENUXA OPS-codex-preflight.log", "utf8");
   if (!output.includes(marker)) {
     throw new Error(`Codex CLI preflight did not contain ${marker}:\n${output}`);
   }
@@ -338,15 +338,15 @@ function assertAgentTurn() {
   const marker = process.argv[3];
   const sessionId = process.argv[4];
   const modelRef = process.argv[5];
-  const stdout = fs.readFileSync("/tmp/openclaw-codex-agent.json", "utf8");
-  const stderr = fs.existsSync("/tmp/openclaw-codex-agent.err")
-    ? fs.readFileSync("/tmp/openclaw-codex-agent.err", "utf8")
+  const stdout = fs.readFileSync("/tmp/KENUXA OPS-codex-agent.json", "utf8");
+  const stderr = fs.existsSync("/tmp/KENUXA OPS-codex-agent.err")
+    ? fs.readFileSync("/tmp/KENUXA OPS-codex-agent.err", "utf8")
     : "";
   const response = JSON.parse(stdout);
   const text = (response.payloads || []).map((payload) => payload?.text || "").join("\n");
   if (!text.includes(marker)) {
     throw new Error(
-      `OpenClaw agent reply did not contain ${marker}:\nstdout=${stdout}\nstderr=${stderr}`,
+      `KENUXA OPS agent reply did not contain ${marker}:\nstdout=${stdout}\nstderr=${stderr}`,
     );
   }
   const executionTrace = response.meta?.executionTrace;
@@ -370,7 +370,7 @@ function assertAgentTurn() {
     throw new Error(`unexpected session model override: ${entry.modelOverride}`);
   }
   if (typeof entry.sessionFile !== "string" || !fs.existsSync(entry.sessionFile)) {
-    throw new Error(`missing OpenClaw session file: ${entry.sessionFile}`);
+    throw new Error(`missing KENUXA OPS session file: ${entry.sessionFile}`);
   }
 
   const bindingPath = `${entry.sessionFile}.codex-app-server.json`;
@@ -412,7 +412,7 @@ function assertUninstalled() {
       `codex install record still exists after uninstall: ${JSON.stringify(records.codex)}`,
     );
   }
-  const list = readJson("/tmp/openclaw-codex-plugins-list-after-uninstall.json");
+  const list = readJson("/tmp/KENUXA OPS-codex-plugins-list-after-uninstall.json");
   const plugin = (list.plugins || []).find((entry) => entry.id === "codex");
   if (plugin?.status === "loaded" || plugin?.enabled === true) {
     throw new Error(`codex plugin still loaded/enabled after uninstall: ${JSON.stringify(plugin)}`);
@@ -430,14 +430,14 @@ function assertAgentError() {
   const status = Number(process.argv[3]);
   if (!Number.isInteger(status) || status === 0) {
     throw new Error(
-      `expected OpenClaw agent to fail after Codex uninstall, got status ${process.argv[3]}`,
+      `expected KENUXA OPS agent to fail after Codex uninstall, got status ${process.argv[3]}`,
     );
   }
-  const stdout = fs.existsSync("/tmp/openclaw-codex-agent-after-uninstall.json")
-    ? fs.readFileSync("/tmp/openclaw-codex-agent-after-uninstall.json", "utf8")
+  const stdout = fs.existsSync("/tmp/KENUXA OPS-codex-agent-after-uninstall.json")
+    ? fs.readFileSync("/tmp/KENUXA OPS-codex-agent-after-uninstall.json", "utf8")
     : "";
-  const stderr = fs.existsSync("/tmp/openclaw-codex-agent-after-uninstall.err")
-    ? fs.readFileSync("/tmp/openclaw-codex-agent-after-uninstall.err", "utf8")
+  const stderr = fs.existsSync("/tmp/KENUXA OPS-codex-agent-after-uninstall.err")
+    ? fs.readFileSync("/tmp/KENUXA OPS-codex-agent-after-uninstall.err", "utf8")
     : "";
   const combined = `${stdout}\n${stderr}`;
   if (

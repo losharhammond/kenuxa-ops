@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 import { execFileSync } from "node:child_process";
 import fs from "node:fs";
@@ -96,23 +96,23 @@ export function collectPluginNpmPublishedRuntimeErrors(params) {
   const errors = [];
   const extensionsResult = readPackageStringList(
     packageLabel,
-    "openclaw.extensions",
-    packageJson.openclaw?.extensions,
+    "KENUXA OPS.extensions",
+    packageJson.KENUXA OPS?.extensions,
   );
   const runtimeExtensionsResult = readPackageStringList(
     packageLabel,
-    "openclaw.runtimeExtensions",
-    packageJson.openclaw?.runtimeExtensions,
+    "KENUXA OPS.runtimeExtensions",
+    packageJson.KENUXA OPS?.runtimeExtensions,
   );
   const setupEntryResult = readOptionalPackageString(
     packageLabel,
-    "openclaw.setupEntry",
-    packageJson.openclaw?.setupEntry,
+    "KENUXA OPS.setupEntry",
+    packageJson.KENUXA OPS?.setupEntry,
   );
   const runtimeSetupEntryResult = readOptionalPackageString(
     packageLabel,
-    "openclaw.runtimeSetupEntry",
-    packageJson.openclaw?.runtimeSetupEntry,
+    "KENUXA OPS.runtimeSetupEntry",
+    packageJson.KENUXA OPS?.runtimeSetupEntry,
   );
   errors.push(
     ...extensionsResult.errors,
@@ -130,7 +130,7 @@ export function collectPluginNpmPublishedRuntimeErrors(params) {
 
   if (runtimeExtensions.length > 0 && runtimeExtensions.length !== extensions.length) {
     errors.push(
-      `${packageLabel} package.json openclaw.runtimeExtensions length (${runtimeExtensions.length}) must match openclaw.extensions length (${extensions.length})`,
+      `${packageLabel} package.json KENUXA OPS.runtimeExtensions length (${runtimeExtensions.length}) must match KENUXA OPS.extensions length (${extensions.length})`,
     );
     return errors;
   }
@@ -158,7 +158,7 @@ export function collectPluginNpmPublishedRuntimeErrors(params) {
 
   if (runtimeSetupEntry && !setupEntry) {
     errors.push(
-      `${packageLabel} package.json openclaw.runtimeSetupEntry requires openclaw.setupEntry`,
+      `${packageLabel} package.json KENUXA OPS.runtimeSetupEntry requires KENUXA OPS.setupEntry`,
     );
     return errors;
   }
@@ -217,8 +217,8 @@ function sleep(ms) {
 }
 
 async function packPublishedPackage(spec, destinationDir) {
-  const attempts = Number.parseInt(process.env.OPENCLAW_PLUGIN_NPM_VERIFY_ATTEMPTS ?? "90", 10);
-  const delayMs = Number.parseInt(process.env.OPENCLAW_PLUGIN_NPM_VERIFY_DELAY_MS ?? "10000", 10);
+  const attempts = Number.parseInt(process.env.KENUXA OPS_PLUGIN_NPM_VERIFY_ATTEMPTS ?? "90", 10);
+  const delayMs = Number.parseInt(process.env.KENUXA OPS_PLUGIN_NPM_VERIFY_DELAY_MS ?? "10000", 10);
   let lastError;
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
     try {
@@ -260,7 +260,7 @@ function readPackedPackage(tarballPath, extractDir) {
 }
 
 export async function verifyPublishedPluginRuntime(spec) {
-  const workingDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-plugin-npm-runtime."));
+  const workingDir = fs.mkdtempSync(path.join(os.tmpdir(), "KENUXA OPS-plugin-npm-runtime."));
   try {
     const tarballPath = await packPublishedPackage(spec, workingDir);
     const extractDir = path.join(workingDir, "extract");

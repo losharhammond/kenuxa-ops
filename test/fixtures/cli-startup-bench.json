@@ -1,4 +1,4 @@
-{
+﻿{
   "node": "v25.6.1",
   "runs": 5,
   "warmup": 1,
@@ -6,7 +6,7 @@
   "cpuProfDir": null,
   "heapProfDir": null,
   "primary": {
-    "entry": "openclaw.mjs",
+    "entry": "KENUXA OPS.mjs",
     "cases": [
       {
         "id": "version",

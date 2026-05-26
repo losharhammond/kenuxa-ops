@@ -1,4 +1,4 @@
-name: Website Installer Sync
+﻿name: Website Installer Sync
 
 on:
   pull_request:
@@ -17,7 +17,7 @@ on:
   workflow_dispatch:
     inputs:
       sync_website:
-        description: Sync openclaw.ai after verification
+        description: Sync KENUXA OPS.ai after verification
         required: false
         default: false
         type: boolean
@@ -78,16 +78,16 @@ jobs:
           timeout 20m docker run --rm \
             -v "$PWD/scripts/install.sh:/tmp/install.sh:ro" \
             node:24-bookworm-slim \
-            bash -lc 'bash /tmp/install.sh --version latest && openclaw --version'
+            bash -lc 'bash /tmp/install.sh --version latest && KENUXA OPS --version'
 
       - name: install-cli.sh in Docker
         run: |
           timeout 20m docker run --rm \
-            -e OPENCLAW_NO_ONBOARD=1 \
-            -e OPENCLAW_NO_PROMPT=1 \
+            -e KENUXA OPS_NO_ONBOARD=1 \
+            -e KENUXA OPS_NO_PROMPT=1 \
             -v "$PWD/scripts/install-cli.sh:/tmp/install-cli.sh:ro" \
             node:24-bookworm-slim \
-            bash -lc 'apt-get update -y && apt-get install -y curl && bash /tmp/install-cli.sh --prefix /tmp/openclaw --no-onboard --version latest && /tmp/openclaw/bin/openclaw --version'
+            bash -lc 'apt-get update -y && apt-get install -y curl && bash /tmp/install-cli.sh --prefix /tmp/KENUXA OPS --no-onboard --version latest && /tmp/KENUXA OPS/bin/KENUXA OPS --version'
 
   macos-installer:
     runs-on: macos-latest
@@ -105,11 +105,11 @@ jobs:
 
       - name: install.sh on macOS
         env:
-          OPENCLAW_NO_ONBOARD: "1"
-          OPENCLAW_NO_PROMPT: "1"
+          KENUXA OPS_NO_ONBOARD: "1"
+          KENUXA OPS_NO_PROMPT: "1"
         run: |
           bash scripts/install.sh --no-onboard --no-prompt --version latest
-          openclaw --version
+          KENUXA OPS --version
 
   windows-installer:
     runs-on: windows-latest
@@ -133,39 +133,39 @@ jobs:
       (github.event_name == 'workflow_dispatch' && inputs.sync_website)
     runs-on: ubuntu-24.04
     env:
-      OPENCLAW_GH_TOKEN: ${{ secrets.OPENCLAW_GH_TOKEN }}
+      KENUXA OPS_GH_TOKEN: ${{ secrets.KENUXA OPS_GH_TOKEN }}
     steps:
       - name: Skip website sync without token
-        if: env.OPENCLAW_GH_TOKEN == ''
-        run: echo "OPENCLAW_GH_TOKEN is not configured; installer verification passed, skipping website sync."
+        if: env.KENUXA OPS_GH_TOKEN == ''
+        run: echo "KENUXA OPS_GH_TOKEN is not configured; installer verification passed, skipping website sync."
 
-      - name: Checkout OpenClaw
-        if: env.OPENCLAW_GH_TOKEN != ''
+      - name: Checkout KENUXA OPS
+        if: env.KENUXA OPS_GH_TOKEN != ''
         uses: actions/checkout@v6
         with:
-          path: openclaw
+          path: KENUXA OPS
 
-      - name: Checkout openclaw.ai
-        if: env.OPENCLAW_GH_TOKEN != ''
+      - name: Checkout KENUXA OPS.ai
+        if: env.KENUXA OPS_GH_TOKEN != ''
         uses: actions/checkout@v6
         with:
-          repository: openclaw/openclaw.ai
-          token: ${{ env.OPENCLAW_GH_TOKEN }}
-          path: openclaw.ai
+          repository: KENUXA OPS/KENUXA OPS.ai
+          token: ${{ env.KENUXA OPS_GH_TOKEN }}
+          path: KENUXA OPS.ai
 
       - name: Sync installer scripts
-        if: env.OPENCLAW_GH_TOKEN != ''
+        if: env.KENUXA OPS_GH_TOKEN != ''
         run: |
-          cp openclaw/scripts/install.sh openclaw.ai/public/install.sh
-          cp openclaw/scripts/install-cli.sh openclaw.ai/public/install-cli.sh
-          cp openclaw/scripts/install.ps1 openclaw.ai/public/install.ps1
-          rm -f openclaw.ai/public/install.cmd
-          chmod +x openclaw.ai/public/install.sh openclaw.ai/public/install-cli.sh
+          cp KENUXA OPS/scripts/install.sh KENUXA OPS.ai/public/install.sh
+          cp KENUXA OPS/scripts/install-cli.sh KENUXA OPS.ai/public/install-cli.sh
+          cp KENUXA OPS/scripts/install.ps1 KENUXA OPS.ai/public/install.ps1
+          rm -f KENUXA OPS.ai/public/install.cmd
+          chmod +x KENUXA OPS.ai/public/install.sh KENUXA OPS.ai/public/install-cli.sh
 
       - name: Check for changes
-        if: env.OPENCLAW_GH_TOKEN != ''
+        if: env.KENUXA OPS_GH_TOKEN != ''
         id: changes
-        working-directory: openclaw.ai
+        working-directory: KENUXA OPS.ai
         run: |
           if git diff --quiet -- public/install.sh public/install-cli.sh public/install.ps1 public/install.cmd; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
@@ -191,7 +191,7 @@ jobs:
 
       - name: Verify website with synced installers
         if: steps.changes.outputs.changed == 'true'
-        working-directory: openclaw.ai
+        working-directory: KENUXA OPS.ai
         run: |
           bash -n public/install.sh public/install-cli.sh
           shellcheck -e SC1091 public/install.sh public/install-cli.sh
@@ -200,14 +200,14 @@ jobs:
 
       - name: Commit and push website sync
         if: steps.changes.outputs.changed == 'true'
-        working-directory: openclaw.ai
+        working-directory: KENUXA OPS.ai
         run: |
-          git config user.name "openclaw-installer-sync[bot]"
-          git config user.email "openclaw-installer-sync[bot]@users.noreply.github.com"
+          git config user.name "KENUXA OPS-installer-sync[bot]"
+          git config user.email "KENUXA OPS-installer-sync[bot]@users.noreply.github.com"
           git add public/install.sh public/install-cli.sh public/install.ps1
           if git ls-files --error-unmatch public/install.cmd >/dev/null 2>&1; then
             git add -u -- public/install.cmd
           fi
-          git commit -m "chore: sync installers from openclaw ${GITHUB_SHA::12}"
+          git commit -m "chore: sync installers from KENUXA OPS ${GITHUB_SHA::12}"
           git pull --rebase origin main
           git push origin HEAD:main

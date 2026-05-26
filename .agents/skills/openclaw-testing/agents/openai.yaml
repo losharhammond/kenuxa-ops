@@ -1,4 +1,4 @@
-interface:
-  display_name: "OpenClaw Testing"
-  short_description: "Choose cheap, targeted OpenClaw validation"
-  default_prompt: "Use $openclaw-testing to choose the cheapest safe test or CI verification path, inspect failures, and rerun only the relevant OpenClaw lane."
+﻿interface:
+  display_name: "KENUXA OPS Testing"
+  short_description: "Choose cheap, targeted KENUXA OPS validation"
+  default_prompt: "Use $KENUXA OPS-testing to choose the cheapest safe test or CI verification path, inspect failures, and rerun only the relevant KENUXA OPS lane."
