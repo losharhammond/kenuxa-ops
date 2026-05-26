@@ -1,5 +1,5 @@
 ﻿{
-  "name": "@KENUXA OPS/lmstudio-provider",
+  "name": "@openclaw/lmstudio-provider",
   "version": "2026.5.26",
   "private": true,
   "description": "KENUXA OPS LM Studio provider plugin",

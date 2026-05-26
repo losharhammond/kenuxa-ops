@@ -1,5 +1,5 @@
 ﻿{
-  "name": "@KENUXA OPS/diagnostics-prometheus",
+  "name": "@openclaw/diagnostics-prometheus",
   "version": "2026.5.26",
   "description": "KENUXA OPS diagnostics Prometheus exporter",
   "repository": {
@@ -8,15 +8,15 @@
   },
   "type": "module",
   "devDependencies": {
-    "@KENUXA OPS/plugin-sdk": "workspace:*"
+    "@openclaw/plugin-sdk": "workspace:*"
   },
   "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ],
     "install": {
-      "clawhubSpec": "clawhub:@KENUXA OPS/diagnostics-prometheus",
-      "npmSpec": "@KENUXA OPS/diagnostics-prometheus",
+      "clawhubSpec": "clawhub:@openclaw/diagnostics-prometheus",
+      "npmSpec": "@openclaw/diagnostics-prometheus",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.4.25"
     },

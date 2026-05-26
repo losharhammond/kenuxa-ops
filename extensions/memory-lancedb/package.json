@@ -1,5 +1,5 @@
 ﻿{
-  "name": "@KENUXA OPS/memory-lancedb",
+  "name": "@openclaw/memory-lancedb",
   "version": "2026.5.26",
   "description": "KENUXA OPS LanceDB-backed long-term memory plugin with auto-recall/capture",
   "repository": {
@@ -14,14 +14,14 @@
     "typebox": "1.1.38"
   },
   "devDependencies": {
-    "@KENUXA OPS/plugin-sdk": "workspace:*"
+    "@openclaw/plugin-sdk": "workspace:*"
   },
   "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ],
     "install": {
-      "npmSpec": "@KENUXA OPS/memory-lancedb",
+      "npmSpec": "@openclaw/memory-lancedb",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.4.10"
     },

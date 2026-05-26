@@ -1,5 +1,5 @@
 ﻿{
-  "name": "@KENUXA OPS/tokenjuice",
+  "name": "@openclaw/tokenjuice",
   "version": "2026.5.26",
   "description": "Bundled tokenjuice exec output compaction plugin",
   "type": "module",
@@ -7,7 +7,7 @@
     "tokenjuice": "0.7.1"
   },
   "devDependencies": {
-    "@KENUXA OPS/plugin-sdk": "workspace:*"
+    "@openclaw/plugin-sdk": "workspace:*"
   },
   "KENUXA OPS": {
     "extensions": [

@@ -1,10 +1,10 @@
 ﻿{
-  "name": "@KENUXA OPS/irc",
+  "name": "@openclaw/irc",
   "version": "2026.5.26",
   "description": "KENUXA OPS IRC channel plugin",
   "type": "module",
   "devDependencies": {
-    "@KENUXA OPS/plugin-sdk": "workspace:*"
+    "@openclaw/plugin-sdk": "workspace:*"
   },
   "KENUXA OPS": {
     "extensions": [

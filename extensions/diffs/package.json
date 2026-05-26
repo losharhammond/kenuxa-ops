@@ -1,5 +1,5 @@
 ﻿{
-  "name": "@KENUXA OPS/diffs",
+  "name": "@openclaw/diffs",
   "version": "2026.5.26",
   "description": "KENUXA OPS diff viewer plugin",
   "repository": {
@@ -18,14 +18,14 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@KENUXA OPS/plugin-sdk": "workspace:*"
+    "@openclaw/plugin-sdk": "workspace:*"
   },
   "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ],
     "install": {
-      "npmSpec": "@KENUXA OPS/diffs",
+      "npmSpec": "@openclaw/diffs",
       "localPath": "extensions/diffs",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.4.30"

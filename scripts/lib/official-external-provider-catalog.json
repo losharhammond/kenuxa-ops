@@ -1,7 +1,7 @@
 ﻿{
   "entries": [
     {
-      "name": "@KENUXA OPS/amazon-bedrock-provider",
+      "name": "@openclaw/amazon-bedrock-provider",
       "description": "KENUXA OPS Amazon Bedrock provider plugin",
       "source": "official",
       "kind": "provider",
@@ -19,14 +19,14 @@
           }
         ],
         "install": {
-          "npmSpec": "@KENUXA OPS/amazon-bedrock-provider",
+          "npmSpec": "@openclaw/amazon-bedrock-provider",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.5.12-beta.1"
         }
       }
     },
     {
-      "name": "@KENUXA OPS/amazon-bedrock-mantle-provider",
+      "name": "@openclaw/amazon-bedrock-mantle-provider",
       "description": "KENUXA OPS Amazon Bedrock Mantle provider plugin",
       "source": "official",
       "kind": "provider",
@@ -44,14 +44,14 @@
           }
         ],
         "install": {
-          "npmSpec": "@KENUXA OPS/amazon-bedrock-mantle-provider",
+          "npmSpec": "@openclaw/amazon-bedrock-mantle-provider",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.5.12-beta.1"
         }
       }
     },
     {
-      "name": "@KENUXA OPS/anthropic-vertex-provider",
+      "name": "@openclaw/anthropic-vertex-provider",
       "description": "KENUXA OPS Anthropic Vertex provider plugin",
       "source": "official",
       "kind": "provider",
@@ -69,14 +69,14 @@
           }
         ],
         "install": {
-          "npmSpec": "@KENUXA OPS/anthropic-vertex-provider",
+          "npmSpec": "@openclaw/anthropic-vertex-provider",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.5.12-beta.1"
         }
       }
     },
     {
-      "name": "@KENUXA OPS/codex",
+      "name": "@openclaw/codex",
       "description": "KENUXA OPS Codex harness and model provider plugin",
       "source": "official",
       "kind": "provider",
@@ -107,7 +107,7 @@
           }
         ],
         "install": {
-          "npmSpec": "@KENUXA OPS/codex",
+          "npmSpec": "@openclaw/codex",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.5.1-beta.1"
         }

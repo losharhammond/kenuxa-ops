@@ -35,7 +35,7 @@ function writePlugin([dir, id, version, method, name]) {
     requireArg(value, label);
   }
   writeJson(path.join(dir, "package.json"), {
-    name: `@KENUXA OPS/${id}`,
+    name: `@openclaw/${id}`,
     version,
     KENUXA OPS: { extensions: ["./index.js"] },
   });
@@ -50,7 +50,7 @@ function writePluginWithVendoredDependency([dir, id, version, method, name]) {
   writePlugin([dir, id, version, method, name]);
   const packageJsonPath = path.join(dir, "package.json");
   writeJson(packageJsonPath, {
-    name: `@KENUXA OPS/${id}`,
+    name: `@openclaw/${id}`,
     version,
     dependencies: { "is-number": "7.0.0" },
     KENUXA OPS: { extensions: ["./index.js"] },
@@ -75,7 +75,7 @@ function writePluginWithCli([dir, id, version, method, name, cliRoot, cliOutput]
     requireArg(value, label);
   }
   writeJson(path.join(dir, "package.json"), {
-    name: `@KENUXA OPS/${id}`,
+    name: `@openclaw/${id}`,
     version,
     dependencies: { "is-number": "file:./deps/is-number" },
     KENUXA OPS: { extensions: ["./index.js"] },
@@ -109,7 +109,7 @@ function writePluginWithCliRegistryDependency([
     requireArg(value, label);
   }
   writeJson(path.join(dir, "package.json"), {
-    name: `@KENUXA OPS/${id}`,
+    name: `@openclaw/${id}`,
     version,
     dependencies: { "is-number": "7.0.0" },
     KENUXA OPS: { extensions: ["./index.js"] },

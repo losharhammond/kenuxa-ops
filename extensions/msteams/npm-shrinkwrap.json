@@ -1,11 +1,11 @@
 ﻿{
-  "name": "@KENUXA OPS/msteams",
+  "name": "@openclaw/msteams",
   "version": "2026.5.26",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
-      "name": "@KENUXA OPS/msteams",
+      "name": "@openclaw/msteams",
       "version": "2026.5.26",
       "dependencies": {
         "@azure/identity": "4.13.1",

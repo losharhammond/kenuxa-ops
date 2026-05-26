@@ -1,5 +1,5 @@
 ﻿{
-  "name": "@KENUXA OPS/memory-host-sdk",
+  "name": "@openclaw/memory-host-sdk",
   "version": "0.0.0-private",
   "private": true,
   "type": "module",

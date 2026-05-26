@@ -1,11 +1,11 @@
 ﻿{
-  "name": "@KENUXA OPS/zalouser",
+  "name": "@openclaw/zalouser",
   "version": "2026.5.26",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
-      "name": "@KENUXA OPS/zalouser",
+      "name": "@openclaw/zalouser",
       "version": "2026.5.26",
       "dependencies": {
         "typebox": "1.1.38",

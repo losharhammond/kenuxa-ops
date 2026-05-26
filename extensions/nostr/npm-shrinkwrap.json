@@ -1,11 +1,11 @@
 ﻿{
-  "name": "@KENUXA OPS/nostr",
+  "name": "@openclaw/nostr",
   "version": "2026.5.26",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
-      "name": "@KENUXA OPS/nostr",
+      "name": "@openclaw/nostr",
       "version": "2026.5.26",
       "dependencies": {
         "nostr-tools": "2.23.5",

@@ -122,7 +122,7 @@
       }
     },
     {
-      "name": "@KENUXA OPS/discord",
+      "name": "@openclaw/discord",
       "description": "KENUXA OPS Discord channel plugin",
       "source": "official",
       "kind": "channel",
@@ -140,7 +140,7 @@
           "preferSessionLookupForAnnounceTarget": true
         },
         "install": {
-          "npmSpec": "@KENUXA OPS/discord",
+          "npmSpec": "@openclaw/discord",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.10",
           "allowInvalidConfigRecovery": true
@@ -148,7 +148,7 @@
       }
     },
     {
-      "name": "@KENUXA OPS/feishu",
+      "name": "@openclaw/feishu",
       "description": "KENUXA OPS Feishu/Lark channel plugin",
       "source": "official",
       "kind": "channel",
@@ -165,14 +165,14 @@
           "quickstartAllowFrom": true
         },
         "install": {
-          "npmSpec": "@KENUXA OPS/feishu",
+          "npmSpec": "@openclaw/feishu",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.25"
         }
       }
     },
     {
-      "name": "@KENUXA OPS/googlechat",
+      "name": "@openclaw/googlechat",
       "description": "KENUXA OPS Google Chat channel plugin",
       "source": "official",
       "kind": "channel",
@@ -215,14 +215,14 @@
           ]
         },
         "install": {
-          "npmSpec": "@KENUXA OPS/googlechat",
+          "npmSpec": "@openclaw/googlechat",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.10"
         }
       }
     },
     {
-      "name": "@KENUXA OPS/line",
+      "name": "@openclaw/line",
       "description": "KENUXA OPS LINE channel plugin",
       "source": "official",
       "kind": "channel",
@@ -240,14 +240,14 @@
           "quickstartAllowFrom": true
         },
         "install": {
-          "npmSpec": "@KENUXA OPS/line",
+          "npmSpec": "@openclaw/line",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.10"
         }
       }
     },
     {
-      "name": "@KENUXA OPS/matrix",
+      "name": "@openclaw/matrix",
       "description": "KENUXA OPS Matrix channel plugin",
       "source": "official",
       "kind": "channel",
@@ -291,8 +291,8 @@
           ]
         },
         "install": {
-          "clawhubSpec": "clawhub:@KENUXA OPS/matrix",
-          "npmSpec": "@KENUXA OPS/matrix",
+          "clawhubSpec": "clawhub:@openclaw/matrix",
+          "npmSpec": "@openclaw/matrix",
           "defaultChoice": "clawhub",
           "minHostVersion": ">=2026.4.10",
           "allowInvalidConfigRecovery": true
@@ -300,7 +300,7 @@
       }
     },
     {
-      "name": "@KENUXA OPS/msteams",
+      "name": "@openclaw/msteams",
       "description": "KENUXA OPS Microsoft Teams channel plugin",
       "source": "official",
       "kind": "channel",
@@ -316,14 +316,14 @@
           "order": 60
         },
         "install": {
-          "npmSpec": "@KENUXA OPS/msteams",
+          "npmSpec": "@openclaw/msteams",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.10"
         }
       }
     },
     {
-      "name": "@KENUXA OPS/nextcloud-talk",
+      "name": "@openclaw/nextcloud-talk",
       "description": "KENUXA OPS Nextcloud Talk channel plugin",
       "source": "official",
       "kind": "channel",
@@ -340,14 +340,14 @@
           "quickstartAllowFrom": true
         },
         "install": {
-          "npmSpec": "@KENUXA OPS/nextcloud-talk",
+          "npmSpec": "@openclaw/nextcloud-talk",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.10"
         }
       }
     },
     {
-      "name": "@KENUXA OPS/nostr",
+      "name": "@openclaw/nostr",
       "description": "KENUXA OPS Nostr channel plugin for NIP-04 encrypted DMs",
       "source": "official",
       "kind": "channel",
@@ -363,14 +363,14 @@
           "quickstartAllowFrom": true
         },
         "install": {
-          "npmSpec": "@KENUXA OPS/nostr",
+          "npmSpec": "@openclaw/nostr",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.10"
         }
       }
     },
     {
-      "name": "@KENUXA OPS/qqbot",
+      "name": "@openclaw/qqbot",
       "description": "KENUXA OPS QQ Bot channel plugin",
       "source": "official",
       "kind": "channel",
@@ -386,14 +386,14 @@
           "systemImage": "bubble.left.and.bubble.right"
         },
         "install": {
-          "npmSpec": "@KENUXA OPS/qqbot",
+          "npmSpec": "@openclaw/qqbot",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.10"
         }
       }
     },
     {
-      "name": "@KENUXA OPS/slack",
+      "name": "@openclaw/slack",
       "description": "KENUXA OPS Slack channel plugin",
       "source": "official",
       "kind": "channel",
@@ -410,7 +410,7 @@
           "markdownCapable": true
         },
         "install": {
-          "npmSpec": "@KENUXA OPS/slack",
+          "npmSpec": "@openclaw/slack",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.5.12-beta.1",
           "allowInvalidConfigRecovery": true
@@ -418,7 +418,7 @@
       }
     },
     {
-      "name": "@KENUXA OPS/synology-chat",
+      "name": "@openclaw/synology-chat",
       "description": "Synology Chat channel plugin for KENUXA OPS",
       "source": "official",
       "kind": "channel",
@@ -433,14 +433,14 @@
           "order": 90
         },
         "install": {
-          "npmSpec": "@KENUXA OPS/synology-chat",
+          "npmSpec": "@openclaw/synology-chat",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.10"
         }
       }
     },
     {
-      "name": "@KENUXA OPS/tlon",
+      "name": "@openclaw/tlon",
       "description": "KENUXA OPS Tlon/Urbit channel plugin",
       "source": "official",
       "kind": "channel",
@@ -456,14 +456,14 @@
           "quickstartAllowFrom": true
         },
         "install": {
-          "npmSpec": "@KENUXA OPS/tlon",
+          "npmSpec": "@openclaw/tlon",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.10"
         }
       }
     },
     {
-      "name": "@KENUXA OPS/twitch",
+      "name": "@openclaw/twitch",
       "description": "KENUXA OPS Twitch channel plugin",
       "source": "official",
       "kind": "channel",
@@ -477,14 +477,14 @@
           "aliases": ["twitch-chat"]
         },
         "install": {
-          "npmSpec": "@KENUXA OPS/twitch",
+          "npmSpec": "@openclaw/twitch",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.10"
         }
       }
     },
     {
-      "name": "@KENUXA OPS/whatsapp",
+      "name": "@openclaw/whatsapp",
       "description": "KENUXA OPS WhatsApp channel plugin",
       "source": "official",
       "kind": "channel",
@@ -500,15 +500,15 @@
           "systemImage": "message"
         },
         "install": {
-          "clawhubSpec": "clawhub:@KENUXA OPS/whatsapp",
-          "npmSpec": "@KENUXA OPS/whatsapp",
+          "clawhubSpec": "clawhub:@openclaw/whatsapp",
+          "npmSpec": "@openclaw/whatsapp",
           "defaultChoice": "clawhub",
           "minHostVersion": ">=2026.4.25"
         }
       }
     },
     {
-      "name": "@KENUXA OPS/zalo",
+      "name": "@openclaw/zalo",
       "description": "KENUXA OPS Zalo channel plugin",
       "source": "official",
       "kind": "channel",
@@ -525,14 +525,14 @@
           "quickstartAllowFrom": true
         },
         "install": {
-          "npmSpec": "@KENUXA OPS/zalo",
+          "npmSpec": "@openclaw/zalo",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.10"
         }
       }
     },
     {
-      "name": "@KENUXA OPS/zalouser",
+      "name": "@openclaw/zalouser",
       "description": "KENUXA OPS Zalo Personal Account plugin via native zca-js integration",
       "source": "official",
       "kind": "channel",
@@ -549,7 +549,7 @@
           "quickstartAllowFrom": false
         },
         "install": {
-          "npmSpec": "@KENUXA OPS/zalouser",
+          "npmSpec": "@openclaw/zalouser",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.10"
         }

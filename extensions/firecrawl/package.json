@@ -1,5 +1,5 @@
 ﻿{
-  "name": "@KENUXA OPS/firecrawl-plugin",
+  "name": "@openclaw/firecrawl-plugin",
   "version": "2026.5.26",
   "private": true,
   "description": "KENUXA OPS Firecrawl plugin",
@@ -8,7 +8,7 @@
     "typebox": "1.1.38"
   },
   "devDependencies": {
-    "@KENUXA OPS/plugin-sdk": "workspace:*"
+    "@openclaw/plugin-sdk": "workspace:*"
   },
   "KENUXA OPS": {
     "extensions": [

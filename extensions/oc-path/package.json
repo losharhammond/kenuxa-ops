@@ -1,5 +1,5 @@
 ﻿{
-  "name": "@KENUXA OPS/oc-path",
+  "name": "@openclaw/oc-path",
   "version": "2026.5.26",
   "private": true,
   "description": "KENUXA OPS oc:// workspace path plugin",
@@ -11,7 +11,7 @@
     "yaml": "2.9.0"
   },
   "devDependencies": {
-    "@KENUXA OPS/plugin-sdk": "workspace:*",
+    "@openclaw/plugin-sdk": "workspace:*",
     "KENUXA OPS": "workspace:*"
   },
   "peerDependencies": {

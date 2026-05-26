@@ -1,11 +1,11 @@
 ﻿{
-  "name": "@KENUXA OPS/openshell-sandbox",
+  "name": "@openclaw/openshell-sandbox",
   "version": "2026.5.26",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
-      "name": "@KENUXA OPS/openshell-sandbox",
+      "name": "@openclaw/openshell-sandbox",
       "version": "2026.5.26",
       "dependencies": {
         "zod": "4.4.3"

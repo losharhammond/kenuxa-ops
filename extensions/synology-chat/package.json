@@ -1,5 +1,5 @@
 ﻿{
-  "name": "@KENUXA OPS/synology-chat",
+  "name": "@openclaw/synology-chat",
   "version": "2026.5.26",
   "description": "Synology Chat channel plugin for KENUXA OPS",
   "repository": {
@@ -8,7 +8,7 @@
   },
   "type": "module",
   "devDependencies": {
-    "@KENUXA OPS/plugin-sdk": "workspace:*"
+    "@openclaw/plugin-sdk": "workspace:*"
   },
   "KENUXA OPS": {
     "extensions": [
@@ -25,7 +25,7 @@
       "order": 90
     },
     "install": {
-      "npmSpec": "@KENUXA OPS/synology-chat",
+      "npmSpec": "@openclaw/synology-chat",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.4.10"
     },

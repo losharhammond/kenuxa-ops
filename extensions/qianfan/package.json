@@ -1,11 +1,11 @@
 ﻿{
-  "name": "@KENUXA OPS/qianfan-provider",
+  "name": "@openclaw/qianfan-provider",
   "version": "2026.5.26",
   "private": true,
   "description": "KENUXA OPS Qianfan provider plugin",
   "type": "module",
   "devDependencies": {
-    "@KENUXA OPS/plugin-sdk": "workspace:*"
+    "@openclaw/plugin-sdk": "workspace:*"
   },
   "KENUXA OPS": {
     "extensions": [

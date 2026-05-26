@@ -1,5 +1,5 @@
 ﻿{
-  "name": "@KENUXA OPS/googlechat",
+  "name": "@openclaw/googlechat",
   "version": "2026.5.26",
   "description": "KENUXA OPS Google Chat channel plugin",
   "repository": {
@@ -13,7 +13,7 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@KENUXA OPS/plugin-sdk": "workspace:*",
+    "@openclaw/plugin-sdk": "workspace:*",
     "KENUXA OPS": "workspace:*"
   },
   "peerDependencies": {
@@ -70,7 +70,7 @@
       ]
     },
     "install": {
-      "npmSpec": "@KENUXA OPS/googlechat",
+      "npmSpec": "@openclaw/googlechat",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.4.10"
     },

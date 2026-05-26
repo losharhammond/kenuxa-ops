@@ -1,5 +1,5 @@
 ﻿{
-  "name": "@KENUXA OPS/anthropic-vertex-provider",
+  "name": "@openclaw/anthropic-vertex-provider",
   "version": "2026.5.26",
   "description": "KENUXA OPS Anthropic Vertex provider plugin",
   "repository": {
@@ -13,14 +13,14 @@
     "@earendil-works/pi-ai": "0.75.5"
   },
   "devDependencies": {
-    "@KENUXA OPS/plugin-sdk": "workspace:*"
+    "@openclaw/plugin-sdk": "workspace:*"
   },
   "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ],
     "install": {
-      "npmSpec": "@KENUXA OPS/anthropic-vertex-provider",
+      "npmSpec": "@openclaw/anthropic-vertex-provider",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.5.12-beta.1"
     },

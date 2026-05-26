@@ -1,11 +1,11 @@
 ﻿{
-  "name": "@KENUXA OPS/googlechat",
+  "name": "@openclaw/googlechat",
   "version": "2026.5.26",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
-      "name": "@KENUXA OPS/googlechat",
+      "name": "@openclaw/googlechat",
       "version": "2026.5.26",
       "dependencies": {
         "gaxios": "7.1.4",

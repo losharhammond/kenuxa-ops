@@ -1,5 +1,5 @@
 ﻿{
-  "name": "@KENUXA OPS/acpx",
+  "name": "@openclaw/acpx",
   "version": "2026.5.26",
   "description": "KENUXA OPS ACP runtime backend",
   "repository": {
@@ -14,14 +14,14 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@KENUXA OPS/plugin-sdk": "workspace:*"
+    "@openclaw/plugin-sdk": "workspace:*"
   },
   "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ],
     "install": {
-      "npmSpec": "@KENUXA OPS/acpx",
+      "npmSpec": "@openclaw/acpx",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.4.25"
     },

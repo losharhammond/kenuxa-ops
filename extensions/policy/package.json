@@ -1,5 +1,5 @@
 ﻿{
-  "name": "@KENUXA OPS/policy",
+  "name": "@openclaw/policy",
   "version": "2026.5.26",
   "private": true,
   "description": "KENUXA OPS policy doctor checks for workspace conformance",
@@ -8,7 +8,7 @@
     "json5": "2.2.3"
   },
   "devDependencies": {
-    "@KENUXA OPS/plugin-sdk": "workspace:*",
+    "@openclaw/plugin-sdk": "workspace:*",
     "KENUXA OPS": "workspace:*"
   },
   "peerDependencies": {

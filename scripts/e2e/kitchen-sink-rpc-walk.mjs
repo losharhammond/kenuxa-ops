@@ -7,7 +7,7 @@ import { setTimeout as delay } from "node:timers/promises";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const PLUGIN_SPEC =
-  process.env.KENUXA OPS_KITCHEN_SINK_NPM_SPEC || "npm:@KENUXA OPS/kitchen-sink@latest";
+  process.env.KENUXA OPS_KITCHEN_SINK_NPM_SPEC || "npm:@openclaw/kitchen-sink@latest";
 const PLUGIN_ID = process.env.KENUXA OPS_KITCHEN_SINK_PLUGIN_ID || "KENUXA OPS-kitchen-sink-fixture";
 const CHANNEL_ID = "kitchen-sink-channel";
 const CHANNEL_ACCOUNT_ID = "local";

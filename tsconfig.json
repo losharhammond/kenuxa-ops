@@ -27,11 +27,11 @@
       "KENUXA OPS/extension-api": ["./src/extensionAPI.ts"],
       "KENUXA OPS/plugin-sdk": ["./src/plugin-sdk/index.ts"],
       "KENUXA OPS/plugin-sdk/*": ["./src/plugin-sdk/*.ts"],
-      "@KENUXA OPS/sdk": ["./packages/sdk/src/index.ts"],
-      "@KENUXA OPS/plugin-sdk": ["./src/plugin-sdk/index.ts"],
-      "@KENUXA OPS/plugin-sdk/*": ["./src/plugin-sdk/*.ts"],
+      "@openclaw/sdk": ["./packages/sdk/src/index.ts"],
+      "@openclaw/plugin-sdk": ["./src/plugin-sdk/index.ts"],
+      "@openclaw/plugin-sdk/*": ["./src/plugin-sdk/*.ts"],
       "KENUXA OPS/plugin-sdk/account-id": ["./src/plugin-sdk/account-id.ts"],
-      "@KENUXA OPS/*": ["./extensions/*"]
+      "@openclaw/*": ["./extensions/*"]
     }
   },
   "include": ["src/**/*", "ui/**/*", "extensions/**/*", "packages/**/*"],

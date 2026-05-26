@@ -1,5 +1,5 @@
 ﻿{
-  "name": "@KENUXA OPS/brave-plugin",
+  "name": "@openclaw/brave-plugin",
   "version": "2026.5.26",
   "description": "KENUXA OPS Brave plugin",
   "repository": {
@@ -8,14 +8,14 @@
   },
   "type": "module",
   "devDependencies": {
-    "@KENUXA OPS/plugin-sdk": "workspace:*"
+    "@openclaw/plugin-sdk": "workspace:*"
   },
   "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ],
     "install": {
-      "npmSpec": "@KENUXA OPS/brave-plugin",
+      "npmSpec": "@openclaw/brave-plugin",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.4.10",
       "allowInvalidConfigRecovery": true

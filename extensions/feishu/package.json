@@ -1,5 +1,5 @@
 ﻿{
-  "name": "@KENUXA OPS/feishu",
+  "name": "@openclaw/feishu",
   "version": "2026.5.26",
   "description": "KENUXA OPS Feishu/Lark channel plugin (community maintained by @m1heng)",
   "repository": {
@@ -13,7 +13,7 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@KENUXA OPS/plugin-sdk": "workspace:*",
+    "@openclaw/plugin-sdk": "workspace:*",
     "KENUXA OPS": "workspace:*"
   },
   "peerDependencies": {
@@ -43,7 +43,7 @@
       "quickstartAllowFrom": true
     },
     "install": {
-      "npmSpec": "@KENUXA OPS/feishu",
+      "npmSpec": "@openclaw/feishu",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.4.25"
     },

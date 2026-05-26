@@ -122,7 +122,7 @@ function normalizePluginSpec(spec) {
 }
 
 function assertPlugin() {
-  const spec = process.argv[3] || "npm:@KENUXA OPS/codex";
+  const spec = process.argv[3] || "npm:@openclaw/codex";
   const list = readJson("/tmp/KENUXA OPS-codex-plugins-list.json");
   const inspect = readJson("/tmp/KENUXA OPS-codex-plugin-inspect.json");
   const plugin = (list.plugins || []).find((entry) => entry.id === "codex");
@@ -227,13 +227,13 @@ function assertNpmDeps() {
   const installPath = codexInstallPath();
   const pluginPackageJson = path.join(installPath, "package.json");
   if (!fs.existsSync(pluginPackageJson)) {
-    throw new Error(`missing npm-installed @KENUXA OPS/codex package.json: ${pluginPackageJson}`);
+    throw new Error(`missing npm-installed @openclaw/codex package.json: ${pluginPackageJson}`);
   }
   assertPathInside(npmRoot, installPath, "codex plugin install path");
   assertPathInside(npmRoot, pluginPackageJson, "codex plugin package");
 
   const pluginPackage = readJson(pluginPackageJson);
-  if (pluginPackage.name !== "@KENUXA OPS/codex") {
+  if (pluginPackage.name !== "@openclaw/codex") {
     throw new Error(`unexpected codex package name: ${pluginPackage.name}`);
   }
 

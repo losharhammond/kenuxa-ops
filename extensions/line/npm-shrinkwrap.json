@@ -1,11 +1,11 @@
 ﻿{
-  "name": "@KENUXA OPS/line",
+  "name": "@openclaw/line",
   "version": "2026.5.26",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
-      "name": "@KENUXA OPS/line",
+      "name": "@openclaw/line",
       "version": "2026.5.26",
       "dependencies": {
         "@line/bot-sdk": "11.0.0",

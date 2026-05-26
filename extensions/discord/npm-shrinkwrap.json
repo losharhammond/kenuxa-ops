@@ -1,11 +1,11 @@
 ﻿{
-  "name": "@KENUXA OPS/discord",
+  "name": "@openclaw/discord",
   "version": "2026.5.26",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
-      "name": "@KENUXA OPS/discord",
+      "name": "@openclaw/discord",
       "version": "2026.5.26",
       "dependencies": {
         "@discordjs/voice": "0.19.2",

@@ -1,5 +1,5 @@
 ﻿{
-  "name": "@KENUXA OPS/line",
+  "name": "@openclaw/line",
   "version": "2026.5.26",
   "description": "KENUXA OPS LINE channel plugin",
   "repository": {
@@ -12,7 +12,7 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@KENUXA OPS/plugin-sdk": "workspace:*",
+    "@openclaw/plugin-sdk": "workspace:*",
     "KENUXA OPS": "workspace:*"
   },
   "peerDependencies": {
@@ -41,7 +41,7 @@
       "quickstartAllowFrom": true
     },
     "install": {
-      "npmSpec": "@KENUXA OPS/line",
+      "npmSpec": "@openclaw/line",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.4.10"
     },

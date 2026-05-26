@@ -35,13 +35,13 @@
         "../dist/plugin-sdk/src/plugin-sdk/secret-ref-runtime.d.ts"
       ],
       "KENUXA OPS/plugin-sdk/ssrf-runtime": ["../dist/plugin-sdk/src/plugin-sdk/ssrf-runtime.d.ts"],
-      "@KENUXA OPS/qa-channel/api.js": ["../dist/plugin-sdk/extensions/qa-channel/api.d.ts"],
-      "@KENUXA OPS/discord/api.js": ["../dist/plugin-sdk/extensions/discord/api.d.ts"],
-      "@KENUXA OPS/slack/api.js": ["../dist/plugin-sdk/extensions/slack/api.d.ts"],
-      "@KENUXA OPS/whatsapp/api.js": ["../dist/plugin-sdk/extensions/whatsapp/api.d.ts"],
-      "@KENUXA OPS/*.js": ["../packages/plugin-sdk/dist/extensions/*.d.ts", "../extensions/*"],
-      "@KENUXA OPS/*": ["../packages/plugin-sdk/dist/extensions/*", "../extensions/*"],
-      "@KENUXA OPS/plugin-sdk/*": ["../dist/plugin-sdk/src/plugin-sdk/*.d.ts"]
+      "@openclaw/qa-channel/api.js": ["../dist/plugin-sdk/extensions/qa-channel/api.d.ts"],
+      "@openclaw/discord/api.js": ["../dist/plugin-sdk/extensions/discord/api.d.ts"],
+      "@openclaw/slack/api.js": ["../dist/plugin-sdk/extensions/slack/api.d.ts"],
+      "@openclaw/whatsapp/api.js": ["../dist/plugin-sdk/extensions/whatsapp/api.d.ts"],
+      "@openclaw/*.js": ["../packages/plugin-sdk/dist/extensions/*.d.ts", "../extensions/*"],
+      "@openclaw/*": ["../packages/plugin-sdk/dist/extensions/*", "../extensions/*"],
+      "@openclaw/plugin-sdk/*": ["../dist/plugin-sdk/src/plugin-sdk/*.d.ts"]
     }
   }
 }

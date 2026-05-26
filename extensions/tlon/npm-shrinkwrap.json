@@ -1,11 +1,11 @@
 ﻿{
-  "name": "@KENUXA OPS/tlon",
+  "name": "@openclaw/tlon",
   "version": "2026.5.26",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
-      "name": "@KENUXA OPS/tlon",
+      "name": "@openclaw/tlon",
       "version": "2026.5.26",
       "dependencies": {
         "@aws-sdk/client-s3": "3.1053.0",

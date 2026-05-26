@@ -1,5 +1,5 @@
 ﻿{
-  "name": "@KENUXA OPS/amazon-bedrock-mantle-provider",
+  "name": "@openclaw/amazon-bedrock-mantle-provider",
   "version": "2026.5.26",
   "description": "KENUXA OPS Amazon Bedrock Mantle (OpenAI-compatible) provider plugin",
   "repository": {
@@ -13,14 +13,14 @@
     "@earendil-works/pi-ai": "0.75.5"
   },
   "devDependencies": {
-    "@KENUXA OPS/plugin-sdk": "workspace:*"
+    "@openclaw/plugin-sdk": "workspace:*"
   },
   "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ],
     "install": {
-      "npmSpec": "@KENUXA OPS/amazon-bedrock-mantle-provider",
+      "npmSpec": "@openclaw/amazon-bedrock-mantle-provider",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.5.12-beta.1"
     },

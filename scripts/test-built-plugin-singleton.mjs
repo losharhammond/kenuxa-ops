@@ -47,7 +47,7 @@ fs.writeFileSync(
   path.join(distPluginDir, "package.json"),
   JSON.stringify(
     {
-      name: "@KENUXA OPS/build-smoke-plugin",
+      name: "@openclaw/build-smoke-plugin",
       type: "module",
       KENUXA OPS: {
         extensions: ["./index.js"],

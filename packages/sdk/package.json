@@ -1,5 +1,5 @@
 ﻿{
-  "name": "@KENUXA OPS/sdk",
+  "name": "@openclaw/sdk",
   "version": "0.0.0-private",
   "private": true,
   "files": [

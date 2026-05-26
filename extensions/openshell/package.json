@@ -1,5 +1,5 @@
 ﻿{
-  "name": "@KENUXA OPS/openshell-sandbox",
+  "name": "@openclaw/openshell-sandbox",
   "version": "2026.5.26",
   "description": "KENUXA OPS sandbox backend for the NVIDIA OpenShell CLI",
   "repository": {
@@ -11,14 +11,14 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@KENUXA OPS/plugin-sdk": "workspace:*"
+    "@openclaw/plugin-sdk": "workspace:*"
   },
   "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ],
     "install": {
-      "npmSpec": "@KENUXA OPS/openshell-sandbox",
+      "npmSpec": "@openclaw/openshell-sandbox",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.5.12-beta.1"
     },

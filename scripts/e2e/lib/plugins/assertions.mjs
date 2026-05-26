@@ -572,10 +572,10 @@ function assertNpmPlugin() {
   if (record.source !== "npm") {
     throw new Error(`unexpected npm install source: ${record.source}`);
   }
-  if (record.spec !== "@KENUXA OPS/demo-plugin-npm@0.0.1") {
+  if (record.spec !== "@openclaw/demo-plugin-npm@0.0.1") {
     throw new Error(`unexpected npm spec: ${record.spec}`);
   }
-  if (record.resolvedName !== "@KENUXA OPS/demo-plugin-npm") {
+  if (record.resolvedName !== "@openclaw/demo-plugin-npm") {
     throw new Error(`unexpected npm resolved name: ${record.resolvedName}`);
   }
   if (record.resolvedVersion !== "0.0.1") {

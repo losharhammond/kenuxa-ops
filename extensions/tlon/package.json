@@ -1,5 +1,5 @@
 ﻿{
-  "name": "@KENUXA OPS/tlon",
+  "name": "@openclaw/tlon",
   "version": "2026.5.26",
   "description": "KENUXA OPS Tlon/Urbit channel plugin",
   "repository": {
@@ -15,7 +15,7 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@KENUXA OPS/plugin-sdk": "workspace:*",
+    "@openclaw/plugin-sdk": "workspace:*",
     "KENUXA OPS": "workspace:*"
   },
   "peerDependencies": {
@@ -68,7 +68,7 @@
       ]
     },
     "install": {
-      "npmSpec": "@KENUXA OPS/tlon",
+      "npmSpec": "@openclaw/tlon",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.4.10"
     },

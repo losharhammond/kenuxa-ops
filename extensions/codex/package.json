@@ -1,5 +1,5 @@
 ﻿{
-  "name": "@KENUXA OPS/codex",
+  "name": "@openclaw/codex",
   "version": "2026.5.26",
   "description": "KENUXA OPS Codex harness and model provider plugin",
   "repository": {
@@ -15,14 +15,14 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@KENUXA OPS/plugin-sdk": "workspace:*"
+    "@openclaw/plugin-sdk": "workspace:*"
   },
   "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ],
     "install": {
-      "npmSpec": "@KENUXA OPS/codex",
+      "npmSpec": "@openclaw/codex",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.5.1-beta.1"
     },

@@ -1,11 +1,11 @@
 ﻿{
-  "name": "@KENUXA OPS/tts-local-cli",
+  "name": "@openclaw/tts-local-cli",
   "version": "2026.5.26",
   "private": true,
   "description": "KENUXA OPS local CLI TTS plugin",
   "type": "module",
   "devDependencies": {
-    "@KENUXA OPS/plugin-sdk": "workspace:*"
+    "@openclaw/plugin-sdk": "workspace:*"
   },
   "KENUXA OPS": {
     "extensions": [

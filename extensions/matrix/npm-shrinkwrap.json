@@ -1,11 +1,11 @@
 ﻿{
-  "name": "@KENUXA OPS/matrix",
+  "name": "@openclaw/matrix",
   "version": "2026.5.26",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
-      "name": "@KENUXA OPS/matrix",
+      "name": "@openclaw/matrix",
       "version": "2026.5.26",
       "dependencies": {
         "@matrix-org/matrix-sdk-crypto-nodejs": "0.4.0",

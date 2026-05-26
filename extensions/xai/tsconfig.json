@@ -41,14 +41,14 @@
       "KENUXA OPS/plugin-sdk/ssrf-runtime": [
         "../../dist/plugin-sdk/src/plugin-sdk/ssrf-runtime.d.ts"
       ],
-      "@KENUXA OPS/qa-channel/api.js": ["../../dist/plugin-sdk/extensions/qa-channel/api.d.ts"],
-      "@KENUXA OPS/*.js": ["../../packages/plugin-sdk/dist/extensions/*.d.ts", "../*"],
-      "@KENUXA OPS/*": ["../*"],
-      "@KENUXA OPS/plugin-sdk/*": ["../../dist/plugin-sdk/src/plugin-sdk/*.d.ts"],
-      "@KENUXA OPS/anthropic-vertex/api.js": ["./.boundary-stubs/anthropic-vertex-api.d.ts"],
-      "@KENUXA OPS/ollama/api.js": ["./.boundary-stubs/ollama-api.d.ts"],
-      "@KENUXA OPS/ollama/runtime-api.js": ["./.boundary-stubs/ollama-runtime-api.d.ts"],
-      "@KENUXA OPS/speech-core/runtime-api.js": ["./.boundary-stubs/speech-core-runtime-api.d.ts"]
+      "@openclaw/qa-channel/api.js": ["../../dist/plugin-sdk/extensions/qa-channel/api.d.ts"],
+      "@openclaw/*.js": ["../../packages/plugin-sdk/dist/extensions/*.d.ts", "../*"],
+      "@openclaw/*": ["../*"],
+      "@openclaw/plugin-sdk/*": ["../../dist/plugin-sdk/src/plugin-sdk/*.d.ts"],
+      "@openclaw/anthropic-vertex/api.js": ["./.boundary-stubs/anthropic-vertex-api.d.ts"],
+      "@openclaw/ollama/api.js": ["./.boundary-stubs/ollama-api.d.ts"],
+      "@openclaw/ollama/runtime-api.js": ["./.boundary-stubs/ollama-runtime-api.d.ts"],
+      "@openclaw/speech-core/runtime-api.js": ["./.boundary-stubs/speech-core-runtime-api.d.ts"]
     }
   },
   "include": ["./*.ts", "./src/**/*.ts"],

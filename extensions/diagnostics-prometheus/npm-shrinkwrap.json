@@ -1,11 +1,11 @@
 ﻿{
-  "name": "@KENUXA OPS/diagnostics-prometheus",
+  "name": "@openclaw/diagnostics-prometheus",
   "version": "2026.5.26",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
-      "name": "@KENUXA OPS/diagnostics-prometheus",
+      "name": "@openclaw/diagnostics-prometheus",
       "version": "2026.5.26"
     }
   }

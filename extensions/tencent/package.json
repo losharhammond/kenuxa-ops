@@ -1,11 +1,11 @@
 ﻿{
-  "name": "@KENUXA OPS/tencent-provider",
+  "name": "@openclaw/tencent-provider",
   "version": "2026.5.26",
   "private": true,
   "description": "KENUXA OPS Tencent Cloud provider plugin (TokenHub + Token Plan)",
   "type": "module",
   "devDependencies": {
-    "@KENUXA OPS/plugin-sdk": "workspace:*"
+    "@openclaw/plugin-sdk": "workspace:*"
   },
   "KENUXA OPS": {
     "extensions": [

@@ -1,11 +1,11 @@
 ﻿{
-  "name": "@KENUXA OPS/deepseek-provider",
+  "name": "@openclaw/deepseek-provider",
   "version": "2026.5.26",
   "private": true,
   "description": "KENUXA OPS DeepSeek provider plugin",
   "type": "module",
   "devDependencies": {
-    "@KENUXA OPS/plugin-sdk": "workspace:*"
+    "@openclaw/plugin-sdk": "workspace:*"
   },
   "KENUXA OPS": {
     "extensions": [

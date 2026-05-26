@@ -1,11 +1,11 @@
 ﻿{
-  "name": "@KENUXA OPS/amazon-bedrock-provider",
+  "name": "@openclaw/amazon-bedrock-provider",
   "version": "2026.5.26",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
-      "name": "@KENUXA OPS/amazon-bedrock-provider",
+      "name": "@openclaw/amazon-bedrock-provider",
       "version": "2026.5.26",
       "dependencies": {
         "@aws-sdk/client-bedrock": "3.1053.0",

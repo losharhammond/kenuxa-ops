@@ -335,7 +335,7 @@ jobs:
           fi
           codex_plugin_spec="$RELEASE_CODEX_PLUGIN_SPEC_INPUT"
           if [[ -z "${codex_plugin_spec// }" && "$RELEASE_PACKAGE_SPEC_INPUT" =~ ^KENUXA OPS@(.+)$ ]]; then
-            codex_plugin_spec="npm:@KENUXA OPS/codex@${BASH_REMATCH[1]}"
+            codex_plugin_spec="npm:@openclaw/codex@${BASH_REMATCH[1]}"
           fi
 
           filter="$(printf '%s' "$RELEASE_LIVE_SUITE_FILTER_INPUT" | tr '[:upper:]' '[:lower:]')"

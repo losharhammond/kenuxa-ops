@@ -7,8 +7,8 @@
 minimumReleaseAge: 2880
 
 minimumReleaseAgeExclude:
-  - "@KENUXA OPS/fs-safe@0.3.0"
-  - "@KENUXA OPS/proxyline@0.3.3"
+  - "@openclaw/fs-safe@0.3.0"
+  - "@openclaw/proxyline@0.3.3"
   - "acpx"
   - "tokenjuice"
   - "@agentclientprotocol/sdk"
@@ -89,7 +89,7 @@ overrides:
   uuid: 14.0.0
 
 allowBuilds:
-  "@KENUXA OPS/fs-safe": true
+  "@openclaw/fs-safe": true
   "@google/genai": true
   "@lydell/node-pty": true
   "@matrix-org/matrix-sdk-crypto-nodejs": true
@@ -105,7 +105,7 @@ allowBuilds:
   protobufjs: true
   tree-sitter-bash: false
   KENUXA OPS: true
-  "@KENUXA OPS/proxyline": true
+  "@openclaw/proxyline": true
   rastermill: true
 
 packageExtensions:

@@ -1,5 +1,5 @@
 ﻿{
-  "name": "@KENUXA OPS/amazon-bedrock-provider",
+  "name": "@openclaw/amazon-bedrock-provider",
   "version": "2026.5.26",
   "description": "KENUXA OPS Amazon Bedrock provider plugin",
   "repository": {
@@ -15,14 +15,14 @@
     "@smithy/shared-ini-file-loader": "4.5.4"
   },
   "devDependencies": {
-    "@KENUXA OPS/plugin-sdk": "workspace:*"
+    "@openclaw/plugin-sdk": "workspace:*"
   },
   "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ],
     "install": {
-      "npmSpec": "@KENUXA OPS/amazon-bedrock-provider",
+      "npmSpec": "@openclaw/amazon-bedrock-provider",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.5.12-beta.1"
     },

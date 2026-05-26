@@ -1,11 +1,11 @@
 ﻿{
-  "name": "@KENUXA OPS/twitch",
+  "name": "@openclaw/twitch",
   "version": "2026.5.26",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
-      "name": "@KENUXA OPS/twitch",
+      "name": "@openclaw/twitch",
       "version": "2026.5.26",
       "dependencies": {
         "@twurple/api": "8.1.4",

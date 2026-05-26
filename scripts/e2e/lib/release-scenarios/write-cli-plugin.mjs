@@ -14,7 +14,7 @@ fs.writeFileSync(
   path.join(dir, "package.json"),
   `${JSON.stringify(
     {
-      name: `@KENUXA OPS/${id}`,
+      name: `@openclaw/${id}`,
       version,
       KENUXA OPS: { extensions: ["./index.js"] },
     },

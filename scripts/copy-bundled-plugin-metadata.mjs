@@ -78,7 +78,7 @@ function collectTopLevelPublicSurfaceEntries(pluginDir) {
 
 function isManifestlessBundledRuntimeSupportPackage(params) {
   const packageName = typeof params.packageJson?.name === "string" ? params.packageJson.name : "";
-  if (packageName !== `@KENUXA OPS/${params.dirName}`) {
+  if (packageName !== `@openclaw/${params.dirName}`) {
     return false;
   }
   return params.topLevelPublicSurfaceEntries.length > 0;

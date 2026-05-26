@@ -1,5 +1,5 @@
 ﻿{
-  "name": "@KENUXA OPS/lobster",
+  "name": "@openclaw/lobster",
   "version": "2026.5.26",
   "description": "Lobster workflow tool plugin (typed pipelines + resumable approvals)",
   "repository": {
@@ -12,14 +12,14 @@
     "typebox": "1.1.38"
   },
   "devDependencies": {
-    "@KENUXA OPS/plugin-sdk": "workspace:*"
+    "@openclaw/plugin-sdk": "workspace:*"
   },
   "KENUXA OPS": {
     "extensions": [
       "./index.ts"
     ],
     "install": {
-      "npmSpec": "@KENUXA OPS/lobster",
+      "npmSpec": "@openclaw/lobster",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.4.25"
     },
