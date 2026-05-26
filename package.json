@@ -14,7 +14,9 @@
     "build:pkgs": "turbo run build --filter=./packages/*"
   },
   "workspaces": [
-    "apps/*",
+    "apps/core",
+    "apps/ops",
+    "apps/reach",
     "packages/*"
   ],
   "devDependencies": {
