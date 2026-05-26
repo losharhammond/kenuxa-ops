@@ -4,6 +4,7 @@ import { normalizeLowercaseStringOrEmpty } from "./string-coerce.ts";
 
 export const TAB_GROUPS = [
   { label: "chat", tabs: ["chat"] },
+  { label: "ops", tabs: ["command-center"] },
   {
     label: "control",
     tabs: ["overview", "activity", "instances", "sessions", "usage", "cron"],
@@ -16,6 +17,7 @@ export const TAB_GROUPS = [
 ] as const;
 
 export type Tab =
+  | "command-center"
   | "agents"
   | "activity"
   | "overview"
@@ -50,6 +52,7 @@ export const SETTINGS_TABS = [
 ] as const satisfies readonly Tab[];
 
 const TAB_PATHS: Record<Tab, string> = {
+  "command-center": "/command-center",
   agents: "/agents",
   activity: "/activity",
   overview: "/overview",
@@ -173,6 +176,8 @@ export function inferBasePathFromPathname(pathname: string): string {
 
 export function iconForTab(tab: Tab): IconName {
   switch (tab) {
+    case "command-center":
+      return "monitor";
     case "agents":
       return "folder";
     case "chat":

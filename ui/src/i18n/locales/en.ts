@@ -382,6 +382,7 @@ export const en: TranslationMap = {
   },
   nav: {
     chat: "Chat",
+    ops: "OPS",
     control: "Control",
     agent: "Agent",
     settings: "Settings",
@@ -390,6 +391,7 @@ export const en: TranslationMap = {
     resize: "Resize sidebar",
   },
   tabs: {
+    "command-center": "Command Center",
     agents: "Agents",
     activity: "Activity",
     overview: "Overview",
@@ -412,6 +414,7 @@ export const en: TranslationMap = {
     dreams: "Dreaming",
   },
   subtitles: {
+    "command-center": "Voice, execution, agents — live.",
     agents: "Workspaces, tools, identities.",
     activity: "Browser-local tool activity summaries.",
     overview: "Status, entry points, health.",
@@ -423,7 +426,7 @@ export const en: TranslationMap = {
     skills: "Skills and API keys.",
     nodes: "Paired devices and commands.",
     chat: "Gateway chat for quick interventions.",
-    config: "Edit KENUXA OPS.json.",
+    config: "Edit kenuxa-ops.json.",
     communications: "Channels, messages, and audio settings.",
     appearance: "Theme, UI, and setup wizard settings.",
     automation: "Commands, hooks, cron, and plugins.",

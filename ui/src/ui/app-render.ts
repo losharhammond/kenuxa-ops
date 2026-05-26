@@ -1,6 +1,8 @@
 ﻿import { html, nothing } from "lit";
 import { styleMap } from "lit/directives/style-map.js";
 import { t } from "../i18n/index.ts";
+// KENUXA OPS Command Center Dashboard
+import "./kenuxa-ops-dashboard.ts";
 import { getSafeLocalStorage } from "../local-storage.ts";
 import {
   createChatSessionsLoadOverrides,
@@ -2883,6 +2885,22 @@ export function renderApp(state: AppViewState) {
                   basePath: state.basePath ?? "",
                 }),
             )
+          : nothing}
+        ${state.tab === "command-center"
+          ? html`<kenuxa-ops-dashboard
+                .status=${{
+                  gatewayConnected: state.connected,
+                  agentCount: state.agentsList?.length ?? 0,
+                  voiceState: (state as unknown as Record<string, unknown>)["kenuxaVoiceState"] ?? "SLEEPING",
+                  uptime: 0,
+                  tasksToday: state.usageSessionsResult?.totalRequests ?? 0,
+                  errorCount: 0,
+                }}
+                @kenuxa-command=${(e: CustomEvent<{ command: string }>) => {
+                  state.chatMessage = e.detail.command;
+                  void (state as unknown as { handleSendChat: () => void }).handleSendChat?.();
+                }}
+              ></kenuxa-ops-dashboard>`
           : nothing}
         ${isSettingsTab(state.tab) && state.tab !== "debug" && state.tab !== "logs"
           ? renderSettingsWorkspace(state, renderConfigTabForActiveTab())
