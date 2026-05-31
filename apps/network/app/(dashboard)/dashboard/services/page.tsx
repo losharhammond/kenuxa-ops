@@ -10,9 +10,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { formatCurrency } from "@/lib/utils";
 import {
   Wrench, CheckCircle2, ClipboardList, Star, Search, MapPin,
-  MessageCircle, FileText, X, Send, Package,
+  MessageCircle, FileText, X, Send, Package, Loader2, AlertCircle,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { ImageUpload } from "@/components/ui/image-upload";
 
 interface ServiceListing {
   id: string;
@@ -39,6 +40,9 @@ const priceLabel: Record<string, string> = {
 const INPUT_CLS = "w-full bg-[#07080f] border border-white/7 rounded-lg px-3 h-9 text-sm text-[#f1f5f9] placeholder:text-[#374151] outline-none focus:border-[rgba(255,101,36,0.4)] transition-colors";
 const TEXTAREA_CLS = "w-full bg-[#07080f] border border-white/7 rounded-lg px-3 py-2 text-sm text-[#f1f5f9] placeholder:text-[#374151] outline-none focus:border-[rgba(255,101,36,0.4)] resize-none";
 
+const SERVICE_CATEGORIES = ["IT & Tech", "Design", "Marketing", "Legal", "Finance", "Construction", "Healthcare", "Education", "Transport", "Cleaning", "Catering", "Other"];
+const DEFAULT_SERVICE = { name: "", category: "IT & Tech", price: "", price_type: "fixed", description: "", location: "", turnaround: "" };
+
 export default function ServicesPage() {
   const supabase = createClient();
   const [services, setServices] = useState<ServiceListing[]>([]);
@@ -50,6 +54,12 @@ export default function ServicesPage() {
   const [bookingSubmitted, setBookingSubmitted] = useState(false);
   const [totalProviders, setTotalProviders] = useState(0);
   const [totalJobs, setTotalJobs] = useState(0);
+  const [showListModal, setShowListModal] = useState(false);
+  const [listForm, setListForm] = useState(DEFAULT_SERVICE);
+  const [listImageUrl, setListImageUrl] = useState<string | null>(null);
+  const [listing, setListing] = useState(false);
+  const [listError, setListError] = useState("");
+  const [listSuccess, setListSuccess] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -81,7 +91,7 @@ export default function ServicesPage() {
       <Header
         title="Service Marketplace"
         subtitle="Find professionals, book services & request quotes"
-        actions={<Button size="sm">+ List a Service</Button>}
+        actions={<Button size="sm" onClick={() => setShowListModal(true)}>+ List a Service</Button>}
       />
 
       <div className="p-6 space-y-6">
@@ -217,6 +227,103 @@ export default function ServicesPage() {
           </Card>
         )}
 
+        {/* List a Service Modal */}
+        {showListModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setShowListModal(false)}>
+            <div className="bg-[#0d0f1a] border border-white/10 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+              <div className="flex items-center justify-between p-5 border-b border-white/7">
+                <h2 className="text-base font-bold text-[#f1f5f9]">List a Service</h2>
+                <button onClick={() => setShowListModal(false)} className="p-1.5 hover:bg-white/5 rounded-lg"><X size={14} className="text-[#64748b]" /></button>
+              </div>
+              {listSuccess ? (
+                <div className="p-10 text-center">
+                  <div className="w-14 h-14 rounded-full bg-[rgba(52,211,153,0.1)] flex items-center justify-center mx-auto mb-3">
+                    <CheckCircle2 size={28} className="text-[#34d399]" />
+                  </div>
+                  <p className="text-[#f1f5f9] font-semibold">Service Listed!</p>
+                  <p className="text-sm text-[#64748b] mt-1">Your service is now live on the marketplace.</p>
+                </div>
+              ) : (
+                <div className="p-5 space-y-4">
+                  <div className="flex justify-center">
+                    <div>
+                      <p className="text-xs text-[#64748b] mb-2 text-center">Service Image</p>
+                      <ImageUpload value={listImageUrl} onChange={setListImageUrl} bucket="service-images" path="listings" size="lg" placeholder="Upload service image" />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-xs text-[#64748b] mb-1.5 block">Service Name *</label>
+                    <input value={listForm.name} onChange={(e) => setListForm((f) => ({ ...f, name: e.target.value }))} placeholder="e.g. Website Design" className={INPUT_CLS} />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs text-[#64748b] mb-1.5 block">Category</label>
+                      <select value={listForm.category} onChange={(e) => setListForm((f) => ({ ...f, category: e.target.value }))} className={INPUT_CLS}>
+                        {SERVICE_CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-xs text-[#64748b] mb-1.5 block">Price Type</label>
+                      <select value={listForm.price_type} onChange={(e) => setListForm((f) => ({ ...f, price_type: e.target.value }))} className={INPUT_CLS}>
+                        <option value="fixed">Fixed</option>
+                        <option value="hourly">Per Hour</option>
+                        <option value="quote">Quote Only</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-xs text-[#64748b] mb-1.5 block">Price (GHS)</label>
+                      <input type="number" value={listForm.price} onChange={(e) => setListForm((f) => ({ ...f, price: e.target.value }))} placeholder="500" className={INPUT_CLS} />
+                    </div>
+                    <div>
+                      <label className="text-xs text-[#64748b] mb-1.5 block">Location</label>
+                      <input value={listForm.location} onChange={(e) => setListForm((f) => ({ ...f, location: e.target.value }))} placeholder="Accra / Remote" className={INPUT_CLS} />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-xs text-[#64748b] mb-1.5 block">Turnaround</label>
+                    <input value={listForm.turnaround} onChange={(e) => setListForm((f) => ({ ...f, turnaround: e.target.value }))} placeholder="e.g. 3–5 days" className={INPUT_CLS} />
+                  </div>
+                  <div>
+                    <label className="text-xs text-[#64748b] mb-1.5 block">Description *</label>
+                    <textarea rows={3} value={listForm.description} onChange={(e) => setListForm((f) => ({ ...f, description: e.target.value }))} placeholder="Describe what you offer, your experience, and process." className={TEXTAREA_CLS} />
+                  </div>
+                  {listError && (
+                    <div className="flex items-center gap-2 text-xs text-red-400 bg-red-400/5 border border-red-400/20 rounded-lg p-3">
+                      <AlertCircle size={12} /> {listError}
+                    </div>
+                  )}
+                  <div className="flex gap-3 justify-end pt-1">
+                    <Button variant="secondary" size="sm" onClick={() => setShowListModal(false)}>Cancel</Button>
+                    <Button size="sm" disabled={listing} onClick={async () => {
+                      if (!listForm.name || !listForm.description) { setListError("Name and description are required."); return; }
+                      setListing(true); setListError("");
+                      const { error: err } = await supabase.from("service_listings").insert({
+                        name: listForm.name.trim(),
+                        category: listForm.category,
+                        price: parseFloat(listForm.price) || 0,
+                        price_type: listForm.price_type,
+                        description: listForm.description.trim(),
+                        location: listForm.location || null,
+                        turnaround: listForm.turnaround || null,
+                        image_url: listImageUrl,
+                        status: "active",
+                        provider_name: "My Business",
+                        is_verified: false,
+                      });
+                      setListing(false);
+                      if (err) { setListError(err.message); return; }
+                      setListSuccess(true);
+                      setTimeout(() => { setShowListModal(false); setListSuccess(false); setListForm(DEFAULT_SERVICE); setListImageUrl(null); load(); }, 2000);
+                    }}>
+                      {listing ? <><Loader2 size={12} className="animate-spin" /> Listing…</> : <><Send size={12} /> Publish Service</>}
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Services Grid */}
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -231,7 +338,7 @@ export default function ServicesPage() {
             <p className="text-sm text-[#64748b]">
               {search ? "Try different search terms." : "Be the first to list a service."}
             </p>
-            <Button size="sm" className="mt-4">+ List a Service</Button>
+            <Button size="sm" className="mt-4" onClick={() => setShowListModal(true)}>+ List a Service</Button>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

@@ -10,8 +10,9 @@ import { formatCurrency } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
 import {
   Search, MapPin, LayoutGrid, List, Package, Store, ShoppingBag,
-  Star, CheckCircle2, SlidersHorizontal,
+  Star, CheckCircle2, SlidersHorizontal, X, Loader2, AlertCircle, Send,
 } from "lucide-react";
+import { ImageUpload } from "@/components/ui/image-upload";
 
 interface Listing {
   id: string;
@@ -29,6 +30,9 @@ interface Listing {
 }
 
 const CATEGORIES = ["All", "Electronics", "Food & Groceries", "Fashion", "Health & Beauty", "Home", "Agriculture", "Construction", "Other"];
+const INPUT_CLS = "w-full bg-[#07080f] border border-white/7 rounded-lg px-3 h-9 text-sm text-[#f1f5f9] placeholder:text-[#374151] outline-none focus:border-[rgba(255,101,36,0.4)] transition-colors";
+const TEXTAREA_CLS = "w-full bg-[#07080f] border border-white/7 rounded-lg px-3 py-2 text-sm text-[#f1f5f9] placeholder:text-[#374151] outline-none focus:border-[rgba(255,101,36,0.4)] resize-none";
+const DEFAULT_PRODUCT = { name: "", category: "Electronics", price: "", compare_price: "", stock_qty: "10", city: "" };
 
 export default function MarketplacePage() {
   const supabase = createClient();
@@ -38,6 +42,12 @@ export default function MarketplacePage() {
   const [category, setCategory] = useState("All");
   const [location, setLocation] = useState("all");
   const [view, setView] = useState<"grid" | "list">("grid");
+  const [showListModal, setShowListModal] = useState(false);
+  const [productForm, setProductForm] = useState(DEFAULT_PRODUCT);
+  const [productImageUrl, setProductImageUrl] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const [submitSuccess, setSubmitSuccess] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -67,7 +77,7 @@ export default function MarketplacePage() {
         actions={
           <div className="flex gap-2">
             <Button variant="secondary" size="sm"><Package size={13} /> My Listings</Button>
-            <Button size="sm">+ List a Product</Button>
+            <Button size="sm" onClick={() => setShowListModal(true)}>+ List a Product</Button>
           </div>
         }
       />
@@ -155,7 +165,7 @@ export default function MarketplacePage() {
             <p className="text-sm text-[#64748b]">
               {search ? "Try different search terms." : "Be the first to list a product in the marketplace."}
             </p>
-            <Button size="sm" className="mt-4">+ List a Product</Button>
+            <Button size="sm" className="mt-4" onClick={() => setShowListModal(true)}>+ List a Product</Button>
           </div>
         ) : view === "grid" ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -247,6 +257,94 @@ export default function MarketplacePage() {
           </div>
         )}
       </div>
+
+      {/* List a Product Modal */}
+      {showListModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setShowListModal(false)}>
+          <div className="bg-[#0d0f1a] border border-white/10 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between p-5 border-b border-white/7">
+              <h2 className="text-base font-bold text-[#f1f5f9]">List a Product</h2>
+              <button onClick={() => setShowListModal(false)} className="p-1.5 hover:bg-white/5 rounded-lg"><X size={14} className="text-[#64748b]" /></button>
+            </div>
+            {submitSuccess ? (
+              <div className="p-10 text-center">
+                <div className="w-14 h-14 rounded-full bg-[rgba(52,211,153,0.1)] flex items-center justify-center mx-auto mb-3">
+                  <CheckCircle2 size={28} className="text-[#34d399]" />
+                </div>
+                <p className="text-[#f1f5f9] font-semibold">Product Listed!</p>
+                <p className="text-sm text-[#64748b] mt-1">Your product is now live in the marketplace.</p>
+              </div>
+            ) : (
+              <div className="p-5 space-y-4">
+                <div className="flex justify-center">
+                  <div>
+                    <p className="text-xs text-[#64748b] mb-2 text-center">Product Image</p>
+                    <ImageUpload value={productImageUrl} onChange={setProductImageUrl} bucket="marketplace" path="products" size="lg" placeholder="Upload product photo" />
+                  </div>
+                </div>
+                <div>
+                  <label className="text-xs text-[#64748b] mb-1.5 block">Product Name *</label>
+                  <input value={productForm.name} onChange={(e) => setProductForm((f) => ({ ...f, name: e.target.value }))} placeholder="e.g. Wireless Earbuds" className={INPUT_CLS} />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-xs text-[#64748b] mb-1.5 block">Category</label>
+                    <select value={productForm.category} onChange={(e) => setProductForm((f) => ({ ...f, category: e.target.value }))} className={INPUT_CLS}>
+                      {CATEGORIES.filter((c) => c !== "All").map((c) => <option key={c} value={c}>{c}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-xs text-[#64748b] mb-1.5 block">City</label>
+                    <input value={productForm.city} onChange={(e) => setProductForm((f) => ({ ...f, city: e.target.value }))} placeholder="Accra" className={INPUT_CLS} />
+                  </div>
+                  <div>
+                    <label className="text-xs text-[#64748b] mb-1.5 block">Price (GHS) *</label>
+                    <input type="number" value={productForm.price} onChange={(e) => setProductForm((f) => ({ ...f, price: e.target.value }))} placeholder="299" className={INPUT_CLS} />
+                  </div>
+                  <div>
+                    <label className="text-xs text-[#64748b] mb-1.5 block">Compare Price</label>
+                    <input type="number" value={productForm.compare_price} onChange={(e) => setProductForm((f) => ({ ...f, compare_price: e.target.value }))} placeholder="399" className={INPUT_CLS} />
+                  </div>
+                  <div>
+                    <label className="text-xs text-[#64748b] mb-1.5 block">Stock Qty</label>
+                    <input type="number" value={productForm.stock_qty} onChange={(e) => setProductForm((f) => ({ ...f, stock_qty: e.target.value }))} placeholder="10" className={INPUT_CLS} />
+                  </div>
+                </div>
+                {submitError && (
+                  <div className="flex items-center gap-2 text-xs text-red-400 bg-red-400/5 border border-red-400/20 rounded-lg p-3">
+                    <AlertCircle size={12} /> {submitError}
+                  </div>
+                )}
+                <div className="flex gap-3 justify-end pt-1">
+                  <Button variant="secondary" size="sm" onClick={() => setShowListModal(false)}>Cancel</Button>
+                  <Button size="sm" disabled={submitting} onClick={async () => {
+                    if (!productForm.name || !productForm.price) { setSubmitError("Name and price are required."); return; }
+                    setSubmitting(true); setSubmitError("");
+                    const { error: err } = await supabase.from("marketplace_listings").insert({
+                      name: productForm.name.trim(),
+                      category: productForm.category,
+                      price: parseFloat(productForm.price),
+                      compare_price: productForm.compare_price ? parseFloat(productForm.compare_price) : null,
+                      stock_qty: parseInt(productForm.stock_qty) || 0,
+                      city: productForm.city || null,
+                      image_url: productImageUrl,
+                      status: "active",
+                      is_verified: false,
+                      total_sold: 0,
+                    });
+                    setSubmitting(false);
+                    if (err) { setSubmitError(err.message); return; }
+                    setSubmitSuccess(true);
+                    setTimeout(() => { setShowListModal(false); setSubmitSuccess(false); setProductForm(DEFAULT_PRODUCT); setProductImageUrl(null); load(); }, 2000);
+                  }}>
+                    {submitting ? <><Loader2 size={12} className="animate-spin" /> Listing…</> : <><Send size={12} /> Publish Product</>}
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/use-auth";
+import { ImageUpload } from "@/components/ui/image-upload";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -472,6 +473,7 @@ function JobCard({
 function PostJobForm({ profile, onPosted }: { profile: ReturnType<typeof useAuth>["profile"]; onPosted: () => void }) {
   const supabase = createClient();
   const [form, setForm] = useState<PostForm>(DEFAULT_POST);
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [posting, setPosting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
@@ -498,6 +500,7 @@ function PostJobForm({ profile, onPosted }: { profile: ReturnType<typeof useAuth
       status: "active",
       application_count: 0,
       posted_at: new Date().toISOString(),
+      company_logo_url: logoUrl,
     });
     if (err) { setError(err.message); setPosting(false); return; }
     setSuccess(true);
@@ -526,6 +529,20 @@ function PostJobForm({ profile, onPosted }: { profile: ReturnType<typeof useAuth
         <p className="text-xs text-[#94a3b8]">
           Jobs posted on KENUXA reach Ghana&apos;s largest professional network. Listings go live instantly and are discoverable by job seekers across the country.
         </p>
+      </div>
+
+      {/* Company Logo Upload */}
+      <div>
+        <label className="text-xs text-[#64748b] mb-2 block">Company Logo</label>
+        <ImageUpload
+          value={logoUrl}
+          onChange={setLogoUrl}
+          bucket="job-logos"
+          path="company-logos"
+          shape="square"
+          size="md"
+          placeholder="Upload logo"
+        />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
