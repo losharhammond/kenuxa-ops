@@ -4,19 +4,21 @@
   "private": true,
   "description": "Africa's Unified Intelligence Infrastructure — KENUXA Ecosystem Monorepo",
   "scripts": {
-    "dev":        "turbo run dev",
-    "build":      "turbo run build",
-    "typecheck":  "turbo run typecheck",
-    "lint":       "turbo run lint",
-    "clean":      "turbo run clean",
-    "dev:core":   "turbo run dev --filter=@kenuxa/core",
-    "dev:reach":  "turbo run dev --filter=@kenuxa/reach",
-    "build:pkgs": "turbo run build --filter=./packages/*"
+    "dev":          "turbo run dev",
+    "build":        "turbo run build",
+    "typecheck":    "turbo run typecheck",
+    "lint":         "turbo run lint",
+    "clean":        "turbo run clean",
+    "dev:core":     "turbo run dev --filter=@kenuxa/core",
+    "dev:reach":    "turbo run dev --filter=@kenuxa/reach",
+    "dev:network":  "turbo run dev --filter=@kenuxa/network",
+    "build:pkgs":   "turbo run build --filter=./packages/*"
   },
   "workspaces": [
     "apps/core",
     "apps/ops",
     "apps/reach",
+    "apps/network",
     "packages/*"
   ],
   "devDependencies": {

@@ -1,0 +1,172 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── KENUXA BUSINESS NETWORK — Design System ───────────────────────────────── */
+
+:root {
+  /* Surfaces */
+  --bg:           #07080f;
+  --surface:      #0d0f1a;
+  --panel:        #111624;
+  --panel-hover:  #161b2e;
+
+  /* Borders */
+  --border:       rgba(255, 255, 255, 0.07);
+  --border-hover: rgba(255, 255, 255, 0.14);
+  --border-active:rgba(255, 101, 36, 0.45);
+
+  /* Brand — NETWORK Orange */
+  --orange:       #FF6524;
+  --orange-light: #FF8B5E;
+  --orange-dim:   rgba(255, 101, 36, 0.15);
+  --orange-glow:  rgba(255, 101, 36, 0.25);
+
+  /* Accent Colors */
+  --emerald:      #10b981;
+  --emerald-dim:  rgba(16, 185, 129, 0.15);
+  --amber:        #f59e0b;
+  --blue:         #3b82f6;
+  --red:          #ef4444;
+  --violet:       #7c3aed;
+
+  /* Text */
+  --text:         #f1f5f9;
+  --text-muted:   #64748b;
+  --text-dim:     #374151;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  background: var(--bg);
+  color-scheme: dark;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+/* Selection */
+::selection { background: rgba(255,101,36,0.3); color: #f1f5f9; }
+
+a { color: inherit; text-decoration: none; }
+
+/* ── Gradient Text ─────────────────────────────────────────────────────────── */
+
+.gradient-text {
+  background: linear-gradient(135deg, #FF6524 0%, #FF8B5E 50%, #F59E0B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-green {
+  background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Glass Morphism ────────────────────────────────────────────────────────── */
+
+.glass {
+  background: rgba(13, 15, 26, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+}
+
+.glass-orange {
+  background: rgba(255, 101, 36, 0.08);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 101, 36, 0.2);
+}
+
+/* ── Grid Background ───────────────────────────────────────────────────────── */
+
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* ── Animations ────────────────────────────────────────────────────────────── */
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 1; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+
+@keyframes slide-up {
+  0%   { opacity: 0; transform: translateY(16px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ── Utility classes ───────────────────────────────────────────────────────── */
+
+.animate-slide-up { animation: slide-up 0.4s ease-out; }
+.animate-fade-in  { animation: fade-in 0.3s ease-out; }
+
+.stat-up   { color: var(--emerald); }
+.stat-down { color: var(--red); }
+
+/* ── Skeleton loading ──────────────────────────────────────────────────────── */
+
+.skeleton {
+  background: linear-gradient(90deg, var(--panel) 25%, var(--panel-hover) 50%, var(--panel) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 6px;
+}
+
+/* ── Form elements ─────────────────────────────────────────────────────────── */
+
+input, textarea, select {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 14px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--orange);
+  box-shadow: 0 0 0 3px var(--orange-dim);
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--text-muted);
+}

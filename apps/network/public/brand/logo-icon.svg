@@ -1,0 +1,25 @@
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="kn-icon-grad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FF6524"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+  </defs>
+  <path d="M20 2L34.64 10.5V27.5L20 36L5.36 27.5V10.5L20 2Z"
+        fill="url(#kn-icon-grad)" opacity="0.18"/>
+  <path d="M20 2L34.64 10.5V27.5L20 36L5.36 27.5V10.5L20 2Z"
+        stroke="#FF6524" stroke-width="1.5" fill="none" opacity="0.5"/>
+  <circle cx="20" cy="19" r="3.5" fill="#FF6524"/>
+  <circle cx="20" cy="7"  r="2.5" fill="#F59E0B"/>
+  <circle cx="29" cy="13" r="2.5" fill="#F59E0B"/>
+  <circle cx="29" cy="25" r="2.5" fill="#F59E0B"/>
+  <circle cx="20" cy="31" r="2.5" fill="#F59E0B"/>
+  <circle cx="11" cy="25" r="2.5" fill="#F59E0B"/>
+  <circle cx="11" cy="13" r="2.5" fill="#F59E0B"/>
+  <line x1="20" y1="15.5" x2="20"  y2="9.5"  stroke="#FF6524" stroke-width="1.2" opacity="0.5"/>
+  <line x1="20" y1="15.5" x2="27"  y2="14"   stroke="#FF6524" stroke-width="1.2" opacity="0.5"/>
+  <line x1="20" y1="15.5" x2="27"  y2="24"   stroke="#FF6524" stroke-width="1.2" opacity="0.5"/>
+  <line x1="20" y1="22.5" x2="20"  y2="28.5" stroke="#FF6524" stroke-width="1.2" opacity="0.5"/>
+  <line x1="20" y1="22.5" x2="13"  y2="24"   stroke="#FF6524" stroke-width="1.2" opacity="0.5"/>
+  <line x1="20" y1="22.5" x2="13"  y2="14"   stroke="#FF6524" stroke-width="1.2" opacity="0.5"/>
+</svg>

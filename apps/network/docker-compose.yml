@@ -1,0 +1,49 @@
+version: "3.9"
+
+services:
+  network:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_SUPABASE_URL:      ${NEXT_PUBLIC_SUPABASE_URL}
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+        NEXT_PUBLIC_APP_URL:           ${NEXT_PUBLIC_APP_URL}
+        NEXT_PUBLIC_APP_NAME:          ${NEXT_PUBLIC_APP_NAME}
+    image: kenuxa-network:latest
+    container_name: kenuxa-network
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    env_file:
+      - .env.production
+    environment:
+      - NODE_ENV=production
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3002/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - kenuxa-net
+
+  # Optional: Nginx reverse proxy / TLS termination
+  nginx:
+    image: nginx:alpine
+    container_name: kenuxa-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certs:/etc/nginx/certs:ro
+    depends_on:
+      - network
+    networks:
+      - kenuxa-net
+
+networks:
+  kenuxa-net:
+    driver: bridge
