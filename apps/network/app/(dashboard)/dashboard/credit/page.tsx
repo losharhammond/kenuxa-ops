@@ -7,7 +7,7 @@ import { useAuth } from "@/lib/hooks/use-auth";
 import {
   Shield, TrendingUp, CheckCircle, Clock, AlertCircle,
   Building2, ShoppingBag, Star, Briefcase, Factory,
-  Loader2, ArrowRight, Zap,
+  Loader2, ArrowRight, Zap, RefreshCw,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -91,24 +91,35 @@ export default function CreditPage() {
       .select("*")
       .eq("user_id", user.id)
       .single();
-    setProfile(data as CreditProfile | null ?? {
-      kenuxa_score: 520,
-      trust_score: 68,
-      business_score: null,
-      talent_score: null,
-      supplier_score: null,
-      last_calculated: new Date().toISOString(),
-    });
+    setProfile(data as CreditProfile | null);
     setLoading(false);
   }, [user?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const refreshScore = useCallback(async () => {
+    setLoading(true);
+    await fetch("/api/credit/compute", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({}),
+    });
+    await load();
+  }, [load]);
+
   useEffect(() => { load(); }, [load]);
 
-  const band = profile ? getBand(profile.kenuxa_score) : SCORE_BANDS[1]!;
+  const displayProfile = profile ?? { kenuxa_score: 500, trust_score: 50, business_score: null, talent_score: null, supplier_score: null, last_calculated: new Date().toISOString() };
+  const band = getBand(displayProfile.kenuxa_score);
 
   return (
     <>
-      <Header title="KENUXA Credit" subtitle="Your economic credit profile" />
+      <Header title="KENUXA Credit" subtitle="Your economic credit profile"
+        actions={
+          <button onClick={refreshScore} disabled={loading}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 text-xs text-[#64748b] hover:text-[#f1f5f9] hover:bg-white/5 transition-all">
+            <RefreshCw size={12} className={loading ? "animate-spin" : ""} /> Refresh Score
+          </button>
+        }
+      />
       <div className="p-6 space-y-5">
 
         {loading ? (
@@ -119,23 +130,28 @@ export default function CreditPage() {
           <>
             {/* Main score card */}
             <div className="rounded-2xl border p-5 text-center" style={{ borderColor: `${band.color}30`, background: band.bg }}>
-              <ScoreGauge score={profile?.kenuxa_score ?? 520} color={band.color} />
+              <ScoreGauge score={displayProfile.kenuxa_score} color={band.color} />
               <p className="text-lg font-bold mt-2" style={{ color: band.color }}>{band.label}</p>
               <p className="text-xs text-[#64748b] mt-1">
-                Last updated {profile?.last_calculated ? new Date(profile.last_calculated).toLocaleDateString("en-GH") : "today"}
+                Last updated {new Date(displayProfile.last_calculated).toLocaleDateString("en-GH")}
               </p>
+              {!profile && (
+                <button onClick={refreshScore} className="mt-3 text-xs text-[#FF8B5E] hover:underline flex items-center gap-1 mx-auto">
+                  <RefreshCw size={10} /> Compute my score now
+                </button>
+              )}
             </div>
 
             {/* Sub-scores */}
             <div className="grid grid-cols-2 gap-3">
               <div className="p-4 rounded-xl bg-[#111624] border border-white/7">
                 <p className="text-[10px] text-[#374151] uppercase tracking-widest mb-1">Trust Score</p>
-                <p className="text-2xl font-bold text-[#f1f5f9]">{profile?.trust_score ?? 0}<span className="text-sm text-[#374151]">/100</span></p>
+                <p className="text-2xl font-bold text-[#f1f5f9]">{displayProfile.trust_score}<span className="text-sm text-[#374151]">/100</span></p>
               </div>
               <div className="p-4 rounded-xl bg-[#111624] border border-white/7">
                 <p className="text-[10px] text-[#374151] uppercase tracking-widest mb-1">Business Score</p>
-                <p className="text-2xl font-bold text-[#f1f5f9]">{profile?.business_score ?? "—"}</p>
-                {!profile?.business_score && <p className="text-[10px] text-[#374151] mt-0.5">Register a business to unlock</p>}
+                <p className="text-2xl font-bold text-[#f1f5f9]">{displayProfile.business_score ?? "—"}</p>
+                {!displayProfile.business_score && <p className="text-[10px] text-[#374151] mt-0.5">Register a business to unlock</p>}
               </div>
             </div>
 

@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { useSearchParams } from "next/navigation";
 import { Header } from "@/components/layout/header";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/use-auth";
 import {
   Zap, TrendingUp, ArrowDownLeft, ArrowUpRight,
   Gift, Sparkles, Megaphone, Package, CreditCard,
-  Loader2, CheckCircle, Shield,
+  Loader2, CheckCircle, Shield, AlertCircle,
 } from "lucide-react";
 
 interface RewardsData {
@@ -65,6 +66,9 @@ function relTime(iso: string) {
 export default function KenuxPage() {
   const supabase = createClient();
   const { user } = useAuth();
+  const searchParams = useSearchParams();
+  const paymentSuccess = searchParams.get("success");
+  const paymentError   = searchParams.get("error");
   const [rewards, setRewards] = useState<RewardsData | null>(null);
   const [txs, setTxs] = useState<KenuxTx[]>([]);
   const [loading, setLoading] = useState(true);
@@ -122,6 +126,18 @@ export default function KenuxPage() {
   return (
     <>
       <Header title="KENUX" subtitle="Your platform utility currency" />
+      {paymentSuccess === "purchase" && (
+        <div className="mx-6 mt-4 flex items-center gap-3 p-3 rounded-xl bg-[rgba(16,185,129,0.1)] border border-[rgba(16,185,129,0.2)]">
+          <CheckCircle size={14} className="text-[#10b981] flex-shrink-0" />
+          <p className="text-sm text-[#10b981] font-medium">KENUX purchased successfully! Your balance has been updated.</p>
+        </div>
+      )}
+      {paymentError && (
+        <div className="mx-6 mt-4 flex items-center gap-3 p-3 rounded-xl bg-[rgba(239,68,68,0.08)] border border-[rgba(239,68,68,0.15)]">
+          <AlertCircle size={14} className="text-[#f87171] flex-shrink-0" />
+          <p className="text-sm text-[#f87171]">Payment was not completed. Please try again.</p>
+        </div>
+      )}
       <div className="p-6 space-y-5">
 
         {loading ? (

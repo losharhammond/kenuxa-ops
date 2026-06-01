@@ -57,5 +57,9 @@ export async function GET(req: NextRequest) {
     read: false,
   });
 
-  return NextResponse.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/dashboard/wallet?success=payment_completed&amount=${amountGHS}`);
+  const successPage = purpose === "kenux_purchase"
+    ? `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/kenux?success=purchase&amount=${amountGHS}`
+    : `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/wallet?success=topup&amount=${amountGHS}`;
+
+  return NextResponse.redirect(successPage);
 }

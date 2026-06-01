@@ -1,12 +1,14 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/use-auth";
 import {
   Wallet, ArrowDownLeft, ArrowUpRight, Plus, Send,
   RefreshCw, TrendingUp, Shield, Clock, CheckCircle,
   ChevronRight, Smartphone, Building2, CreditCard,
+  AlertCircle, Download,
 } from "lucide-react";
 
 interface WalletData {
@@ -50,6 +52,11 @@ function relTime(iso: string) {
 export default function WalletPage() {
   const { profile, user } = useAuth();
   const supabase = createClient();
+  const searchParams = useSearchParams();
+
+  // Handle Paystack redirect callbacks
+  const paymentSuccess = searchParams.get("success");
+  const paymentError   = searchParams.get("error");
 
   const [wallet, setWallet] = useState<WalletData | null>(null);
   const [txs, setTxs] = useState<WalletTx[]>([]);
@@ -158,6 +165,21 @@ export default function WalletPage() {
 
   return (
     <div className="min-h-screen bg-[#070B14] text-white">
+      {/* Payment status banners */}
+      {paymentSuccess === "topup" && (
+        <div className="bg-[rgba(16,185,129,0.12)] border-b border-[rgba(16,185,129,0.25)] px-6 py-3 flex items-center gap-3">
+          <CheckCircle size={15} className="text-[#10b981] flex-shrink-0" />
+          <p className="text-sm text-[#10b981] font-medium">Wallet topped up successfully! Your balance has been updated.</p>
+        </div>
+      )}
+      {paymentError && (
+        <div className="bg-[rgba(239,68,68,0.1)] border-b border-[rgba(239,68,68,0.2)] px-6 py-3 flex items-center gap-3">
+          <AlertCircle size={15} className="text-[#f87171] flex-shrink-0" />
+          <p className="text-sm text-[#f87171] font-medium">
+            {paymentError === "payment_failed" ? "Payment was not completed. Please try again." : "An error occurred. Please contact support if funds were deducted."}
+          </p>
+        </div>
+      )}
       {/* Header */}
       <div className="border-b border-white/7 bg-[#0d0f1a]">
         <div className="max-w-3xl mx-auto px-6 py-6 flex items-start justify-between">

@@ -5,13 +5,14 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/brand/logo";
 import {
-  LayoutDashboard, BarChart3, Map, Star, ShoppingBag, Wrench, Briefcase,
+  LayoutDashboard, BarChart3, Map, ShoppingBag, Wrench, Briefcase,
   Factory, Monitor, Package, Truck, Users, FileText, CreditCard, Landmark,
   Megaphone, Sparkles, Building2, Settings, ShieldCheck,
   Compass, Gift, Flame, Pen, MessageSquare, BadgeCheck,
   ClipboardList, Banknote, Code2, UtensilsCrossed, Smartphone as SmartphoneIcon,
   Pill, BedDouble, Sprout, Stethoscope, GraduationCap, Network, Award,
-  Bell, Activity, UserCog, Zap, Receipt, TrendingUp,
+  Bell, Activity, UserCog, Zap, Receipt, TrendingUp, Wallet, Star,
+  Globe, Search, HandCoins, BookOpen, ChevronRight,
 } from "lucide-react";
 import { useAuth } from "@/lib/hooks/use-auth";
 import { useRoles } from "@/lib/hooks/use-roles";
@@ -25,175 +26,190 @@ interface NavItem {
   icon: React.ElementType;
   permission?: Permission;
   badge?: string;
-  roles?: Role[];        // show only for these roles (empty = all roles)
-  hideFor?: Role[];      // hide for these specific roles
+  roles?: Role[];
+  hideFor?: Role[];
 }
 
 interface NavGroup {
   label: string;
   items: NavItem[];
-  showFor?: Role[];      // only show group for these roles
+  showFor?: Role[];
 }
 
-// ── Role-specific nav groups ─────────────────────────────────
-
+// ─────────────────────────────────────────────────────────────
+// KENUXA ECONOMIC NETWORK — Role-Specific Navigation
+// Primary: Discover & Participate | Secondary: Business Tools
+// ─────────────────────────────────────────────────────────────
 const NAV_GROUPS: NavGroup[] = [
-  // ── Overview (all roles) ─────────────────────────────────
+
+  // ── 1. HOME (all roles) ──────────────────────────────────
   {
     label: "Home",
     items: [
-      { href: "/dashboard",           label: "Dashboard",          icon: LayoutDashboard },
-      { href: "/dashboard/analytics", label: "Analytics",          icon: BarChart3, permission: "analytics.view" },
+      { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     ],
   },
 
-  // ── Discover (consumer-facing roles) ────────────────────
+  // ── 2. DISCOVER (Economic Network primary nav) ────────────
+  // Customers, Job Seekers, Freelancers, general participants
   {
     label: "Discover",
     items: [
-      { href: "/dashboard/discover",     label: "Explore",             icon: Compass },
-      { href: "/dashboard/directory",    label: "Business Directory",  icon: Map },
-      { href: "/dashboard/marketplace",  label: "Product Market",      icon: ShoppingBag, permission: "marketplace.buy" },
-      { href: "/dashboard/services",     label: "Service Market",      icon: Wrench, permission: "services.book" },
-      { href: "/dashboard/jobs",         label: "Jobs & Careers",      icon: Briefcase, permission: "jobs.apply" },
-      { href: "/dashboard/freelancers",  label: "Freelancers",         icon: Pen },
-      { href: "/dashboard/skills",       label: "Skills Marketplace",  icon: Award },
-      { href: "/dashboard/suppliers",    label: "Supplier Network",    icon: Factory, permission: "suppliers.view" },
+      { href: "/dashboard/discover",    label: "Explore",            icon: Compass,   badge: "NEW" },
+      { href: "/dashboard/directory",   label: "Businesses",         icon: Map },
+      { href: "/dashboard/marketplace", label: "Products",           icon: ShoppingBag, permission: "marketplace.buy" },
+      { href: "/dashboard/services",    label: "Services",           icon: Wrench,     permission: "services.book" },
+      { href: "/dashboard/jobs",        label: "Jobs",               icon: Briefcase,  permission: "jobs.apply" },
+      { href: "/dashboard/freelancers", label: "Freelancers",        icon: Pen },
+      { href: "/dashboard/suppliers",   label: "Suppliers",          icon: Factory,    permission: "suppliers.view" },
+      { href: "/dashboard/trending",    label: "Trending",           icon: Flame },
     ],
-    showFor: ["customer", "job_seeker", "freelancer", "business_owner", "super_admin", "country_admin"],
+    showFor: ["customer", "job_seeker", "freelancer", "business_owner",
+              "branch_manager", "employee", "supplier", "delivery_rider",
+              "recruiter", "financial_partner", "super_admin", "country_admin"],
   },
 
-  // ── Operations (business/operations roles) ────────────────
+  // ── 3. EARN & PARTICIPATE (Freelancer / Job Seeker) ──────
   {
-    label: "Operations",
+    label: "Earn",
     items: [
-      { href: "/dashboard/pos",            label: "Point of Sale",      icon: Monitor,         permission: "pos.access" },
-      { href: "/dashboard/inventory",      label: "Inventory",          icon: Package,         permission: "inventory.view" },
-      { href: "/dashboard/delivery",       label: "Delivery",           icon: Truck,           permission: "delivery.manage" },
-      { href: "/dashboard/restaurant",     label: "Restaurant OS",      icon: UtensilsCrossed, permission: "pos.access" },
-      { href: "/dashboard/mobile-money",   label: "Mobile Money OS",    icon: SmartphoneIcon,  permission: "payments.view" },
-      { href: "/dashboard/pharmacy",       label: "Pharmacy OS",        icon: Pill,            permission: "inventory.view" },
-      { href: "/dashboard/hotel",          label: "Hotel OS",           icon: BedDouble,       permission: "pos.access" },
-      { href: "/dashboard/agriculture",    label: "Agriculture OS",     icon: Sprout,          permission: "inventory.view" },
-      { href: "/dashboard/healthcare",     label: "Healthcare OS",      icon: Stethoscope,     permission: "pos.access" },
-      { href: "/dashboard/education",      label: "Education OS",       icon: GraduationCap,   permission: "inventory.view" },
-      { href: "/dashboard/professional",   label: "Professional OS",    icon: Briefcase,       permission: "invoicing.view" },
+      { href: "/dashboard/talent",     label: "My Talent Profile",  icon: BadgeCheck },
+      { href: "/dashboard/skills",     label: "Skills Marketplace", icon: Award },
+      { href: "/dashboard/jobs",       label: "Find Jobs",          icon: Briefcase },
+      { href: "/dashboard/freelancers",label: "Find Projects",      icon: Pen },
+      { href: "/dashboard/analytics",  label: "Earnings",           icon: TrendingUp },
     ],
-    showFor: ["business_owner", "branch_manager", "cashier", "employee", "super_admin"],
+    showFor: ["freelancer", "job_seeker"],
   },
 
-  // ── Business management ───────────────────────────────────
-  {
-    label: "Business",
-    items: [
-      { href: "/dashboard/crm",         label: "CRM",                 icon: Users,        permission: "crm.view" },
-      { href: "/dashboard/invoicing",   label: "Invoicing",           icon: FileText,     permission: "invoicing.view" },
-      { href: "/dashboard/payments",    label: "Payments",            icon: CreditCard,   permission: "payments.view" },
-      { href: "/dashboard/finance",     label: "Finance",             icon: Landmark,     permission: "finance.view" },
-      { href: "/dashboard/lending",     label: "Lending",             icon: Banknote,     permission: "finance.view" },
-      { href: "/dashboard/rfq",         label: "Procurement",         icon: ClipboardList, permission: "suppliers.view" },
-      { href: "/dashboard/team",        label: "Team Management",     icon: UserCog,       permission: "users.manage" },
-      { href: "/dashboard/billing",     label: "Billing & Plans",     icon: Receipt,       permission: "business.billing" },
-    ],
-    showFor: ["business_owner", "branch_manager", "super_admin", "country_admin", "financial_partner"],
-  },
-
-  // ── Supplier-specific ────────────────────────────────────
+  // ── 4. SUPPLY CHAIN (Suppliers) ──────────────────────────
   {
     label: "Supply Chain",
     items: [
-      { href: "/dashboard/rfq",         label: "RFQs & Quotes",       icon: ClipboardList },
-      { href: "/dashboard/invoicing",   label: "Invoicing",           icon: FileText },
-      { href: "/dashboard/payments",    label: "Payments",            icon: CreditCard },
-      { href: "/dashboard/analytics",   label: "Analytics",           icon: BarChart3 },
+      { href: "/dashboard/rfq",        label: "RFQs & Quotes",      icon: ClipboardList },
+      { href: "/dashboard/invoicing",  label: "Invoicing",          icon: FileText },
+      { href: "/dashboard/payments",   label: "Payments",           icon: CreditCard },
+      { href: "/dashboard/analytics",  label: "Analytics",          icon: BarChart3 },
     ],
     showFor: ["supplier"],
   },
 
-  // ── Delivery Rider ───────────────────────────────────────
+  // ── 5. DELIVERIES (Riders) ───────────────────────────────
   {
     label: "Deliveries",
     items: [
-      { href: "/dashboard/delivery",    label: "Active Deliveries",   icon: Truck },
-      { href: "/dashboard/analytics",   label: "Earnings",            icon: TrendingUp },
+      { href: "/dashboard/delivery",   label: "Active Deliveries",  icon: Truck },
+      { href: "/dashboard/analytics",  label: "My Earnings",        icon: TrendingUp },
     ],
     showFor: ["delivery_rider"],
   },
 
-  // ── Job Seeker ───────────────────────────────────────────
-  {
-    label: "Career",
-    items: [
-      { href: "/dashboard/jobs",            label: "Browse Jobs",       icon: Briefcase },
-      { href: "/dashboard/talent",          label: "My Profile",        icon: BadgeCheck },
-      { href: "/dashboard/onboarding/job-seeker", label: "Update CV",  icon: FileText },
-    ],
-    showFor: ["job_seeker"],
-  },
-
-  // ── Freelancer ───────────────────────────────────────────
-  {
-    label: "Freelancing",
-    items: [
-      { href: "/dashboard/services",        label: "My Services",       icon: Wrench },
-      { href: "/dashboard/talent",          label: "Portfolio",         icon: BadgeCheck },
-      { href: "/dashboard/payments",        label: "Earnings",          icon: CreditCard },
-      { href: "/dashboard/onboarding/freelancer", label: "Update Profile", icon: Pen },
-    ],
-    showFor: ["freelancer"],
-  },
-
-  // ── Financial Partner ────────────────────────────────────
-  {
-    label: "Finance Portal",
-    items: [
-      { href: "/dashboard/finance-partner", label: "Partner Portal",  icon: Landmark },
-      { href: "/dashboard/lending",         label: "Applications",    icon: Banknote },
-      { href: "/dashboard/analytics",       label: "Portfolio",       icon: BarChart3 },
-    ],
-    showFor: ["financial_partner"],
-  },
-
-  // ── Recruiter ────────────────────────────────────────────
+  // ── 6. RECRUITMENT (Recruiters) ──────────────────────────
   {
     label: "Recruitment",
     items: [
-      { href: "/dashboard/jobs",        label: "Job Postings",        icon: Briefcase },
-      { href: "/dashboard/analytics",   label: "Applications",        icon: BarChart3 },
+      { href: "/dashboard/jobs",       label: "Job Postings",       icon: Briefcase },
+      { href: "/dashboard/analytics",  label: "Applications",       icon: BarChart3 },
     ],
     showFor: ["recruiter"],
   },
 
-  // ── Growth (business owners) ─────────────────────────────
+  // ── 7. OPERATIONS (Business tools — secondary) ───────────
+  {
+    label: "Operations",
+    items: [
+      { href: "/dashboard/pos",           label: "Point of Sale",      icon: Monitor,         permission: "pos.access" },
+      { href: "/dashboard/inventory",     label: "Inventory",          icon: Package,         permission: "inventory.view" },
+      { href: "/dashboard/delivery",      label: "Delivery",           icon: Truck,           permission: "delivery.manage" },
+      { href: "/dashboard/restaurant",    label: "Restaurant OS",      icon: UtensilsCrossed, permission: "pos.access" },
+      { href: "/dashboard/mobile-money",  label: "Mobile Money OS",    icon: SmartphoneIcon,  permission: "payments.view" },
+      { href: "/dashboard/pharmacy",      label: "Pharmacy OS",        icon: Pill,            permission: "inventory.view" },
+      { href: "/dashboard/hotel",         label: "Hotel OS",           icon: BedDouble,       permission: "pos.access" },
+      { href: "/dashboard/agriculture",   label: "Agriculture OS",     icon: Sprout,          permission: "inventory.view" },
+      { href: "/dashboard/healthcare",    label: "Healthcare OS",      icon: Stethoscope,     permission: "pos.access" },
+      { href: "/dashboard/education",     label: "Education OS",       icon: GraduationCap,   permission: "inventory.view" },
+      { href: "/dashboard/professional",  label: "Professional OS",    icon: Briefcase,       permission: "invoicing.view" },
+    ],
+    showFor: ["business_owner", "branch_manager", "cashier", "employee", "super_admin"],
+  },
+
+  // ── 8. BUSINESS (Management tools) ───────────────────────
+  {
+    label: "Business",
+    items: [
+      { href: "/dashboard/crm",        label: "CRM",                icon: Users,        permission: "crm.view" },
+      { href: "/dashboard/invoicing",  label: "Invoicing",          icon: FileText,     permission: "invoicing.view" },
+      { href: "/dashboard/payments",   label: "Payments",           icon: CreditCard,   permission: "payments.view" },
+      { href: "/dashboard/finance",    label: "Finance",            icon: Landmark,     permission: "finance.view" },
+      { href: "/dashboard/lending",    label: "Lending",            icon: Banknote,     permission: "finance.view" },
+      { href: "/dashboard/rfq",        label: "Procurement",        icon: ClipboardList, permission: "suppliers.view" },
+      { href: "/dashboard/team",       label: "Team",               icon: UserCog,      permission: "users.manage" },
+      { href: "/dashboard/billing",    label: "Billing & Plans",    icon: Receipt,      permission: "business.billing" },
+    ],
+    showFor: ["business_owner", "branch_manager", "super_admin", "country_admin"],
+  },
+
+  // ── 9. LENDING PORTAL (Financial Partners) ───────────────
+  {
+    label: "Lending Portal",
+    items: [
+      { href: "/dashboard/finance-partner", label: "Applications",    icon: Landmark },
+      { href: "/dashboard/analytics",       label: "Portfolio",       icon: BarChart3 },
+      { href: "/dashboard/developer",       label: "API Integration", icon: Code2 },
+    ],
+    showFor: ["financial_partner"],
+  },
+
+  // ── 10. GROWTH (Business owners) ─────────────────────────
   {
     label: "Growth",
     items: [
-      { href: "/dashboard/marketing",    label: "Marketing",          icon: Megaphone, permission: "marketing.view" },
-      { href: "/dashboard/reputation",   label: "Reputation",         icon: Star,      permission: "business.view" },
-      { href: "/dashboard/ai",           label: "AI Assistant",       icon: Sparkles },
-      { href: "/dashboard/economic-graph", label: "Economic Graph",   icon: Network, badge: "NEW" },
-      { href: "/dashboard/developer",    label: "Developer",          icon: Code2 },
+      { href: "/dashboard/marketing",      label: "Marketing",        icon: Megaphone,  permission: "marketing.view" },
+      { href: "/dashboard/reputation",     label: "Reputation",       icon: Star,       permission: "business.view" },
+      { href: "/dashboard/ai",             label: "AI Assistant",     icon: Sparkles },
+      { href: "/dashboard/economic-graph", label: "Economic Graph",   icon: Network,   badge: "NEW" },
+      { href: "/dashboard/analytics",      label: "Analytics",        icon: BarChart3, permission: "analytics.view" },
+      { href: "/dashboard/developer",      label: "Developer",        icon: Code2 },
     ],
     showFor: ["business_owner", "branch_manager", "super_admin"],
   },
 
-  // ── Community (all roles) ────────────────────────────────
+  // ── 11. COMMUNITY (All roles) ─────────────────────────────
+  {
+    label: "Community",
+    items: [
+      { href: "/dashboard/community", label: "Social Feed",          icon: MessageSquare, badge: "NEW" },
+      { href: "/dashboard/directory", label: "Business Directory",   icon: Globe },
+      { href: "/dashboard/ai",        label: "AI Assistant",         icon: Sparkles,
+        hideFor: ["business_owner", "branch_manager"] },
+    ],
+  },
+
+  // ── 12. FINANCE (Wallet, KENUX, Credit) ──────────────────
+  {
+    label: "Finance",
+    items: [
+      { href: "/dashboard/wallet",    label: "Wallet",              icon: Wallet },
+      { href: "/dashboard/kenux",     label: "KENUX",               icon: Zap },
+      { href: "/dashboard/credit",    label: "KENUXA Credit",       icon: TrendingUp },
+      { href: "/dashboard/rewards",   label: "Rewards",             icon: Gift },
+      { href: "/dashboard/lending",   label: "Financing",           icon: HandCoins,
+        hideFor: ["business_owner", "branch_manager"] },
+    ],
+  },
+
+  // ── 13. MY KENUXA (Personal) ─────────────────────────────
   {
     label: "My KENUXA",
     items: [
-      { href: "/dashboard/ai",            label: "AI Assistant",        icon: Sparkles,   hideFor: ["business_owner", "branch_manager"] },
-      { href: "/dashboard/community",     label: "Social Feed",         icon: MessageSquare, badge: "NEW" },
-      { href: "/dashboard/rewards",       label: "Rewards",             icon: Gift },
-      { href: "/dashboard/kenux",         label: "KENUX",               icon: Zap },
-      { href: "/dashboard/trending",      label: "Trending",            icon: Flame },
-      { href: "/dashboard/account",       label: "My Account",          icon: ShoppingBag, hideFor: ["business_owner", "branch_manager", "cashier"] },
-      { href: "/dashboard/wallet",        label: "Wallet",              icon: CreditCard },
-      { href: "/dashboard/credit",        label: "KENUXA Credit",       icon: TrendingUp },
-      { href: "/dashboard/notifications", label: "Notifications",       icon: Bell },
-      { href: "/dashboard/activity",      label: "Activity Feed",       icon: Activity },
-      { href: "/dashboard/talent",        label: "Talent Profile",      icon: BadgeCheck, hideFor: ["business_owner", "cashier", "branch_manager"] },
-      { href: "/dashboard/identity",      label: "KENUXA ID",           icon: ShieldCheck },
-      { href: "/dashboard/roles",         label: "My Roles",            icon: Users },
+      { href: "/dashboard/account",       label: "My Account",         icon: ShoppingBag,
+        hideFor: ["business_owner", "branch_manager", "cashier"] },
+      { href: "/dashboard/notifications", label: "Notifications",      icon: Bell },
+      { href: "/dashboard/activity",      label: "Activity",           icon: Activity },
+      { href: "/dashboard/talent",        label: "Talent Profile",     icon: BadgeCheck,
+        hideFor: ["business_owner", "cashier", "branch_manager", "customer"] },
+      { href: "/dashboard/identity",      label: "KENUXA ID",          icon: ShieldCheck },
+      { href: "/dashboard/roles",         label: "My Roles",           icon: Users },
     ],
   },
 ];
@@ -203,7 +219,6 @@ export function Sidebar() {
   const { role, profile } = useAuth();
   const { activeContext } = useRoles();
 
-  // Use activeContext (multi-role switching) with fallback to useAuth role
   const currentRole: Role = (activeContext || role || "customer") as Role;
 
   const visibleGroups = NAV_GROUPS
@@ -214,11 +229,8 @@ export function Sidebar() {
     .map((group) => ({
       ...group,
       items: group.items.filter((item) => {
-        // Hide for specific roles
         if (item.hideFor?.includes(currentRole)) return false;
-        // Role-specific whitelist
         if (item.roles && !item.roles.includes(currentRole)) return false;
-        // Permission-based
         if (item.permission && !hasPermission(currentRole, item.permission)) return false;
         return true;
       }),
@@ -232,14 +244,16 @@ export function Sidebar() {
         <Link href="/dashboard" className="flex items-center">
           <Logo variant="full" size="sm" />
         </Link>
-        <RoleSwitcher />
+        <div className="flex items-center gap-1.5">
+          <RoleSwitcher />
+        </div>
       </div>
 
       {/* Nav */}
       <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-5">
         {visibleGroups.map((group) => (
           <div key={group.label}>
-            <p className="text-[10px] font-semibold text-[#374151] uppercase tracking-widest px-2 mb-1.5">
+            <p className="text-[10px] font-semibold text-[#2d3450] uppercase tracking-widest px-2 mb-1.5">
               {group.label}
             </p>
             <ul className="space-y-0.5">
@@ -279,7 +293,7 @@ export function Sidebar() {
         ))}
       </nav>
 
-      {/* Notifications */}
+      {/* Notifications strip */}
       <div className="flex-shrink-0 px-3 py-2 border-t border-white/7">
         <div className="flex items-center gap-2.5 px-2.5 py-1.5">
           <NotificationBell iconSize={15} />
@@ -287,7 +301,7 @@ export function Sidebar() {
         </div>
       </div>
 
-      {/* Bottom — admin + settings */}
+      {/* Bottom — Admin + Settings + Identity */}
       <div className="flex-shrink-0 p-3 border-t border-white/7 space-y-0.5">
         {isAdminRole(currentRole) && (
           <Link
@@ -333,11 +347,18 @@ export function Sidebar() {
         )}
 
         {/* User identity strip */}
-        <Link href="/dashboard/identity" className="mt-2 flex items-center gap-2.5 px-2.5 py-2.5 rounded-xl bg-white/[0.02] border border-white/[0.06] hover:border-white/[0.1] hover:bg-white/[0.04] transition-all group">
+        <Link
+          href="/dashboard/identity"
+          className="mt-2 flex items-center gap-2.5 px-2.5 py-2.5 rounded-xl bg-white/[0.02] border border-white/[0.06] hover:border-white/[0.1] hover:bg-white/[0.04] transition-all group"
+        >
           <div className="w-8 h-8 rounded-xl overflow-hidden flex-shrink-0 bg-gradient-to-br from-[rgba(255,101,36,0.2)] to-[rgba(255,101,36,0.05)] flex items-center justify-center">
             {(profile as { avatar_url?: string | null } | null)?.avatar_url ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={(profile as { avatar_url?: string | null } | null)?.avatar_url!} alt="You" className="w-full h-full object-cover" />
+              <img
+                src={(profile as { avatar_url?: string | null } | null)?.avatar_url!}
+                alt="You"
+                className="w-full h-full object-cover"
+              />
             ) : (
               <span className="text-[#FF8B5E] text-xs font-black">
                 {profile?.full_name?.[0] ?? "?"}
@@ -348,9 +369,11 @@ export function Sidebar() {
             <p className="text-xs font-semibold text-[#94a3b8] truncate group-hover:text-[#f1f5f9] transition-colors">
               {profile?.full_name ?? "Your Profile"}
             </p>
-            <p className="text-[10px] text-[#374151] capitalize">{currentRole?.replace(/_/g, " ")}</p>
+            <p className="text-[10px] text-[#374151] capitalize">
+              {currentRole?.replace(/_/g, " ")}
+            </p>
           </div>
-          <RoleSwitcher />
+          <ChevronRight size={12} className="text-[#374151] group-hover:text-[#64748b] transition-colors flex-shrink-0" />
         </Link>
       </div>
     </aside>
