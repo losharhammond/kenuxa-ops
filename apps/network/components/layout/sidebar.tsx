@@ -200,7 +200,7 @@ const NAV_GROUPS: NavGroup[] = [
 
 export function Sidebar() {
   const pathname = usePathname();
-  const { role } = useAuth();
+  const { role, profile } = useAuth();
   const { activeContext } = useRoles();
 
   // Use activeContext (multi-role switching) with fallback to useAuth role
@@ -331,6 +331,27 @@ export function Sidebar() {
             <span>Settings</span>
           </Link>
         )}
+
+        {/* User identity strip */}
+        <Link href="/dashboard/identity" className="mt-2 flex items-center gap-2.5 px-2.5 py-2.5 rounded-xl bg-white/[0.02] border border-white/[0.06] hover:border-white/[0.1] hover:bg-white/[0.04] transition-all group">
+          <div className="w-8 h-8 rounded-xl overflow-hidden flex-shrink-0 bg-gradient-to-br from-[rgba(255,101,36,0.2)] to-[rgba(255,101,36,0.05)] flex items-center justify-center">
+            {(profile as { avatar_url?: string | null } | null)?.avatar_url ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={(profile as { avatar_url?: string | null } | null)?.avatar_url!} alt="You" className="w-full h-full object-cover" />
+            ) : (
+              <span className="text-[#FF8B5E] text-xs font-black">
+                {profile?.full_name?.[0] ?? "?"}
+              </span>
+            )}
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-semibold text-[#94a3b8] truncate group-hover:text-[#f1f5f9] transition-colors">
+              {profile?.full_name ?? "Your Profile"}
+            </p>
+            <p className="text-[10px] text-[#374151] capitalize">{currentRole?.replace(/_/g, " ")}</p>
+          </div>
+          <RoleSwitcher />
+        </Link>
       </div>
     </aside>
   );

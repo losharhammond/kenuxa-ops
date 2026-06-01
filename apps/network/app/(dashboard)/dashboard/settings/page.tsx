@@ -100,6 +100,10 @@ export default function SettingsPage() {
   const [countrySearch, setCountrySearch] = useState("");
   const [countrySaved, setCountrySaved] = useState(false);
 
+  // Personal avatar
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [avatarSaving, setAvatarSaving] = useState(false);
+
   // Business profile
   const [bizForm, setBizForm] = useState<BusinessProfile>(EMPTY_PROFILE);
   const [bizLogo, setBizLogo] = useState<string | null>(null);
@@ -301,6 +305,39 @@ export default function SettingsPage() {
         {/* General */}
         {activeTab === "general" && (
           <div className="space-y-6">
+            {/* Personal Avatar */}
+            <Card>
+              <CardHeader><CardTitle>Personal Profile Photo</CardTitle></CardHeader>
+              <CardContent>
+                <div className="flex items-center gap-6">
+                  <ImageUpload
+                    value={avatarUrl ?? (profile as { avatar_url?: string | null } | null)?.avatar_url ?? null}
+                    onChange={async (url) => {
+                      setAvatarUrl(url);
+                      if (url && profile?.id) {
+                        setAvatarSaving(true);
+                        await supabase.from("user_profiles").update({ avatar_url: url }).eq("id", profile.id);
+                        setAvatarSaving(false);
+                      }
+                    }}
+                    bucket="avatars"
+                    path={`users/${profile?.id ?? "unknown"}`}
+                    shape="circle"
+                    size="md"
+                    placeholder="Upload photo"
+                  />
+                  <div>
+                    <p className="text-sm font-semibold text-[#f1f5f9] mb-1">Profile Photo</p>
+                    <p className="text-xs text-[#64748b] leading-relaxed max-w-xs">
+                      Your photo appears on your KENUXA ID, community posts, service listings, and freelancer profile. Recommended: 400×400px.
+                    </p>
+                    {avatarSaving && <p className="text-xs text-[#FF8B5E] mt-1">Saving…</p>}
+                    {avatarUrl && !avatarSaving && <p className="text-xs text-[#34d399] mt-1 flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-[#34d399] inline-block" /> Photo updated</p>}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Plan */}
             <Card className="border-[rgba(255,101,36,0.2)] bg-[rgba(255,101,36,0.04)]">
               <CardContent className="p-6">

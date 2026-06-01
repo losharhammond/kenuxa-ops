@@ -135,6 +135,27 @@ export default function WalletPage() {
   const monthIn  = txs.filter((t) => t.type === "credit").reduce((s, t) => s + t.amount, 0);
   const monthOut = txs.filter((t) => t.type === "debit").reduce((s, t) => s + t.amount, 0);
 
+  const downloadStatement = () => {
+    if (txs.length === 0) return;
+    const header = "Date,Type,Description,Amount (GHS),Status,Reference";
+    const rows = txs.map((t) => [
+      new Date(t.created_at).toISOString().split("T")[0],
+      t.type,
+      `"${t.description.replace(/"/g, '""')}"`,
+      (t.type === "debit" ? -t.amount : t.amount).toFixed(2),
+      t.status,
+      t.reference ?? "",
+    ].join(","));
+    const csv = [header, ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `kenuxa-wallet-statement-${new Date().toISOString().split("T")[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="min-h-screen bg-[#070B14] text-white">
       {/* Header */}
@@ -233,8 +254,12 @@ export default function WalletPage() {
         <div className="bg-[#0d0f1a] border border-white/7 rounded-2xl overflow-hidden">
           <div className="px-5 py-4 border-b border-white/7 flex items-center justify-between">
             <p className="font-semibold text-white text-sm">Transaction History</p>
-            <button className="text-xs text-[#64748b] hover:text-[#FF8B5E] flex items-center gap-1 transition-colors">
-              Export <ChevronRight size={12} />
+            <button
+              onClick={downloadStatement}
+              disabled={txs.length === 0}
+              className="text-xs text-[#64748b] hover:text-[#FF8B5E] flex items-center gap-1 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              Download CSV <ChevronRight size={12} />
             </button>
           </div>
           <div className="divide-y divide-white/[0.04]">
