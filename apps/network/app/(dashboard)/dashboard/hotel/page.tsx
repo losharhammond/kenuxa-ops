@@ -199,7 +199,7 @@ export default function HotelPage() {
   const load = useCallback(async () => {
     if (!businessId) return;
     setLoading(true);
-
+    try {
     const [roomRes, resRes] = await Promise.all([
       supabase.from("hotel_rooms").select("*").eq("business_id", businessId).order("room_number"),
       supabase.from("hotel_reservations").select("*").eq("business_id", businessId).order("check_in", { ascending: false }),
@@ -210,7 +210,9 @@ export default function HotelPage() {
 
     setRooms(roomData);
     setReservations(resData);
+  } finally {
     setLoading(false);
+  }
   }, [businessId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);

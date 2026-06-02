@@ -1,15 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 /**
- * Market price update cron — 3×/day at 06:00, 12:00, 18:00 UTC.
+ * Market price update cron — daily at 07:00 UTC (see vercel.json for schedule).
  * Pulls commodity prices from AgroMonitor / GCMA API if configured,
  * otherwise refreshes timestamps to signal data is still current.
  */
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+let _supabase: SupabaseClient | null = null;
+function getSupabase(): SupabaseClient {
+  if (!_supabase) {
+    _supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+  }
+  return _supabase;
+}
 
 // Simulated market volatility ±5% per update cycle when no external API
 function jitter(base: number, pct = 0.05): number {
@@ -40,6 +46,7 @@ export async function POST(req: NextRequest) {
 }
 
 async function runUpdate() {
+  const supabase = getSupabase();
   const now = new Date().toISOString();
   const agroApiKey = process.env.AGRO_MONITOR_API_KEY;
   let source = "internal_simulation";

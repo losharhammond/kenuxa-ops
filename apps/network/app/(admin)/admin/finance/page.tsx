@@ -68,7 +68,7 @@ export default function AdminFinancePage() {
 
   const load = useCallback(async () => {
     setLoading(true);
-
+    try {
     // Settlements
     const { data: settlData } = await supabase
       .from("pending_settlements")
@@ -143,7 +143,9 @@ export default function AdminFinancePage() {
     const payoutsTotal = payoutRows.filter((p) => p.status === "success").reduce((s, r) => s + r.amount, 0);
 
     setKpis({ fees_mtd: feesMtd, pending, escrow: escrowTotal, payouts_total: payoutsTotal });
-    setLoading(false);
+    } finally {
+      setLoading(false);
+    }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);

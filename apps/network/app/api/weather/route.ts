@@ -72,6 +72,7 @@ export async function GET(req: NextRequest) {
     url.searchParams.set("forecast_days",     "1");
 
     const res = await fetch(url.toString(), { next: { revalidate: 1800 } }); // cache 30 min
+    if (!res.ok) throw new Error(`Weather API error: ${res.status}`);
     const data = await res.json();
 
     const current = data.current;

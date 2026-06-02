@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { createClient as createBrowserClient } from "@/lib/supabase/client";
 import { useUser } from "@/lib/hooks/use-auth";
 
@@ -19,19 +19,20 @@ export function useBusiness() {
   const { user } = useUser();
   const [business, setBusiness] = useState<Business | null>(null);
   const [loading, setLoading] = useState(true);
-  const supabase = createBrowserClient();
+  // Stable client ref — never recreated across renders
+  const supabaseRef = useRef(createBrowserClient());
 
   const fetch = useCallback(async () => {
     if (!user) { setLoading(false); return; }
     setLoading(true);
-    const { data } = await supabase
+    const { data } = await supabaseRef.current
       .from("businesses")
       .select("id, name, type, city, verified, logo_url, phone, email")
       .eq("owner_id", user.id)
       .single();
     setBusiness(data ?? null);
     setLoading(false);
-  }, [user, supabase]);
+  }, [user]);
 
   useEffect(() => { fetch(); }, [fetch]);
 

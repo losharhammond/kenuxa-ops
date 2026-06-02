@@ -347,35 +347,35 @@ export default function RestaurantPage() {
     if (!bizId) return;
     setLoading(true);
     const today = new Date().toISOString().slice(0, 10);
+    try {
+      const [menuRes, tableRes, orderRes] = await Promise.all([
+        supabase.from("menu_items").select("*").eq("business_id", bizId).order("category").order("name"),
+        supabase.from("restaurant_tables").select("*").eq("business_id", bizId).order("table_number"),
+        supabase.from("dining_orders").select("*").eq("business_id", bizId)
+          .gte("created_at", today).order("created_at", { ascending: false }),
+      ]);
 
-    const [menuRes, tableRes, orderRes] = await Promise.all([
-      supabase.from("menu_items").select("*").eq("business_id", bizId).order("category").order("name"),
-      supabase.from("restaurant_tables").select("*").eq("business_id", bizId).order("table_number"),
-      supabase.from("dining_orders").select("*").eq("business_id", bizId)
-        .gte("created_at", today).order("created_at", { ascending: false }),
-    ]);
+      const menuData: MenuItem[] = menuRes.data ?? [];
+      const tableData: RestaurantTable[] = tableRes.data ?? [];
+      const orderData: DiningOrder[] = orderRes.data ?? [];
 
-    const menuData: MenuItem[] = menuRes.data ?? [];
-    const tableData: RestaurantTable[] = tableRes.data ?? [];
-    const orderData: DiningOrder[] = orderRes.data ?? [];
+      setMenuItems(menuData);
+      setTables(tableData);
+      setOrders(orderData);
 
-    setMenuItems(menuData);
-    setTables(tableData);
-    setOrders(orderData);
+      const completedOrders = orderData.filter((o) => o.status === "completed");
+      const revenue = completedOrders.reduce((s, o) => s + o.total_amount, 0);
+      const occupied = tableData.filter((t) => t.status === "occupied").length;
 
-    const completedOrders = orderData.filter((o) => o.status === "completed");
-    const revenue = completedOrders.reduce((s, o) => s + o.total_amount, 0);
-    const occupied = tableData.filter((t) => t.status === "occupied").length;
-
-    setStats({
-      revenue,
-      orders: orderData.length,
-      avgOrderValue: completedOrders.length ? revenue / completedOrders.length : 0,
-      tableOccupancy: tableData.length ? Math.round((occupied / tableData.length) * 100) : 0,
-    });
-
-
-    setLoading(false);
+      setStats({
+        revenue,
+        orders: orderData.length,
+        avgOrderValue: completedOrders.length ? revenue / completedOrders.length : 0,
+        tableOccupancy: tableData.length ? Math.round((occupied / tableData.length) * 100) : 0,
+      });
+    } finally {
+      setLoading(false);
+    }
   }, [bizId, supabase]);
 
   useEffect(() => { load(); }, [load]);

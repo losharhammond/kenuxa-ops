@@ -1,12 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import crypto from "crypto";
 
-// Supabase admin client — no cookie auth needed for webhooks
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+// Lazy Supabase admin client — no cookie auth needed for webhooks
+let _supabase: SupabaseClient | null = null;
+function getSupabase(): SupabaseClient {
+  if (!_supabase) {
+    _supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+  }
+  return _supabase;
+}
 
 function verifySignature(body: string, signature: string): boolean {
   const hash = crypto
@@ -25,31 +31,33 @@ export async function POST(req: NextRequest) {
   }
 
   const event = JSON.parse(rawBody);
+  const sb = getSupabase();
 
   if (event.event === "charge.success") {
     const data = event.data;
     const reference = data.reference;
-    const userId = data.metadata?.user_id;
-    const purpose = data.metadata?.purpose ?? "wallet_topup";
     const amountGHS = data.amount / 100;
 
-    // Idempotent: only process if still pending
-    const { data: tx } = await supabase
+    // SECURITY: resolve user_id from OUR database record — never trust metadata from Paystack
+    const { data: tx } = await sb
       .from("wallet_transactions")
-      .select("id, status")
+      .select("id, status, user_id, metadata")
       .eq("reference", reference)
       .single();
 
     if (tx && tx.status === "pending") {
-      await supabase
+      const userId = (tx as { user_id: string }).user_id;
+      const purpose = (tx.metadata as { purpose?: string } | null)?.purpose ?? "wallet_topup";
+
+      await sb
         .from("wallet_transactions")
         .update({ status: "completed", settled_at: new Date().toISOString() })
         .eq("reference", reference);
 
-      if (purpose === "wallet_topup" && userId) {
-        await supabase.rpc("wallet_credit", { p_user_id: userId, p_amount: amountGHS, p_currency: data.currency });
+      if (purpose === "wallet_topup") {
+        await sb.rpc("wallet_credit", { p_user_id: userId, p_amount: amountGHS, p_currency: data.currency ?? "GHS" });
         // Record wallet transaction row for history
-        await supabase.from("wallet_transactions").upsert({
+        await sb.from("wallet_transactions").upsert({
           user_id:     userId,
           type:        "credit",
           amount:      amountGHS,
@@ -58,20 +66,24 @@ export async function POST(req: NextRequest) {
           status:      "completed",
           reference,
           provider:    "paystack",
-        }, { onConflict: "reference" }).then(() => {});
-      } else if (purpose === "kenux_purchase" && userId) {
+        }, { onConflict: "reference" });
+      } else if (purpose === "kenux_purchase") {
         // Fixed rate: 10 KENUX = GH₵ 1.00 (i.e. 10 KNX per GHS)
         const KENUX_PER_GHS = parseInt(process.env.KENUX_PER_GHS ?? "10", 10);
         const kenuxAmount = Math.floor(amountGHS * KENUX_PER_GHS);
-        await supabase.rpc("kenux_credit", { p_user_id: userId, p_points: kenuxAmount, p_reason: `Purchased ${kenuxAmount} KENUX for GH₵${amountGHS.toFixed(2)}` });
+        await sb.rpc("kenux_credit", {
+          p_user_id: userId,
+          p_points:  kenuxAmount,
+          p_reason:  `Purchased ${kenuxAmount} KENUX for GH₵${amountGHS.toFixed(2)}`,
+        });
 
         // Record platform revenue
-        await supabase.from("platform_revenue").insert({
-          source:       "kenux_purchase",
+        await sb.from("platform_revenue").insert({
           revenue_type: "kenux_purchase",
           amount:       amountGHS,
           reference,
           user_id:      userId,
+          currency:     "GHS",
           status:       "settled",
         });
       }
@@ -80,7 +92,7 @@ export async function POST(req: NextRequest) {
 
   if (event.event === "transfer.success") {
     const reference = event.data.reference;
-    await supabase
+    await sb
       .from("wallet_transactions")
       .update({ status: "completed", settled_at: new Date().toISOString() })
       .eq("reference", reference);
@@ -89,12 +101,10 @@ export async function POST(req: NextRequest) {
   // ── Subscription events ──────────────────────────────────────
   if (event.event === "subscription.create") {
     const sub = event.data;
-    const customerId = sub.customer?.customer_code;
-    const planCode   = sub.plan?.plan_code;
-    await supabase.from("subscriptions").upsert({
+    await sb.from("subscriptions").upsert({
       paystack_subscription_code: sub.subscription_code,
-      paystack_customer_code:     customerId,
-      plan_code:  planCode,
+      paystack_customer_code:     sub.customer?.customer_code,
+      plan_code:  sub.plan?.plan_code,
       status:     "active",
       next_payment_date: sub.next_payment_date,
       updated_at: new Date().toISOString(),
@@ -104,7 +114,7 @@ export async function POST(req: NextRequest) {
   if (event.event === "subscription.disable" || event.event === "subscription.not_renew") {
     const subCode = event.data.subscription_code;
     if (subCode) {
-      await supabase
+      await sb
         .from("subscriptions")
         .update({ status: "cancelled", updated_at: new Date().toISOString() })
         .eq("paystack_subscription_code", subCode);
@@ -114,7 +124,7 @@ export async function POST(req: NextRequest) {
   if (event.event === "invoice.payment_failed") {
     const subCode = event.data.subscription?.subscription_code;
     if (subCode) {
-      await supabase
+      await sb
         .from("subscriptions")
         .update({ status: "past_due", updated_at: new Date().toISOString() })
         .eq("paystack_subscription_code", subCode);
@@ -124,27 +134,35 @@ export async function POST(req: NextRequest) {
   if (event.event === "invoice.update" && event.data.paid) {
     const subCode = event.data.subscription?.subscription_code;
     if (subCode) {
-      await supabase
+      await sb
         .from("subscriptions")
-        .update({ status: "active", next_payment_date: event.data.next_notification, updated_at: new Date().toISOString() })
+        .update({
+          status: "active",
+          next_payment_date: event.data.next_notification,
+          updated_at: new Date().toISOString(),
+        })
         .eq("paystack_subscription_code", subCode);
     }
   }
 
   if (event.event === "transfer.failed" || event.event === "transfer.reversed") {
     const reference = event.data.reference;
-    await supabase
+    await sb
       .from("wallet_transactions")
       .update({ status: "failed" })
       .eq("reference", reference);
-    // Reverse debit if withdrawal failed
-    const { data: tx } = await supabase
+    // Reverse debit if withdrawal failed — refund the user
+    const { data: failedTx } = await sb
       .from("wallet_transactions")
       .select("user_id, amount, currency")
       .eq("reference", reference)
       .single();
-    if (tx) {
-      await supabase.rpc("wallet_credit", { p_user_id: tx.user_id, p_amount: tx.amount, p_currency: tx.currency });
+    if (failedTx) {
+      await sb.rpc("wallet_credit", {
+        p_user_id:  failedTx.user_id,
+        p_amount:   failedTx.amount,
+        p_currency: failedTx.currency ?? "GHS",
+      });
     }
   }
 

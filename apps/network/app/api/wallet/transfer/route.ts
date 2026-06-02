@@ -6,14 +6,20 @@
  */
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import { trackRevenue } from "@/lib/revenue/track";
 
-const adminSupabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+let _admin: SupabaseClient | null = null;
+function getAdmin(): SupabaseClient {
+  if (!_admin) {
+    _admin = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+  }
+  return _admin;
+}
 
 export async function POST(req: NextRequest) {
   const cookieStore = await cookies();
@@ -35,7 +41,7 @@ export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => ({})) as {
     receiver_identifier?: string;
     amount?: number;
-    note?: string | undefined;
+    note?: string;
   };
 
   if (!body.receiver_identifier || !body.amount) {
@@ -55,7 +61,7 @@ export async function POST(req: NextRequest) {
   const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(receiverId);
 
   if (!isUUID) {
-    const { data: receiverProfile } = await adminSupabase
+    const { data: receiverProfile } = await getAdmin()
       .from("user_profiles")
       .select("id")
       .or(`email.eq.${receiverId},phone.eq.${receiverId}`)
@@ -72,12 +78,12 @@ export async function POST(req: NextRequest) {
   }
 
   // Execute atomic transfer via RPC
-  const { data: result, error } = await adminSupabase.rpc("wallet_transfer", {
+  const { data: result, error } = await getAdmin().rpc("wallet_transfer", {
     p_sender_id:   user.id,
     p_receiver_id: receiverId,
     p_amount:      amount,
     p_currency:    "GHS",
-    p_note:        body.note ?? undefined,
+    p_note:        body.note ?? null,
   });
 
   if (error) {
@@ -91,11 +97,11 @@ export async function POST(req: NextRequest) {
   }
 
   const transfer = result as { ok: boolean; reference: string; sender_balance: number };
+  const reference = transfer.reference;
 
   // Record wallet transaction rows for history
-  const reference = transfer.reference;
   await Promise.all([
-    adminSupabase.from("wallet_transactions").insert({
+    getAdmin().from("wallet_transactions").insert({
       user_id:     user.id,
       type:        "debit",
       amount,
@@ -105,7 +111,7 @@ export async function POST(req: NextRequest) {
       reference,
       provider:    "wallet",
     }),
-    adminSupabase.from("wallet_transactions").insert({
+    getAdmin().from("wallet_transactions").insert({
       user_id:     receiverId,
       type:        "credit",
       amount,
@@ -118,7 +124,7 @@ export async function POST(req: NextRequest) {
   ]);
 
   // Notify receiver
-  await adminSupabase.from("notifications").insert({
+  await getAdmin().from("notifications").insert({
     user_id:    receiverId,
     type:       "wallet_credit",
     category:   "payment",
@@ -127,14 +133,14 @@ export async function POST(req: NextRequest) {
     action_url: "/dashboard/wallet",
   });
 
-  // Track platform transfer fee (1.5% + 0.50, waived for low amounts < 10)
+  // Track platform transfer fee (1.5% + GH₵0.50, waived for amounts < GH₵10)
   if (amount >= 10) {
     const fee = Math.round((amount * 0.015 + 0.50) * 100) / 100;
     await trackRevenue({ source: "transaction_fee", amount: fee, userId: user.id, reference });
   }
 
   // Activity feed
-  await adminSupabase.from("activity_feed").insert({
+  await getAdmin().from("activity_feed").insert({
     user_id: user.id,
     type:    "payment_sent",
     title:   `Sent GH₵ ${amount.toFixed(2)}`,
@@ -143,9 +149,9 @@ export async function POST(req: NextRequest) {
   });
 
   return NextResponse.json({
-    ok:              true,
+    ok:             true,
     reference,
-    sender_balance:  transfer.sender_balance,
-    amount_sent:     amount,
+    sender_balance: transfer.sender_balance,
+    amount_sent:    amount,
   });
 }

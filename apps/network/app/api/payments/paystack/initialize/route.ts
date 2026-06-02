@@ -53,6 +53,10 @@ export async function POST(req: NextRequest) {
     }),
   });
 
+  if (!paystackRes.ok) {
+    return NextResponse.json({ error: "Payment initialization failed" }, { status: 400 });
+  }
+
   const paystackData = await paystackRes.json();
 
   if (!paystackData.status) {

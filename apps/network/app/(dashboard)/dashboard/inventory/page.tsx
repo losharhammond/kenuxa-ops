@@ -72,13 +72,16 @@ export default function InventoryPage() {
   const load = useCallback(async () => {
     if (!profile?.business_id) return;
     setLoading(true);
-    const { data } = await supabase
-      .from("inventory_items")
-      .select("*")
-      .eq("business_id", profile.business_id)
-      .order("name");
-    setItems(data ?? []);
-    setLoading(false);
+    try {
+      const { data } = await supabase
+        .from("inventory_items")
+        .select("*")
+        .eq("business_id", profile.business_id)
+        .order("name");
+      setItems(data ?? []);
+    } finally {
+      setLoading(false);
+    }
   }, [profile?.business_id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);
@@ -117,17 +120,19 @@ export default function InventoryPage() {
       is_active: true,
       image_url: editImageUrl,
     };
-    if (editItem) {
-      await supabase.from("inventory_items").update(payload).eq("id", editItem.id);
-    } else {
-      await supabase.from("inventory_items").insert(payload);
+    try {
+      const { error: saveErr } = editItem
+        ? await supabase.from("inventory_items").update(payload).eq("id", editItem.id)
+        : await supabase.from("inventory_items").insert(payload);
+      if (saveErr) { setFormError(saveErr.message || "Failed to save item."); return; }
+      setShowAddModal(false);
+      setEditItem(null);
+      setForm(DEFAULT_FORM);
+      setEditImageUrl(null);
+      load();
+    } finally {
+      setSaving(false);
     }
-    setSaving(false);
-    setShowAddModal(false);
-    setEditItem(null);
-    setForm(DEFAULT_FORM);
-    setEditImageUrl(null);
-    load();
   }
 
   function openEdit(item: InventoryItem) {

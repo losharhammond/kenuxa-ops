@@ -65,6 +65,7 @@ export default function AdminBusinessesPage() {
   useEffect(() => {
     async function load() {
       setLoading(true);
+      try {
       let q = supabase
         .from("businesses")
         .select("id, name, type, city, region, status, verification_status, avg_rating, total_sales, created_at")
@@ -76,7 +77,9 @@ export default function AdminBusinessesPage() {
 
       const { data } = await q;
       setBusinesses((data as AdminBusiness[]) ?? []);
+    } finally {
       setLoading(false);
+    }
     }
     load();
   // eslint-disable-next-line react-hooks/exhaustive-deps

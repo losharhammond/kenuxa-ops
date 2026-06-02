@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/use-auth";
 import { type Role, type Permission, ROLE_PERMISSIONS_MAP } from "@/lib/rbac";
@@ -35,10 +35,12 @@ export function useRoles(): RolesState {
   const [activeRoles, setActiveRoles] = useState<ActiveRole[]>([]);
   const [activeContext, setActiveContext] = useState<Role>("customer");
   const [loading, setLoading] = useState(true);
+  // Stable client ref — never recreated across renders
+  const supabaseRef = useRef(createClient());
 
   const load = useCallback(async () => {
     if (!user?.id) { setLoading(false); return; }
-    const supabase = createClient();
+    const supabase = supabaseRef.current;
 
     const [rolesRes, contextRes] = await Promise.all([
       supabase.from("user_roles").select("role, activated_at, metadata").eq("user_id", user.id),
@@ -66,7 +68,7 @@ export function useRoles(): RolesState {
 
   const activateRole = useCallback(async (role: Role, metadata?: Record<string, string>) => {
     if (!user?.id) return;
-    const supabase = createClient();
+    const supabase = supabaseRef.current;
     await supabase.from("user_roles").upsert({
       user_id: user.id,
       role,
@@ -79,7 +81,7 @@ export function useRoles(): RolesState {
 
   const switchContext = useCallback(async (role: Role) => {
     if (!user?.id) return;
-    const supabase = createClient();
+    const supabase = supabaseRef.current;
     const prevRole = activeContext;
     setActiveContext(role);
     await Promise.all([

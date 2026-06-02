@@ -57,31 +57,34 @@ export default function InvoicingPage() {
     if (!profile?.business_id) return;
     async function load() {
       setLoading(true);
-      let q = supabase
-        .from("invoices")
-        .select("id, invoice_number, customer_name, type, total_amount, amount_paid, status, due_date, issued_date")
-        .eq("business_id", profile!.business_id)
-        .order("issued_date", { ascending: false })
-        .limit(50);
+      try {
+        let q = supabase
+          .from("invoices")
+          .select("id, invoice_number, customer_name, type, total_amount, amount_paid, status, due_date, issued_date")
+          .eq("business_id", profile!.business_id)
+          .order("issued_date", { ascending: false })
+          .limit(50);
 
-      if (search) q = q.ilike("customer_name", `%${search}%`);
-      if (statusFilter !== "all") q = q.eq("status", statusFilter);
+        if (search) q = q.ilike("customer_name", `%${search}%`);
+        if (statusFilter !== "all") q = q.eq("status", statusFilter);
 
-      const { data } = await q;
-      setInvoices((data as Invoice[]) ?? []);
+        const { data } = await q;
+        setInvoices((data as Invoice[]) ?? []);
 
-      const { data: all } = await supabase
-        .from("invoices")
-        .select("total_amount, amount_paid, status")
-        .eq("business_id", profile!.business_id);
+        const { data: all } = await supabase
+          .from("invoices")
+          .select("total_amount, amount_paid, status")
+          .eq("business_id", profile!.business_id);
 
-      if (all) {
-        const totalInvoiced = all.reduce((s, r) => s + (r.total_amount ?? 0), 0);
-        const amountPaid    = all.reduce((s, r) => s + (r.amount_paid ?? 0), 0);
-        const overdue       = all.filter((r) => r.status === "overdue").reduce((s, r) => s + ((r.total_amount ?? 0) - (r.amount_paid ?? 0)), 0);
-        setStats({ total_invoiced: totalInvoiced, amount_paid: amountPaid, outstanding: totalInvoiced - amountPaid, overdue });
+        if (all) {
+          const totalInvoiced = all.reduce((s, r) => s + (r.total_amount ?? 0), 0);
+          const amountPaid    = all.reduce((s, r) => s + (r.amount_paid ?? 0), 0);
+          const overdue       = all.filter((r) => r.status === "overdue").reduce((s, r) => s + ((r.total_amount ?? 0) - (r.amount_paid ?? 0)), 0);
+          setStats({ total_invoiced: totalInvoiced, amount_paid: amountPaid, outstanding: totalInvoiced - amountPaid, overdue });
+        }
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     }
     load();
   // eslint-disable-next-line react-hooks/exhaustive-deps

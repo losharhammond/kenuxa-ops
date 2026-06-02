@@ -253,7 +253,7 @@ export default function PharmacyPage() {
   const load = useCallback(async () => {
     if (!businessId) return;
     setLoading(true);
-
+    try {
     const [medRes, rxRes] = await Promise.all([
       supabase.from("pharmacy_medicines").select("*").eq("business_id", businessId).order("name"),
       supabase.from("pharmacy_prescriptions").select("*").eq("business_id", businessId).order("created_at", { ascending: false }),
@@ -264,7 +264,9 @@ export default function PharmacyPage() {
 
     setMedicines(meds);
     setPrescriptions(rxs);
+  } finally {
     setLoading(false);
+  }
   }, [businessId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);

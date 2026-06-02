@@ -227,7 +227,7 @@ export default function OpportunitiesPage() {
   const load = useCallback(async (silent = false) => {
     if (!silent) setLoading(true);
     else setRefreshing(true);
-
+    try {
     const [jobsRes, gigsRes, rfqsRes,] = await Promise.all([
       supabase.from("job_listings")
         .select("id,title,business_name,location,job_type,salary_min,salary_max,created_at")
@@ -271,8 +271,10 @@ export default function OpportunitiesPage() {
     setRFQs(rfqData);
     setSupply(supplyData);
     setCounts({ jobs: jobData.length, gigs: gigData.length, rfqs: rfqData.length, supply: supplyData.length });
-    setLoading(false);
-    setRefreshing(false);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);

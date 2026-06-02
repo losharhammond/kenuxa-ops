@@ -53,20 +53,23 @@ export default function MarketplacePage() {
 
   const load = useCallback(async () => {
     setLoading(true);
-    let q = supabase
-      .from("marketplace_listings")
-      .select("id, name, price, compare_price, category, city, stock_qty, business_name, is_verified, avg_rating, total_sold, image_url")
-      .eq("status", "active")
-      .order("total_sold", { ascending: false })
-      .limit(48);
+    try {
+      let q = supabase
+        .from("marketplace_listings")
+        .select("id, name, price, compare_price, category, city, stock_qty, business_name, is_verified, avg_rating, total_sold, image_url")
+        .eq("status", "active")
+        .order("total_sold", { ascending: false })
+        .limit(48);
 
-    if (search) q = q.ilike("name", `%${search}%`);
-    if (category !== "All") q = q.eq("category", category);
-    if (location !== "all") q = q.ilike("city", `%${location}%`);
+      if (search) q = q.ilike("name", `%${search}%`);
+      if (category !== "All") q = q.eq("category", category);
+      if (location !== "all") q = q.ilike("city", `%${location}%`);
 
-    const { data } = await q;
-    setListings((data as Listing[]) ?? []);
-    setLoading(false);
+      const { data } = await q;
+      setListings((data as Listing[]) ?? []);
+    } finally {
+      setLoading(false);
+    }
   }, [search, category, location]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);

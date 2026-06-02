@@ -1,10 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+let _supabase: SupabaseClient | null = null;
+function getSupabase(): SupabaseClient {
+  if (!_supabase) {
+    _supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+  }
+  return _supabase;
+}
 
 const SUPPORTED_CURRENCIES = [
   "GHS","NGN","KES","ZAR","ETB","UGX","TZS","RWF",
@@ -12,7 +18,7 @@ const SUPPORTED_CURRENCIES = [
   "GNF","SZL","LSL","MUR","SCR","CVE","STD",
 ];
 
-// Called by Vercel Cron (hourly) or POST with CRON_SECRET
+// Called by Vercel Cron (daily at 06:00 UTC) or POST with CRON_SECRET
 export async function GET(req: NextRequest) {
   const authHeader = req.headers.get("authorization");
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
@@ -30,6 +36,7 @@ export async function POST(req: NextRequest) {
 }
 
 async function refreshRates() {
+  const supabase = getSupabase();
   const apiKey = process.env.EXCHANGE_RATE_API_KEY;
 
   let rates: Record<string, number> = {};
@@ -41,6 +48,7 @@ async function refreshRates() {
         `https://openexchangerates.org/api/latest.json?app_id=${apiKey}&symbols=${SUPPORTED_CURRENCIES.join(",")}`,
         { cache: "no-store" }
       );
+      if (!res.ok) throw new Error(`Exchange rate API error: ${res.status}`);
       const data = await res.json();
       if (data.rates) {
         rates = data.rates as Record<string, number>;

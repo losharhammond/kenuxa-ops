@@ -1,0 +1,86 @@
+// KENUXA ACADEMY — Identity Service Database Schema
+// Phase 1: Academy-specific data linked to Supabase user IDs
+//
+// AUTH is owned by Supabase (shared with KENUXA NETWORK).
+// This schema stores Academy-specific extensions only.
+// All rows use supabaseUserId (UUID) as the cross-app foreign key.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ──────────────────────────────────────────────────
+
+enum AcademyRole {
+  learner
+  mentor
+  creator
+  admin
+}
+
+// ─── Academy User Metadata ───────────────────────────────────
+// Thin row that stores Academy-specific role for a Supabase user.
+// Created automatically on first Academy login (even for Network users).
+
+model AcademyUserMeta {
+  id              String      @id @default(uuid())
+  supabaseUserId  String      @unique @map("supabase_user_id")
+  email           String
+  role            AcademyRole @default(learner)
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime    @updatedAt @map("updated_at")
+
+  profile       Profile?
+  identityState IdentityState?
+
+  @@map("academy_user_meta")
+}
+
+// ─── Profile ────────────────────────────────────────────────
+
+model Profile {
+  id             String   @id @default(uuid())
+  supabaseUserId String   @unique @map("supabase_user_id")
+  fullName       String   @map("full_name")
+  bio            String?
+  avatarUrl      String?  @map("avatar_url")
+  location       String?
+  interests      String[] @default([])
+  goals          String[] @default([])
+  // Extension point: Phase 5 Knowledge Graph, Phase 6 AI, Phase 8 Marketplace
+  metadata       Json     @default("{}") @map("metadata")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  userMeta AcademyUserMeta @relation(fields: [supabaseUserId], references: [supabaseUserId], onDelete: Cascade)
+
+  @@map("academy_profiles")
+}
+
+// ─── Identity State ─────────────────────────────────────────
+// Seven-dimension Human Development Score (0–100 each)
+// Scores start at 0. Future phases populate via assessments + AI inference.
+
+model IdentityState {
+  id               String   @id @default(uuid())
+  supabaseUserId   String   @unique @map("supabase_user_id")
+  cognitiveScore   Int      @default(0) @map("cognitive_score")
+  creativeScore    Int      @default(0) @map("creative_score")
+  socialScore      Int      @default(0) @map("social_score")
+  emotionalScore   Int      @default(0) @map("emotional_score")
+  practicalScore   Int      @default(0) @map("practical_score")
+  leadershipScore  Int      @default(0) @map("leadership_score")
+  economicScore    Int      @default(0) @map("economic_score")
+  // Extension point: Phase 6 AI will add vector embedding refs + graph node IDs
+  metadata         Json     @default("{}") @map("metadata")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  userMeta AcademyUserMeta @relation(fields: [supabaseUserId], references: [supabaseUserId], onDelete: Cascade)
+
+  @@map("academy_identity_states")
+}

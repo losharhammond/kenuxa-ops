@@ -82,32 +82,34 @@ export default function RewardsPage() {
   const load = useCallback(async () => {
     if (!profile?.id) return;
     setLoading(true);
+    try {
+      const { data: acct } = await supabase
+        .from("rewards_accounts")
+        .select("points, lifetime_points")
+        .eq("user_id", profile.id)
+        .maybeSingle();
 
-    const { data: acct } = await supabase
-      .from("rewards_accounts")
-      .select("points, lifetime_points")
-      .eq("user_id", profile.id)
-      .maybeSingle();
+      setPoints((acct as { points: number; lifetime_points: number } | null)?.points ?? 0);
+      setLifetime((acct as { points: number; lifetime_points: number } | null)?.lifetime_points ?? 0);
 
-    setPoints((acct as { points: number; lifetime_points: number } | null)?.points ?? 0);
-    setLifetime((acct as { points: number; lifetime_points: number } | null)?.lifetime_points ?? 0);
+      const { data: ledger } = await supabase
+        .from("kenux_ledger")
+        .select("id, points, entry_type, reason, created_at")
+        .eq("user_id", profile.id)
+        .order("created_at", { ascending: false })
+        .limit(20);
 
-    const { data: ledger } = await supabase
-      .from("kenux_ledger")
-      .select("id, points, entry_type, reason, created_at")
-      .eq("user_id", profile.id)
-      .order("created_at", { ascending: false })
-      .limit(20);
-
-    const txns = (ledger ?? []).map((r) => ({
-      id: r.id as string,
-      points: r.entry_type === "earn" ? (r.points as number) : -(r.points as number),
-      type: r.entry_type as string,
-      description: (r.reason as string | null),
-      created_at: r.created_at as string,
-    }));
-    setTransactions(txns);
-    setLoading(false);
+      const txns = (ledger ?? []).map((r) => ({
+        id: r.id as string,
+        points: r.entry_type === "earn" ? (r.points as number) : -(r.points as number),
+        type: r.entry_type as string,
+        description: (r.reason as string | null),
+        created_at: r.created_at as string,
+      }));
+      setTransactions(txns);
+    } finally {
+      setLoading(false);
+    }
   }, [profile?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);

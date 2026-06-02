@@ -18,7 +18,7 @@ export async function GET() {
     .single();
 
   const role = (profile as { role?: string } | null)?.role ?? "";
-  if (!["super_admin", "country_admin", "support_agent"].includes(role)) {
+  if (!["super_admin", "country_admin"].includes(role)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 

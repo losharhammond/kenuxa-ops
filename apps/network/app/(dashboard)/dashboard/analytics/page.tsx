@@ -67,16 +67,19 @@ export default function AnalyticsPage() {
   const load = useCallback(async () => {
     if (!profile?.business_id) return;
     setLoading(true);
-    const daysAgo = parseInt(range, 10);
-    const since = new Date(Date.now() - daysAgo * 86400_000).toISOString();
-    const { data } = await supabase
-      .from("sales")
-      .select("total, payment_method, created_at, items")
-      .eq("business_id", profile.business_id)
-      .gte("created_at", since)
-      .order("created_at");
-    setSales(data ?? []);
-    setLoading(false);
+    try {
+      const daysAgo = parseInt(range, 10);
+      const since = new Date(Date.now() - daysAgo * 86400_000).toISOString();
+      const { data } = await supabase
+        .from("sales")
+        .select("total, payment_method, created_at, items")
+        .eq("business_id", profile.business_id)
+        .gte("created_at", since)
+        .order("created_at");
+      setSales(data ?? []);
+    } finally {
+      setLoading(false);
+    }
   }, [profile?.business_id, range]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);

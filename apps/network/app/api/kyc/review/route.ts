@@ -1,12 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 
-const adminSupabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+let _admin: SupabaseClient | null = null;
+function getAdmin(): SupabaseClient {
+  if (!_admin) {
+    _admin = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+  }
+  return _admin;
+}
 
 /**
  * POST /api/kyc/review — Admin-only: approve or reject a KYC document
@@ -30,7 +36,7 @@ export async function POST(req: NextRequest) {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   // Admin role check
-  const { data: profile } = await adminSupabase
+  const { data: profile } = await getAdmin()
     .from("user_profiles").select("role").eq("id", user.id).single();
   if (!["super_admin", "country_admin"].includes((profile as { role?: string } | null)?.role ?? "")) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
@@ -48,7 +54,7 @@ export async function POST(req: NextRequest) {
   const now = new Date().toISOString();
   const status = body.action === "approve" ? "approved" : "rejected";
 
-  const { data: doc, error } = await adminSupabase
+  const { data: doc, error } = await getAdmin()
     .from("kyc_documents")
     .update({
       status,
@@ -66,7 +72,7 @@ export async function POST(req: NextRequest) {
 
   // Notify the user
   if (docRow) {
-    await adminSupabase.from("notifications").insert({
+    await getAdmin().from("notifications").insert({
       user_id:    docRow.user_id,
       type:       `kyc_${status}`,
       category:   "kyc",
@@ -88,7 +94,7 @@ export async function POST(req: NextRequest) {
   }
 
   // Audit log
-  await adminSupabase.from("audit_logs").insert({
+  await getAdmin().from("audit_logs").insert({
     action:   `kyc_${status}`,
     category: "compliance",
     severity: "info",

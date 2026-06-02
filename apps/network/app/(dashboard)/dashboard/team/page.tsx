@@ -54,26 +54,29 @@ export default function TeamPage() {
   const load = useCallback(async () => {
     if (!user?.id) return;
     setLoading(true);
-    // Get owner's business
-    const { data: prof } = await supabase
-      .from("user_profiles")
-      .select("business_id")
-      .eq("id", user.id)
-      .single();
+    try {
+      // Get owner's business
+      const { data: prof } = await supabase
+        .from("user_profiles")
+        .select("business_id")
+        .eq("id", user.id)
+        .single();
 
-    const bizId = (prof as { business_id?: string } | null)?.business_id ?? null;
-    setBusinessId(bizId);
+      const bizId = (prof as { business_id?: string } | null)?.business_id ?? null;
+      setBusinessId(bizId);
 
-    if (!bizId) { setLoading(false); return; }
+      if (!bizId) return;
 
-    const { data } = await supabase
-      .from("business_members")
-      .select("id, user_id, role, branch_id, status, invited_at, accepted_at, user_profiles(full_name, email)")
-      .eq("business_id", bizId)
-      .order("invited_at", { ascending: false });
+      const { data } = await supabase
+        .from("business_members")
+        .select("id, user_id, role, branch_id, status, invited_at, accepted_at, user_profiles(full_name, email)")
+        .eq("business_id", bizId)
+        .order("invited_at", { ascending: false });
 
-    setMembers(((data ?? []) as unknown as TeamMember[]));
-    setLoading(false);
+      setMembers(((data ?? []) as unknown as TeamMember[]));
+    } finally {
+      setLoading(false);
+    }
   }, [user?.id, supabase]);
 
   useEffect(() => { load(); }, [load]);

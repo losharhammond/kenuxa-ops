@@ -33,6 +33,7 @@ export default function AdminUsersPage() {
   useEffect(() => {
     async function load() {
       setLoading(true);
+      try {
       let q = supabase
         .from("user_profiles")
         .select("id, full_name, email, phone, role, avatar_url, is_verified, created_at")
@@ -44,7 +45,9 @@ export default function AdminUsersPage() {
 
       const { data } = await q;
       setUsers((data as AdminUser[]) ?? []);
+    } finally {
       setLoading(false);
+    }
     }
     load();
   // eslint-disable-next-line react-hooks/exhaustive-deps

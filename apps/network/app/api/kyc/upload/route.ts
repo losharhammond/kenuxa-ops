@@ -1,12 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 
-const adminSupabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+let _admin: SupabaseClient | null = null;
+function getAdmin(): SupabaseClient {
+  if (!_admin) {
+    _admin = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+  }
+  return _admin;}
 
 /**
  * KYC Document Upload
@@ -63,7 +68,7 @@ export async function POST(req: NextRequest) {
 
   const buffer = Buffer.from(await file.arrayBuffer());
 
-  const { error: uploadError } = await adminSupabase.storage
+  const { error: uploadError } = await getAdmin().storage
     .from("kyc-documents")
     .upload(path, buffer, {
       contentType: file.type,
@@ -75,12 +80,12 @@ export async function POST(req: NextRequest) {
   }
 
   // Get the signed URL (valid 7 days for review)
-  const { data: signedUrl } = await adminSupabase.storage
+  const { data: signedUrl } = await getAdmin().storage
     .from("kyc-documents")
     .createSignedUrl(path, 60 * 60 * 24 * 7);
 
   // Upsert KYC document record
-  const { data: doc, error: dbError } = await adminSupabase
+  const { data: doc, error: dbError } = await getAdmin()
     .from("kyc_documents")
     .upsert({
       user_id:       user.id,
@@ -99,7 +104,7 @@ export async function POST(req: NextRequest) {
   }
 
   // Log security event
-  await adminSupabase.from("security_events").insert({
+  await getAdmin().from("security_events").insert({
     user_id:    user.id,
     event_type: "kyc_document_uploaded",
     severity:   "info",
@@ -107,7 +112,7 @@ export async function POST(req: NextRequest) {
   });
 
   // Notify admins
-  await adminSupabase.from("notifications").insert({
+  await getAdmin().from("notifications").insert({
     user_id:    user.id,
     type:       "kyc_submitted",
     category:   "kyc",

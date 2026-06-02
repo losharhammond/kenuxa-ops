@@ -131,13 +131,16 @@ function RFQCard({
   const loadBids = useCallback(async () => {
     if (!expanded) return;
     setLoadingBids(true);
-    const { data } = await supabase
-      .from("rfq_bids")
-      .select("*")
-      .eq("rfq_id", rfq.id)
-      .order("total_price", { ascending: true });
-    setBids(data ?? []);
-    setLoadingBids(false);
+    try {
+      const { data } = await supabase
+        .from("rfq_bids")
+        .select("*")
+        .eq("rfq_id", rfq.id)
+        .order("total_price", { ascending: true });
+      setBids(data ?? []);
+    } finally {
+      setLoadingBids(false);
+    }
   }, [expanded, rfq.id, supabase]);
 
   useEffect(() => { loadBids(); }, [loadBids]);
@@ -494,37 +497,39 @@ export default function RFQPage() {
 
   const loadRFQs = useCallback(async () => {
     setLoading(true);
-    let query = supabase
-      .from("rfqs")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .limit(50);
+    try {
+      let query = supabase
+        .from("rfqs")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(50);
 
-    if (tab === "browse") {
-      query = query.neq("status", "closed");
-      if (businessId) query = query.neq("business_id", businessId);
-    } else {
-      if (businessId) query = query.eq("business_id", businessId);
-      else { setLoading(false); return; }
+      if (tab === "browse") {
+        query = query.neq("status", "closed");
+        if (businessId) query = query.neq("business_id", businessId);
+      } else {
+        if (!businessId) return;
+        query = query.eq("business_id", businessId);
+      }
+
+      if (categoryFilter) query = query.eq("category", categoryFilter);
+      if (statusFilter) query = query.eq("status", statusFilter);
+      if (search.trim()) query = query.ilike("title", `%${search.trim()}%`);
+
+      const { data } = await query;
+      if (tab === "browse") setRfqs(data ?? []);
+      else setMyRfqs(data ?? []);
+
+      // Stats
+      const [openRes, myBidsRes, awardedRes] = await Promise.all([
+        supabase.from("rfqs").select("id", { count: "exact", head: true }).eq("status", "open"),
+        userId ? supabase.from("rfq_bids").select("id", { count: "exact", head: true }).eq("bidder_id", userId) : Promise.resolve({ count: 0 }),
+        businessId ? supabase.from("rfqs").select("id", { count: "exact", head: true }).eq("business_id", businessId).eq("status", "awarded") : Promise.resolve({ count: 0 }),
+      ]);
+      setStats({ open: openRes.count ?? 0, myBids: myBidsRes.count ?? 0, awarded: awardedRes.count ?? 0 });
+    } finally {
+      setLoading(false);
     }
-
-    if (categoryFilter) query = query.eq("category", categoryFilter);
-    if (statusFilter) query = query.eq("status", statusFilter);
-    if (search.trim()) query = query.ilike("title", `%${search.trim()}%`);
-
-    const { data } = await query;
-    if (tab === "browse") setRfqs(data ?? []);
-    else setMyRfqs(data ?? []);
-
-    // Stats
-    const [openRes, myBidsRes, awardedRes] = await Promise.all([
-      supabase.from("rfqs").select("id", { count: "exact", head: true }).eq("status", "open"),
-      userId ? supabase.from("rfq_bids").select("id", { count: "exact", head: true }).eq("bidder_id", userId) : Promise.resolve({ count: 0 }),
-      businessId ? supabase.from("rfqs").select("id", { count: "exact", head: true }).eq("business_id", businessId).eq("status", "awarded") : Promise.resolve({ count: 0 }),
-    ]);
-    setStats({ open: openRes.count ?? 0, myBids: myBidsRes.count ?? 0, awarded: awardedRes.count ?? 0 });
-
-    setLoading(false);
   }, [tab, businessId, userId, categoryFilter, statusFilter, search, supabase]);
 
   useEffect(() => {

@@ -3,7 +3,7 @@
 import { Search, Bell, ChevronDown } from "lucide-react";
 import { useAuth } from "@/lib/hooks/use-auth";
 import { ROLE_LABELS, ROLE_COLORS } from "@/lib/rbac";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
@@ -18,7 +18,9 @@ export function Header({ title, subtitle, actions }: HeaderProps) {
   const { profile, role } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const router = useRouter();
-  const supabase = createClient();
+  // Stable client ref — never recreated across renders
+  const supabaseRef = useRef(createClient());
+  const supabase = supabaseRef.current;
 
   const initials = profile?.full_name
     ? profile.full_name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()

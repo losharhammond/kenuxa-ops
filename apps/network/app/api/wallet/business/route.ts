@@ -4,13 +4,19 @@
  */
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 
-const adminSupabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+let _admin: SupabaseClient | null = null;
+function getAdmin(): SupabaseClient {
+  if (!_admin) {
+    _admin = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+  }
+  return _admin;
+}
 
 async function getUser() {
   const cookieStore = await cookies();
@@ -38,7 +44,7 @@ export async function GET(req: NextRequest) {
   if (!businessId) return NextResponse.json({ error: "business_id required" }, { status: 400 });
 
   // Verify user belongs to business
-  const { data: member } = await adminSupabase
+  const { data: member } = await getAdmin()
     .from("business_members")
     .select("role")
     .eq("business_id", businessId)
@@ -48,12 +54,12 @@ export async function GET(req: NextRequest) {
   if (!member) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const [walletRes, txsRes] = await Promise.all([
-    adminSupabase
+    getAdmin()
       .from("business_wallets")
       .select("balance, currency, status, updated_at")
       .eq("business_id", businessId)
       .single(),
-    adminSupabase
+    getAdmin()
       .from("business_wallet_transactions")
       .select("id, type, amount, currency, description, status, reference, created_at")
       .eq("business_id", businessId)
@@ -75,7 +81,7 @@ export async function POST(req: NextRequest) {
   if (!business_id) return NextResponse.json({ error: "business_id required" }, { status: 400 });
 
   // Verify ownership
-  const { data: biz } = await adminSupabase
+  const { data: biz } = await getAdmin()
     .from("businesses")
     .select("id, name")
     .eq("id", business_id)
@@ -84,7 +90,7 @@ export async function POST(req: NextRequest) {
 
   if (!biz) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-  const { error } = await adminSupabase
+  const { error } = await getAdmin()
     .from("business_wallets")
     .upsert({ business_id, balance: 0, currency: "GHS", status: "active" }, { onConflict: "business_id" });
 

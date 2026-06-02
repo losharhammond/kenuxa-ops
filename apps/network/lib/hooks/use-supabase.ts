@@ -1,11 +1,12 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useRef } from "react";
 import { createClient as createBrowserClient } from "@/lib/supabase/client";
 
 export function useSupabase() {
-  const client = useMemo(() => createBrowserClient(), []);
-  return client;
+  // Stable client ref — never recreated across renders
+  const ref = useRef(createBrowserClient());
+  return ref.current;
 }
 
 export function useRealtime<T>(
@@ -16,7 +17,8 @@ export function useRealtime<T>(
 ) {
   const supabase = useSupabase();
 
-  useMemo(() => {
+  // useEffect (not useMemo) for side-effects; cleanup unsubscribes on unmount
+  useEffect(() => {
     const channel = supabase
       .channel(`realtime:${table}`)
       .on(
@@ -31,5 +33,6 @@ export function useRealtime<T>(
       .subscribe();
 
     return () => { supabase.removeChannel(channel); };
-  }, [supabase, table, onInsert, onUpdate, onDelete]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [table]);
 }

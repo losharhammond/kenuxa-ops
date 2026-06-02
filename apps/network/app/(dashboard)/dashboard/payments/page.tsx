@@ -57,42 +57,45 @@ export default function PaymentsPage() {
     if (!profile?.business_id) return;
     async function load() {
       setLoading(true);
-      let q = supabase
-        .from("payment_transactions")
-        .select("id, transaction_ref, external_ref, type, payment_method, amount, status, customer_name, created_at")
-        .eq("business_id", profile!.business_id)
-        .order("created_at", { ascending: false })
-        .limit(50);
-
-      if (typeFilter !== "all") q = q.eq("type", typeFilter);
-
-      const [{ data: txns }, { data: allTxns }, { data: walletData }] = await Promise.all([
-        q,
-        supabase
+      try {
+        let q = supabase
           .from("payment_transactions")
-          .select("type, payment_method, amount, status")
+          .select("id, transaction_ref, external_ref, type, payment_method, amount, status, customer_name, created_at")
           .eq("business_id", profile!.business_id)
-          .eq("status", "paid"),
-        supabase
-          .from("business_wallets")
-          .select("balance")
-          .eq("business_id", profile!.business_id)
-          .single(),
-      ]);
+          .order("created_at", { ascending: false })
+          .limit(50);
 
-      setTransactions((txns as Transaction[]) ?? []);
+        if (typeFilter !== "all") q = q.eq("type", typeFilter);
 
-      if (allTxns) {
-        const payments = allTxns.filter((t) => t.type === "payment");
-        setStats({
-          total_received: payments.reduce((s, t) => s + (t.amount ?? 0), 0),
-          momo: payments.filter((t) => ["mtn_momo", "telecel_cash", "at_money"].includes(t.payment_method)).reduce((s, t) => s + (t.amount ?? 0), 0),
-          card: payments.filter((t) => ["visa", "mastercard"].includes(t.payment_method)).reduce((s, t) => s + (t.amount ?? 0), 0),
-          cash: payments.filter((t) => t.payment_method === "cash").reduce((s, t) => s + (t.amount ?? 0), 0),
-          wallet_balance: (walletData as { balance: number } | null)?.balance ?? 0,
-        });
+        const [{ data: txns }, { data: allTxns }, { data: walletData }] = await Promise.all([
+          q,
+          supabase
+            .from("payment_transactions")
+            .select("type, payment_method, amount, status")
+            .eq("business_id", profile!.business_id)
+            .eq("status", "paid"),
+          supabase
+            .from("business_wallets")
+            .select("balance")
+            .eq("business_id", profile!.business_id)
+            .single(),
+        ]);
+
+        setTransactions((txns as Transaction[]) ?? []);
+
+        if (allTxns) {
+          const payments = allTxns.filter((t) => t.type === "payment");
+          setStats({
+            total_received: payments.reduce((s, t) => s + (t.amount ?? 0), 0),
+            momo: payments.filter((t) => ["mtn_momo", "telecel_cash", "at_money"].includes(t.payment_method)).reduce((s, t) => s + (t.amount ?? 0), 0),
+            card: payments.filter((t) => ["visa", "mastercard"].includes(t.payment_method)).reduce((s, t) => s + (t.amount ?? 0), 0),
+            cash: payments.filter((t) => t.payment_method === "cash").reduce((s, t) => s + (t.amount ?? 0), 0),
+            wallet_balance: (walletData as { balance: number } | null)?.balance ?? 0,
+          });
+        }
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     }
     load();
   // eslint-disable-next-line react-hooks/exhaustive-deps

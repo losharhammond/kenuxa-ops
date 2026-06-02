@@ -66,23 +66,26 @@ export default function ServicesPage() {
 
   const load = useCallback(async () => {
     setLoading(true);
-    let q = supabase
-      .from("service_listings")
-      .select("id, name, provider_name, category, price, price_type, description, location, turnaround, is_verified, avg_rating, total_jobs, image_url")
-      .eq("status", "active")
-      .order("avg_rating", { ascending: false })
-      .limit(48);
+    try {
+      let q = supabase
+        .from("service_listings")
+        .select("id, name, provider_name, category, price, price_type, description, location, turnaround, is_verified, avg_rating, total_jobs, image_url")
+        .eq("status", "active")
+        .order("avg_rating", { ascending: false })
+        .limit(48);
 
-    if (search) q = q.ilike("name", `%${search}%`);
-    if (activeCategory !== "All") q = q.eq("category", activeCategory);
-    if (location !== "all") q = q.ilike("location", `%${location}%`);
+      if (search) q = q.ilike("name", `%${search}%`);
+      if (activeCategory !== "All") q = q.eq("category", activeCategory);
+      if (location !== "all") q = q.ilike("location", `%${location}%`);
 
-    const { data, count } = await q;
-    const rows = (data as ServiceListing[]) ?? [];
-    setServices(rows);
-    setTotalProviders(count ?? rows.length);
-    setTotalJobs(rows.reduce((s, r) => s + (r.total_jobs ?? 0), 0));
-    setLoading(false);
+      const { data, count } = await q;
+      const rows = (data as ServiceListing[]) ?? [];
+      setServices(rows);
+      setTotalProviders(count ?? rows.length);
+      setTotalJobs(rows.reduce((s, r) => s + (r.total_jobs ?? 0), 0));
+    } finally {
+      setLoading(false);
+    }
   }, [search, activeCategory, location]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);

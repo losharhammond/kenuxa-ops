@@ -1,15 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 /**
  * Nightly batch credit score computation for all users.
  * Called by Vercel Cron at 02:00 UTC daily.
  * Secured by CRON_SECRET.
  */
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+let _supabase: SupabaseClient | null = null;
+function getSupabase(): SupabaseClient {
+  if (!_supabase) {
+    _supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+  }
+  return _supabase;
+}
 
 export async function GET(req: NextRequest) {
   const authHeader = req.headers.get("authorization");
@@ -28,39 +34,50 @@ export async function POST(req: NextRequest) {
 }
 
 async function runBatch() {
+  const supabase = getSupabase();
   const startedAt = new Date();
-
-  // Fetch all user IDs that have not had credit computed in 24 hours
   const cutoff = new Date(Date.now() - 23 * 60 * 60 * 1000).toISOString();
-  const { data: users } = await supabase
-    .from("user_profiles")
-    .select("id")
-    .order("created_at", { ascending: true })
-    .limit(500); // Process up to 500 per run
 
-  if (!users || users.length === 0) {
-    return NextResponse.json({ ok: true, processed: 0, message: "No users to process" });
-  }
-
-  // Get users whose scores need refresh
+  // Fetch users whose credit score is stale (>23h old)
   const { data: stale } = await supabase
     .from("credit_profiles")
     .select("user_id")
-    .lt("last_calculated", cutoff);
+    .lt("last_calculated", cutoff)
+    .limit(150);
 
-  const staleIds = new Set((stale ?? []).map((r) => r.user_id));
+  // Fetch users who have no credit profile yet
+  // Left-join approach: get user_profiles and exclude those already in credit_profiles
+  const { data: existingProfiles } = await supabase
+    .from("credit_profiles")
+    .select("user_id")
+    .limit(2000);
 
-  // Also include users with no credit profile
-  const { data: noProfile } = await supabase
+  const existingIds = new Set((existingProfiles ?? []).map((r) => r.user_id));
+
+  const { data: allUsers } = await supabase
     .from("user_profiles")
     .select("id")
-    .not("id", "in", `(${users.map((u) => `'${u.id}'`).join(",") || "'00000000-0000-0000-0000-000000000000'"})`)
-    .limit(100);
+    .order("created_at", { ascending: true })
+    .limit(500);
 
-  const targetIds = [
-    ...users.filter((u) => staleIds.has(u.id)).map((u) => u.id),
-    ...(noProfile ?? []).map((u) => u.id),
-  ].slice(0, 200); // Cap batch at 200
+  const noProfileIds = (allUsers ?? [])
+    .filter((u) => !existingIds.has(u.id))
+    .map((u) => u.id)
+    .slice(0, 100);
+
+  const staleIds = (stale ?? []).map((r) => r.user_id);
+
+  // Deduplicate
+  const seen = new Set<string>();
+  const targetIds: string[] = [];
+  for (const id of [...staleIds, ...noProfileIds]) {
+    if (!seen.has(id)) { seen.add(id); targetIds.push(id); }
+    if (targetIds.length >= 200) break;
+  }
+
+  if (targetIds.length === 0) {
+    return NextResponse.json({ ok: true, processed: 0, message: "All credit scores are current" });
+  }
 
   let processed = 0;
   let errors = 0;
@@ -73,8 +90,7 @@ async function runBatch() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // Use service role to bypass auth for batch
-          "X-Cron-Secret": process.env.CRON_SECRET ?? "",
+          "Authorization": `Bearer ${process.env.CRON_SECRET ?? ""}`,
         },
         body: JSON.stringify({ user_id: userId }),
       });

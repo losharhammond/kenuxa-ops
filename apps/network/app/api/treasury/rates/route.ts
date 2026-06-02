@@ -40,6 +40,7 @@ export async function GET() {
       `https://openexchangerates.org/api/latest.json?app_id=${apiKey}&symbols=${SUPPORTED.join(",")}`,
       { next: { revalidate: 3600 } }
     );
+    if (!res.ok) throw new Error(`Exchange rate API error: ${res.status}`);
     const data = await res.json();
 
     if (data.rates) {

@@ -41,6 +41,7 @@ export default function POSPage() {
   const [showReceipt, setShowReceipt] = useState(false);
   const [lastReceiptNo, setLastReceiptNo] = useState("");
   const [processing, setProcessing] = useState(false);
+  const [saleError, setSaleError] = useState("");
 
   useEffect(() => {
     if (!profile?.business_id) return;
@@ -103,9 +104,14 @@ export default function POSPage() {
   const removeItem = (id: string) => setCart((prev) => prev.filter((c) => c.id !== id));
 
   const processSale = async () => {
+    setSaleError("");
+    if (!profile?.business_id) {
+      setSaleError("No business assigned to your account. Contact your administrator.");
+      return;
+    }
     setProcessing(true);
     const rno = generateReceiptNo();
-    if (profile?.business_id) {
+    try {
       const { error: saleErr } = await supabase.from("sales").insert({
         business_id: profile.business_id,
         receipt_no: rno,
@@ -119,13 +125,14 @@ export default function POSPage() {
         cashier_id: profile.id,
       });
       if (saleErr) {
-        setProcessing(false);
+        setSaleError(saleErr.message || "Failed to record sale. Please try again.");
         return;
       }
+      setLastReceiptNo(rno);
+      setShowReceipt(true);
+    } finally {
+      setProcessing(false);
     }
-    setLastReceiptNo(rno);
-    setProcessing(false);
-    setShowReceipt(true);
   };
 
   const newSale = () => {
@@ -329,6 +336,12 @@ export default function POSPage() {
                 </div>
               )}
 
+              {saleError && (
+                <div className="flex items-center gap-2 text-red-400 text-xs bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">
+                  <AlertTriangle size={12} className="flex-shrink-0" />
+                  {saleError}
+                </div>
+              )}
               <Button
                 onClick={processSale}
                 size="lg"

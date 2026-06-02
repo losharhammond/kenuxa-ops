@@ -54,7 +54,7 @@ export default function AdminCompliancePage() {
 
   const load = useCallback(async () => {
     setLoading(true);
-
+    try {
     const [{ data: kycData }, { data: disputeData }, { data: fraudData }] = await Promise.all([
       supabase
         .from("kyc_documents")
@@ -76,7 +76,9 @@ export default function AdminCompliancePage() {
     setKyc((kycData as KYCRecord[]) ?? []);
     setDisputes((disputeData as Dispute[]) ?? []);
     setFraudAlerts((fraudData as FraudSignal[]) ?? []);
+  } finally {
     setLoading(false);
+  }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);

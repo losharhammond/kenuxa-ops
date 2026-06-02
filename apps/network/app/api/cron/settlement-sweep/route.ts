@@ -1,15 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 /**
- * Settlement sweep — every 30 minutes.
+ * Settlement sweep — daily (see vercel.json for schedule).
  * Processes pending_settlements and reconciles wallet_transactions.
  * Marks transactions that have been pending > 24h as failed.
  */
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+let _supabase: SupabaseClient | null = null;
+function getSupabase(): SupabaseClient {
+  if (!_supabase) {
+    _supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+  }
+  return _supabase;
+}
 
 export async function GET(req: NextRequest) {
   const authHeader = req.headers.get("authorization");
@@ -28,6 +34,7 @@ export async function POST(req: NextRequest) {
 }
 
 async function runSweep() {
+  const supabase = getSupabase();
   const startedAt = new Date();
   const cutoff24h = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
   const cutoff1h  = new Date(Date.now() - 60 * 60 * 1000).toISOString();
@@ -105,6 +112,7 @@ async function runSweep() {
           const res = await fetch(`https://api.paystack.co/transaction/verify/${tx.reference}`, {
             headers: { Authorization: `Bearer ${apiKey}` },
           });
+          if (!res.ok) continue;
           const data = await res.json();
           if (data?.data?.status === "success") {
             await supabase

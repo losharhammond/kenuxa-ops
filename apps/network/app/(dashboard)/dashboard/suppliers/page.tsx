@@ -51,27 +51,29 @@ export default function SuppliersPage() {
     if (!profile?.business_id) return;
     async function load() {
       setLoading(true);
+      try {
+        let sq = supabase
+          .from("suppliers")
+          .select("id, name, category, city, rating, total_orders, is_verified, moq, lead_time_days, logo_url")
+          .order("rating", { ascending: false })
+          .limit(20);
+        if (search) sq = sq.ilike("name", `%${search}%`);
 
-      let sq = supabase
-        .from("suppliers")
-        .select("id, name, category, city, rating, total_orders, is_verified, moq, lead_time_days, logo_url")
-        .order("rating", { ascending: false })
-        .limit(20);
-      if (search) sq = sq.ilike("name", `%${search}%`);
+        const [{ data: supData }, { data: poData }] = await Promise.all([
+          sq,
+          supabase
+            .from("purchase_orders")
+            .select("id, po_number, supplier_name, total_amount, status, expected_date")
+            .eq("business_id", profile!.business_id)
+            .order("created_at", { ascending: false })
+            .limit(5),
+        ]);
 
-      const [{ data: supData }, { data: poData }] = await Promise.all([
-        sq,
-        supabase
-          .from("purchase_orders")
-          .select("id, po_number, supplier_name, total_amount, status, expected_date")
-          .eq("business_id", profile!.business_id)
-          .order("created_at", { ascending: false })
-          .limit(5),
-      ]);
-
-      setSuppliers((supData as Supplier[]) ?? []);
-      setOrders((poData as PurchaseOrder[]) ?? []);
-      setLoading(false);
+        setSuppliers((supData as Supplier[]) ?? []);
+        setOrders((poData as PurchaseOrder[]) ?? []);
+      } finally {
+        setLoading(false);
+      }
     }
     load();
   // eslint-disable-next-line react-hooks/exhaustive-deps

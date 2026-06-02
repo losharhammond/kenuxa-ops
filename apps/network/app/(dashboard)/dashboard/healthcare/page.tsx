@@ -173,7 +173,7 @@ export default function HealthcarePage() {
   const load = useCallback(async () => {
     if (!businessId) return;
     setLoading(true);
-
+    try {
     const [apptRes, patRes] = await Promise.all([
       supabase.from("clinic_appointments").select("*").eq("business_id", businessId).order("date").order("time"),
       supabase.from("clinic_patients").select("*").eq("business_id", businessId).order("full_name"),
@@ -184,7 +184,9 @@ export default function HealthcarePage() {
 
     setAppointments(appts);
     setPatients(pats);
+  } finally {
     setLoading(false);
+  }
   }, [businessId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);
