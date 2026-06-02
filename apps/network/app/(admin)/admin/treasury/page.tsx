@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import {
   Zap, TrendingUp, DollarSign, Globe, RefreshCw,
   BarChart3, ArrowDownLeft, ArrowUpRight, Shield,
-  Activity, CreditCard,
+  Activity, CreditCard, Clock,
 } from "lucide-react";
 
 interface TreasuryStats {
@@ -76,7 +76,7 @@ export default function TreasuryDashboard() {
       supabase.from("kenux_ledger").select("points").eq("entry_type", "earn"),
       supabase.from("kenux_ledger").select("points").eq("entry_type", "spend"),
       supabase.from("wallets").select("balance").eq("status", "active"),
-      supabase.from("platform_revenue").select("amount, source").order("amount", { ascending: false }),
+      supabase.from("platform_revenue").select("amount, revenue_type").order("amount", { ascending: false }),
       supabase.from("wallet_transactions").select("id", { count: "exact", head: true }).eq("status", "completed"),
       supabase.from("exchange_rates").select("to_currency, rate, fetched_at").order("to_currency"),
     ]);
@@ -84,8 +84,8 @@ export default function TreasuryDashboard() {
     // Aggregate revenue by source
     const streamMap: Record<string, { amount: number; count: number }> = {};
     for (const row of revenueRes.data ?? []) {
-      const r = row as unknown as { source: string; amount: number };
-      const s = r.source;
+      const r = row as unknown as { revenue_type: string; amount: number };
+      const s = r.revenue_type;
       if (!streamMap[s]) streamMap[s] = { amount: 0, count: 0 };
       streamMap[s]!.amount += r.amount;
       streamMap[s]!.count++;
@@ -268,7 +268,3 @@ export default function TreasuryDashboard() {
   );
 }
 
-// missing import
-function Clock({ size, style }: { size: number; style?: React.CSSProperties }) {
-  return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={style?.color ?? "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>;
-}

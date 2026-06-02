@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { createClient as createBrowserClient } from "@/lib/supabase/client";
 import type { User, Session } from "@supabase/supabase-js";
 import type { Role } from "@/lib/rbac";
@@ -36,7 +36,9 @@ export function useAuth(): AuthState {
     role: null,
   });
 
-  const supabase = createBrowserClient();
+  // Stable client ref — never recreated across renders
+  const supabaseRef = useRef(createBrowserClient());
+  const supabase = supabaseRef.current;
 
   const loadProfile = useCallback(
     async (userId: string) => {
@@ -47,7 +49,8 @@ export function useAuth(): AuthState {
         .single();
       return data as UserProfile | null;
     },
-    [supabase]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
   );
 
   useEffect(() => {

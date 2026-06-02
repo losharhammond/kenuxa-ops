@@ -652,22 +652,25 @@ export default function JobsPage() {
 
   const loadJobs = useCallback(async () => {
     setLoading(true);
-    let q = supabase
-      .from("job_listings")
-      .select("id, title, company_name, business_name, job_type, location, salary_min, salary_max, skills, description, requirements, application_count, posted_at, deadline, is_remote, status, company_logo_url", { count: "exact" })
-      .eq("status", "active")
-      .order("posted_at", { ascending: false })
-      .limit(30);
+    try {
+      let q = supabase
+        .from("job_listings")
+        .select("id, title, company_name, business_name, job_type, location, salary_min, salary_max, skills, description, requirements, application_count, posted_at, deadline, is_remote, status, company_logo_url", { count: "exact" })
+        .eq("status", "active")
+        .order("posted_at", { ascending: false })
+        .limit(30);
 
-    if (search.trim()) q = q.ilike("title", `%${search.trim()}%`);
-    if (location !== "all") q = q.ilike("location", `%${location}%`);
-    if (typeFilter === "remote") q = q.eq("is_remote", true);
-    else if (typeFilter !== "all") q = q.eq("job_type", typeFilter);
+      if (search.trim()) q = q.ilike("title", `%${search.trim()}%`);
+      if (location !== "all") q = q.ilike("location", `%${location}%`);
+      if (typeFilter === "remote") q = q.eq("is_remote", true);
+      else if (typeFilter !== "all") q = q.eq("job_type", typeFilter);
 
-    const { data, count } = await q;
-    setJobs((data as Job[]) ?? []);
-    setTotal(count ?? 0);
-    setLoading(false);
+      const { data, count } = await q;
+      setJobs((data as Job[]) ?? []);
+      setTotal(count ?? 0);
+    } finally {
+      setLoading(false);
+    }
   }, [search, location, typeFilter, supabase]);
 
   const loadApplications = useCallback(async () => {

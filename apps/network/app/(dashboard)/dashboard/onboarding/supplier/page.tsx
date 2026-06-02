@@ -67,7 +67,6 @@ export default function SupplierOnboardingPage() {
 
       if (err) {
         // Table might not exist yet — still activate the role
-        console.warn("supplier_profiles upsert:", err.message);
       }
       await activateRole("supplier", { company_name: companyName });
       setStep(2);

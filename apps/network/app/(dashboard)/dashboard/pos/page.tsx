@@ -106,7 +106,7 @@ export default function POSPage() {
     setProcessing(true);
     const rno = generateReceiptNo();
     if (profile?.business_id) {
-      await supabase.from("sales").insert({
+      const { error: saleErr } = await supabase.from("sales").insert({
         business_id: profile.business_id,
         receipt_no: rno,
         items: cart,
@@ -118,6 +118,10 @@ export default function POSPage() {
         change_given: change,
         cashier_id: profile.id,
       });
+      if (saleErr) {
+        setProcessing(false);
+        return;
+      }
     }
     setLastReceiptNo(rno);
     setProcessing(false);

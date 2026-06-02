@@ -12,6 +12,10 @@ export async function GET(req: NextRequest) {
   const segment    = searchParams.get("segment") || "";
   const limit      = parseInt(searchParams.get("limit") || "50", 10);
 
+  if (!businessId) {
+    return NextResponse.json({ error: "business_id is required" }, { status: 400 });
+  }
+
   let query = supabase
     .from("crm_customers")
     .select("*")
@@ -34,6 +38,11 @@ export async function POST(req: NextRequest) {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await req.json();
+
+  if (!body.name || !body.business_id) {
+    return NextResponse.json({ error: "name and business_id are required" }, { status: 400 });
+  }
+
   const { data, error } = await supabase
     .from("crm_customers")
     .insert(body)

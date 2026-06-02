@@ -14,6 +14,7 @@ import {
   MessageCircle, FileText, X, Send, Package, Loader2, AlertCircle,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { useAuth } from "@/lib/hooks/use-auth";
 import { ImageUpload } from "@/components/ui/image-upload";
 
 interface ServiceListing {
@@ -46,6 +47,7 @@ const DEFAULT_SERVICE = { name: "", category: "IT & Tech", price: "", price_type
 
 export default function ServicesPage() {
   const supabase = createClient();
+  const { profile } = useAuth();
   const [services, setServices] = useState<ServiceListing[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState("All");
@@ -308,7 +310,7 @@ export default function ServicesPage() {
                         turnaround: listForm.turnaround || null,
                         image_url: listImageUrl,
                         status: "active",
-                        provider_name: "My Business",
+                        provider_name: (profile as { business_name?: string; full_name?: string } | null)?.business_name ?? profile?.full_name ?? "My Business",
                         is_verified: false,
                       });
                       setListing(false);

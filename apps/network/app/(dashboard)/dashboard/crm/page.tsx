@@ -61,39 +61,42 @@ export default function CRMPage() {
     if (!profile?.business_id) return;
     async function load() {
       setLoading(true);
-      let q = supabase
-        .from("customers")
-        .select("id, full_name, phone, email, city, segment, total_orders, lifetime_value, loyalty_points, last_purchase")
-        .eq("business_id", profile!.business_id)
-        .order("lifetime_value", { ascending: false })
-        .limit(50);
+      try {
+        let q = supabase
+          .from("customers")
+          .select("id, full_name, phone, email, city, segment, total_orders, lifetime_value, loyalty_points, last_purchase")
+          .eq("business_id", profile!.business_id)
+          .order("lifetime_value", { ascending: false })
+          .limit(50);
 
-      if (search) q = q.ilike("full_name", `%${search}%`);
-      if (segment !== "all") q = q.eq("segment", segment);
+        if (search) q = q.ilike("full_name", `%${search}%`);
+        if (segment !== "all") q = q.eq("segment", segment);
 
-      const { data } = await q;
-      setCustomers((data as Customer[]) ?? []);
+        const { data } = await q;
+        setCustomers((data as Customer[]) ?? []);
 
-      const { data: all } = await supabase
-        .from("customers")
-        .select("lifetime_value, total_orders, loyalty_points, segment")
-        .eq("business_id", profile!.business_id);
+        const { data: all } = await supabase
+          .from("customers")
+          .select("lifetime_value, total_orders, loyalty_points, segment")
+          .eq("business_id", profile!.business_id);
 
-      if (all) {
-        const totalLV = all.reduce((s, r) => s + (r.lifetime_value ?? 0), 0);
-        const totalOrders = all.reduce((s, r) => s + (r.total_orders ?? 0), 0);
-        const totalPoints = all.reduce((s, r) => s + (r.loyalty_points ?? 0), 0);
-        const counts: Record<string, number> = {};
-        all.forEach((r) => { counts[r.segment ?? "Regular"] = (counts[r.segment ?? "Regular"] ?? 0) + 1; });
-        setStats({
-          total: all.length,
-          vip: counts["VIP"] ?? 0,
-          avg_order_value: totalOrders > 0 ? Math.round(totalLV / totalOrders) : 0,
-          total_points: totalPoints,
-        });
-        setSegmentCounts(counts);
+        if (all) {
+          const totalLV = all.reduce((s, r) => s + (r.lifetime_value ?? 0), 0);
+          const totalOrders = all.reduce((s, r) => s + (r.total_orders ?? 0), 0);
+          const totalPoints = all.reduce((s, r) => s + (r.loyalty_points ?? 0), 0);
+          const counts: Record<string, number> = {};
+          all.forEach((r) => { counts[r.segment ?? "Regular"] = (counts[r.segment ?? "Regular"] ?? 0) + 1; });
+          setStats({
+            total: all.length,
+            vip: counts["VIP"] ?? 0,
+            avg_order_value: totalOrders > 0 ? Math.round(totalLV / totalOrders) : 0,
+            total_points: totalPoints,
+          });
+          setSegmentCounts(counts);
+        }
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     }
     load();
   // eslint-disable-next-line react-hooks/exhaustive-deps

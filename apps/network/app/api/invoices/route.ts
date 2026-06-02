@@ -11,9 +11,21 @@ export async function GET(request: NextRequest) {
   const customerId = searchParams.get("customer_id");
   const limit = Number(searchParams.get("limit") ?? "50");
 
+  // Scope to the user's business — prevent cross-tenant data leakage
+  const { data: profile } = await supabase
+    .from("user_profiles")
+    .select("business_id")
+    .eq("id", user.id)
+    .single();
+
+  if (!profile?.business_id) {
+    return NextResponse.json({ error: "No business associated with this account" }, { status: 403 });
+  }
+
   let query = supabase
     .from("invoices")
     .select("*, crm_customers(name, email), invoice_items(*)")
+    .eq("business_id", profile.business_id)
     .order("created_at", { ascending: false })
     .limit(limit);
 

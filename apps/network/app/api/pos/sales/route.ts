@@ -11,6 +11,10 @@ export async function GET(req: NextRequest) {
   const businessId = searchParams.get("business_id");
   const limit      = parseInt(searchParams.get("limit") || "50", 10);
 
+  if (!businessId) {
+    return NextResponse.json({ error: "business_id is required" }, { status: 400 });
+  }
+
   const { data, error } = await supabase
     .from("sales")
     .select("*, sale_items(*)")

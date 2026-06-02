@@ -33,6 +33,10 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const { items, ...rfqData } = body;
 
+  if (!rfqData.supplier_id) {
+    return NextResponse.json({ error: "supplier_id is required" }, { status: 400 });
+  }
+
   const rfqNo = `RFQ-${Date.now()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
 
   const { data: rfq, error: rfqError } = await supabase

@@ -161,17 +161,20 @@ export default function AgriculturePage() {
     if (!businessId) return;
     setLoading(true);
 
-    const [cropRes, proRes] = await Promise.all([
-      supabase.from("farm_crops").select("*").eq("business_id", businessId).order("created_at", { ascending: false }),
-      supabase.from("farm_produce").select("*").eq("business_id", businessId).order("harvest_date", { ascending: false }),
-    ]);
+    try {
+      const [cropRes, proRes] = await Promise.all([
+        supabase.from("farm_crops").select("*").eq("business_id", businessId).order("created_at", { ascending: false }),
+        supabase.from("farm_produce").select("*").eq("business_id", businessId).order("harvest_date", { ascending: false }),
+      ]);
 
-    const cropData = (cropRes.data ?? []) as Crop[];
-    const proData  = (proRes.data  ?? []) as Produce[];
+      const cropData = (cropRes.data ?? []) as Crop[];
+      const proData  = (proRes.data  ?? []) as Produce[];
 
-    setCrops(cropData);
-    setProduce(proData);
-    setLoading(false);
+      setCrops(cropData);
+      setProduce(proData);
+    } finally {
+      setLoading(false);
+    }
   }, [businessId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);

@@ -4,12 +4,18 @@
  * All revenue flows through this single entry point for auditability.
  */
 
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+let _supabase: SupabaseClient | null = null;
+function getSupabase(): SupabaseClient {
+  if (!_supabase) {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (!url || !key) throw new Error("Missing Supabase env vars for revenue tracker");
+    _supabase = createClient(url, key);
+  }
+  return _supabase;
+}
 
 export type RevenueSource =
   | "subscription"
@@ -62,7 +68,7 @@ export async function trackRevenue(input: TrackRevenueInput): Promise<void> {
       enterprise_license:  "enterprise",
     };
 
-    await supabase.from("platform_revenue").insert({
+    await getSupabase().from("platform_revenue").insert({
       revenue_type: revenueTypeMap[input.source] ?? "transaction_fee",
       amount:       input.amount,
       user_id:      input.userId,

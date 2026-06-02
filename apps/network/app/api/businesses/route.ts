@@ -35,6 +35,10 @@ export async function POST(req: NextRequest) {
 
   const body = await req.json();
 
+  if (!body.name) {
+    return NextResponse.json({ error: "name is required" }, { status: 400 });
+  }
+
   const { data, error } = await supabase
     .from("businesses")
     .insert({ ...body, owner_id: user.id })

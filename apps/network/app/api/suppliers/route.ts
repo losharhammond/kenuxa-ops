@@ -56,6 +56,17 @@ export async function PATCH(req: NextRequest) {
 
   if (!id) return NextResponse.json({ error: "Supplier ID required" }, { status: 400 });
 
+  // Verify ownership before updating
+  const { data: existing } = await supabase
+    .from("suppliers")
+    .select("created_by")
+    .eq("id", id)
+    .single();
+
+  if (!existing || existing.created_by !== user.id) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   const { data, error } = await supabase
     .from("suppliers")
     .update({ ...updates, updated_at: new Date().toISOString() })

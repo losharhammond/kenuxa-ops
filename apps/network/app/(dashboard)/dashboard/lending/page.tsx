@@ -158,10 +158,12 @@ function LoanApplicationModal({
   product,
   onClose,
   onSubmit,
+  submitting,
 }: {
   product: (typeof LOAN_PRODUCTS)[number];
   onClose: () => void;
   onSubmit: (type: string, amount: number, term: number, notes: string) => void;
+  submitting?: boolean;
 }) {
   const [amount, setAmount] = useState(5000);
   const [term, setTerm] = useState(6);
@@ -230,10 +232,10 @@ function LoanApplicationModal({
         </div>
 
         <div className="flex gap-3 p-5 border-t border-white/8">
-          <button onClick={onClose} className="flex-1 py-2 rounded-lg border border-white/10 text-white/60 text-sm">Cancel</button>
-          <button onClick={() => onSubmit(product.type, amount, term, notes)}
-            className="flex-1 py-2 rounded-lg bg-[#FF6524] text-white text-sm font-medium hover:bg-[#e55a1f]">
-            Submit Application
+          <button onClick={onClose} disabled={submitting} className="flex-1 py-2 rounded-lg border border-white/10 text-white/60 text-sm disabled:opacity-50">Cancel</button>
+          <button onClick={() => onSubmit(product.type, amount, term, notes)} disabled={submitting}
+            className="flex-1 py-2 rounded-lg bg-[#FF6524] text-white text-sm font-medium hover:bg-[#e55a1f] disabled:opacity-50">
+            {submitting ? "Submitting…" : "Submit Application"}
           </button>
         </div>
       </div>
@@ -252,7 +254,7 @@ export default function LendingPage() {
   const [loading, setLoading] = useState(true);
   const [applyProduct, setApplyProduct] = useState<(typeof LOAN_PRODUCTS)[number] | null>(null);
   const [submitted, setSubmitted] = useState(false);
-  const [, setSubmitting] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const businessId = profile?.business_id;
   const { score: eligScore, factors } = useEligibilityScore(businessId ?? null);
@@ -260,9 +262,12 @@ export default function LendingPage() {
   const load = useCallback(async () => {
     if (!businessId) return;
     setLoading(true);
-    const { data } = await supabase.from("loan_applications").select("*").eq("business_id", businessId).order("created_at", { ascending: false });
-    setApplications((data ?? []) as LoanApplication[]);
-    setLoading(false);
+    try {
+      const { data } = await supabase.from("loan_applications").select("*").eq("business_id", businessId).order("created_at", { ascending: false });
+      setApplications((data ?? []) as LoanApplication[]);
+    } finally {
+      setLoading(false);
+    }
   }, [businessId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);
@@ -270,13 +275,16 @@ export default function LendingPage() {
   const handleApply = async (type: string, amount: number, term: number, notes: string) => {
     if (!businessId) return;
     setSubmitting(true);
-    await supabase.from("loan_applications").insert({ business_id: businessId, type, amount, term_months: term, notes: notes || null });
-    setSubmitting(false);
-    setApplyProduct(null);
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 3000);
-    load();
-    setTab("applications");
+    try {
+      await supabase.from("loan_applications").insert({ business_id: businessId, type, amount, term_months: term, notes: notes || null });
+      setApplyProduct(null);
+      setSubmitted(true);
+      setTimeout(() => setSubmitted(false), 3000);
+      load();
+      setTab("applications");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   // Derived
@@ -550,8 +558,9 @@ export default function LendingPage() {
       {applyProduct && (
         <LoanApplicationModal
           product={applyProduct}
-          onClose={() => setApplyProduct(null)}
+          onClose={() => { if (!submitting) setApplyProduct(null); }}
           onSubmit={handleApply}
+          submitting={submitting}
         />
       )}
     </div>

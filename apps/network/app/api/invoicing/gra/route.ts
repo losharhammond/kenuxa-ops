@@ -115,7 +115,7 @@ export async function POST(request: NextRequest) {
       already_submitted: true,
       submission_id: existing.gra_submission_id,
       status: existing.gra_status,
-    });
+    }, { status: 409 });
   }
 
   // Build GRA payload

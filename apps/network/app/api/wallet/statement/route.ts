@@ -28,6 +28,12 @@ export async function GET(req: NextRequest) {
   const from = searchParams.get("from") ?? new Date(Date.now() - 30 * 86400000).toISOString().split("T")[0];
   const to   = searchParams.get("to")   ?? new Date().toISOString().split("T")[0];
 
+  // Validate date format to prevent malformed values reaching the query
+  const dateRe = /^\d{4}-\d{2}-\d{2}$/;
+  if (!dateRe.test(from ?? "") || !dateRe.test(to ?? "")) {
+    return NextResponse.json({ error: "Invalid date format. Use YYYY-MM-DD." }, { status: 400 });
+  }
+
   const { data: txs, error } = await supabase
     .from("wallet_transactions")
     .select("created_at, type, amount, currency, description, status, reference, provider")

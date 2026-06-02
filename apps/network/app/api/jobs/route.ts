@@ -33,6 +33,11 @@ export async function POST(request: NextRequest) {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await request.json();
+
+  if (!body.title) {
+    return NextResponse.json({ error: "title is required" }, { status: 400 });
+  }
+
   const { data, error } = await supabase
     .from("job_listings")
     .insert({ ...body, posted_by: user.id, status: "open" })

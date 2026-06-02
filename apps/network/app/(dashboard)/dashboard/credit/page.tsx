@@ -88,23 +88,30 @@ export default function CreditPage() {
   const load = useCallback(async () => {
     if (!user?.id) { setLoading(false); return; }
     setLoading(true);
-    const { data } = await supabase
-      .from("credit_profiles")
-      .select("*")
-      .eq("user_id", user.id)
-      .single();
-    setProfile(data as CreditProfile | null);
-    setLoading(false);
+    try {
+      const { data } = await supabase
+        .from("credit_profiles")
+        .select("*")
+        .eq("user_id", user.id)
+        .single();
+      setProfile(data as CreditProfile | null);
+    } finally {
+      setLoading(false);
+    }
   }, [user?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const refreshScore = useCallback(async () => {
     setLoading(true);
-    await fetch("/api/credit/compute", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({}),
-    });
-    await load();
+    try {
+      await fetch("/api/credit/compute", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({}),
+      });
+      await load();
+    } catch {
+      setLoading(false);
+    }
   }, [load]);
 
   useEffect(() => { load(); }, [load]);

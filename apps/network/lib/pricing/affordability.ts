@@ -159,8 +159,8 @@ export function getSubscriptionPrice(
   const profile = getCountryPricing(countryCode);
   if (plan === "free") return 0;
   if (plan === "enterprise") return 0; // Custom pricing
-  // Business plan with PPP adjustment
-  return Math.round(149 * profile.pppMultiplier);
+  // Business plan — use the pre-computed PPP-adjusted value from the profile
+  return profile.subscriptionGHS;
 }
 
 /**

@@ -2,7 +2,7 @@
   "crons": [
     {
       "path": "/api/treasury/refresh-rates",
-      "schedule": "0 * * * *",
+      "schedule": "0 6 * * *",
       "headers": { "Authorization": "Bearer $CRON_SECRET" }
     },
     {
@@ -12,12 +12,12 @@
     },
     {
       "path": "/api/cron/settlement-sweep",
-      "schedule": "*/30 * * * *",
+      "schedule": "0 3 * * *",
       "headers": { "Authorization": "Bearer $CRON_SECRET" }
     },
     {
       "path": "/api/cron/market-prices-update",
-      "schedule": "0 6,12,18 * * *",
+      "schedule": "0 7 * * *",
       "headers": { "Authorization": "Bearer $CRON_SECRET" }
     }
   ],

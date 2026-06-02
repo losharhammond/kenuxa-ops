@@ -172,7 +172,7 @@ export function NotificationBell({ iconSize = 14 }: { iconSize?: number }) {
                     </div>
                   );
                   return n.action_url ? (
-                    <Link key={n.id} href={n.action_url} onClick={() => { setOpen(false); if (isUnread) markRead(n.id); }}>
+                    <Link key={n.id} href={n.action_url} onClick={() => { setOpen(false); }}>
                       {inner}
                     </Link>
                   ) : (

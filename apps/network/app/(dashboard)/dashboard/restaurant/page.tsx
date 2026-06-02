@@ -247,11 +247,16 @@ function MenuItemModal({ item, bizId, onClose, onSaved }: {
       is_available: form.is_available,
       is_popular: form.is_popular,
     };
+    let saveErr: { message: string } | null = null;
     if (item) {
-      await supabase.from("menu_items").update(payload).eq("id", item.id);
+      const { error } = await supabase.from("menu_items").update(payload).eq("id", item.id);
+      saveErr = error;
     } else {
-      await supabase.from("menu_items").insert(payload);
+      const { error } = await supabase.from("menu_items").insert(payload);
+      saveErr = error;
     }
+    setSaving(false);
+    if (saveErr) { setError(saveErr.message); return; }
     onSaved();
   }
 

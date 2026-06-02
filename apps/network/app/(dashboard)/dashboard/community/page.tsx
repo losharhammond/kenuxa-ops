@@ -289,27 +289,31 @@ export default function CommunityPage() {
 
   const load = useCallback(async () => {
     setLoading(true);
-    const q = supabase
-      .from("community_posts")
-      .select("id, author_id, author_name, author_avatar, author_role, author_business, content, post_type, likes_count, comments_count, shares_count, image_url, created_at")
-      .order("created_at", { ascending: false })
-      .limit(20);
+    try {
+      const q = supabase
+        .from("community_posts")
+        .select("id, author_id, author_name, author_avatar, author_role, author_business, content, post_type, likes_count, comments_count, shares_count, image_url, created_at")
+        .order("created_at", { ascending: false })
+        .limit(20);
 
-    if (filter !== "all") {
-      q.eq("post_type", filter === "businesses" ? "update" : filter === "jobs" ? "job" : filter === "achievements" ? "achievement" : "promotion");
+      if (filter !== "all") {
+        q.eq("post_type", filter === "businesses" ? "update" : filter === "jobs" ? "job" : filter === "achievements" ? "achievement" : "promotion");
+      }
+
+      const { data } = await q;
+      const rows = ((data ?? []) as Omit<Post, "liked_by_me">[]).map((p) => ({ ...p, liked_by_me: false }));
+      setPosts(rows);
+    } finally {
+      setLoading(false);
     }
-
-    const { data } = await q;
-    const rows = ((data ?? []) as Omit<Post, "liked_by_me">[]).map((p) => ({ ...p, liked_by_me: false }));
-    setPosts(rows);
-    setLoading(false);
   }, [filter]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);
 
   const handlePost = async (content: string, type: string, imageUrl?: string | null) => {
+    if (!profile?.id) return;
     const newPost = {
-      author_id: profile?.id ?? "",
+      author_id: profile.id,
       author_name: profile?.full_name ?? "Anonymous",
       author_avatar: null,
       author_role: null,
@@ -328,6 +332,7 @@ export default function CommunityPage() {
   };
 
   const handleLike = async (postId: string) => {
+    if (!profile?.id) return;
     setPosts((prev) =>
       prev.map((p) =>
         p.id === postId
@@ -335,7 +340,7 @@ export default function CommunityPage() {
           : p
       )
     );
-    await supabase.rpc("toggle_post_like", { p_post_id: postId, p_user_id: profile?.id });
+    await supabase.rpc("toggle_post_like", { p_post_id: postId, p_user_id: profile.id });
   };
 
   const FILTERS: { key: FeedFilter; label: string; icon: React.ElementType }[] = [

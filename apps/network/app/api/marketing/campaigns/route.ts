@@ -3,6 +3,9 @@ import { createClient } from "@/lib/supabase/server";
 
 export async function GET(request: NextRequest) {
   const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   const { searchParams } = new URL(request.url);
   const status = searchParams.get("status");
   const limit = Number(searchParams.get("limit") ?? "20");
@@ -43,6 +46,17 @@ export async function PATCH(request: NextRequest) {
 
   const { id, ...updates } = await request.json();
   if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });
+
+  // Verify ownership before updating
+  const { data: existing } = await supabase
+    .from("marketing_campaigns")
+    .select("created_by")
+    .eq("id", id)
+    .single();
+
+  if (!existing || existing.created_by !== user.id) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
 
   const { data, error } = await supabase
     .from("marketing_campaigns")

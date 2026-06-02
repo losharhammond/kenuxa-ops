@@ -109,33 +109,39 @@ export default function BillingPage() {
   const load = useCallback(async () => {
     if (!user?.id) { setLoading(false); return; }
     setLoading(true);
-    const [subRes, histRes] = await Promise.all([
-      supabase.from("subscriptions").select("*").eq("user_id", user.id).eq("status", "active").single(),
-      supabase.from("billing_history").select("*").eq("user_id", user.id).order("created_at", { ascending: false }).limit(20),
-    ]);
-    setSub(subRes.data as Subscription | null);
-    setHistory((histRes.data ?? []) as BillingHistory[]);
-    setLoading(false);
+    try {
+      const [subRes, histRes] = await Promise.all([
+        supabase.from("subscriptions").select("*").eq("user_id", user.id).eq("status", "active").single(),
+        supabase.from("billing_history").select("*").eq("user_id", user.id).order("created_at", { ascending: false }).limit(20),
+      ]);
+      setSub(subRes.data as Subscription | null);
+      setHistory((histRes.data ?? []) as BillingHistory[]);
+    } finally {
+      setLoading(false);
+    }
   }, [user?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);
 
   const handleUpgrade = async (planId: string, price: number) => {
     setUpgrading(planId);
-    const res = await fetch("/api/payments/paystack/initialize", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        amount: price * 100,
-        currency: "GHS",
-        purpose: "subscription",
-        metadata: { plan: planId },
-      }),
-    });
-    const data = await res.json();
-    if (data.authorization_url) {
-      window.location.href = data.authorization_url;
-    }
+    try {
+      const res = await fetch("/api/payments/paystack/initialize", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: price * 100,
+          currency: "GHS",
+          purpose: "subscription",
+          metadata: { plan: planId },
+        }),
+      });
+      const data = await res.json();
+      if (data.authorization_url) {
+        window.location.href = data.authorization_url;
+        return; // navigation will occur; don't clear state
+      }
+    } catch { /* network error — fall through to reset state */ }
     setUpgrading(null);
   };
 

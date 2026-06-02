@@ -151,7 +151,7 @@ export async function middleware(request: NextRequest) {
 
     // Admin-only guard
     if (pathname.startsWith("/admin")) {
-      const adminRoles = ["super_admin", "country_admin", "platform_admin", "finance_admin"];
+      const adminRoles = ["super_admin", "country_admin"];
       if (!adminRoles.includes(role)) {
         return NextResponse.redirect(new URL("/dashboard", request.url));
       }

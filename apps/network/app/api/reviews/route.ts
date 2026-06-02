@@ -87,6 +87,28 @@ export async function PATCH(request: NextRequest) {
   const { id, reply } = await request.json();
   if (!id || reply === undefined) return NextResponse.json({ error: "id and reply required" }, { status: 400 });
 
+  // Only the business owner may post a reply
+  const { data: review } = await supabase
+    .from("business_reviews")
+    .select("business_id")
+    .eq("id", id)
+    .single();
+
+  if (!review) {
+    return NextResponse.json({ error: "Review not found" }, { status: 404 });
+  }
+
+  const { data: biz } = await supabase
+    .from("businesses")
+    .select("id")
+    .eq("id", review.business_id)
+    .eq("owner_id", user.id)
+    .single();
+
+  if (!biz) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   const { data, error } = await supabase
     .from("business_reviews")
     .update({ owner_reply: reply, replied_at: new Date().toISOString() })

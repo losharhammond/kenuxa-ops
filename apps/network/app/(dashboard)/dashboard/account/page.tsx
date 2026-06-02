@@ -108,18 +108,21 @@ export default function AccountPage() {
     if (!user?.id) { setLoading(false); return; }
     setLoading(true);
 
-    const [ordersRes, walletRes, rewardsRes, reviewsRes] = await Promise.all([
-      supabase.from("orders").select("id,status,total,currency,created_at,items_count,seller_name").eq("buyer_id", user.id).order("created_at", { ascending: false }).limit(20),
-      supabase.from("wallets").select("balance,currency,status").eq("user_id", user.id).single(),
-      supabase.from("rewards_accounts").select("points,lifetime_points,tier").eq("user_id", user.id).single(),
-      supabase.from("business_reviews").select("id,rating,comment,created_at").eq("reviewer_id", user.id).order("created_at", { ascending: false }).limit(10),
-    ]);
+    try {
+      const [ordersRes, walletRes, rewardsRes, reviewsRes] = await Promise.all([
+        supabase.from("orders").select("id,status,total,currency,created_at,items_count,seller_name").eq("buyer_id", user.id).order("created_at", { ascending: false }).limit(20),
+        supabase.from("wallets").select("balance,currency,status").eq("user_id", user.id).single(),
+        supabase.from("rewards_accounts").select("points,lifetime_points,tier").eq("user_id", user.id).single(),
+        supabase.from("business_reviews").select("id,rating,comment,created_at").eq("reviewer_id", user.id).order("created_at", { ascending: false }).limit(10),
+      ]);
 
-    setOrders((ordersRes.data as Order[]) ?? []);
-    setWallet(walletRes.data as WalletData | null ?? { balance: 0, currency: "GHS", status: "active" });
-    setRewards(rewardsRes.data as RewardsData | null ?? { points: 100, lifetime_points: 100, tier: "bronze" });
-    setReviews((reviewsRes.data as Review[] | null) ?? []);
-    setLoading(false);
+      setOrders((ordersRes.data as Order[]) ?? []);
+      setWallet(walletRes.data as WalletData | null ?? { balance: 0, currency: "GHS", status: "active" });
+      setRewards(rewardsRes.data as RewardsData | null ?? { points: 100, lifetime_points: 100, tier: "bronze" });
+      setReviews((reviewsRes.data as Review[] | null) ?? []);
+    } finally {
+      setLoading(false);
+    }
   }, [user?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);

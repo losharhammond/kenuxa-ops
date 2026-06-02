@@ -185,22 +185,25 @@ export default function DiscoverPage() {
     }
     setLoading(true);
     setHasSearched(true);
-    const t = `%${q}%`;
-    const [bR, jR, fR, pR] = await Promise.all([
-      supabase.from("businesses").select("id,name,category,description,city,logo_url,banner_url,is_verified,created_at")
-        .or(`name.ilike.${t},category.ilike.${t},city.ilike.${t}`).eq("is_active", true).limit(12),
-      supabase.from("job_listings").select("id,title,business_name,location,job_type,salary_min,salary_max,created_at")
-        .or(`title.ilike.${t},business_name.ilike.${t},location.ilike.${t}`).eq("status", "open").limit(8),
-      supabase.from("freelancer_profiles").select("id,headline,skills,hourly_rate,user_id,created_at")
-        .or(`headline.ilike.${t},skills.ilike.${t}`).limit(8),
-      supabase.from("inventory_items").select("id,name,description,price,business_id,image_url,category")
-        .or(`name.ilike.${t},category.ilike.${t}`).limit(8),
-    ]);
-    setBusinesses((bR.data ?? []) as Business[]);
-    setJobs((jR.data ?? []) as JobListing[]);
-    setFreelancers((fR.data ?? []) as FreelancerListing[]);
-    setProducts((pR.data ?? []) as Product[]);
-    setLoading(false);
+    try {
+      const t = `%${q}%`;
+      const [bR, jR, fR, pR] = await Promise.all([
+        supabase.from("businesses").select("id,name,category,description,city,logo_url,banner_url,is_verified,created_at")
+          .or(`name.ilike.${t},category.ilike.${t},city.ilike.${t}`).eq("is_active", true).limit(12),
+        supabase.from("job_listings").select("id,title,business_name,location,job_type,salary_min,salary_max,created_at")
+          .or(`title.ilike.${t},business_name.ilike.${t},location.ilike.${t}`).eq("status", "open").limit(8),
+        supabase.from("freelancer_profiles").select("id,headline,skills,hourly_rate,user_id,created_at")
+          .or(`headline.ilike.${t},skills.ilike.${t}`).limit(8),
+        supabase.from("inventory_items").select("id,name,description,price,business_id,image_url,category")
+          .or(`name.ilike.${t},category.ilike.${t}`).limit(8),
+      ]);
+      setBusinesses((bR.data ?? []) as Business[]);
+      setJobs((jR.data ?? []) as JobListing[]);
+      setFreelancers((fR.data ?? []) as FreelancerListing[]);
+      setProducts((pR.data ?? []) as Product[]);
+    } finally {
+      setLoading(false);
+    }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { search(debounced); }, [debounced, search]);

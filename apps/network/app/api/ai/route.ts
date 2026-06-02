@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
     if (!apiKey) {
       return NextResponse.json(
         { reply: "AI is not configured. Add GROQ_API_KEY to your .env.local file." },
-        { status: 200 }
+        { status: 503 }
       );
     }
 
@@ -82,7 +82,7 @@ export async function POST(req: NextRequest) {
       console.error("Groq error:", err);
       return NextResponse.json(
         { reply: "AI service error. Please check your API key." },
-        { status: 200 }
+        { status: 503 }
       );
     }
 

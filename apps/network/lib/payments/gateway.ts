@@ -88,6 +88,7 @@ export class PaystackGateway implements PaymentGateway {
     const res = await fetch(`${this.baseUrl}/transaction/verify/${reference}`, {
       headers: { Authorization: `Bearer ${this.secretKey}` },
     });
+    if (!res.ok) throw new Error(`Paystack verify HTTP ${res.status}`);
     const { data } = await res.json();
     if (!data || data.status !== "success") throw new Error("Payment verification failed");
     return {
@@ -113,7 +114,7 @@ export class PaystackGateway implements PaymentGateway {
   }
 
   supportedCurrencies(): Currency[] { return ["GHS", "NGN", "ZAR", "KES", "USD"]; }
-  supportedCountries(): string[] { return ["GH", "NG", "ZA", "KE", "GH"]; }
+  supportedCountries(): string[] { return ["GH", "NG", "ZA", "KE"]; }
 }
 
 // ── Flutterwave Adapter ──────────────────────────────────────
@@ -148,6 +149,7 @@ export class FlutterwaveGateway implements PaymentGateway {
     const res = await fetch(`${this.baseUrl}/transactions/${reference}/verify`, {
       headers: { Authorization: `Bearer ${this.secretKey}` },
     });
+    if (!res.ok) throw new Error(`Flutterwave verify HTTP ${res.status}`);
     const { data } = await res.json();
     if (!data || data.status !== "successful") throw new Error("Flutterwave verification failed");
     return {

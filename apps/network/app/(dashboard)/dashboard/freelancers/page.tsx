@@ -90,28 +90,30 @@ export default function FreelancersPage() {
 
   const load = useCallback(async () => {
     setLoading(true);
+    try {
+      const [profilesRes, countRes, packagesRes] = await Promise.all([
+        supabase
+          .from("freelancer_profiles")
+          .select("id, full_name, headline, skills, hourly_rate, location, rating, reviews_count, completed_jobs, availability, verified, avatar_url")
+          .ilike(query ? "full_name" : "availability", query ? `%${query}%` : "%")
+          .order("rating", { ascending: false })
+          .limit(12),
+        supabase
+          .from("freelancer_profiles")
+          .select("id", { count: "exact", head: true }),
+        supabase
+          .from("freelancer_packages")
+          .select("id, title, description, price, delivery_days, freelancer_name, category, rating")
+          .order("rating", { ascending: false, nullsFirst: false })
+          .limit(8),
+      ]);
 
-    const [profilesRes, countRes, packagesRes] = await Promise.all([
-      supabase
-        .from("freelancer_profiles")
-        .select("id, full_name, headline, skills, hourly_rate, location, rating, reviews_count, completed_jobs, availability, verified, avatar_url")
-        .ilike(query ? "full_name" : "availability", query ? `%${query}%` : "%")
-        .order("rating", { ascending: false })
-        .limit(12),
-      supabase
-        .from("freelancer_profiles")
-        .select("id", { count: "exact", head: true }),
-      supabase
-        .from("freelancer_packages")
-        .select("id, title, description, price, delivery_days, freelancer_name, category, rating")
-        .order("rating", { ascending: false, nullsFirst: false })
-        .limit(8),
-    ]);
-
-    setFreelancers((profilesRes.data as FreelancerProfile[]) ?? []);
-    setTotalFreelancers(countRes.count ?? 0);
-    setPackages((packagesRes.data as ServicePackage[]) ?? []);
-    setLoading(false);
+      setFreelancers((profilesRes.data as FreelancerProfile[]) ?? []);
+      setTotalFreelancers(countRes.count ?? 0);
+      setPackages((packagesRes.data as ServicePackage[]) ?? []);
+    } finally {
+      setLoading(false);
+    }
   }, [query]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
@@ -122,18 +124,23 @@ export default function FreelancersPage() {
   const postJob = async () => {
     if (!jobTitle.trim() || !profile?.business_id) return;
     setPosting(true);
-    await supabase.from("freelance_requests").insert({
-      business_id: profile.business_id,
-      title: jobTitle,
-      description: jobDesc,
-      budget: jobBudget ? parseFloat(jobBudget) : null,
-      deadline: jobDeadline || null,
-      status: "open",
-    });
-    setPostSuccess(true);
-    setJobTitle(""); setJobDesc(""); setJobBudget(""); setJobDeadline("");
-    setPosting(false);
-    setTimeout(() => setPostSuccess(false), 3000);
+    try {
+      const { error: insertErr } = await supabase.from("freelance_requests").insert({
+        business_id: profile.business_id,
+        title: jobTitle,
+        description: jobDesc,
+        budget: jobBudget ? parseFloat(jobBudget) : null,
+        deadline: jobDeadline || null,
+        status: "open",
+      });
+      if (!insertErr) {
+        setPostSuccess(true);
+        setJobTitle(""); setJobDesc(""); setJobBudget(""); setJobDeadline("");
+        setTimeout(() => setPostSuccess(false), 3000);
+      }
+    } finally {
+      setPosting(false);
+    }
   };
 
   const isBusiness = ["business_owner", "branch_manager", "employee"].includes(role ?? "");

@@ -140,9 +140,12 @@ export default function TreasuryPage() {
 
   const handleRefreshRates = async () => {
     setRefreshing(true);
-    await fetch("/api/treasury/rates");
-    await load();
-    setRefreshing(false);
+    try {
+      await fetch("/api/treasury/rates");
+      await load();
+    } finally {
+      setRefreshing(false);
+    }
   };
 
   const ghsRate = rates.find((r) => r.to_currency === "GHS")?.rate ?? 14.5;

@@ -276,13 +276,17 @@ export default function PharmacyPage() {
 
     const payload = { ...data, business_id: businessId };
 
+    let saveErr: { message: string } | null = null;
     if (editItem?.id) {
-      await supabase.from("pharmacy_medicines").update(payload).eq("id", editItem.id);
+      const { error } = await supabase.from("pharmacy_medicines").update(payload).eq("id", editItem.id);
+      saveErr = error;
     } else {
-      await supabase.from("pharmacy_medicines").insert(payload);
+      const { error } = await supabase.from("pharmacy_medicines").insert(payload);
+      saveErr = error;
     }
 
     setSaving(false);
+    if (saveErr) return;
     setShowModal(false);
     setEditItem(null);
     load();

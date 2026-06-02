@@ -67,41 +67,44 @@ export default function DeliveryPage() {
     if (!profile?.business_id) return;
     async function load() {
       setLoading(true);
-      const today = new Date().toISOString().slice(0, 10);
+      try {
+        const today = new Date().toISOString().slice(0, 10);
 
-      const [{ data: delData }, { data: riderData }, { data: statsData }] = await Promise.all([
-        supabase
-          .from("delivery_orders")
-          .select("id, delivery_ref, recipient_name, delivery_address, rider_name, fee, distance_km, status, eta_minutes, created_at")
-          .eq("business_id", profile!.business_id)
-          .gte("created_at", `${today}T00:00:00Z`)
-          .order("created_at", { ascending: false })
-          .limit(20),
-        supabase
-          .from("delivery_riders")
-          .select("id, full_name, zone, trips_today, rating, is_available")
-          .order("is_available", { ascending: false })
-          .limit(10),
-        supabase
-          .from("delivery_orders")
-          .select("status, fee")
-          .eq("business_id", profile!.business_id)
-          .gte("created_at", `${today}T00:00:00Z`),
-      ]);
+        const [{ data: delData }, { data: riderData }, { data: statsData }] = await Promise.all([
+          supabase
+            .from("delivery_orders")
+            .select("id, delivery_ref, recipient_name, delivery_address, rider_name, fee, distance_km, status, eta_minutes, created_at")
+            .eq("business_id", profile!.business_id)
+            .gte("created_at", `${today}T00:00:00Z`)
+            .order("created_at", { ascending: false })
+            .limit(20),
+          supabase
+            .from("delivery_riders")
+            .select("id, full_name, zone, trips_today, rating, is_available")
+            .order("is_available", { ascending: false })
+            .limit(10),
+          supabase
+            .from("delivery_orders")
+            .select("status, fee")
+            .eq("business_id", profile!.business_id)
+            .gte("created_at", `${today}T00:00:00Z`),
+        ]);
 
-      setDeliveries((delData as Delivery[]) ?? []);
-      setRiders((riderData as Rider[]) ?? []);
+        setDeliveries((delData as Delivery[]) ?? []);
+        setRiders((riderData as Rider[]) ?? []);
 
-      if (statsData) {
-        const all = statsData as { status: string; fee: number }[];
-        setStats({
-          today: all.length,
-          in_transit: all.filter((d) => d.status === "in_transit" || d.status === "picked_up").length,
-          completed:  all.filter((d) => d.status === "delivered").length,
-          revenue:    all.reduce((s, d) => s + (d.fee ?? 0), 0),
-        });
+        if (statsData) {
+          const all = statsData as { status: string; fee: number }[];
+          setStats({
+            today: all.length,
+            in_transit: all.filter((d) => d.status === "in_transit" || d.status === "picked_up").length,
+            completed:  all.filter((d) => d.status === "delivered").length,
+            revenue:    all.reduce((s, d) => s + (d.fee ?? 0), 0),
+          });
+        }
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     }
     load();
   // eslint-disable-next-line react-hooks/exhaustive-deps

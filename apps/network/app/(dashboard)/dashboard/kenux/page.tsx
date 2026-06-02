@@ -80,6 +80,7 @@ function KenuxPageInner() {
   const load = useCallback(async () => {
     if (!user?.id) { setLoading(false); return; }
     setLoading(true);
+    setBuyError("");
 
     // Detect country from browser locale for PPP pricing
     const detected = typeof navigator !== "undefined"
@@ -87,31 +88,33 @@ function KenuxPageInner() {
       : "GH";
     setCountryCode(detected);
 
-    const [rewardsRes, txsRes, pricingRes] = await Promise.all([
-      supabase.from("rewards_accounts").select("points,lifetime_points,tier").eq("user_id", user.id).single(),
-      supabase.from("kenux_ledger").select("id, entry_type, points, reason, created_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(30),
-      fetch(`/api/pricing/kenux?country=${detected}`).then((r) => r.json()).catch(() => null),
-    ]);
-
-    setRewards(rewardsRes.data as RewardsData | null ?? { points: 0, lifetime_points: 0, tier: "bronze" });
-    const raw = (txsRes.data ?? []) as { id: string; entry_type: string; points: number; reason: string | null; created_at: string }[];
-    setTxs(raw.map((r) => ({ id: r.id, type: r.entry_type as "earn" | "spend", amount: r.points, description: r.reason ?? (r.entry_type === "earn" ? "KENUX earned" : "KENUX spent"), created_at: r.created_at })));
-
-    if (pricingRes?.bundles?.length) {
-      setBundles(pricingRes.bundles as KenuxBundle[]);
-    } else {
-      // Fallback bundles (Ghana defaults)
-      setBundles([
-        { ghsAmount: 5,   kenuxAmount: 50,   label: "Starter" },
-        { ghsAmount: 25,  kenuxAmount: 250,  label: "Basic" },
-        { ghsAmount: 50,  kenuxAmount: 500,  label: "Standard" },
-        { ghsAmount: 100, kenuxAmount: 1000, label: "Value", popular: true },
-        { ghsAmount: 250, kenuxAmount: 2500, label: "Premium" },
-        { ghsAmount: 500, kenuxAmount: 5000, label: "Enterprise" },
+    try {
+      const [rewardsRes, txsRes, pricingRes] = await Promise.all([
+        supabase.from("rewards_accounts").select("points,lifetime_points,tier").eq("user_id", user.id).single(),
+        supabase.from("kenux_ledger").select("id, entry_type, points, reason, created_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(30),
+        fetch(`/api/pricing/kenux?country=${detected}`).then((r) => r.json()).catch(() => null),
       ]);
-    }
 
-    setLoading(false);
+      setRewards(rewardsRes.data as RewardsData | null ?? { points: 0, lifetime_points: 0, tier: "bronze" });
+      const raw = (txsRes.data ?? []) as { id: string; entry_type: string; points: number; reason: string | null; created_at: string }[];
+      setTxs(raw.map((r) => ({ id: r.id, type: r.entry_type as "earn" | "spend", amount: r.points, description: r.reason ?? (r.entry_type === "earn" ? "KENUX earned" : "KENUX spent"), created_at: r.created_at })));
+
+      if (pricingRes?.bundles?.length) {
+        setBundles(pricingRes.bundles as KenuxBundle[]);
+      } else {
+        // Fallback bundles (Ghana defaults)
+        setBundles([
+          { ghsAmount: 5,   kenuxAmount: 50,   label: "Starter" },
+          { ghsAmount: 25,  kenuxAmount: 250,  label: "Basic" },
+          { ghsAmount: 50,  kenuxAmount: 500,  label: "Standard" },
+          { ghsAmount: 100, kenuxAmount: 1000, label: "Value", popular: true },
+          { ghsAmount: 250, kenuxAmount: 2500, label: "Premium" },
+          { ghsAmount: 500, kenuxAmount: 5000, label: "Enterprise" },
+        ]);
+      }
+    } finally {
+      setLoading(false);
+    }
   }, [user?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);

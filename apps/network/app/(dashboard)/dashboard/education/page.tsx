@@ -173,27 +173,29 @@ export default function EducationPage() {
     if (!businessId) return;
     setLoading(true);
 
-    const [stuRes, attRes, payRes] = await Promise.all([
-      supabase.from("school_students").select("*").eq("business_id", businessId).order("full_name"),
-      supabase.from("school_attendance").select("*").eq("business_id", businessId).order("date", { ascending: false }).limit(200),
-      supabase.from("school_fee_payments").select("*").eq("business_id", businessId).order("created_at", { ascending: false }),
-    ]);
+    try {
+      const [stuRes, attRes, payRes] = await Promise.all([
+        supabase.from("school_students").select("*").eq("business_id", businessId).order("full_name"),
+        supabase.from("school_attendance").select("*").eq("business_id", businessId).order("date", { ascending: false }).limit(200),
+        supabase.from("school_fee_payments").select("*").eq("business_id", businessId).order("created_at", { ascending: false }),
+      ]);
 
-    const stuData = (stuRes.data ?? []) as Student[];
-    const attData = (attRes.data ?? []) as Attendance[];
-    const payData = (payRes.data ?? []) as FeePayment[];
+      const stuData = (stuRes.data ?? []) as Student[];
+      const attData = (attRes.data ?? []) as Attendance[];
+      const payData = (payRes.data ?? []) as FeePayment[];
 
-    setStudents(stuData);
-    setAttendance(attData);
-    setPayments(payData);
+      setStudents(stuData);
+      setAttendance(attData);
+      setPayments(payData);
 
-    // Init attendance map for today's class
-    const todayAtt = attData.filter((a) => a.date === attendanceDate && a.class_name === attendanceClass);
-    const map: Record<string, string> = {};
-    todayAtt.forEach((a) => { map[a.student_id] = a.status; });
-    setAttendanceMap(map);
-
-    setLoading(false);
+      // Init attendance map for today's class
+      const todayAtt = attData.filter((a) => a.date === attendanceDate && a.class_name === attendanceClass);
+      const map: Record<string, string> = {};
+      todayAtt.forEach((a) => { map[a.student_id] = a.status; });
+      setAttendanceMap(map);
+    } finally {
+      setLoading(false);
+    }
   }, [businessId, attendanceDate, attendanceClass]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);

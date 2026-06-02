@@ -97,15 +97,18 @@ export default function AdminCompliancePage() {
   }
 
   async function suspendFraud(userId: string) {
-    // Insert security event to flag the user for review
-    await supabase.from("audit_logs").insert({
-      action: "fraud_signal_actioned",
-      category: "security",
-      severity: "warning",
-      actor: "admin",
-      target: userId,
-      metadata: { actioned_at: new Date().toISOString() },
-    });
+    // Suspend the user account and record the security event
+    await Promise.all([
+      supabase.from("user_profiles").update({ is_active: false }).eq("id", userId),
+      supabase.from("audit_logs").insert({
+        action: "fraud_signal_actioned",
+        category: "security",
+        severity: "warning",
+        actor: "admin",
+        target: userId,
+        metadata: { actioned_at: new Date().toISOString() },
+      }),
+    ]);
     setFraudAlerts((prev) => prev.filter((f) => f.user_id !== userId));
   }
 

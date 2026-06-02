@@ -40,26 +40,29 @@ export default function FinancePage() {
   const load = useCallback(async () => {
     if (!profile?.business_id) return;
     setLoading(true);
-    const now = new Date();
-    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+    try {
+      const now = new Date();
+      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
 
-    const [{ data: expData }, { data: salesData }] = await Promise.all([
-      supabase
-        .from("business_expenses")
-        .select("id, description, category, amount, expense_date, payment_method")
-        .eq("business_id", profile.business_id)
-        .gte("expense_date", startOfMonth.split("T")[0])
-        .order("expense_date", { ascending: false }),
-      supabase
-        .from("sales")
-        .select("total")
-        .eq("business_id", profile.business_id)
-        .gte("created_at", startOfMonth),
-    ]);
+      const [{ data: expData }, { data: salesData }] = await Promise.all([
+        supabase
+          .from("business_expenses")
+          .select("id, description, category, amount, expense_date, payment_method")
+          .eq("business_id", profile.business_id)
+          .gte("expense_date", startOfMonth.split("T")[0])
+          .order("expense_date", { ascending: false }),
+        supabase
+          .from("sales")
+          .select("total")
+          .eq("business_id", profile.business_id)
+          .gte("created_at", startOfMonth),
+      ]);
 
-    setExpenses((expData as Expense[]) ?? []);
-    setTotalRevenue((salesData ?? []).reduce((s: number, r: { total: number }) => s + r.total, 0));
-    setLoading(false);
+      setExpenses((expData as Expense[]) ?? []);
+      setTotalRevenue((salesData ?? []).reduce((s: number, r: { total: number }) => s + r.total, 0));
+    } finally {
+      setLoading(false);
+    }
   }, [profile?.business_id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);
@@ -75,7 +78,7 @@ export default function FinancePage() {
     }
     setSaving(true);
     setFormError("");
-    await supabase.from("business_expenses").insert({
+    const { error: insertErr } = await supabase.from("business_expenses").insert({
       business_id: profile.business_id,
       description: form.description.trim(),
       category: form.category,
@@ -84,6 +87,10 @@ export default function FinancePage() {
       payment_method: form.payment_method,
     });
     setSaving(false);
+    if (insertErr) {
+      setFormError(insertErr.message);
+      return;
+    }
     setShowModal(false);
     setForm({ description: "", category: "Rent", amount: "", expense_date: "", payment_method: "cash" });
     load();

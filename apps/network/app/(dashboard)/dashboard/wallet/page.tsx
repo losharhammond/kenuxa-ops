@@ -160,13 +160,16 @@ function WalletPageInner() {
     if (!biz) { setBizLoading(false); return; }
     setBizId((biz as { id: string }).id);
 
-    const res = await fetch(`/api/wallet/business?business_id=${(biz as { id: string }).id}`);
-    if (res.ok) {
-      const data = await res.json() as { wallet: BusinessWallet; transactions: BusinessWalletTx[] };
-      setBizWallet(data.wallet);
-      setBizTxs(data.transactions);
+    try {
+      const res = await fetch(`/api/wallet/business?business_id=${(biz as { id: string }).id}`);
+      if (res.ok) {
+        const data = await res.json() as { wallet: BusinessWallet; transactions: BusinessWalletTx[] };
+        setBizWallet(data.wallet);
+        setBizTxs(data.transactions);
+      }
+    } finally {
+      setBizLoading(false);
     }
-    setBizLoading(false);
   }, [user?.id, showBusinessWallet]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);
@@ -186,23 +189,26 @@ function WalletPageInner() {
     const amount = parseFloat(topUpAmount);
     if (isNaN(amount) || amount < 1) return;
     setTopping(true);
-    const res = await fetch("/api/payments/paystack/initialize", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        amount: Math.round(amount * 100), // pesewas
-        currency: "GHS",
-        purpose: "wallet_topup",
-        metadata: { method: topUpMethod, phone: topUpPhone },
-      }),
-    });
-    const data = await res.json();
-    setTopping(false);
-    if (data.authorization_url) {
-      window.location.href = data.authorization_url;
-    } else {
-      setTopUpSuccess(false);
-      setShowTopUp(false);
+    try {
+      const res = await fetch("/api/payments/paystack/initialize", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: Math.round(amount * 100), // pesewas
+          currency: "GHS",
+          purpose: "wallet_topup",
+          metadata: { method: topUpMethod, phone: topUpPhone },
+        }),
+      });
+      const data = await res.json();
+      if (data.authorization_url) {
+        window.location.href = data.authorization_url;
+      } else {
+        setTopUpSuccess(false);
+        setShowTopUp(false);
+      }
+    } finally {
+      setTopping(false);
     }
   };
 
@@ -213,18 +219,23 @@ function WalletPageInner() {
     if (isNaN(amount) || amount < 0.01) { setSendError("Enter a valid amount"); return; }
     if (amount > (wallet?.balance ?? 0)) { setSendError("Insufficient balance"); return; }
     setSending(true);
-    const res = await fetch("/api/wallet/transfer", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ receiver_identifier: sendTo.trim(), amount, note: sendNote || undefined }),
-    });
-    const data = await res.json() as { ok?: boolean; reference?: string; error?: string };
-    setSending(false);
-    if (!res.ok || !data.ok) { setSendError(data.error ?? "Transfer failed"); return; }
-    setSendSuccess(data.reference ?? "done");
-    setSendTo(""); setSendAmount(""); setSendNote("");
-    await load();
-    setTimeout(() => { setSendSuccess(null); setShowSend(false); }, 3000);
+    try {
+      const res = await fetch("/api/wallet/transfer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ receiver_identifier: sendTo.trim(), amount, note: sendNote || undefined }),
+      });
+      const data = await res.json() as { ok?: boolean; reference?: string; error?: string };
+      if (!res.ok || !data.ok) { setSendError(data.error ?? "Transfer failed"); return; }
+      setSendSuccess(data.reference ?? "done");
+      setSendTo(""); setSendAmount(""); setSendNote("");
+      await load();
+      setTimeout(() => { setSendSuccess(null); setShowSend(false); }, 3000);
+    } catch {
+      setSendError("Network error. Please try again.");
+    } finally {
+      setSending(false);
+    }
   };
 
   const balance = wallet?.balance ?? 0;
