@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { trackRevenue, calcTransactionFee } from "@/lib/revenue/track";
 
 export async function GET(req: NextRequest) {
   const reference = req.nextUrl.searchParams.get("reference");
@@ -41,11 +42,20 @@ export async function GET(req: NextRequest) {
   if (purpose === "wallet_topup") {
     // Double-entry: credit user wallet
     await supabase.rpc("wallet_credit", { p_user_id: userId, p_amount: amountGHS, p_currency: data.currency });
+    // Track platform transaction fee revenue
+    const fee = calcTransactionFee(amountGHS);
+    await trackRevenue({ source: "transaction_fee", amount: fee, userId, reference });
   } else if (purpose === "kenux_purchase") {
-    const kenuxRate = parseFloat(process.env.KENUX_GHS_RATE ?? "10");
-    const kenuxAmount = Math.floor((amountGHS / kenuxRate) * 100);
+    // Fixed rate: 10 KENUX = GH₵ 1.00 (KENUX is NOT cryptocurrency — it's a utility currency)
+    const KENUX_PER_GHS = parseInt(process.env.KENUX_PER_GHS ?? "10", 10);
+    const kenuxAmount = Math.floor(amountGHS * KENUX_PER_GHS);
     // Credit KENUX to rewards account
-    await supabase.rpc("kenux_credit", { p_user_id: userId, p_points: kenuxAmount });
+    await supabase.rpc("kenux_credit", { p_user_id: userId, p_points: kenuxAmount, p_reason: `Purchased ${kenuxAmount} KENUX via Paystack` });
+    // 100% margin on KENUX — entire GHS is revenue
+    await trackRevenue({ source: "kenux_purchase", amount: amountGHS, userId, reference });
+  } else if (purpose === "marketplace_order") {
+    // Marketplace fee tracked separately when order fulfills
+    await trackRevenue({ source: "transaction_fee", amount: calcTransactionFee(amountGHS), userId, reference });
   }
 
   // Seed activity event

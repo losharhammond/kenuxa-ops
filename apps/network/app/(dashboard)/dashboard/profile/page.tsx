@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useEffect, useState, useCallback, useRef } from "react";
+import Image from "next/image";
 import { Header } from "@/components/layout/header";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/use-auth";
@@ -223,7 +224,7 @@ export default function ProfilePage() {
               onClick={(e) => { e.stopPropagation(); logoRef.current?.click(); }}
             >
               {logoUrl ? (
-                <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
+                <Image src={logoUrl} alt="Logo" className="w-full h-full object-cover" width={80} height={80} />
               ) : (
                 <div className="w-full h-full flex items-center justify-center">
                   <Store size={32} className="text-[#FF8B5E]" />

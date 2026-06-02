@@ -89,8 +89,8 @@ export default function EconomicGraphPage() {
   const load = useCallback(async () => {
     const [bizRes, userRes, txRes] = await Promise.all([
       supabase.from("businesses").select("id", { count: "exact", head: true }),
-      supabase.from("profiles").select("id", { count: "exact", head: true }),
-      supabase.from("transactions").select("id", { count: "exact", head: true }),
+      supabase.from("user_profiles").select("id", { count: "exact", head: true }),
+      supabase.from("wallet_transactions").select("id", { count: "exact", head: true }),
     ]);
     const biz = bizRes.count ?? 0;
     const usr = userRes.count ?? 0;
@@ -108,12 +108,12 @@ export default function EconomicGraphPage() {
         id: b.id,
         name: b.name,
         industry: b.industry ?? "General",
-        connections: Math.floor(Math.random() * 3000) + 500,
+        connections: 0,
         revenue_tier: ["SME", "Large", "Enterprise"][i % 3]!,
       })));
     }
     setLoading(false);
-  }, [supabase]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [supabase]);
 
   useEffect(() => { load(); }, [load]);
 

@@ -5,13 +5,12 @@ import { Header } from "@/components/layout/header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { formatCurrency, formatDate } from "@/lib/utils";
+import { formatCurrency } from "@/lib/utils";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
-import { useAuth } from "@/lib/hooks/use-auth";
 import {
   Flame, TrendingUp, ShoppingBag, Briefcase, Building2,
-  Star, ArrowUpRight, Eye, BarChart2, Wrench,
+  Star, ArrowUpRight, Eye, BarChart2,
 } from "lucide-react";
 
 interface TrendingBusiness {

@@ -2,14 +2,14 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import {
-  ArrowRight, Zap, Shield, Globe, Rocket, TrendingUp,
+  ArrowRight, Shield, Globe, Rocket, TrendingUp,
   Building2, Users, Factory, Landmark, Truck,
   ShoppingBag, Briefcase, Wrench, Star, CreditCard,
   Sparkles, CheckCircle, Play, ChevronRight, X,
   BarChart3, Lock, Cpu, Network, DollarSign,
-  MessageSquare, Award, Package, Pill, UtensilsCrossed,
+  MessageSquare, Award, Pill, UtensilsCrossed,
   BedDouble, GraduationCap, Stethoscope, Sprout, Check,
-  Zap as Bolt, MapPin, Clock, Activity,
+  Zap as Bolt, Activity,
 } from "lucide-react";
 
 export const metadata: Metadata = {

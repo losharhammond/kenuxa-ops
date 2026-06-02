@@ -12,8 +12,8 @@ export async function GET(request: NextRequest) {
 
   let query = supabase
     .from("notifications")
-    .select("*")
-    .eq("recipient_id", user.id)
+    .select("id, title, body, category, action_url, read_at, created_at")
+    .eq("user_id", user.id)
     .order("created_at", { ascending: false })
     .limit(limit);
 
@@ -22,11 +22,10 @@ export async function GET(request: NextRequest) {
   const { data, error } = await query;
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-  // Count unread — support both `read` boolean and `read_at` timestamp columns
   const { count } = await supabase
     .from("notifications")
     .select("id", { count: "exact" })
-    .eq("recipient_id", user.id)
+    .eq("user_id", user.id)
     .is("read_at", null);
 
   return NextResponse.json({ notifications: data, unreadCount: count ?? 0 });
@@ -51,7 +50,7 @@ export async function PATCH(request: NextRequest) {
     .from("notifications")
     .update({ read_at: new Date().toISOString() })
     .eq("id", id)
-    .eq("recipient_id", user.id);
+    .eq("user_id", user.id);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ success: true });

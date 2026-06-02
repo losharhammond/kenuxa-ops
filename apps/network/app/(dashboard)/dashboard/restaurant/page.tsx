@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/use-auth";
 import {
   ChefHat, UtensilsCrossed, QrCode, Clock, Users, Plus, Pencil, X,
-  CheckCircle2, AlertCircle, Loader2, Flame, Star, TrendingUp,
-  Coffee, ShoppingBag, Truck, Calendar, BarChart2, Sparkles,
-  Eye, RefreshCw, DollarSign, Package,
+  CheckCircle2, Loader2, Flame, Star, TrendingUp,
+  ShoppingBag, Truck, Sparkles,
+  DollarSign, Package,
 } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -95,7 +96,7 @@ function MenuItemCard({ item, onEdit, onToggle }: {
       {/* Image placeholder */}
       <div className="h-28 bg-gradient-to-br from-[rgba(255,101,36,0.08)] to-[rgba(255,101,36,0.03)] flex items-center justify-center relative">
         {item.image_url ? (
-          <img src={item.image_url} alt={item.name} className="w-full h-full object-cover" />
+          <Image src={item.image_url} alt={item.name} className="w-full h-full object-cover" width={200} height={112} />
         ) : (
           <UtensilsCrossed size={28} className="text-[#374151]" />
         )}
@@ -368,23 +369,9 @@ export default function RestaurantPage() {
       tableOccupancy: tableData.length ? Math.round((occupied / tableData.length) * 100) : 0,
     });
 
-    // Seed demo tables if none
-    if (tableData.length === 0) {
-      await supabase.from("restaurant_tables").insert(
-        Array.from({ length: 8 }, (_, i) => ({
-          business_id: bizId,
-          table_number: String(i + 1),
-          capacity: i % 3 === 0 ? 6 : i % 2 === 0 ? 4 : 2,
-          status: i < 3 ? "occupied" : i === 3 ? "reserved" : "available",
-          current_order_id: null,
-        }))
-      );
-      load();
-      return;
-    }
 
     setLoading(false);
-  }, [bizId, supabase]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [bizId, supabase]);
 
   useEffect(() => { load(); }, [load]);
 
@@ -579,7 +566,7 @@ export default function RestaurantPage() {
       {tab === "tables" && (
         <div className="space-y-4">
           <div className="flex gap-4 text-xs text-[#64748b] flex-wrap">
-            {Object.entries(TABLE_STATUS_CONFIG).map(([status, { label, color }]) => (
+            {Object.entries(TABLE_STATUS_CONFIG).map(([status, { label, color: _color }]) => (
               <span key={status} className="flex items-center gap-1.5">
                 <span className={`text-[9px] px-2 py-0.5 rounded-full border font-bold ${TABLE_STATUS_CONFIG[status]?.bg}`}>{label}</span>
                 <span>{tables.filter((t) => t.status === status).length}</span>

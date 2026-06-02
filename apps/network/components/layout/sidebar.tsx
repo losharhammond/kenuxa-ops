@@ -12,7 +12,7 @@ import {
   ClipboardList, Banknote, Code2, UtensilsCrossed, Smartphone as SmartphoneIcon,
   Pill, BedDouble, Sprout, Stethoscope, GraduationCap, Network, Award,
   Bell, Activity, UserCog, Zap, Receipt, TrendingUp, Wallet, Star,
-  Globe, Search, HandCoins, BookOpen, ChevronRight,
+  Globe, HandCoins, ChevronRight, Target,
 } from "lucide-react";
 import { useAuth } from "@/lib/hooks/use-auth";
 import { useRoles } from "@/lib/hooks/use-roles";
@@ -55,17 +55,18 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: "Discover",
     items: [
-      { href: "/dashboard/discover",    label: "Explore",            icon: Compass,   badge: "NEW" },
-      { href: "/dashboard/directory",   label: "Businesses",         icon: Map },
-      { href: "/dashboard/marketplace", label: "Products",           icon: ShoppingBag, permission: "marketplace.buy" },
-      { href: "/dashboard/services",    label: "Services",           icon: Wrench,     permission: "services.book" },
-      { href: "/dashboard/jobs",        label: "Jobs",               icon: Briefcase,  permission: "jobs.apply" },
-      { href: "/dashboard/freelancers", label: "Freelancers",        icon: Pen },
-      { href: "/dashboard/suppliers",   label: "Suppliers",          icon: Factory,    permission: "suppliers.view" },
-      { href: "/dashboard/trending",    label: "Trending",           icon: Flame },
+      { href: "/dashboard/discover",       label: "Explore",            icon: Compass,   badge: "NEW" },
+      { href: "/dashboard/opportunities",  label: "Opportunities",      icon: Target,    badge: "HOT" },
+      { href: "/dashboard/directory",      label: "Businesses",         icon: Map },
+      { href: "/dashboard/marketplace",    label: "Products",           icon: ShoppingBag, permission: "marketplace.buy" },
+      { href: "/dashboard/services",       label: "Services",           icon: Wrench,     permission: "services.book" },
+      { href: "/dashboard/jobs",           label: "Jobs",               icon: Briefcase,  permission: "jobs.apply" },
+      { href: "/dashboard/freelancers",    label: "Freelancers",        icon: Pen },
+      { href: "/dashboard/suppliers",      label: "Suppliers",          icon: Factory,    permission: "suppliers.view" },
+      { href: "/dashboard/trending",       label: "Trending",           icon: Flame },
     ],
     showFor: ["customer", "job_seeker", "freelancer", "business_owner",
-              "branch_manager", "employee", "supplier", "delivery_rider",
+              "branch_manager", "cashier", "employee", "supplier", "delivery_rider",
               "recruiter", "financial_partner", "super_admin", "country_admin"],
   },
 
@@ -146,7 +147,7 @@ const NAV_GROUPS: NavGroup[] = [
       { href: "/dashboard/team",       label: "Team",               icon: UserCog,      permission: "users.manage" },
       { href: "/dashboard/billing",    label: "Billing & Plans",    icon: Receipt,      permission: "business.billing" },
     ],
-    showFor: ["business_owner", "branch_manager", "super_admin", "country_admin"],
+    showFor: ["business_owner", "branch_manager", "cashier", "employee", "super_admin", "country_admin"],
   },
 
   // ── 9. LENDING PORTAL (Financial Partners) ───────────────
@@ -195,6 +196,8 @@ const NAV_GROUPS: NavGroup[] = [
       { href: "/dashboard/rewards",   label: "Rewards",             icon: Gift },
       { href: "/dashboard/lending",   label: "Financing",           icon: HandCoins,
         hideFor: ["business_owner", "branch_manager"] },
+      { href: "/dashboard/treasury",  label: "Treasury",            icon: Landmark,
+        roles: ["super_admin", "country_admin", "financial_partner", "business_owner"] },
     ],
   },
 
@@ -355,7 +358,7 @@ export function Sidebar() {
             {(profile as { avatar_url?: string | null } | null)?.avatar_url ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                src={(profile as { avatar_url?: string | null } | null)?.avatar_url!}
+                src={(profile as { avatar_url?: string | null } | null)?.avatar_url ?? ""}
                 alt="You"
                 className="w-full h-full object-cover"
               />

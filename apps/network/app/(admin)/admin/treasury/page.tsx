@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import {
   Zap, TrendingUp, DollarSign, Globe, RefreshCw,
   BarChart3, ArrowDownLeft, ArrowUpRight, Shield,
-  Activity, CreditCard, AlertTriangle,
+  Activity, CreditCard,
 } from "lucide-react";
 
 interface TreasuryStats {
@@ -71,10 +71,12 @@ export default function TreasuryDashboard() {
 
   const load = useCallback(async () => {
     setLoading(true);
-    const [kenuxRes, walletRes, revenueRes, txRes, ratesRes] = await Promise.all([
-      supabase.from("rewards_accounts").select("points.sum()").single(),
-      supabase.from("wallets").select("balance.sum()").single(),
-      supabase.from("platform_revenue").select("amount.sum(), source").order("amount", { ascending: false }),
+    const [circulationRes, earnedRes, spentRes, walletRes, revenueRes, txRes, ratesRes] = await Promise.all([
+      supabase.from("rewards_accounts").select("points"),
+      supabase.from("kenux_ledger").select("points").eq("entry_type", "earn"),
+      supabase.from("kenux_ledger").select("points").eq("entry_type", "spend"),
+      supabase.from("wallets").select("balance").eq("status", "active"),
+      supabase.from("platform_revenue").select("amount, source").order("amount", { ascending: false }),
       supabase.from("wallet_transactions").select("id", { count: "exact", head: true }).eq("status", "completed"),
       supabase.from("exchange_rates").select("to_currency, rate, fetched_at").order("to_currency"),
     ]);
@@ -92,15 +94,20 @@ export default function TreasuryDashboard() {
 
     const totalRevenue = Object.values(streamMap).reduce((s, v) => s + v.amount, 0);
 
+    const kenuxMinted     = (earnedRes.data ?? []).reduce((s, r) => s + ((r as { points: number }).points ?? 0), 0);
+    const kenuxSpentTotal = (spentRes.data ?? []).reduce((s, r) => s + ((r as { points: number }).points ?? 0), 0);
+    const kenuxCirculation = (circulationRes.data ?? []).reduce((s, r) => s + ((r as { points: number }).points ?? 0), 0);
+    const walletTotal     = (walletRes.data ?? []).reduce((s, r) => s + ((r as { balance: number }).balance ?? 0), 0);
+
     setStats({
-      kenux_total_minted: (kenuxRes.data as { sum: number } | null)?.sum ?? 85000,
-      kenux_total_spent: 12000,
-      kenux_in_circulation: ((kenuxRes.data as { sum: number } | null)?.sum ?? 85000) - 12000,
-      total_wallet_balance_ghs: (walletRes.data as { sum: number } | null)?.sum ?? 0,
-      total_revenue_ghs: totalRevenue,
-      total_transactions: txRes.count ?? 0,
-      paystack_settled_ghs: totalRevenue * 0.85,
-      pending_settlements_ghs: totalRevenue * 0.15,
+      kenux_total_minted:       kenuxMinted,
+      kenux_total_spent:        kenuxSpentTotal,
+      kenux_in_circulation:     kenuxCirculation,
+      total_wallet_balance_ghs: walletTotal,
+      total_revenue_ghs:        totalRevenue,
+      total_transactions:       txRes.count ?? 0,
+      paystack_settled_ghs:     totalRevenue * 0.85,
+      pending_settlements_ghs:  totalRevenue * 0.15,
     });
     setRates((ratesRes.data ?? []) as ExchangeRate[]);
     setLastRefresh(new Date());

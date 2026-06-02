@@ -14,11 +14,13 @@ const TABS = ["kyc", "disputes", "fraud"] as const;
 
 interface KYCRecord {
   id: string;
-  business_id: string;
-  business_name: string;
+  user_id: string;
   document_type: string;
+  side: string;
   status: "pending" | "approved" | "rejected";
   submitted_at: string;
+  rejection_reason?: string | null;
+  user?: { full_name?: string | null; email?: string | null } | null;
 }
 
 interface Dispute {
@@ -32,12 +34,13 @@ interface Dispute {
   created_at: string;
 }
 
-interface FraudAlert {
-  id: string;
-  entity_name: string;
-  fraud_type: string;
-  risk_level: string;
-  detected_at: string;
+interface FraudSignal {
+  user_id: string;
+  mfa_failures: number;
+  login_failures: number;
+  critical_events: number;
+  last_event: string;
+  unique_ips: number;
 }
 
 export default function AdminCompliancePage() {
@@ -45,7 +48,7 @@ export default function AdminCompliancePage() {
   const [tab, setTab] = useState<typeof TABS[number]>("kyc");
   const [kyc, setKyc] = useState<KYCRecord[]>([]);
   const [disputes, setDisputes] = useState<Dispute[]>([]);
-  const [fraudAlerts, setFraudAlerts] = useState<FraudAlert[]>([]);
+  const [fraudAlerts, setFraudAlerts] = useState<FraudSignal[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -54,8 +57,8 @@ export default function AdminCompliancePage() {
 
     const [{ data: kycData }, { data: disputeData }, { data: fraudData }] = await Promise.all([
       supabase
-        .from("kyc_submissions")
-        .select("id, business_id, business_name, document_type, status, submitted_at")
+        .from("kyc_documents")
+        .select("id, user_id, document_type, side, status, submitted_at, rejection_reason, user:user_profiles(full_name, email)")
         .order("submitted_at", { ascending: false })
         .limit(50),
       supabase
@@ -64,22 +67,27 @@ export default function AdminCompliancePage() {
         .order("created_at", { ascending: false })
         .limit(50),
       supabase
-        .from("fraud_alerts")
-        .select("id, entity_name, fraud_type, risk_level, detected_at")
-        .order("detected_at", { ascending: false })
+        .from("fraud_signals")
+        .select("user_id, mfa_failures, login_failures, critical_events, last_event, unique_ips")
+        .order("last_event", { ascending: false })
         .limit(50),
     ]);
 
     setKyc((kycData as KYCRecord[]) ?? []);
     setDisputes((disputeData as Dispute[]) ?? []);
-    setFraudAlerts((fraudData as FraudAlert[]) ?? []);
+    setFraudAlerts((fraudData as FraudSignal[]) ?? []);
     setLoading(false);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);
 
   async function updateKyc(id: string, status: "approved" | "rejected") {
-    await supabase.from("kyc_submissions").update({ status }).eq("id", id);
+    // Call the admin review API which also notifies the user + updates credit score
+    await fetch("/api/kyc/review", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ doc_id: id, action: status === "approved" ? "approve" : "reject" }),
+    });
     setKyc((prev) => prev.map((k) => (k.id === id ? { ...k, status } : k)));
   }
 
@@ -88,13 +96,24 @@ export default function AdminCompliancePage() {
     setDisputes((prev) => prev.map((d) => (d.id === id ? { ...d, status: "resolved" } : d)));
   }
 
-  async function suspendFraud(id: string) {
-    await supabase.from("fraud_alerts").update({ status: "actioned" }).eq("id", id);
-    setFraudAlerts((prev) => prev.filter((f) => f.id !== id));
+  async function suspendFraud(userId: string) {
+    // Insert security event to flag the user for review
+    await supabase.from("audit_logs").insert({
+      action: "fraud_signal_actioned",
+      category: "security",
+      severity: "warning",
+      actor: "admin",
+      target: userId,
+      metadata: { actioned_at: new Date().toISOString() },
+    });
+    setFraudAlerts((prev) => prev.filter((f) => f.user_id !== userId));
   }
 
   const filteredKyc = kyc.filter((k) =>
-    k.business_name?.toLowerCase().includes(search.toLowerCase())
+    !search ||
+    k.user?.full_name?.toLowerCase().includes(search.toLowerCase()) ||
+    k.user?.email?.toLowerCase().includes(search.toLowerCase()) ||
+    k.document_type.toLowerCase().includes(search.toLowerCase())
   );
 
   const pendingKyc = kyc.filter((k) => k.status === "pending").length;
@@ -160,7 +179,7 @@ export default function AdminCompliancePage() {
                 <input
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search businesses..."
+                  placeholder="Search by name, email or document type..."
                   className="bg-transparent outline-none flex-1 text-sm text-[#f1f5f9] placeholder:text-[#374151]"
                 />
               </div>
@@ -192,13 +211,17 @@ export default function AdminCompliancePage() {
                   ) : filteredKyc.map((k) => (
                     <tr key={k.id} className="hover:bg-white/2 transition-colors">
                       <td className="px-5 py-3.5">
-                        <p className="text-sm font-medium text-[#f1f5f9]">{k.business_name}</p>
+                        <p className="text-sm font-medium text-[#f1f5f9]">{k.user?.full_name ?? k.user?.email ?? k.user_id.slice(0, 8)}</p>
+                        <p className="text-xs text-[#64748b]">{k.user?.email ?? ""}</p>
                       </td>
                       <td className="px-5 py-3.5">
                         <div className="flex items-center gap-1.5 text-xs text-[#64748b]">
                           <FileText size={12} />
-                          {k.document_type}
+                          {k.document_type.replace(/_/g, " ")} ({k.side})
                         </div>
+                        {k.rejection_reason && (
+                          <p className="text-[10px] text-[#f87171] mt-0.5">{k.rejection_reason}</p>
+                        )}
                       </td>
                       <td className="px-5 py-3.5 text-center">
                         <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${
@@ -305,34 +328,38 @@ export default function AdminCompliancePage() {
                 <ShieldAlert size={32} className="mx-auto text-[#374151] mb-3" />
                 <p className="text-sm text-[#64748b]">No fraud alerts</p>
               </Card>
-            ) : fraudAlerts.map((f) => (
-              <Card key={f.id} className="p-5 flex items-center justify-between">
+            ) : fraudAlerts.map((f) => {
+              const isCritical = f.critical_events > 0;
+              const riskLabel = isCritical ? "critical" : f.mfa_failures > 5 ? "high" : "medium";
+              return (
+              <Card key={f.user_id} className="p-5 flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${
-                    f.risk_level === "critical" ? "bg-[rgba(239,68,68,0.1)]" : "bg-[rgba(249,115,22,0.1)]"
+                    isCritical ? "bg-[rgba(239,68,68,0.1)]" : "bg-[rgba(249,115,22,0.1)]"
                   }`}>
-                    <ShieldAlert size={18} className={f.risk_level === "critical" ? "text-[#f87171]" : "text-[#f97316]"} />
+                    <ShieldAlert size={18} className={isCritical ? "text-[#f87171]" : "text-[#f97316]"} />
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-[#f1f5f9]">{f.entity_name}</p>
+                    <p className="text-sm font-semibold text-[#f1f5f9] font-mono">{f.user_id.slice(0, 12)}…</p>
                     <p className="text-xs text-[#64748b]">
-                      {f.fraud_type} · Detected {new Date(f.detected_at).toLocaleDateString("en-GH")}
+                      {f.mfa_failures} MFA fails · {f.login_failures} login fails · {f.unique_ips} IPs
+                      &nbsp;· Last {new Date(f.last_event).toLocaleString("en-GH", { dateStyle: "short", timeStyle: "short" })}
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className={`px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${
-                    f.risk_level === "critical" ? "bg-[rgba(239,68,68,0.15)] text-[#f87171]" :
-                    f.risk_level === "high"     ? "bg-[rgba(249,115,22,0.15)] text-[#f97316]" :
+                    riskLabel === "critical" ? "bg-[rgba(239,68,68,0.15)] text-[#f87171]" :
+                    riskLabel === "high"     ? "bg-[rgba(249,115,22,0.15)] text-[#f97316]" :
                     "bg-[rgba(245,158,11,0.15)] text-[#F59E0B]"
                   }`}>
-                    {f.risk_level}
+                    {riskLabel}
                   </span>
-                  <Button size="sm" variant="danger" className="text-xs" onClick={() => suspendFraud(f.id)}>Suspend</Button>
+                  <Button size="sm" variant="danger" className="text-xs" onClick={() => suspendFraud(f.user_id)}>Action</Button>
                   <Button size="sm" variant="secondary" className="text-xs">Investigate</Button>
                 </div>
               </Card>
-            ))}
+            );})}
           </div>
         )}
       </div>

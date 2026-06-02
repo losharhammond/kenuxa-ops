@@ -2,16 +2,17 @@
 
 import { useEffect, useState, useCallback, useRef } from "react";
 import { Header } from "@/components/layout/header";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/use-auth";
+import { useRoleGuard } from "@/lib/hooks/use-role-guard";
 import {
-  BadgeCheck, Pen, Plus, X, Star, Shield, CheckCircle2, Upload,
-  Briefcase, GraduationCap, Award, Globe, MapPin, Clock, DollarSign,
-  TrendingUp, Eye, MessageSquare, Camera, Save, Loader2,
+  BadgeCheck, Pen, Plus, X, Shield, CheckCircle2, Upload,
+  Briefcase, GraduationCap, Globe, MapPin, Clock,
+  TrendingUp, Camera, Save, Loader2,
 } from "lucide-react";
 import { ImageUpload } from "@/components/ui/image-upload";
 
@@ -98,6 +99,7 @@ function ScoreRing({ score, size = 80 }: { score: number; size?: number }) {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function TalentProfilePage() {
+  useRoleGuard("talent.manage");
   const { profile: authProfile, user } = useAuth();
   const supabase = createClient();
 
@@ -115,7 +117,7 @@ export default function TalentProfilePage() {
   });
   const [experience, setExperience] = useState<WorkExperience[]>([]);
   const [education, setEducation] = useState<Education[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [skillInput, setSkillInput] = useState("");
@@ -245,7 +247,7 @@ export default function TalentProfilePage() {
                 className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[rgba(139,92,246,0.3)] to-[rgba(255,101,36,0.2)] flex items-center justify-center text-2xl font-black text-[#a78bfa] cursor-pointer group relative overflow-hidden border-2 border-[rgba(139,92,246,0.2)] hover:border-[rgba(139,92,246,0.5)] transition-all"
               >
                 {talent.avatar_url ? (
-                  <img src={talent.avatar_url} alt="" className="w-full h-full object-cover" />
+                  <Image src={talent.avatar_url} alt="" className="w-full h-full object-cover" width={80} height={80} />
                 ) : (
                   talent.full_name?.[0] ?? "?"
                 )}

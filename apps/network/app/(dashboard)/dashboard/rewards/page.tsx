@@ -11,7 +11,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/use-auth";
 import {
   Gift, Star, Zap, TrendingUp, Trophy, Award,
-  ShoppingBag, CheckCircle2, Clock, ArrowRight,
+  ShoppingBag, CheckCircle2, ArrowRight,
   Crown, Flame, Target, Lock,
 } from "lucide-react";
 
@@ -83,24 +83,30 @@ export default function RewardsPage() {
     if (!profile?.id) return;
     setLoading(true);
 
-    // Try to get reward points from loyalty_points table (if it exists)
-    const { data: pointsRow } = await supabase
-      .from("loyalty_points")
+    const { data: acct } = await supabase
+      .from("rewards_accounts")
       .select("points, lifetime_points")
       .eq("user_id", profile.id)
       .maybeSingle();
 
-    setPoints((pointsRow as { points: number; lifetime_points: number } | null)?.points ?? 0);
-    setLifetime((pointsRow as { points: number; lifetime_points: number } | null)?.lifetime_points ?? 0);
+    setPoints((acct as { points: number; lifetime_points: number } | null)?.points ?? 0);
+    setLifetime((acct as { points: number; lifetime_points: number } | null)?.lifetime_points ?? 0);
 
-    const { data: txns } = await supabase
-      .from("loyalty_transactions")
-      .select("id, points, type, description, created_at")
+    const { data: ledger } = await supabase
+      .from("kenux_ledger")
+      .select("id, points, entry_type, reason, created_at")
       .eq("user_id", profile.id)
       .order("created_at", { ascending: false })
-      .limit(10);
+      .limit(20);
 
-    setTransactions((txns as RewardTransaction[]) ?? []);
+    const txns = (ledger ?? []).map((r) => ({
+      id: r.id as string,
+      points: r.entry_type === "earn" ? (r.points as number) : -(r.points as number),
+      type: r.entry_type as string,
+      description: (r.reason as string | null),
+      created_at: r.created_at as string,
+    }));
+    setTransactions(txns);
     setLoading(false);
   }, [profile?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 

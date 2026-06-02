@@ -91,7 +91,7 @@ export default function DataPlatformPage() {
   const [queries] = useState<QueryLog[]>(PLATFORM_QUERIES);
   const [activeTab, setActiveTab] = useState<"overview" | "streams" | "warehouse" | "queries">("overview");
   const [refreshing, setRefreshing] = useState(false);
-  const [liveCount, setLiveCount] = useState(847);
+  const [liveCount, setLiveCount] = useState(0);
 
   const loadRealCounts = useCallback(async () => {
     const tableNames = ["transactions", "profiles", "businesses", "inventory", "job_listings", "invoices", "skill_profiles", "rfqs"];
@@ -102,13 +102,19 @@ export default function DataPlatformPage() {
       ...t,
       row_estimate: results[i]?.count ?? t.row_estimate,
     })));
-  }, [supabase]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    // Live event count = wallet_transactions in last hour
+    const { count } = await supabase
+      .from("wallet_transactions")
+      .select("id", { count: "exact", head: true })
+      .gte("created_at", new Date(Date.now() - 3600000).toISOString());
+    setLiveCount(count ?? 0);
+  }, [supabase]);
 
   useEffect(() => {
     loadRealCounts();
-    const interval = setInterval(() => {
-      setLiveCount((n) => n + Math.floor(Math.random() * 20) - 5);
-    }, 2000);
+    // Refresh real counts every 30s
+    const interval = setInterval(() => { loadRealCounts(); }, 30000);
     return () => clearInterval(interval);
   }, [loadRealCounts]);
 

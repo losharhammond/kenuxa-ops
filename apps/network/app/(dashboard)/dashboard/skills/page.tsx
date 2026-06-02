@@ -48,7 +48,7 @@ interface SkillProfile {
 
 
 export default function SkillsMarketplacePage() {
-  const { profile, role } = useAuth();
+  const { profile } = useAuth();
   const supabase = createClient();
 
   const [profiles, setProfiles] = useState<SkillProfile[]>([]);
@@ -77,7 +77,7 @@ export default function SkillsMarketplacePage() {
 
     setProfiles((data as SkillProfile[]) ?? []);
     setLoading(false);
-  }, [supabase]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [supabase]);
 
   useEffect(() => { load(); }, [load]);
 

@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { Header } from "@/components/layout/header";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/use-auth";
+import { useRoleGuard } from "@/lib/hooks/use-role-guard";
 import {
   Users, UserPlus, MoreVertical, CheckCircle, Clock,
   X, Loader2, Mail, CreditCard, BarChart3, MessageSquare,
@@ -36,8 +37,9 @@ const ROLE_COLORS: Record<string, string> = {
 };
 
 export default function TeamPage() {
+  useRoleGuard("team.view");
   const supabase = createClient();
-  const { user, profile } = useAuth();
+  const { user } = useAuth();
   const [members, setMembers] = useState<TeamMember[]>([]);
   const [loading, setLoading] = useState(true);
   const [businessId, setBusinessId] = useState<string | null>(null);
@@ -70,10 +72,9 @@ export default function TeamPage() {
       .eq("business_id", bizId)
       .order("invited_at", { ascending: false });
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setMembers(((data ?? []) as unknown as TeamMember[]));
     setLoading(false);
-  }, [user?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [user?.id, supabase]);
 
   useEffect(() => { load(); }, [load]);
 

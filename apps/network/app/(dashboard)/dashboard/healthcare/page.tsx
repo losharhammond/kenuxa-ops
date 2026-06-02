@@ -4,9 +4,9 @@ import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/use-auth";
 import {
-  Stethoscope, Plus, Search, Calendar, Users, Clock, CreditCard,
-  Brain, BarChart3, X, Check, Edit2, Trash2, FileText, Phone,
-  AlertTriangle, Activity, Heart, TrendingUp, Video, ChevronRight,
+  Stethoscope, Plus, Search, Calendar, Users, CreditCard,
+  Brain, X, Check, Phone,
+  AlertTriangle, Activity, Heart, Video,
 } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -61,7 +61,6 @@ const APPOINTMENT_TYPES = [
 ];
 
 const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
-const GENDERS = ["Male", "Female", "Other"];
 const DOCTORS = ["Dr. Asante", "Dr. Mensah", "Dr. Owusu", "Dr. Boateng", "Dr. Agyemang"];
 
 

@@ -107,7 +107,29 @@ export type Permission =
   // Settings
   | "settings.view"
   | "settings.manage"
-  | "settings.rbac";
+  | "settings.rbac"
+  // Treasury & Finance
+  | "treasury.view"
+  | "treasury.manage"
+  // Wallet & KENUX
+  | "wallet.view"
+  | "wallet.transfer"
+  | "kenux.buy"
+  // Team
+  | "team.view"
+  | "team.manage"
+  // Billing
+  | "billing.view"
+  | "billing.manage"
+  // Developer
+  | "developer.access"
+  // Talent
+  | "talent.manage"
+  // Lending & Credit
+  | "lending.view"
+  | "lending.apply"
+  | "lending.manage"
+  | "credit.view";
 
 const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
   super_admin: [
@@ -133,6 +155,14 @@ const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
     "kyc.submit", "kyc.review", "kyc.approve",
     "audit.view",
     "settings.view", "settings.manage", "settings.rbac",
+    "treasury.view", "treasury.manage",
+    "wallet.view", "wallet.transfer", "kenux.buy",
+    "team.view", "team.manage",
+    "billing.view", "billing.manage",
+    "developer.access",
+    "talent.manage",
+    "lending.view", "lending.apply", "lending.manage",
+    "credit.view",
   ],
   country_admin: [
     "country.manage", "country.analytics", "country.kyc",
@@ -142,6 +172,10 @@ const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
     "analytics.view", "analytics.export",
     "audit.view",
     "settings.view",
+    "treasury.view",
+    "wallet.view",
+    "team.view",
+    "credit.view",
   ],
   business_owner: [
     "business.create", "business.edit", "business.view", "business.billing", "business.analytics",
@@ -162,6 +196,13 @@ const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
     "analytics.view", "analytics.export",
     "kyc.submit",
     "settings.view", "settings.manage", "settings.rbac",
+    "treasury.view", "treasury.manage",
+    "wallet.view", "wallet.transfer", "kenux.buy",
+    "team.view", "team.manage",
+    "billing.view", "billing.manage",
+    "developer.access",
+    "lending.view", "lending.apply",
+    "credit.view",
   ],
   branch_manager: [
     "business.view", "business.analytics",
@@ -178,6 +219,12 @@ const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
     "marketing.view",
     "analytics.view",
     "settings.view",
+    "treasury.view",
+    "wallet.view", "wallet.transfer", "kenux.buy",
+    "team.view",
+    "billing.view",
+    "lending.view", "lending.apply",
+    "credit.view",
   ],
   cashier: [
     "pos.access", "pos.discount",
@@ -186,6 +233,9 @@ const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
     "payments.view",
     "marketplace.buy",
     "crm.view",
+    "kyc.submit",
+    "settings.view",
+    "wallet.view", "kenux.buy",
   ],
   employee: [
     "inventory.view",
@@ -194,6 +244,9 @@ const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
     "invoicing.view",
     "payments.view",
     "analytics.view",
+    "kyc.submit",
+    "settings.view",
+    "wallet.view", "kenux.buy",
   ],
   customer: [
     "marketplace.buy",
@@ -201,30 +254,76 @@ const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
     "jobs.apply",
     "invoicing.view",
     "payments.view",
+    "kyc.submit",
+    "settings.view",
+    "wallet.view", "wallet.transfer", "kenux.buy",
+    "credit.view",
+    "lending.view", "lending.apply",
+    "developer.access",
   ],
   supplier: [
-    "suppliers.quote", "suppliers.manage",
-    "invoicing.view", "invoicing.create",
+    "suppliers.view", "suppliers.quote", "suppliers.manage", "suppliers.rfq",
+    "invoicing.view", "invoicing.create", "invoicing.send",
     "payments.view",
+    "marketplace.buy", "marketplace.list", "marketplace.sell",
+    "analytics.view",
+    "kyc.submit",
+    "settings.view",
+    "wallet.view", "wallet.transfer", "kenux.buy",
+    "treasury.view",
+    "credit.view",
+    "lending.view", "lending.apply",
+    "developer.access",
   ],
   delivery_rider: [
     "delivery.pickup", "delivery.earnings",
+    "marketplace.buy",
+    "analytics.view",
+    "kyc.submit",
+    "settings.view",
+    "wallet.view", "wallet.transfer", "kenux.buy",
   ],
   recruiter: [
     "jobs.post", "jobs.manage_apps",
+    "marketplace.buy",
     "analytics.view",
+    "kyc.submit",
+    "settings.view",
+    "wallet.view", "wallet.transfer", "kenux.buy",
+    "talent.manage",
+    "developer.access",
   ],
   job_seeker: [
     "jobs.apply",
+    "marketplace.buy",
+    "services.book",
+    "kyc.submit",
+    "settings.view",
+    "wallet.view", "wallet.transfer", "kenux.buy",
+    "credit.view",
+    "lending.view", "lending.apply",
   ],
   financial_partner: [
     "finance.view", "finance.bnpl", "finance.loans",
     "analytics.view", "analytics.export",
-    "kyc.review",
+    "kyc.review", "kyc.submit",
+    "settings.view",
+    "wallet.view",
+    "lending.view", "lending.manage",
+    "credit.view",
+    "developer.access",
   ],
   freelancer: [
     "jobs.apply", "services.book",
-    "marketplace.buy", "analytics.view",
+    "marketplace.buy", "marketplace.list", "marketplace.sell",
+    "services.offer",
+    "analytics.view",
+    "kyc.submit",
+    "settings.view",
+    "wallet.view", "wallet.transfer", "kenux.buy",
+    "credit.view",
+    "lending.view", "lending.apply",
+    "developer.access",
   ],
 };
 

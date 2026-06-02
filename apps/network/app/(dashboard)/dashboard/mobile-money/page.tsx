@@ -4,10 +4,10 @@ import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/use-auth";
 import {
-  Smartphone, TrendingUp, TrendingDown, ArrowUpRight, ArrowDownLeft,
-  RefreshCw, BarChart2, AlertTriangle, CheckCircle2, Clock, DollarSign,
-  Users, Zap, Wifi, Signal, ShoppingBag, Tv, Lightbulb, GraduationCap,
-  Shield, CreditCard, Plus, Send, Eye, ChevronRight, Sparkles,
+  Smartphone, TrendingUp, ArrowUpRight, ArrowDownLeft,
+  RefreshCw, BarChart2, Clock, DollarSign,
+  Zap, Wifi, Signal, ShoppingBag, Tv, Lightbulb, GraduationCap,
+  Shield, CreditCard, Plus, Send, ChevronRight, Sparkles,
   Activity, Target, Award,
 } from "lucide-react";
 
@@ -32,15 +32,6 @@ interface MoMoTransaction {
   customer_name: string | null;
   status: "completed" | "pending" | "failed";
   created_at: string;
-}
-
-interface ServiceProduct {
-  id: string;
-  name: string;
-  category: string;
-  price: number;
-  network: string | null;
-  description: string | null;
 }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -188,7 +179,6 @@ function ProcessTxModal({
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState("");
 
-  const cfg = TX_TYPE_CONFIG[type]!;
   const commissionRate = type === "cash_in" ? 0.01 : type === "cash_out" ? 0.015 : 0.02;
   const commission = parseFloat(form.amount || "0") * commissionRate;
 
@@ -343,13 +333,13 @@ export default function MobileMoneyPage() {
 
     setStats({ todayCashIn, todayCashOut, todayCommission, totalFloat, txCount: statsData.length });
 
-    // Seed default float accounts if none exist (demo convenience)
+    // Seed default float accounts if none exist (zero balance — agent will top up)
     if (floatData.length === 0) {
       await supabase.from("momo_float_accounts").insert(
         NETWORKS.map((n) => ({
           business_id: bizId,
           network: n,
-          balance: Math.random() * 5000 + 500,
+          balance: 0,
           min_balance: 500,
           last_topped_up: null,
         }))
@@ -369,7 +359,7 @@ export default function MobileMoneyPage() {
     }
 
     setLoading(false);
-  }, [bizId, supabase]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [bizId, supabase]);
 
   useEffect(() => { load(); }, [load]);
 

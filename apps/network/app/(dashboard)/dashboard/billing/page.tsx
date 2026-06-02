@@ -4,8 +4,9 @@ import { useState, useEffect, useCallback } from "react";
 import { Header } from "@/components/layout/header";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/use-auth";
+import { useRoleGuard } from "@/lib/hooks/use-role-guard";
 import {
-  CheckCircle, Zap, Building2, Shield, Loader2,
+  CheckCircle, Zap, Shield, Loader2,
   CreditCard, Receipt, ArrowRight, Star,
 } from "lucide-react";
 
@@ -96,6 +97,7 @@ const ADDON_CATALOG = [
 ];
 
 export default function BillingPage() {
+  useRoleGuard("billing.view");
   const supabase = createClient();
   const { user } = useAuth();
   const [sub, setSub] = useState<Subscription | null>(null);

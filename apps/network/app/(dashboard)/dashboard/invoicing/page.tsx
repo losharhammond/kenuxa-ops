@@ -10,6 +10,7 @@ import { formatCurrency, formatDate } from "@/lib/utils";
 import { Search, FileText, Send, AlertCircle, CheckCircle2, Clock, FilePlus } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/use-auth";
+import { useRoleGuard } from "@/lib/hooks/use-role-guard";
 
 interface Invoice {
   id: string;
@@ -43,6 +44,7 @@ const STATUS_ICON: Record<string, React.ReactNode> = {
 };
 
 export default function InvoicingPage() {
+  useRoleGuard("invoicing.view");
   const { profile } = useAuth();
   const supabase = createClient();
   const [invoices, setInvoices] = useState<Invoice[]>([]);

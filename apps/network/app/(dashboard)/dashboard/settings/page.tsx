@@ -14,9 +14,9 @@ import { Loader2,
   Facebook, Instagram, Twitter, MessageCircle, Linkedin,
   Zap, Smartphone, Radio, Cpu, Map, LayoutGrid, FileText,
   Lock, KeyRound, ShieldCheck, ShieldAlert, Eye, EyeOff,
-  CheckCircle2, AlertTriangle, QrCode, Trash2, DollarSign, ChevronDown,
+  CheckCircle2, AlertTriangle, QrCode, Trash2, DollarSign, ChevronDown, Clock,
 } from "lucide-react";
-import { AFRICAN_COUNTRIES as SUPPORTED_COUNTRIES, COUNTRIES_BY_REGION, type AfricanCountry as SupportedCountry } from "@/lib/constants/africa";
+import { COUNTRIES_BY_REGION, type SupportedCountry } from "@/lib/constants/countries";
 import { ImageUpload } from "@/components/ui/image-upload";
 
 interface BusinessProfile {
@@ -70,6 +70,7 @@ const RBAC_ROLES: RbacRole[] = [
   { key: "recruiter",         label: "Recruiter",         icon: <Target size={18} className="text-[#FF8B5E]" />,       color: "orange",  desc: "Posts job openings, reviews applications, and manages the hiring pipeline for the business.",                                permissions: ["Post jobs", "Review applications", "Shortlist candidates", "Send offers", "Talent analytics"],                 scope: "Jobs module"     },
   { key: "job_seeker",        label: "Job Seeker",        icon: <Briefcase size={18} className="text-[#94a3b8]" />,    color: "default", desc: "External applicant. Can browse job listings, apply, track application status, and build a profile.",                         permissions: ["Browse listings", "Apply to jobs", "Application tracking", "Build work profile"],                              scope: "Jobs portal"     },
   { key: "financial_partner", label: "Financial Partner", icon: <Landmark size={18} className="text-[#3B82F6]" />,     color: "blue",    desc: "Bank, MFI, or fintech partner. Can review credit applications, disburse BNPL, and view risk data.",                          permissions: ["Credit applications", "Risk analytics", "BNPL disbursement", "Repayment tracking", "KYC data"],               scope: "Finance module"  },
+  { key: "freelancer",        label: "Freelancer",        icon: <Briefcase size={18} className="text-[#a78bfa]" />,     color: "default", desc: "Independent professional. Can offer services, list products, apply for contracts, and manage gig income.",                 permissions: ["Offer services", "Marketplace listing", "Apply to jobs", "Income analytics", "KYC verification"],              scope: "Freelancer portal"},
 ];
 
 interface TeamMember {
@@ -93,7 +94,7 @@ const DEFAULT_HOURS: BusinessHours[] = [
 export default function SettingsPage() {
   const supabase = createClient();
   const { profile } = useAuth();
-  const [activeTab, setActiveTab] = useState<"general" | "security" | "roles" | "team" | "notifications" | "integrations" | "country">("general");
+  const [activeTab, setActiveTab] = useState<"general" | "security" | "kyc" | "roles" | "team" | "notifications" | "integrations" | "country">("general");
 
   // Multi-country / region
   const [selectedCountry, setSelectedCountry] = useState<SupportedCountry | null>(null);
@@ -134,6 +135,39 @@ export default function SettingsPage() {
   const [pwError, setPwError] = useState("");
   const [pwSuccess, setPwSuccess] = useState(false);
   const [showPw, setShowPw] = useState(false);
+
+  // KYC
+  const [kycDocs, setKycDocs] = useState<{ id: string; document_type: string; side: string; status: string; submitted_at: string; file_url?: string | null }[]>([]);
+  const [kycLoading, setKycLoading] = useState(false);
+  const [kycUploading, setKycUploading] = useState<string | null>(null);
+  const [kycError, setKycError] = useState("");
+
+  const loadKyc = useCallback(async () => {
+    setKycLoading(true);
+    const res = await fetch("/api/kyc/status");
+    if (res.ok) {
+      const json = await res.json() as { documents?: { id: string; document_type: string; side: string; status: string; submitted_at: string; file_url?: string | null }[] };
+      setKycDocs(json.documents ?? []);
+    }
+    setKycLoading(false);
+  }, []);
+
+  async function uploadKycDoc(file: File, documentType: string, side: string) {
+    setKycError("");
+    setKycUploading(`${documentType}_${side}`);
+    const form = new FormData();
+    form.append("file", file);
+    form.append("type", documentType);
+    form.append("side", side);
+    const res = await fetch("/api/kyc/upload", { method: "POST", body: form });
+    setKycUploading(null);
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: "Upload failed" })) as { error?: string };
+      setKycError(err.error ?? "Upload failed");
+      return;
+    }
+    await loadKyc();
+  }
 
   const loadSecurity = useCallback(async () => {
     const { data } = await supabase.auth.mfa.listFactors();
@@ -268,11 +302,13 @@ export default function SettingsPage() {
     if (activeTab === "general")  loadGeneral();
     if (activeTab === "team")     loadTeam();
     if (activeTab === "security") loadSecurity();
-  }, [activeTab, loadGeneral, loadTeam, loadSecurity]);
+    if (activeTab === "kyc")      loadKyc();
+  }, [activeTab, loadGeneral, loadTeam, loadSecurity, loadKyc]);
 
   const TABS = [
     { key: "general" as const,       label: "General" },
     { key: "security" as const,      label: "Security" },
+    { key: "kyc" as const,           label: "ID Verification" },
     { key: "roles" as const,         label: "Roles & RBAC" },
     { key: "team" as const,          label: "Team" },
     { key: "notifications" as const, label: "Notifications" },
@@ -522,10 +558,10 @@ export default function SettingsPage() {
         {activeTab === "roles" && (
           <div className="space-y-4">
             <div className="bg-[rgba(255,101,36,0.06)] border border-[rgba(255,101,36,0.2)] rounded-xl p-4">
-              <p className="text-sm text-[#FF8B5E] font-medium mb-1">KENUXA RBAC — 12 Role System</p>
+              <p className="text-sm text-[#FF8B5E] font-medium mb-1">KENUXA RBAC — 13 Role System</p>
               <p className="text-xs text-[#64748b]">
-                KENUXA uses a 12-role RBAC model spanning the full ecosystem — from platform-level Super Admins
-                to external stakeholders like Customers, Suppliers, Job Seekers, and Financial Partners.
+                KENUXA uses a 13-role RBAC model spanning the full ecosystem — from platform-level Super Admins
+                to external stakeholders like Customers, Suppliers, Job Seekers, Financial Partners, and Freelancers.
                 Each role has a defined scope and permission set.
               </p>
             </div>
@@ -793,6 +829,116 @@ export default function SettingsPage() {
           </div>
         )}
 
+        {/* ID Verification (KYC) */}
+        {activeTab === "kyc" && (
+          <div className="space-y-6">
+            <div className="bg-[rgba(59,130,246,0.06)] border border-[rgba(59,130,246,0.2)] rounded-xl p-4">
+              <p className="text-sm text-[#60a5fa] font-medium mb-1">Identity Verification (KYC)</p>
+              <p className="text-xs text-[#64748b]">
+                Verify your identity to unlock higher transaction limits, access lending products, and build trust with partners.
+                Documents are encrypted and reviewed by our compliance team within 24–48 hours.
+              </p>
+            </div>
+
+            {kycError && (
+              <div className="flex items-center gap-2 text-sm text-[#f87171] bg-[rgba(248,113,113,0.08)] border border-[rgba(248,113,113,0.2)] rounded-xl px-4 py-3">
+                <AlertTriangle size={14} /> {kycError}
+              </div>
+            )}
+
+            {kycLoading ? (
+              <div className="space-y-3">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} className="h-24 bg-white/3 rounded-xl animate-pulse" />
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {[
+                  { type: "national_id",      label: "National ID / Voter Card",   sides: ["front", "back"]  },
+                  { type: "passport",          label: "International Passport",     sides: ["front"]          },
+                  { type: "drivers_license",   label: "Driver's Licence",           sides: ["front", "back"]  },
+                  { type: "proof_of_address",  label: "Proof of Address (utility bill, bank statement)", sides: ["front"] },
+                ].map((doc) => {
+                  const docRecords = kycDocs.filter((d) => d.document_type === doc.type);
+                  return (
+                    <Card key={doc.type}>
+                      <CardContent className="p-5">
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-lg bg-[rgba(59,130,246,0.1)] flex items-center justify-center">
+                              <FileText size={16} className="text-[#60a5fa]" />
+                            </div>
+                            <div>
+                              <p className="text-sm font-semibold text-[#f1f5f9]">{doc.label}</p>
+                              <p className="text-xs text-[#64748b]">
+                                {doc.sides.length > 1 ? "Front & back required" : "Front side required"} · Max 5MB · JPG/PNG/PDF
+                              </p>
+                            </div>
+                          </div>
+                          {docRecords.some((d) => d.status === "approved") && (
+                            <span className="flex items-center gap-1.5 text-xs font-medium text-[#34d399] bg-[rgba(52,211,153,0.1)] border border-[rgba(52,211,153,0.2)] px-3 py-1 rounded-full">
+                              <CheckCircle2 size={11} /> Verified
+                            </span>
+                          )}
+                          {!docRecords.some((d) => d.status === "approved") && docRecords.some((d) => d.status === "pending") && (
+                            <span className="flex items-center gap-1.5 text-xs font-medium text-[#F59E0B] bg-[rgba(245,158,11,0.1)] border border-[rgba(245,158,11,0.2)] px-3 py-1 rounded-full">
+                              <Clock size={11} /> Under Review
+                            </span>
+                          )}
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                          {doc.sides.map((side) => {
+                            const existing = docRecords.find((d) => d.side === side);
+                            const uploading = kycUploading === `${doc.type}_${side}`;
+                            return (
+                              <label key={side} className={`relative flex flex-col items-center justify-center gap-2 p-4 rounded-xl border-2 border-dashed cursor-pointer transition-colors ${
+                                existing?.status === "approved" ? "border-[rgba(52,211,153,0.4)] bg-[rgba(52,211,153,0.04)]" :
+                                existing?.status === "pending"  ? "border-[rgba(245,158,11,0.4)] bg-[rgba(245,158,11,0.04)]" :
+                                existing?.status === "rejected" ? "border-[rgba(239,68,68,0.4)] bg-[rgba(239,68,68,0.04)]" :
+                                "border-white/10 hover:border-white/20 bg-white/2"
+                              }`}>
+                                <input
+                                  type="file"
+                                  className="sr-only"
+                                  accept="image/jpeg,image/png,image/webp,application/pdf"
+                                  disabled={uploading || existing?.status === "approved"}
+                                  onChange={async (e) => {
+                                    const file = e.target.files?.[0];
+                                    if (file) await uploadKycDoc(file, doc.type, side);
+                                    e.target.value = "";
+                                  }}
+                                />
+                                {uploading ? (
+                                  <Loader2 size={20} className="animate-spin text-[#FF8B5E]" />
+                                ) : existing?.status === "approved" ? (
+                                  <CheckCircle2 size={20} className="text-[#34d399]" />
+                                ) : existing?.status === "pending" ? (
+                                  <Clock size={20} className="text-[#F59E0B]" />
+                                ) : existing?.status === "rejected" ? (
+                                  <AlertTriangle size={20} className="text-[#f87171]" />
+                                ) : (
+                                  <Eye size={20} className="text-[#374151]" />
+                                )}
+                                <p className="text-xs font-medium text-[#94a3b8] capitalize">{side} side</p>
+                                {existing ? (
+                                  <p className="text-[10px] text-[#64748b] capitalize">{existing.status}</p>
+                                ) : (
+                                  <p className="text-[10px] text-[#374151]">Click to upload</p>
+                                )}
+                              </label>
+                            );
+                          })}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Country & Currency */}
         {activeTab === "country" && (
           <div className="space-y-6">
@@ -949,11 +1095,11 @@ export default function SettingsPage() {
                   <p className="text-xs font-semibold text-[#374151] uppercase tracking-widest mb-2">Regional Communities</p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     {[
-                      { name: "ECOWAS",   desc: "Economic Community of West States",          active: true },
-                      { name: "AfCFTA",   desc: "Continental Free Trade Area",               active: true },
-                      { name: "AU",       desc: "Economic Union",                            active: true },
-                      { name: "EAC",      desc: "East Community",                            active: false },
-                      { name: "SADC",     desc: "Southern Development Community",            active: false },
+                      { name: "ECOWAS",   desc: "Economic Community of West States",        active: true  },
+                      { name: "AfCFTA",   desc: "Continental Free Trade Area",              active: true  },
+                      { name: "AU",       desc: "Economic Union (55 member states)",        active: true  },
+                      { name: "EAC",      desc: "East Community",                           active: false },
+                      { name: "SADC",     desc: "Southern Development Community",           active: false },
                     ].map(({ name, desc, active }) => (
                       <div key={name} className={`flex items-center gap-3 p-3 rounded-xl border ${active ? "bg-[rgba(255,101,36,0.04)] border-[rgba(255,101,36,0.15)]" : "bg-white/2 border-white/5"}`}>
                         <div className={`w-2 h-2 rounded-full ${active ? "bg-[#FF6524]" : "bg-[#374151]"}`} />

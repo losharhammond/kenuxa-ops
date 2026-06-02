@@ -4,9 +4,9 @@ import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/use-auth";
 import {
-  Sprout, Plus, Search, TrendingUp, TrendingDown, Cloud, Droplets,
-  Sun, Calendar, Package, AlertTriangle, Brain, BarChart3, X, Check,
-  Edit2, Trash2, ShoppingBag, Truck, Leaf, Thermometer, Wind,
+  Sprout, Plus, TrendingUp, TrendingDown, Cloud, Droplets,
+  Calendar, Package, Brain, X,
+  Edit2, Trash2, ShoppingBag, Truck, Leaf, Wind,
 } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -52,11 +52,28 @@ const CROP_STATUS: Record<string, { label: string; color: string; stage: number 
   harvested:   { label: "Harvested",    color: "text-purple-400 bg-purple-400/10 border-purple-400/20",   stage: 5 },
 };
 
-const PRODUCE_GRADES = ["Grade A (Premium)", "Grade B (Standard)", "Grade C (Processing)"];
 
 
-// Weather (mock)
-const WEATHER = { temp: 32, humidity: 71, condition: "Partly Cloudy", rain_chance: 40, wind: 12 };
+interface WeatherData {
+  temp: number;
+  humidity: number;
+  condition: string;
+  rain_chance: number;
+  wind: number;
+  city: string;
+  country: string;
+  icon: string;
+}
+
+interface MarketPrice {
+  crop: string;
+  price: number;
+  unit: string;
+  change: number;
+  category: string;
+}
+
+const WEATHER_FALLBACK: WeatherData = { temp: 32, humidity: 71, condition: "Partly Cloudy", rain_chance: 40, wind: 12, city: "Accra", country: "GH", icon: "⛅" };
 
 // ─── CropModal ────────────────────────────────────────────────────────────────
 function CropModal({ item, onClose, onSave }: { item: Partial<Crop> | null; onClose: () => void; onSave: (d: Partial<Crop>) => void }) {
@@ -134,6 +151,9 @@ export default function AgriculturePage() {
   const [loading, setLoading] = useState(true);
   const [showCropModal, setShowCropModal] = useState(false);
   const [editCrop, setEditCrop] = useState<Crop | null>(null);
+  const [weather, setWeather] = useState<WeatherData>(WEATHER_FALLBACK);
+  const [marketPrices, setMarketPrices] = useState<MarketPrice[]>([]);
+  const [weatherLoading, setWeatherLoading] = useState(true);
 
   const businessId = profile?.business_id;
 
@@ -155,6 +175,22 @@ export default function AgriculturePage() {
   }, [businessId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);
+
+  // Fetch live weather + market prices
+  useEffect(() => {
+    (async () => {
+      setWeatherLoading(true);
+      try {
+        const [wRes, mRes] = await Promise.all([
+          fetch("/api/weather?city=accra"),
+          fetch("/api/market-prices"),
+        ]);
+        if (wRes.ok) { const d = await wRes.json(); setWeather(d as WeatherData); }
+        if (mRes.ok) { const d = await mRes.json(); setMarketPrices((d as { prices: MarketPrice[] }).prices ?? []); }
+      } catch { /* keep fallback */ }
+      setWeatherLoading(false);
+    })();
+  }, []);
 
   const handleSaveCrop = async (data: Partial<Crop>) => {
     if (!businessId || !data.name) return;
@@ -218,22 +254,24 @@ export default function AgriculturePage() {
       </div>
 
       {/* Weather strip */}
-      <div className="bg-gradient-to-r from-blue-500/10 to-green-500/10 border border-blue-500/20 rounded-xl px-4 py-3 flex items-center gap-6">
+      <div className="bg-gradient-to-r from-blue-500/10 to-green-500/10 border border-blue-500/20 rounded-xl px-4 py-3 flex items-center gap-6 flex-wrap">
         <div className="flex items-center gap-2">
-          <Sun size={18} className="text-yellow-400" />
-          <span className="text-white font-medium">{WEATHER.temp}°C</span>
-          <span className="text-white/40 text-sm">{WEATHER.condition}</span>
+          <span className="text-lg">{weather.icon}</span>
+          <span className="text-white font-medium">{weather.temp}°C</span>
+          <span className="text-white/40 text-sm">{weather.condition}</span>
         </div>
         <div className="flex items-center gap-1.5 text-sm text-white/50">
-          <Droplets size={14} className="text-blue-400" /> {WEATHER.humidity}% humidity
+          <Droplets size={14} className="text-blue-400" /> {weather.humidity}% humidity
         </div>
         <div className="flex items-center gap-1.5 text-sm text-white/50">
-          <Cloud size={14} className="text-white/40" /> {WEATHER.rain_chance}% rain
+          <Cloud size={14} className="text-white/40" /> {weather.rain_chance}% rain
         </div>
         <div className="flex items-center gap-1.5 text-sm text-white/50">
-          <Wind size={14} className="text-white/40" /> {WEATHER.wind} km/h
+          <Wind size={14} className="text-white/40" /> {weather.wind} km/h
         </div>
-        <span className="ml-auto text-xs text-white/30">Live weather · Accra, GH</span>
+        <span className="ml-auto text-xs text-white/30">
+          {weatherLoading ? "Loading weather..." : `Live weather · ${weather.city}${weather.country ? `, ${weather.country}` : ""}`}
+        </span>
       </div>
 
       {/* KPIs */}
@@ -381,27 +419,27 @@ export default function AgriculturePage() {
             </div>
           )}
 
-          {/* Market prices (mock) */}
+          {/* Market prices (live) */}
           <div className="bg-white/3 border border-white/8 rounded-xl p-5">
             <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-              <TrendingUp size={15} className="text-green-400" /> Ghana Market Prices (Today)
+              <TrendingUp size={15} className="text-green-400" /> Market Prices (Today)
             </h3>
             <div className="grid grid-cols-2 gap-3 text-sm">
-              {[
-                { crop: "Maize", price: 2.40, change: +0.10 },
-                { crop: "Tomato", price: 4.20, change: -0.30 },
-                { crop: "Cassava", price: 0.85, change: +0.05 },
-                { crop: "Yam", price: 3.50, change: +0.20 },
-                { crop: "Pepper", price: 13.00, change: +1.00 },
-                { crop: "Plantain", price: 1.80, change: -0.10 },
-              ].map((m) => (
+              {(marketPrices.length > 0 ? marketPrices.slice(0, 12) : [
+                { crop: "Maize", price: 2.40, change: 0.10, unit: "kg", category: "grain" },
+                { crop: "Tomato", price: 4.20, change: -0.30, unit: "kg", category: "vegetable" },
+                { crop: "Cassava", price: 0.85, change: 0.05, unit: "kg", category: "tuber" },
+                { crop: "Yam", price: 3.50, change: 0.20, unit: "kg", category: "tuber" },
+                { crop: "Pepper", price: 13.00, change: 1.00, unit: "kg", category: "spice" },
+                { crop: "Plantain", price: 1.80, change: -0.10, unit: "kg", category: "fruit" },
+              ] as MarketPrice[]).map((m) => (
                 <div key={m.crop} className="flex items-center justify-between bg-white/3 rounded-lg px-3 py-2">
                   <span className="text-white/70">{m.crop}</span>
                   <div className="flex items-center gap-2">
-                    <span className="text-white font-medium">GHS {m.price}/kg</span>
-                    <span className={`text-xs flex items-center gap-0.5 ${m.change > 0 ? "text-green-400" : "text-red-400"}`}>
-                      {m.change > 0 ? <TrendingUp size={10} /> : <TrendingDown size={10} />}
-                      {m.change > 0 ? "+" : ""}{m.change}
+                    <span className="text-white font-medium">GHS {m.price}/{m.unit}</span>
+                    <span className={`text-xs flex items-center gap-0.5 ${m.change > 0 ? "text-green-400" : m.change < 0 ? "text-red-400" : "text-white/40"}`}>
+                      {m.change > 0 ? <TrendingUp size={10} /> : m.change < 0 ? <TrendingDown size={10} /> : null}
+                      {m.change > 0 ? "+" : ""}{m.change !== 0 ? m.change : "—"}
                     </span>
                   </div>
                 </div>
@@ -487,7 +525,7 @@ export default function AgriculturePage() {
                 <p className="bg-white/3 rounded-lg px-3 py-2">🌾 {readyToHarvest} crop{readyToHarvest > 1 ? "s" : ""} ready for harvest! Delay can reduce quality and market price. Harvest within 7 days.</p>
               )}
               <p className="bg-white/3 rounded-lg px-3 py-2">💰 Estimated ROI for this season: {totalCost > 0 ? `${Math.round(((estRevenue - totalCost) / totalCost) * 100)}%` : "N/A"}. Focus on high-value crops like pepper to improve margins.</p>
-              <p className="bg-white/3 rounded-lg px-3 py-2">🌦️ {WEATHER.rain_chance}% rain probability today. Consider delaying fertilizer application to avoid runoff.</p>
+              <p className="bg-white/3 rounded-lg px-3 py-2">🌦️ {weather.rain_chance}% rain probability today. Consider delaying fertilizer application to avoid runoff.</p>
               <p className="bg-white/3 rounded-lg px-3 py-2">📊 Tomato prices rose 5% on the Accra market this week. Consider listing your tomato harvest now for maximum returns.</p>
             </div>
           </div>

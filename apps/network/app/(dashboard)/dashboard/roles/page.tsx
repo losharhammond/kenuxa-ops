@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useRoles } from "@/lib/hooks/use-roles";
 import { useAuth } from "@/lib/hooks/use-auth";
+import { useRoleGuard } from "@/lib/hooks/use-role-guard";
 import { Header } from "@/components/layout/header";
 import {
   ShoppingBag, Briefcase, Pen, Building2, Factory, Truck,
@@ -100,6 +101,7 @@ const ASSIGNED_ROLES: { role: Role; label: string; icon: React.ElementType; note
 ];
 
 export default function RolesPage() {
+  useRoleGuard("settings.rbac");
   const router = useRouter();
   const { profile } = useAuth();
   const { activeRoles, activateRole, switchContext, loading } = useRoles();

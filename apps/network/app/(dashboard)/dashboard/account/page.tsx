@@ -95,10 +95,10 @@ function relTime(iso: string) {
 
 export default function AccountPage() {
   const supabase = createClient();
-  const { user, profile } = useAuth();
+  const { user } = useAuth();
   const [tab, setTab] = useState<TabId>("orders");
   const [orders, setOrders] = useState<Order[]>([]);
-  const [wishlist, setWishlist] = useState<WishlistItem[]>([]);
+  const [wishlist] = useState<WishlistItem[]>([]);
   const [wallet, setWallet] = useState<WalletData | null>(null);
   const [rewards, setRewards] = useState<RewardsData | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -112,7 +112,7 @@ export default function AccountPage() {
       supabase.from("orders").select("id,status,total,currency,created_at,items_count,seller_name").eq("buyer_id", user.id).order("created_at", { ascending: false }).limit(20),
       supabase.from("wallets").select("balance,currency,status").eq("user_id", user.id).single(),
       supabase.from("rewards_accounts").select("points,lifetime_points,tier").eq("user_id", user.id).single(),
-      supabase.from("reviews").select("id,rating,comment,created_at").eq("reviewer_id", user.id).order("created_at", { ascending: false }).limit(10),
+      supabase.from("business_reviews").select("id,rating,comment,created_at").eq("reviewer_id", user.id).order("created_at", { ascending: false }).limit(10),
     ]);
 
     setOrders((ordersRes.data as Order[]) ?? []);

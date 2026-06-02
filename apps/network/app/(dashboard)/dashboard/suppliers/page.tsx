@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { Header } from "@/components/layout/header";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,6 +10,7 @@ import { formatCurrency } from "@/lib/utils";
 import { Search, Factory, CheckCircle2, Star, Package, Clock, ShoppingCart } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/use-auth";
+import { useRoleGuard } from "@/lib/hooks/use-role-guard";
 
 interface Supplier {
   id: string;
@@ -37,6 +39,7 @@ const PO_STATUS: Record<string, "green" | "blue" | "amber"> = {
 };
 
 export default function SuppliersPage() {
+  useRoleGuard("suppliers.view");
   const { profile } = useAuth();
   const supabase = createClient();
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
@@ -123,7 +126,7 @@ export default function SuppliersPage() {
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 rounded-xl bg-[rgba(255,101,36,0.08)] overflow-hidden flex items-center justify-center flex-shrink-0">
                         {sup.logo_url ? (
-                          <img src={sup.logo_url} alt={sup.name} className="w-full h-full object-cover" />
+                          <Image src={sup.logo_url} alt={sup.name} className="w-full h-full object-cover" width={48} height={48} />
                         ) : (
                           <Factory size={22} className="text-[#FF8B5E]" />
                         )}

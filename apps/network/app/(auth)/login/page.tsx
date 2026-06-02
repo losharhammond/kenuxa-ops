@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import {
-  LogIn, Eye, EyeOff,
+  LogIn, Eye, EyeOff, Phone, Mail, KeyRound,
   ShoppingBag, Briefcase, Zap, Users, Truck, Sparkles,
 } from "lucide-react";
 
@@ -63,9 +63,15 @@ const OAUTH_PROVIDERS = [
   },
 ];
 
+type LoginMode = "email" | "phone";
+
 function LoginForm() {
+  const [mode, setMode]         = useState<LoginMode>("email");
   const [email, setEmail]       = useState("");
   const [password, setPassword] = useState("");
+  const [phone, setPhone]       = useState("");
+  const [otp, setOtp]           = useState("");
+  const [otpSent, setOtpSent]   = useState(false);
   const [showPw, setShowPw]     = useState(false);
   const [error, setError]       = useState("");
   const [loading, setLoading]   = useState(false);
@@ -80,6 +86,42 @@ function LoginForm() {
     setError("");
     const supabase = createClient();
     const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+      setError(error.message);
+      setLoading(false);
+    } else {
+      router.push(redirect);
+    }
+  };
+
+  const handleSendOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    // Normalize phone — ensure it has country code
+    const normalized = phone.startsWith("+") ? phone : `+${phone}`;
+    const supabase = createClient();
+    const { error } = await supabase.auth.signInWithOtp({ phone: normalized });
+    if (error) {
+      setError(error.message);
+      setLoading(false);
+    } else {
+      setOtpSent(true);
+      setLoading(false);
+    }
+  };
+
+  const handleVerifyOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    const normalized = phone.startsWith("+") ? phone : `+${phone}`;
+    const supabase = createClient();
+    const { error } = await supabase.auth.verifyOtp({
+      phone: normalized,
+      token: otp,
+      type: "sms",
+    });
     if (error) {
       setError(error.message);
       setLoading(false);
@@ -165,43 +207,120 @@ function LoginForm() {
             ))}
           </div>
 
-          <div className="relative my-5">
-            <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-white/7" /></div>
-            <div className="relative flex justify-center"><span className="bg-[#080a14] px-3 text-xs text-[#374151]">or sign in with email</span></div>
+          {/* Email / Phone toggle */}
+          <div className="flex gap-1 bg-[#111624] rounded-xl p-1 mb-5">
+            <button
+              type="button"
+              onClick={() => { setMode("email"); setError(""); setOtpSent(false); }}
+              className={`flex-1 flex items-center justify-center gap-1.5 h-8 rounded-lg text-xs font-medium transition-all ${mode === "email" ? "bg-[#080a14] text-[#f1f5f9] shadow-sm" : "text-[#64748b] hover:text-[#94a3b8]"}`}
+            >
+              <Mail size={12} /> Email
+            </button>
+            <button
+              type="button"
+              onClick={() => { setMode("phone"); setError(""); setOtpSent(false); }}
+              className={`flex-1 flex items-center justify-center gap-1.5 h-8 rounded-lg text-xs font-medium transition-all ${mode === "phone" ? "bg-[#080a14] text-[#f1f5f9] shadow-sm" : "text-[#64748b] hover:text-[#94a3b8]"}`}
+            >
+              <Phone size={12} /> Phone
+            </button>
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-3.5">
-            <div>
-              <label className="text-xs text-[#64748b] mb-1.5 block">Email Address</label>
-              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
-                placeholder="you@example.com" className={inputCls} />
+          <div className="relative my-5">
+            <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-white/7" /></div>
+            <div className="relative flex justify-center">
+              <span className="bg-[#080a14] px-3 text-xs text-[#374151]">
+                {mode === "email" ? "or sign in with email" : "or sign in with phone number"}
+              </span>
             </div>
-            <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="text-xs text-[#64748b]">Password</label>
-                <Link href="/forgot-password" className="text-xs text-[#FF8B5E] hover:underline">Forgot password?</Link>
-              </div>
-              <div className="relative">
-                <input type={showPw ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} required
-                  placeholder="••••••••" className={`${inputCls} pr-10`} />
-                <button type="button" onClick={() => setShowPw(!showPw)} tabIndex={-1}
-                  className="absolute right-3 top-3 text-[#374151] hover:text-[#64748b] transition-colors">
-                  {showPw ? <EyeOff size={14} /> : <Eye size={14} />}
-                </button>
-              </div>
-            </div>
+          </div>
 
-            {error && (
-              <div className="bg-[rgba(239,68,68,0.1)] border border-[rgba(239,68,68,0.2)] text-[#f87171] text-xs rounded-xl px-3.5 py-2.5">
-                {error}
+          {/* Email form */}
+          {mode === "email" && (
+            <form onSubmit={handleLogin} className="space-y-3.5">
+              <div>
+                <label className="text-xs text-[#64748b] mb-1.5 block">Email Address</label>
+                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
+                  placeholder="you@example.com" className={inputCls} />
               </div>
-            )}
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="text-xs text-[#64748b]">Password</label>
+                  <Link href="/forgot-password" className="text-xs text-[#FF8B5E] hover:underline">Forgot password?</Link>
+                </div>
+                <div className="relative">
+                  <input type={showPw ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} required
+                    placeholder="••••••••" className={`${inputCls} pr-10`} />
+                  <button type="button" onClick={() => setShowPw(!showPw)} tabIndex={-1}
+                    className="absolute right-3 top-3 text-[#374151] hover:text-[#64748b] transition-colors">
+                    {showPw ? <EyeOff size={14} /> : <Eye size={14} />}
+                  </button>
+                </div>
+              </div>
+              {error && (
+                <div className="bg-[rgba(239,68,68,0.1)] border border-[rgba(239,68,68,0.2)] text-[#f87171] text-xs rounded-xl px-3.5 py-2.5">{error}</div>
+              )}
+              <button type="submit" disabled={loading}
+                className="w-full h-11 bg-gradient-to-r from-[#FF6524] to-[#F59E0B] rounded-xl text-white font-semibold text-sm flex items-center justify-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-50 mt-1">
+                {loading ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><LogIn size={14} /> Sign In</>}
+              </button>
+            </form>
+          )}
 
-            <button type="submit" disabled={loading}
-              className="w-full h-11 bg-gradient-to-r from-[#FF6524] to-[#F59E0B] rounded-xl text-white font-semibold text-sm flex items-center justify-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-50 mt-1">
-              {loading ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><LogIn size={14} /> Sign In</>}
-            </button>
-          </form>
+          {/* Phone / OTP form */}
+          {mode === "phone" && (
+            <form onSubmit={otpSent ? handleVerifyOtp : handleSendOtp} className="space-y-3.5">
+              <div>
+                <label className="text-xs text-[#64748b] mb-1.5 block">Phone Number</label>
+                <input
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  required
+                  disabled={otpSent}
+                  placeholder="+233 24 000 0000"
+                  className={`${inputCls} ${otpSent ? "opacity-60" : ""}`}
+                />
+              </div>
+              {otpSent && (
+                <div>
+                  <label className="text-xs text-[#64748b] mb-1.5 block">Verification Code</label>
+                  <div className="relative">
+                    <KeyRound size={13} className="absolute left-3.5 top-3.5 text-[#374151]" />
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      maxLength={6}
+                      value={otp}
+                      onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
+                      required
+                      placeholder="Enter 6-digit code"
+                      className={`${inputCls} pl-9 tracking-[0.25em] font-mono`}
+                      autoFocus
+                    />
+                  </div>
+                  <p className="text-xs text-[#374151] mt-1.5">
+                    Code sent to {phone}.{" "}
+                    <button type="button" onClick={() => { setOtpSent(false); setOtp(""); }} className="text-[#FF8B5E] hover:underline">
+                      Change number
+                    </button>
+                  </p>
+                </div>
+              )}
+              {error && (
+                <div className="bg-[rgba(239,68,68,0.1)] border border-[rgba(239,68,68,0.2)] text-[#f87171] text-xs rounded-xl px-3.5 py-2.5">{error}</div>
+              )}
+              <button type="submit" disabled={loading}
+                className="w-full h-11 bg-gradient-to-r from-[#FF6524] to-[#F59E0B] rounded-xl text-white font-semibold text-sm flex items-center justify-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-50 mt-1">
+                {loading
+                  ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  : otpSent
+                    ? <><KeyRound size={14} /> Verify Code</>
+                    : <><Phone size={14} /> Send Code</>
+                }
+              </button>
+            </form>
+          )}
 
           <p className="text-center text-sm text-[#64748b] mt-6">
             New to KENUXA?{" "}

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/use-auth";
 import {
   Code2, Key, Plus, Copy, Eye, EyeOff, Trash2, CheckCircle2,
@@ -130,10 +129,6 @@ type Tab = "overview" | "keys" | "docs" | "webhooks";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-function genKeyPreview() {
-  return "kx_live_" + [...Array(32)].map(() => Math.random().toString(36)[2]).join("");
-}
-
 function copyToClipboard(text: string) {
   navigator.clipboard.writeText(text).catch(() => {});
 }
@@ -211,12 +206,10 @@ function ApiKeyCard({ apiKey, onRevoke }: { apiKey: ApiKey; onRevoke: () => void
 
 // ─── Create Key Modal ─────────────────────────────────────────────────────────
 
-function CreateKeyModal({ userId, onClose, onCreated }: {
-  userId: string;
+function CreateKeyModal({ onClose, onCreated }: {
   onClose: () => void;
   onCreated: (plainKey: string) => void;
 }) {
-  const supabase = createClient();
   const [name, setName] = useState("");
   const [perms, setPerms] = useState<Set<string>>(new Set(["businesses:read", "products:read", "jobs:read"]));
   const [creating, setCreating] = useState(false);
@@ -229,20 +222,20 @@ function CreateKeyModal({ userId, onClose, onCreated }: {
   async function create() {
     if (!name.trim()) { setError("Name is required"); return; }
     setCreating(true);
-    const plainKey = genKeyPreview();
-    const prefix = plainKey.slice(0, 16);
-    // In production this would be a server-side operation that hashes the key
-    const { error: err } = await supabase.from("api_keys").insert({
-      user_id: userId,
-      name: name.trim(),
-      key_prefix: prefix,
-      key_hash: plainKey, // In prod: bcrypt hash of the full key
-      permissions: [...perms],
-      is_active: true,
-      calls_count: 0,
-    });
-    if (err) { setError(err.message); setCreating(false); return; }
-    onCreated(plainKey);
+    setError("");
+    try {
+      const res = await fetch("/api/developer/keys", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: name.trim(), permissions: [...perms] }),
+      });
+      const json = await res.json();
+      if (!res.ok) { setError(json.error ?? "Failed to create key"); setCreating(false); return; }
+      onCreated(json.plainKey as string);
+    } catch {
+      setError("Network error. Please try again.");
+      setCreating(false);
+    }
   }
 
   return (
@@ -355,9 +348,7 @@ function KeyRevealModal({ plainKey, onClose }: { plainKey: string; onClose: () =
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function DeveloperPage() {
-  const { profile } = useAuth();
-  const supabase = createClient();
-  const userId = (profile as { id?: string } | null)?.id ?? null;
+  useAuth(); // Ensures user is authenticated
 
   const [tab, setTab] = useState<Tab>("overview");
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
@@ -368,22 +359,23 @@ export default function DeveloperPage() {
   const [openGroup, setOpenGroup] = useState<string | null>("Businesses");
 
   const loadKeys = useCallback(async () => {
-    if (!userId) return;
     setLoading(true);
-    const { data } = await supabase
-      .from("api_keys")
-      .select("*")
-      .eq("user_id", userId)
-      .order("created_at", { ascending: false });
-    setApiKeys((data as ApiKey[]) ?? []);
-    setLoading(false);
-  }, [userId, supabase]); // eslint-disable-line react-hooks/exhaustive-deps
+    try {
+      const res = await fetch("/api/developer/keys");
+      if (res.ok) {
+        const json = await res.json();
+        setApiKeys((json.keys as ApiKey[]) ?? []);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, []); // no client-side deps — server route handles auth
 
   useEffect(() => { loadKeys(); }, [loadKeys]);
 
   async function revokeKey(id: string) {
     if (!confirm("Revoke this API key? Applications using it will stop working immediately.")) return;
-    await supabase.from("api_keys").update({ is_active: false }).eq("id", id);
+    await fetch(`/api/developer/keys?id=${encodeURIComponent(id)}`, { method: "DELETE" });
     loadKeys();
   }
 
@@ -721,9 +713,8 @@ export default function DeveloperPage() {
       )}
 
       {/* Modals */}
-      {showCreate && userId && (
+      {showCreate && (
         <CreateKeyModal
-          userId={userId}
           onClose={() => setShowCreate(false)}
           onCreated={(key) => {
             setShowCreate(false);

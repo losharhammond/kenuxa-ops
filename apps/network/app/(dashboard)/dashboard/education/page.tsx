@@ -4,9 +4,8 @@ import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/use-auth";
 import {
-  GraduationCap, Plus, Search, Users, CreditCard, CheckSquare,
-  X, Check, Calendar, BarChart3, Brain, BookOpen, AlertTriangle,
-  TrendingUp, Clock, Award, FileText, ChevronRight,
+  GraduationCap, Plus, Search, Users, CreditCard,
+  X, Check, Brain, AlertTriangle,
 } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -431,7 +430,6 @@ export default function EducationPage() {
           <div className="space-y-2">
             {classStudents.map((s) => {
               const status = attendanceMap[s.id] ?? "present";
-              const cfg = ATTENDANCE_STATUS[status] ?? ATTENDANCE_STATUS["present"]!;
               return (
                 <div key={s.id} className="flex items-center justify-between bg-white/3 border border-white/8 rounded-xl px-4 py-3">
                   <div>

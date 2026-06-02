@@ -28,6 +28,14 @@ interface PlatformStats {
   arr_ghs: number;
   active_loans: number;
   total_loan_book_ghs: number;
+  total_customers: number;
+  total_freelancers: number;
+  total_suppliers: number;
+  total_job_seekers: number;
+  total_financial_partners: number;
+  total_delivery_riders: number;
+  total_recruiters: number;
+  total_business_owners: number;
 }
 
 interface RecentAction {
@@ -67,6 +75,14 @@ export default function AdminOverviewPage() {
     arr_ghs: 0,
     active_loans: 0,
     total_loan_book_ghs: 0,
+    total_customers: 0,
+    total_freelancers: 0,
+    total_suppliers: 0,
+    total_job_seekers: 0,
+    total_financial_partners: 0,
+    total_delivery_riders: 0,
+    total_recruiters: 0,
+    total_business_owners: 0,
   });
   const [recentActions, setRecentActions] = useState<RecentAction[]>([]);
   const [revenueTrend, setRevenueTrend] = useState<RevenueTrend[]>([]);
@@ -129,16 +145,16 @@ export default function AdminOverviewPage() {
     );
     setRegionData(regionRows);
 
-    // KENUX circulation
+    // KENUX circulation (sum all rewards account points)
     const [kenuxRes, loansRes, subsRes] = await Promise.all([
-      supabase.from("rewards_accounts").select("points.sum()").single(),
-      supabase.from("loan_applications").select("amount.sum(), status").in("status", ["approved","disbursed","repaying"]),
-      supabase.from("platform_revenue").select("amount.sum()").eq("source", "subscription").single(),
+      supabase.from("rewards_accounts").select("points"),
+      supabase.from("loan_applications").select("amount").in("status", ["approved","disbursed","repaying"]),
+      supabase.from("platform_revenue").select("amount").eq("revenue_type", "subscription"),
     ]);
-    const kenuxCirc = (kenuxRes.data as { sum?: number } | null)?.sum ?? 0;
-    const loanBook = ((loansRes.data ?? []) as unknown as { amount: number }[]).reduce((s, r) => s + (r.amount ?? 0), 0);
+    const kenuxCirc = ((kenuxRes.data ?? []) as { points: number }[]).reduce((s, r) => s + (r.points ?? 0), 0);
+    const loanBook = ((loansRes.data ?? []) as { amount: number }[]).reduce((s, r) => s + (r.amount ?? 0), 0);
     const loanCount = (loansRes.data ?? []).length;
-    const mrrRaw = (subsRes.data as { sum?: number } | null)?.sum ?? 0;
+    const mrrRaw = ((subsRes.data ?? []) as { amount: number }[]).reduce((s, r) => s + (r.amount ?? 0), 0);
 
     setStats((prev) => ({
       ...prev,
@@ -355,6 +371,34 @@ export default function AdminOverviewPage() {
             </div>
           </Card>
         </div>
+
+        {/* Network Role Breakdown */}
+        <Card className="p-6">
+          <div className="flex items-center justify-between mb-5">
+            <div>
+              <h3 className="text-sm font-semibold text-[#f1f5f9]">Network Participant Breakdown</h3>
+              <p className="text-xs text-[#64748b]">Users by role across the economic network</p>
+            </div>
+            <a href="/admin/users" className="text-xs text-[#64748b] hover:text-[#FF8B5E] transition-colors">Manage Users →</a>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+            {[
+              { label: "Customers",        value: stats.total_customers,          color: "text-[#10b981]", bg: "bg-[rgba(16,185,129,0.08)]" },
+              { label: "Business Owners",  value: stats.total_business_owners,    color: "text-[#3B82F6]", bg: "bg-[rgba(59,130,246,0.08)]" },
+              { label: "Freelancers",      value: stats.total_freelancers,        color: "text-[#8b5cf6]", bg: "bg-[rgba(139,92,246,0.08)]" },
+              { label: "Suppliers",        value: stats.total_suppliers,          color: "text-[#F59E0B]", bg: "bg-[rgba(245,158,11,0.08)]" },
+              { label: "Job Seekers",      value: stats.total_job_seekers,        color: "text-[#FF8B5E]", bg: "bg-[rgba(255,101,36,0.08)]" },
+              { label: "Recruiters",       value: stats.total_recruiters,         color: "text-[#f472b6]", bg: "bg-[rgba(244,114,182,0.08)]" },
+              { label: "Riders",           value: stats.total_delivery_riders,    color: "text-[#34d399]", bg: "bg-[rgba(52,211,153,0.08)]" },
+              { label: "Fin. Partners",    value: stats.total_financial_partners, color: "text-[#60a5fa]", bg: "bg-[rgba(96,165,250,0.08)]" },
+            ].map((r) => (
+              <div key={r.label} className={`${r.bg} rounded-xl p-3 text-center`}>
+                <p className={`text-xl font-bold ${r.color}`}>{r.value.toLocaleString()}</p>
+                <p className="text-[11px] text-[#64748b] mt-1 leading-tight">{r.label}</p>
+              </div>
+            ))}
+          </div>
+        </Card>
 
         {/* Region breakdown + Recent activity */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

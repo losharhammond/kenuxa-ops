@@ -9,45 +9,60 @@ import {
   LayoutDashboard, Map, Monitor, Sparkles, MoreHorizontal,
   ShoppingBag, Wrench, Briefcase, Factory, Star,
   Package, Users, FileText, CreditCard, Truck,
-  Megaphone, BarChart3, Landmark, Building2, Settings, X, Search,
+  Megaphone, BarChart3, Landmark, Building2, Settings, X, Search, Target,
 } from "lucide-react";
 import { NotificationBell } from "@/components/layout/notification-bell";
+import { useAuth } from "@/lib/hooks/use-auth";
+import { useRoles } from "@/lib/hooks/use-roles";
+import { hasPermission, type Role, type Permission } from "@/lib/rbac";
 
-const BOTTOM_NAV = [
-  { href: "/dashboard",          label: "Home",      Icon: LayoutDashboard },
-  { href: "/dashboard/directory",label: "Directory", Icon: Map },
-  { href: "/dashboard/pos",      label: "POS",       Icon: Monitor },
-  { href: "/dashboard/ai",       label: "AI",        Icon: Sparkles },
+interface MobileNavItem {
+  href: string;
+  label: string;
+  Icon: React.ElementType;
+  permission?: Permission;
+}
+
+const BOTTOM_NAV: MobileNavItem[] = [
+  { href: "/dashboard",           label: "Home",      Icon: LayoutDashboard },
+  { href: "/dashboard/directory", label: "Directory", Icon: Map },
+  { href: "/dashboard/pos",       label: "POS",       Icon: Monitor,  permission: "pos.access" },
+  { href: "/dashboard/ai",        label: "AI",        Icon: Sparkles },
 ];
 
-const ALL_NAV = [
-  { href: "/dashboard/marketplace", label: "Products",    Icon: ShoppingBag },
-  { href: "/dashboard/services",    label: "Services",    Icon: Wrench },
-  { href: "/dashboard/jobs",        label: "Jobs",        Icon: Briefcase },
-  { href: "/dashboard/suppliers",   label: "Suppliers",   Icon: Factory },
-  { href: "/dashboard/reputation",  label: "Reputation",  Icon: Star },
-  { href: "/dashboard/inventory",   label: "Inventory",   Icon: Package },
-  { href: "/dashboard/crm",         label: "CRM",         Icon: Users },
-  { href: "/dashboard/invoicing",   label: "Invoicing",   Icon: FileText },
-  { href: "/dashboard/payments",    label: "Payments",    Icon: CreditCard },
-  { href: "/dashboard/delivery",    label: "Delivery",    Icon: Truck },
-  { href: "/dashboard/marketing",   label: "Marketing",   Icon: Megaphone },
-  { href: "/dashboard/analytics",   label: "Analytics",   Icon: BarChart3 },
-  { href: "/dashboard/finance",     label: "Finance",     Icon: Landmark },
-  { href: "/dashboard/profile",     label: "Profile",     Icon: Building2 },
-  { href: "/dashboard/settings",    label: "Settings",    Icon: Settings },
+const ALL_NAV: MobileNavItem[] = [
+  { href: "/dashboard/opportunities", label: "Opportunities", Icon: Target },
+  { href: "/dashboard/marketplace",   label: "Products",      Icon: ShoppingBag, permission: "marketplace.buy" },
+  { href: "/dashboard/services",    label: "Services",    Icon: Wrench,      permission: "services.book" },
+  { href: "/dashboard/jobs",        label: "Jobs",        Icon: Briefcase,   permission: "jobs.apply" },
+  { href: "/dashboard/suppliers",   label: "Suppliers",   Icon: Factory,     permission: "suppliers.view" },
+  { href: "/dashboard/reputation",  label: "Reputation",  Icon: Star,        permission: "business.view" },
+  { href: "/dashboard/inventory",   label: "Inventory",   Icon: Package,     permission: "inventory.view" },
+  { href: "/dashboard/crm",         label: "CRM",         Icon: Users,       permission: "crm.view" },
+  { href: "/dashboard/invoicing",   label: "Invoicing",   Icon: FileText,    permission: "invoicing.view" },
+  { href: "/dashboard/payments",    label: "Payments",    Icon: CreditCard,  permission: "payments.view" },
+  { href: "/dashboard/delivery",    label: "Delivery",    Icon: Truck,       permission: "delivery.manage" },
+  { href: "/dashboard/marketing",   label: "Marketing",   Icon: Megaphone,   permission: "marketing.view" },
+  { href: "/dashboard/analytics",   label: "Analytics",   Icon: BarChart3,   permission: "analytics.view" },
+  { href: "/dashboard/finance",     label: "Finance",     Icon: Landmark,    permission: "finance.view" },
+  { href: "/dashboard/profile",     label: "Profile",     Icon: Building2,   permission: "business.edit" },
+  { href: "/dashboard/treasury",    label: "Treasury",    Icon: Landmark },
+  { href: "/dashboard/settings",    label: "Settings",    Icon: Settings,    permission: "settings.view" },
 ];
 
 export function MobileNav() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const { role } = useAuth();
+  const { activeContext } = useRoles();
+  const currentRole: Role = (activeContext || role || "customer") as Role;
 
   return (
     <>
       {/* Bottom tab bar */}
       <div className="fixed bottom-0 inset-x-0 z-40 bg-[#0d0f1a]/95 backdrop-blur-xl border-t border-white/7 md:hidden safe-area-pb">
         <div className="flex items-center justify-around px-2 py-1.5">
-          {BOTTOM_NAV.map(({ href, label, Icon }) => {
+          {BOTTOM_NAV.filter((item) => !item.permission || hasPermission(currentRole, item.permission)).map(({ href, label, Icon }) => {
             const active = href === "/dashboard" ? pathname === "/dashboard" : pathname.startsWith(href);
             return (
               <Link
@@ -92,7 +107,7 @@ export function MobileNav() {
               </button>
             </div>
             <div className="grid grid-cols-3 gap-1 p-3">
-              {ALL_NAV.map(({ href, label, Icon }) => {
+              {ALL_NAV.filter((item) => !item.permission || hasPermission(currentRole, item.permission)).map(({ href, label, Icon }) => {
                 const active = pathname.startsWith(href);
                 return (
                   <Link

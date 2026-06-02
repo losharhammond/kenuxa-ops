@@ -4,8 +4,9 @@ import { useEffect, useState, useCallback } from "react";
 import { Header } from "@/components/layout/header";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/use-auth";
+import { useRoleGuard } from "@/lib/hooks/use-role-guard";
 import {
-  Shield, TrendingUp, CheckCircle, Clock, AlertCircle,
+  Shield, TrendingUp, CheckCircle2, Clock, AlertCircle,
   Building2, ShoppingBag, Star, Briefcase, Factory,
   Loader2, ArrowRight, Zap, RefreshCw,
 } from "lucide-react";
@@ -78,6 +79,7 @@ function ScoreGauge({ score, color }: { score: number; color: string }) {
 }
 
 export default function CreditPage() {
+  useRoleGuard("credit.view");
   const supabase = createClient();
   const { user } = useAuth();
   const [profile, setProfile] = useState<CreditProfile | null>(null);
@@ -181,8 +183,8 @@ export default function CreditPage() {
                 <p className="text-xs font-semibold text-[#10b981]">Improve Your Score</p>
               </div>
               <ul className="space-y-1.5 text-xs text-[#64748b]">
-                <li className="flex items-center gap-2"><CheckCircle size={10} className="text-[#10b981]" /> Complete your KENUXA ID verification (+80 pts)</li>
-                <li className="flex items-center gap-2"><CheckCircle size={10} className="text-[#10b981]" /> Register and verify a business (+120 pts)</li>
+                <li className="flex items-center gap-2"><CheckCircle2 size={10} className="text-[#10b981]" /> Complete your KENUXA ID verification (+80 pts)</li>
+                <li className="flex items-center gap-2"><CheckCircle2 size={10} className="text-[#10b981]" /> Register and verify a business (+120 pts)</li>
                 <li className="flex items-center gap-2"><Clock size={10} className="text-[#374151]" /> Make consistent on-time payments (+30 pts/mo)</li>
                 <li className="flex items-center gap-2"><Clock size={10} className="text-[#374151]" /> Collect 10+ positive reviews (+50 pts)</li>
                 <li className="flex items-center gap-2"><AlertCircle size={10} className="text-[#f59e0b]" /> Avoid disputes and chargebacks</li>
@@ -198,7 +200,7 @@ export default function CreditPage() {
                     eligible ? "bg-[#111624] border-white/7" : "bg-[#0d0f1a] border-white/4 opacity-60"
                   }`}>
                     <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${eligible ? "bg-[rgba(16,185,129,0.1)]" : "bg-white/3"}`}>
-                      {eligible ? <CheckCircle size={14} className="text-[#10b981]" /> : <Shield size={14} className="text-[#374151]" />}
+                      {eligible ? <CheckCircle2 size={14} className="text-[#10b981]" /> : <Shield size={14} className="text-[#374151]" />}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-[#f1f5f9]">{name}</p>

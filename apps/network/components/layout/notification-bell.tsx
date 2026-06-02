@@ -51,7 +51,7 @@ export function NotificationBell({ iconSize = 14 }: { iconSize?: number }) {
     } finally {
       setLoading(false);
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => { load(); }, [load]);
 

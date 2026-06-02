@@ -4,9 +4,8 @@ import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/use-auth";
 import {
-  Briefcase, Plus, Search, Clock, CreditCard, Users, FileText,
-  X, Check, TrendingUp, Brain, BarChart3, Calendar, Star,
-  Edit2, Trash2, CheckSquare, AlertTriangle, Target, Award,
+  Briefcase, Plus, Search, Clock, Users,
+  X, Brain,
 } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────

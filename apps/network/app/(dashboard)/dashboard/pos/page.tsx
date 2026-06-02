@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { formatCurrency, generateReceiptNo, PAYMENT_METHOD_LABELS } from "@/lib/utils";
 import type { SaleItem, PaymentMethod } from "@/lib/types";
 import { useAuth } from "@/lib/hooks/use-auth";
+import { useRoleGuard } from "@/lib/hooks/use-role-guard";
 import { createClient } from "@/lib/supabase/client";
 import {
   Search, Camera, User, ShoppingCart, Package, CheckCircle2,
@@ -27,6 +28,7 @@ type CartItem = SaleItem & { id: string };
 const PAYMENT_METHODS: PaymentMethod[] = ["cash", "mtn_momo", "telecel_cash", "at_money", "visa", "mastercard"];
 
 export default function POSPage() {
+  useRoleGuard("pos.access");
   const { profile } = useAuth();
   const supabase = createClient();
 

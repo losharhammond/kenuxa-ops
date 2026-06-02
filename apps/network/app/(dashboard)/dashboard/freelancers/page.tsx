@@ -2,20 +2,20 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { Header } from "@/components/layout/header";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { StatCard } from "@/components/ui/stat-card";
 import { formatCurrency } from "@/lib/utils";
+import Image from "next/image";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/use-auth";
 import {
   Pen, Search, Star, MapPin, Users, Briefcase, Shield,
-  Clock, DollarSign, CheckCircle2, ArrowRight, Filter,
+  Clock, CheckCircle2, ArrowRight,
   Code, Palette, Megaphone, Camera, BookOpen, BarChart2,
-  Wrench, Globe, MessageSquare, TrendingUp, Zap, Plus,
+  Wrench, Globe, Zap, Plus,
 } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -281,7 +281,7 @@ export default function FreelancersPage() {
                     <div className="flex items-start gap-3 mb-4">
                       <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[rgba(139,92,246,0.2)] to-[rgba(255,101,36,0.1)] flex items-center justify-center text-lg font-bold text-[#a78bfa] flex-shrink-0">
                         {f.avatar_url ? (
-                          <img src={f.avatar_url} alt={f.full_name} className="w-full h-full rounded-2xl object-cover" />
+                          <Image src={f.avatar_url} alt={f.full_name} width={48} height={48} className="w-full h-full rounded-2xl object-cover" />
                         ) : (
                           f.full_name[0]
                         )}

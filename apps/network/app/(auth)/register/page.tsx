@@ -29,17 +29,19 @@ export default function RegisterPage() {
   const router = useRouter();
   const supabase = createClient();
 
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName]   = useState("");
-  const [email, setEmail]         = useState("");
-  const [phone, setPhone]         = useState("");
-  const [password, setPassword]   = useState("");
-  const [country, setCountry]     = useState("");
-  const [region, setRegion]       = useState("");
-  const [city, setCity]           = useState("");
-  const [showPw, setShowPw]       = useState(false);
-  const [loading, setLoading]     = useState(false);
-  const [error, setError]         = useState("");
+  const [firstName, setFirstName]     = useState("");
+  const [lastName, setLastName]       = useState("");
+  const [email, setEmail]             = useState("");
+  const [phone, setPhone]             = useState("");
+  const [password, setPassword]       = useState("");
+  const [country, setCountry]         = useState("");
+  const [region, setRegion]           = useState("");
+  const [city, setCity]               = useState("");
+  const [referralCode, setReferralCode] = useState("");
+  const [showPw, setShowPw]           = useState(false);
+  const [showReferral, setShowReferral] = useState(false);
+  const [loading, setLoading]         = useState(false);
+  const [error, setError]             = useState("");
   const [oauthLoading, setOauthLoading] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -58,6 +60,7 @@ export default function RegisterPage() {
           country: country || null,
           region: region || null,
           city: city || null,
+          referral_code: referralCode.trim().toUpperCase() || null,
         },
       },
     });
@@ -67,7 +70,7 @@ export default function RegisterPage() {
       setLoading(false);
     } else {
       try { await fetch("/api/onboarding/provision", { method: "POST" }); } catch { /* non-blocking */ }
-      router.push("/dashboard");
+      router.push("/dashboard/onboarding");
     }
   };
 
@@ -215,6 +218,26 @@ export default function RegisterPage() {
                   {showPw ? <EyeOff size={15} /> : <Eye size={15} />}
                 </button>
               </div>
+            </div>
+
+            {/* Referral code — collapsible */}
+            <div>
+              <button
+                type="button"
+                onClick={() => setShowReferral(!showReferral)}
+                className="text-xs text-[#64748b] hover:text-[#FF8B5E] transition-colors"
+              >
+                {showReferral ? "— Hide" : "+ Have a referral code?"}
+              </button>
+              {showReferral && (
+                <input
+                  className={`${inputCls} mt-2 uppercase tracking-widest`}
+                  placeholder="e.g. KENUXA-XXXX"
+                  value={referralCode}
+                  onChange={(e) => setReferralCode(e.target.value)}
+                  maxLength={20}
+                />
+              )}
             </div>
 
             {error && <p className="text-xs text-[#f87171] bg-[rgba(239,68,68,0.1)] border border-[rgba(239,68,68,0.2)] rounded-lg px-3 py-2">{error}</p>}

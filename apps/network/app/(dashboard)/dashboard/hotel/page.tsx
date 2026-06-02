@@ -4,9 +4,9 @@ import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/use-auth";
 import {
-  BedDouble, Plus, Search, Calendar, Users, CreditCard, CheckSquare,
-  X, Check, Clock, Star, Brain, BarChart3, AlertTriangle, Edit2,
-  Coffee, Wifi, Car, Tv, Bath, Wind, Phone, Key,
+  BedDouble, Plus, Search, Calendar,
+  X, Check, Star, Brain,
+  Coffee, Wifi, Car, Tv, Bath, Wind, Phone,
 } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -47,7 +47,6 @@ interface Reservation {
 type Tab = "rooms" | "reservations" | "housekeeping" | "analytics";
 
 const ROOM_TYPES = ["Standard", "Deluxe", "Superior", "Suite", "Executive Suite", "Presidential Suite"];
-const AMENITIES_LIST = ["WiFi", "TV", "AC", "Parking", "Bath", "Coffee Maker", "Phone", "Minibar"];
 
 const ROOM_STATUS: Record<string, { label: string; color: string; dot: string }> = {
   available:   { label: "Available",    color: "text-green-400 bg-green-400/10 border-green-400/20",  dot: "bg-green-400" },

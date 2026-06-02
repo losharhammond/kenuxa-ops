@@ -74,7 +74,6 @@ export async function POST(req: NextRequest) {
   // ── 2. Payment History Score (0–212) ─────────────────────
   const txs = (txRes.data ?? []) as { status: string; amount: number }[];
   const completedTxs = txs.filter((t) => t.status === "completed").length;
-  const failedTxs    = txs.filter((t) => t.status === "failed").length;
   const txTotal      = txs.length;
   const txSuccessRate = txTotal > 0 ? completedTxs / txTotal : 0.5;
   const txVolumeScore = Math.min(100, completedTxs * 2);

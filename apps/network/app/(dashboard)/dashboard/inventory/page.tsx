@@ -10,11 +10,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 import { formatCurrency } from "@/lib/utils";
 import { useAuth } from "@/lib/hooks/use-auth";
+import { useRoleGuard } from "@/lib/hooks/use-role-guard";
 import { createClient } from "@/lib/supabase/client";
 import {
   Search, Download, PlusCircle, Package, DollarSign, AlertTriangle,
   Warehouse, Cpu, Pencil, X, Loader2,
 } from "lucide-react";
+import Image from "next/image";
 import { ImageUpload } from "@/components/ui/image-upload";
 
 interface InventoryItem {
@@ -50,6 +52,7 @@ const DEFAULT_FORM: AddProductForm = {
 const CATEGORIES = ["Food", "Beverages", "Medicine", "Household", "Electronics", "Clothing", "Other"];
 
 export default function InventoryPage() {
+  useRoleGuard("inventory.view");
   const { profile } = useAuth();
   const supabase = createClient();
 
@@ -278,9 +281,11 @@ export default function InventoryPage() {
                           <tr key={item.id} className="hover:bg-white/2 transition-colors group">
                             <td className="px-4 py-3 text-center">
                               {item.image_url ? (
-                                <img
+                                <Image
                                   src={item.image_url}
                                   alt={item.name}
+                                  width={40}
+                                  height={40}
                                   className="w-10 h-10 rounded-lg object-cover mx-auto border border-white/10"
                                 />
                               ) : (

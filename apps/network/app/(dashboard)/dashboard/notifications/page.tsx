@@ -7,7 +7,7 @@ import { useAuth } from "@/lib/hooks/use-auth";
 import Link from "next/link";
 import {
   Bell, CheckCheck, Briefcase, CreditCard, ShoppingBag,
-  ShieldCheck, Users, Zap, Info, AlertTriangle, CheckCircle,
+  ShieldCheck, Users, Zap,
   Loader2, Inbox,
 } from "lucide-react";
 
@@ -33,12 +33,6 @@ const CATEGORY_META: Record<string, { icon: React.ElementType; color: string; bg
   general: { icon: Bell,        color: "#64748b", bg: "rgba(100,116,139,0.1)" },
 };
 
-const TYPE_ICON: Record<string, React.ElementType> = {
-  info:            Info,
-  success:         CheckCircle,
-  warning:         AlertTriangle,
-  action_required: AlertTriangle,
-};
 
 const DEMO: Notification[] = [
   { id: "d1", type: "success",         category: "role",    title: "Customer role activated",            body: "You can now browse, shop, and earn rewards across the KENUXA network.",           action_url: "/dashboard",              action_label: "Explore now",  read: false, created_at: new Date(Date.now() - 3 * 60000).toISOString() },
@@ -148,7 +142,6 @@ export default function NotificationsPage() {
             {displayed.map((n) => {
               const catMeta = CATEGORY_META[n.category] ?? CATEGORY_META.general!;
               const CatIcon = catMeta.icon;
-              const TypeIcon = TYPE_ICON[n.type] ?? Info;
               return (
                 <div
                   key={n.id}

@@ -1,14 +1,14 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { useAuth } from "@/lib/hooks/use-auth";
+import Image from "next/image";
 import Link from "next/link";
 import {
   Search, MapPin, TrendingUp, ChevronRight, ShoppingBag, Wrench,
   Briefcase, Factory, UtensilsCrossed, Pill, Stethoscope, GraduationCap,
   BedDouble, Sprout, Building2, X, Compass, Flame, ArrowRight,
-  Package, Globe, Sparkles, Filter,
+  Package, Globe, Sparkles, Filter, Users, Target,
 } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -37,9 +37,9 @@ interface JobListing {
 
 interface FreelancerListing {
   id: string;
-  title: string;
-  category: string;
-  price: number;
+  headline: string | null;
+  skills: string | null;
+  hourly_rate: number | null;
   user_id: string;
   created_at: string;
 }
@@ -89,7 +89,7 @@ function BusinessCard({ biz }: { biz: Business }) {
       <div className="bg-white/3 border border-white/8 rounded-2xl overflow-hidden hover:border-white/20 hover:bg-white/5 transition-all group cursor-pointer">
         <div className="h-20 bg-gradient-to-br from-[#FF6524]/15 via-purple-500/8 to-blue-500/8 relative flex items-center justify-center">
           {biz.logo_url
-            ? <img src={biz.logo_url} alt={biz.name} className="w-12 h-12 rounded-xl object-cover border-2 border-white/20 relative z-10" />
+            ? <Image src={biz.logo_url} alt={biz.name} width={48} height={48} className="w-12 h-12 rounded-xl object-cover border-2 border-white/20 relative z-10" />
             : <div className="w-12 h-12 rounded-xl bg-[#FF6524]/20 border border-[#FF6524]/30 flex items-center justify-center text-[#FF8B5E] font-bold text-sm relative z-10">{initials}</div>
           }
           {biz.is_verified && (
@@ -157,6 +157,9 @@ export default function DiscoverPage() {
   const [hasSearched, setHasSearched] = useState(false);
   const [rotating, setRotating] = useState(0);
 
+  // Network stats
+  const [netStats, setNetStats] = useState<{ total_businesses: number; total_users: number; open_jobs: number; total_freelancers: number } | null>(null);
+
   // Featured (shown when no search)
   const [featured, setFeatured] = useState<Business[]>([]);
   const [featuredJobs, setFeaturedJobs] = useState<JobListing[]>([]);
@@ -188,8 +191,8 @@ export default function DiscoverPage() {
         .or(`name.ilike.${t},category.ilike.${t},city.ilike.${t}`).eq("is_active", true).limit(12),
       supabase.from("job_listings").select("id,title,business_name,location,job_type,salary_min,salary_max,created_at")
         .or(`title.ilike.${t},business_name.ilike.${t},location.ilike.${t}`).eq("status", "open").limit(8),
-      supabase.from("freelancer_listings").select("id,title,category,price,user_id,created_at")
-        .or(`title.ilike.${t},category.ilike.${t}`).limit(8),
+      supabase.from("freelancer_profiles").select("id,headline,skills,hourly_rate,user_id,created_at")
+        .or(`headline.ilike.${t},skills.ilike.${t}`).limit(8),
       supabase.from("inventory_items").select("id,name,description,price,business_id,image_url,category")
         .or(`name.ilike.${t},category.ilike.${t}`).limit(8),
     ]);
@@ -202,17 +205,19 @@ export default function DiscoverPage() {
 
   useEffect(() => { search(debounced); }, [debounced, search]);
 
-  // Load featured on mount
+  // Load featured + network stats on mount
   useEffect(() => {
     async function load() {
-      const [bR, jR] = await Promise.all([
+      const [bR, jR, nsR] = await Promise.all([
         supabase.from("businesses").select("id,name,category,description,city,logo_url,banner_url,is_verified,created_at")
           .eq("is_active", true).order("created_at", { ascending: false }).limit(8),
         supabase.from("job_listings").select("id,title,business_name,location,job_type,salary_min,salary_max,created_at")
           .eq("status", "open").order("created_at", { ascending: false }).limit(6),
+        fetch("/api/network/stats").then((r) => r.ok ? r.json() : null).catch(() => null),
       ]);
       setFeatured((bR.data ?? []) as Business[]);
       setFeaturedJobs((jR.data ?? []) as JobListing[]);
+      if (nsR) setNetStats(nsR as { total_businesses: number; total_users: number; open_jobs: number; total_freelancers: number });
     }
     load();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -279,6 +284,32 @@ export default function DiscoverPage() {
           )}
         </div>
       </div>
+
+      {/* ── LIVE NETWORK STATS ─────────────────────────────────────────────── */}
+      {netStats && (
+        <div className="px-6 py-3 border-b border-white/5 bg-[#07080f]/80">
+          <div className="max-w-7xl mx-auto flex items-center gap-1.5 overflow-x-auto">
+            <span className="flex items-center gap-1 text-[9px] font-bold text-[#2d3450] uppercase tracking-widest flex-shrink-0 mr-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#34d399] animate-pulse" /> Live Network
+            </span>
+            {[
+              { label: "Businesses", value: netStats.total_businesses, icon: Building2, color: "#3b82f6" },
+              { label: "Members",    value: netStats.total_users,       icon: Users,    color: "#FF8B5E" },
+              { label: "Open Jobs",  value: netStats.open_jobs,         icon: Briefcase, color: "#10b981" },
+              { label: "Freelancers",value: netStats.total_freelancers, icon: Wrench,   color: "#a78bfa" },
+            ].map(({ label, value, icon: Icon, color }) => (
+              <div key={label} className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white/3 border border-white/5 flex-shrink-0">
+                <Icon size={10} style={{ color }} />
+                <span className="text-[11px] font-bold" style={{ color }}>{value.toLocaleString()}</span>
+                <span className="text-[10px] text-[#374151]">{label}</span>
+              </div>
+            ))}
+            <Link href="/dashboard/opportunities" className="flex items-center gap-1 ml-auto text-[10px] text-[#FF8B5E] hover:text-[#FF6524] font-semibold flex-shrink-0 transition-colors">
+              <Target size={9} /> View Opportunities
+            </Link>
+          </div>
+        </div>
+      )}
 
       <div className="px-6 py-6 space-y-8 max-w-7xl mx-auto">
         {/* ── CATEGORY PILLS ─────────────────────────────────────────────────── */}
@@ -392,9 +423,9 @@ export default function DiscoverPage() {
                       {freelancers.slice(0, tab === "all" ? 4 : 8).map((f) => (
                         <Link key={f.id} href="/dashboard/freelancers">
                           <div className="bg-white/3 border border-white/8 rounded-xl p-4 hover:border-white/20 transition-all">
-                            <p className="text-white font-medium text-sm">{f.title}</p>
-                            <p className="text-xs text-white/40 mt-0.5">{f.category}</p>
-                            <p className="text-sm text-[#FF6524] font-medium mt-2">GHS {f.price.toLocaleString()}</p>
+                            <p className="text-white font-medium text-sm">{f.headline ?? "Freelancer"}</p>
+                            <p className="text-xs text-white/40 mt-0.5">{f.skills ?? "—"}</p>
+                            <p className="text-sm text-[#FF6524] font-medium mt-2">{f.hourly_rate ? `GHS ${f.hourly_rate}/hr` : "Rate on request"}</p>
                           </div>
                         </Link>
                       ))}
@@ -417,7 +448,7 @@ export default function DiscoverPage() {
                           <div className="bg-white/3 border border-white/8 rounded-xl overflow-hidden hover:border-white/20 transition-all group">
                             <div className="h-28 bg-white/3 flex items-center justify-center">
                               {p.image_url
-                                ? <img src={p.image_url} alt={p.name} className="w-full h-full object-cover" />
+                                ? <Image src={p.image_url} alt={p.name} width={200} height={112} className="w-full h-full object-cover" />
                                 : <Package size={24} className="text-white/15" />}
                             </div>
                             <div className="p-3">

@@ -6,12 +6,12 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatCurrency, formatDate } from "@/lib/utils";
+import Image from "next/image";
 import {
-  Search, MapPin, Briefcase, Users, Clock, Wifi, PlusCircle, X,
-  Bookmark, BookmarkCheck, Send, ChevronDown, ChevronUp, Sparkles,
-  FileText, CheckCircle2, AlertCircle, Loader2, BarChart2,
-  Building2, DollarSign, Calendar, Star, TrendingUp, ArrowRight,
-  GraduationCap, Globe, Bell,
+  Search, MapPin, Briefcase, Users, Wifi, PlusCircle, X,
+  Bookmark, BookmarkCheck, Send, Sparkles,
+  FileText, CheckCircle2, AlertCircle, Loader2,
+  DollarSign, Calendar, TrendingUp,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/use-auth";
@@ -127,7 +127,7 @@ function JobDetailDrawer({
           <div className="flex gap-4 items-start">
             <div className="w-14 h-14 rounded-2xl bg-[rgba(255,101,36,0.12)] overflow-hidden flex items-center justify-center flex-shrink-0">
               {job.company_logo_url ? (
-                <img src={job.company_logo_url} alt={employer} className="w-full h-full object-cover" />
+                <Image src={job.company_logo_url} alt={employer} width={56} height={56} className="w-full h-full object-cover" />
               ) : (
                 <span className="text-[#FF8B5E] font-bold text-xl">{employer[0]}</span>
               )}
@@ -401,7 +401,7 @@ function JobCard({
         {/* Logo */}
         <div className="w-11 h-11 rounded-xl bg-[rgba(255,101,36,0.1)] overflow-hidden flex items-center justify-center flex-shrink-0">
           {job.company_logo_url ? (
-            <img src={job.company_logo_url} alt={employer} className="w-full h-full object-cover" />
+            <Image src={job.company_logo_url} alt={employer} width={44} height={44} className="w-full h-full object-cover" />
           ) : (
             <span className="text-[#FF8B5E] font-bold text-base">{employer[0]}</span>
           )}
@@ -668,7 +668,7 @@ export default function JobsPage() {
     setJobs((data as Job[]) ?? []);
     setTotal(count ?? 0);
     setLoading(false);
-  }, [search, location, typeFilter, supabase]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [search, location, typeFilter, supabase]);
 
   const loadApplications = useCallback(async () => {
     if (!userId) return;
@@ -680,7 +680,7 @@ export default function JobsPage() {
     const apps = (data as Application[]) ?? [];
     setApplications(apps);
     setAppliedIds(new Set(apps.map((a) => a.job_id)));
-  }, [userId, supabase]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [userId, supabase]);
 
   useEffect(() => {
     const t = setTimeout(loadJobs, 200);

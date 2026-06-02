@@ -73,9 +73,27 @@ export async function middleware(request: NextRequest) {
   response.headers.set("X-Frame-Options", "DENY");
   response.headers.set("X-XSS-Protection", "1; mode=block");
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  response.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=(self)");
+  // HSTS — force HTTPS for 1 year including subdomains
+  if (process.env.NODE_ENV === "production") {
+    response.headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
+  }
+  // CSP — allow self, Supabase, Paystack, Sentry, Google OAuth
   response.headers.set(
-    "Permissions-Policy",
-    "camera=(), microphone=(), geolocation=(self)"
+    "Content-Security-Policy",
+    [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.paystack.co https://www.gstatic.com https://browser.sentry-cdn.com",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "font-src 'self' https://fonts.gstatic.com",
+      "img-src 'self' data: blob: https: http:",
+      "connect-src 'self' https://*.supabase.co https://api.paystack.co https://o*.ingest.sentry.io https://api.openexchangerates.org https://groq.com https://api.groq.com",
+      "frame-src 'self' https://js.paystack.co https://accounts.google.com",
+      "object-src 'none'",
+      "base-uri 'self'",
+      "form-action 'self'",
+      "upgrade-insecure-requests",
+    ].join("; ")
   );
 
   // ── Public path bypass ───────────────────────────────────────────────────
@@ -102,6 +120,9 @@ export async function middleware(request: NextRequest) {
           authResponse.headers.set("X-Frame-Options", "DENY");
           authResponse.headers.set("X-XSS-Protection", "1; mode=block");
           authResponse.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+          if (process.env.NODE_ENV === "production") {
+            authResponse.headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
+          }
           cookiesToSet.forEach(({ name, value, options }: CookieItem) =>
             authResponse.cookies.set(name, value, options)
           );
@@ -137,13 +158,30 @@ export async function middleware(request: NextRequest) {
     }
 
     // Role-specific dashboard restrictions
-    // NOTE: Multi-role architecture — most role restrictions removed.
-    // Users can have multiple active roles and freely navigate the platform.
-    // Only cashiers remain restricted to their operational modules.
     if (pathname.startsWith("/dashboard")) {
+      // Cashier: locked to POS, inventory, invoicing only
       const cashierAllowed = ["/dashboard/pos", "/dashboard/inventory", "/dashboard/invoicing", "/dashboard"];
       if (role === "cashier" && !cashierAllowed.some((p) => pathname === p || pathname.startsWith(p + "/"))) {
         return NextResponse.redirect(new URL("/dashboard/pos", request.url));
+      }
+
+      // Finance-partner portal: only for financial_partner role
+      if (pathname.startsWith("/dashboard/finance-partner") && role !== "financial_partner" && role !== "super_admin") {
+        return NextResponse.redirect(new URL("/dashboard", request.url));
+      }
+
+      // Talent pool management: recruiter and admin only
+      if (pathname.startsWith("/dashboard/talent") && role !== "recruiter" && role !== "super_admin" && role !== "country_admin") {
+        return NextResponse.redirect(new URL("/dashboard", request.url));
+      }
+
+      // Admin-tier pages inside dashboard
+      const adminDashboardPaths = ["/dashboard/treasury", "/dashboard/roles"];
+      if (adminDashboardPaths.some((p) => pathname.startsWith(p))) {
+        const allowedRoles = ["super_admin", "country_admin", "business_owner", "branch_manager", "financial_partner", "supplier"];
+        if (!allowedRoles.includes(role)) {
+          return NextResponse.redirect(new URL("/dashboard", request.url));
+        }
       }
     }
   }

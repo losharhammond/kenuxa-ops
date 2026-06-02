@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { ShieldCheck, TrendingUp, Star, CheckCircle2, Clock, AlertCircle } from "lucide-react";
+import { ShieldCheck, TrendingUp, CheckCircle2, Clock, AlertCircle } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -147,10 +147,8 @@ interface KenuxaScoreCardProps {
 
 export function KenuxaScoreCard({ factors, compact = false, showBreakdown = true }: KenuxaScoreCardProps) {
   const data = useMemo(() => computeKenuxaScore(factors), [
-    factors.salesCount, factors.avgRating, factors.totalReviews,
-    factors.verificationStatus, factors.yearsInBusiness,
-    factors.profileComplete, factors.hasLogo, factors.hasBanner,
-  ]); // eslint-disable-line react-hooks/exhaustive-deps
+    factors,
+  ]);
 
   if (compact) {
     return (

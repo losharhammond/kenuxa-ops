@@ -1,14 +1,13 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/use-auth";
 import Link from "next/link";
 import {
-  Sparkles, Send, User, Bot, TrendingUp, Briefcase, Package,
-  BarChart3, Brain, Zap, ChevronRight, RefreshCw, Copy, Check,
-  DollarSign, Users, Star, Shield, Lightbulb, Target, Globe,
-  BookOpen, FileText, MessageSquare,
+  Sparkles, Send, User, TrendingUp, Briefcase, Package,
+  BarChart3, Brain, RefreshCw, Copy, Check,
+  DollarSign, Users, Star, Shield, Target, Globe,
+  BookOpen, FileText,
 } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -93,7 +92,6 @@ export default function AIPage() {
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  const isBusinessRole = ["business_owner", "branch_manager", "cashier", "employee"].includes(role ?? "");
   const isCareerRole   = ["job_seeker", "freelancer", "delivery_rider"].includes(role ?? "");
 
   // Set default module based on role

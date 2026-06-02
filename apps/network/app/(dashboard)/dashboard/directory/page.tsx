@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { formatNumber } from "@/lib/utils";
 import Link from "next/link";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import {
   Globe, ShoppingCart, Utensils, Pill, Briefcase, Laptop, Hammer, Truck,
@@ -268,7 +269,7 @@ function DirectoryContent() {
                     <div className="flex items-center gap-3">
                       <div className="w-11 h-11 rounded-xl bg-[rgba(255,101,36,0.12)] overflow-hidden flex items-center justify-center flex-shrink-0">
                         {biz.logo_url ? (
-                          <img src={biz.logo_url} alt={biz.name} className="w-full h-full object-cover" />
+                          <Image src={biz.logo_url} alt={biz.name} width={44} height={44} className="w-full h-full object-cover" />
                         ) : (
                           <Building2 size={20} className="text-[#FF8B5E]" />
                         )}

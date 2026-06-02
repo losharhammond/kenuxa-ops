@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/use-auth";
+import { useRoleGuard } from "@/lib/hooks/use-role-guard";
 import {
   ClipboardList, Plus, ChevronDown, ChevronUp, Send, Clock, CheckCircle2,
   XCircle, Gavel, Package, AlertCircle, TrendingUp, Building2, Calendar,
@@ -137,7 +138,7 @@ function RFQCard({
       .order("total_price", { ascending: true });
     setBids(data ?? []);
     setLoadingBids(false);
-  }, [expanded, rfq.id, supabase]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [expanded, rfq.id, supabase]);
 
   useEffect(() => { loadBids(); }, [loadBids]);
 
@@ -472,6 +473,7 @@ function CreateRFQModal({ businessId, businessName, onClose, onCreated }: {
 type Tab = "browse" | "my_rfqs";
 
 export default function RFQPage() {
+  useRoleGuard("suppliers.rfq");
   const { profile } = useAuth();
   const supabase = createClient();
 
@@ -523,7 +525,7 @@ export default function RFQPage() {
     setStats({ open: openRes.count ?? 0, myBids: myBidsRes.count ?? 0, awarded: awardedRes.count ?? 0 });
 
     setLoading(false);
-  }, [tab, businessId, userId, categoryFilter, statusFilter, search, supabase]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [tab, businessId, userId, categoryFilter, statusFilter, search, supabase]);
 
   useEffect(() => {
     const t = setTimeout(loadRFQs, 200);

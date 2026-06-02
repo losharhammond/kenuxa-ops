@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/use-auth";
 import { useRoles } from "@/lib/hooks/use-roles";
 import {
-  Factory, CheckCircle, ArrowRight, ArrowLeft, Loader2, Plus, X,
+  Factory, CheckCircle, ArrowRight, ArrowLeft, Loader2,
 } from "lucide-react";
 
 const STEPS = ["Company Profile", "Products & Regions", "Done"];

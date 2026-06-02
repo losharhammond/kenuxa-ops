@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import Image from "next/image";
 import { Header } from "@/components/layout/header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -346,7 +347,7 @@ export default function ServicesPage() {
               <Card key={s.id} className="overflow-hidden hover:border-white/20 hover:bg-[#161b2e] transition-all flex flex-col">
                 {s.image_url && (
                   <div className="h-36 overflow-hidden bg-[#0d0f1a]">
-                    <img src={s.image_url} alt={s.name} className="w-full h-full object-cover" />
+                    <Image src={s.image_url} alt={s.name} className="w-full h-full object-cover" width={400} height={144} />
                   </div>
                 )}
                 <div className="p-5 flex flex-col flex-1">

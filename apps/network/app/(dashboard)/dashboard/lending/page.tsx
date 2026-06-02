@@ -3,11 +3,12 @@
 import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/use-auth";
+import { useRoleGuard } from "@/lib/hooks/use-role-guard";
 import {
-  Banknote, Plus, TrendingUp, Shield, Clock, CheckCircle2,
-  X, Check, AlertTriangle, Brain, BarChart3, ChevronRight,
-  DollarSign, FileText, Zap, Building2, Package, Star,
-  CreditCard, Percent, Calendar,
+  Banknote, TrendingUp, Clock, CheckCircle2,
+  X, Check, Brain, BarChart3, ChevronRight,
+  FileText, Zap, Building2, Package, Star,
+  CreditCard,
 } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -127,7 +128,7 @@ function useEligibilityScore(businessId: string | null) {
       const [salesRes, invRes, cusRes] = await Promise.all([
         supabase.from("sales").select("id, total_amount", { count: "exact" }).eq("business_id", businessId!).limit(100),
         supabase.from("invoices").select("id", { count: "exact" }).eq("business_id", businessId!),
-        supabase.from("crm_contacts").select("id", { count: "exact" }).eq("business_id", businessId!),
+        supabase.from("crm_customers").select("id", { count: "exact" }).eq("business_id", businessId!),
       ]);
 
       const salesCount   = salesRes.count ?? 0;
@@ -242,6 +243,7 @@ function LoanApplicationModal({
 
 // ─── Main Page ─────────────────────────────────────────────────────────────────
 export default function LendingPage() {
+  useRoleGuard("lending.view");
   const supabase = createClient();
   const { profile } = useAuth();
 
@@ -249,8 +251,8 @@ export default function LendingPage() {
   const [applications, setApplications] = useState<LoanApplication[]>([]);
   const [loading, setLoading] = useState(true);
   const [applyProduct, setApplyProduct] = useState<(typeof LOAN_PRODUCTS)[number] | null>(null);
-  const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [, setSubmitting] = useState(false);
 
   const businessId = profile?.business_id;
   const { score: eligScore, factors } = useEligibilityScore(businessId ?? null);

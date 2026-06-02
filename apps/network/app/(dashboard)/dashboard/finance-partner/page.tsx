@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { Header } from "@/components/layout/header";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/use-auth";
+import { useRoleGuard } from "@/lib/hooks/use-role-guard";
 import {
   Landmark, TrendingUp, CheckCircle, Clock, XCircle,
   AlertTriangle, FileText, Users, BarChart3, Shield,
@@ -53,6 +54,7 @@ function getRisk(score: number) {
 }
 
 export default function FinancePartnerPage() {
+  useRoleGuard("lending.manage");
   const supabase = createClient();
   const { user } = useAuth();
   const [applications, setApplications] = useState<LoanApplication[]>([]);

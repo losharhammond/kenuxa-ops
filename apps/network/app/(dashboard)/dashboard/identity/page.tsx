@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/use-auth";
 import {
   ShieldCheck, Star, Briefcase, Award, TrendingUp, CheckCircle,
-  AlertCircle, Clock, Globe, Lock, Zap, ChevronRight, BadgeCheck,
+  AlertCircle, Globe, Lock, Zap, ChevronRight, BadgeCheck,
   Building2, CreditCard, BarChart3, Eye, Camera, Upload, Loader2,
 } from "lucide-react";
 import { ImageUpload } from "@/components/ui/image-upload";
@@ -84,10 +84,10 @@ export default function IdentityPage() {
     if (pPhoto) setProfilePhoto(pPhoto);
 
     const [txRes, reviewsRes, jobsRes] = await Promise.all([
-      supabase.from("transactions").select("id", { count: "exact", head: true })
-        .eq("business_id", profile?.business_id ?? ""),
-      supabase.from("reviews").select("id", { count: "exact", head: true })
-        .eq("target_id", profile?.id ?? ""),
+      supabase.from("wallet_transactions").select("id", { count: "exact", head: true })
+        .eq("user_id", profile?.id ?? ""),
+      supabase.from("business_reviews").select("id", { count: "exact", head: true })
+        .eq("reviewer_id", profile?.id ?? ""),
       supabase.from("skill_profiles").select("jobs_completed")
         .eq("user_id", user?.id ?? "").single(),
     ]);
@@ -140,7 +140,7 @@ export default function IdentityPage() {
       jobs_completed: jobsCompleted,
     });
     setLoading(false);
-  }, [supabase, profile, user]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [supabase, profile, user]);
 
   useEffect(() => { load(); }, [load]);
 

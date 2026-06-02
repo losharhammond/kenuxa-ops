@@ -10,6 +10,7 @@ import { formatCurrency } from "@/lib/utils";
 import { Truck, MapPin, CheckCircle2, Clock, UserCheck, Star, PlusCircle, Bike } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/use-auth";
+import { useRoleGuard } from "@/lib/hooks/use-role-guard";
 
 interface Delivery {
   id: string;
@@ -54,6 +55,7 @@ const STATUS_ICON: Record<string, React.ReactNode> = {
 };
 
 export default function DeliveryPage() {
+  useRoleGuard("delivery.pickup");
   const { profile } = useAuth();
   const supabase = createClient();
   const [deliveries, setDeliveries] = useState<Delivery[]>([]);
@@ -76,7 +78,7 @@ export default function DeliveryPage() {
           .order("created_at", { ascending: false })
           .limit(20),
         supabase
-          .from("delivery_riders_view")
+          .from("delivery_riders")
           .select("id, full_name, zone, trips_today, rating, is_available")
           .order("is_available", { ascending: false })
           .limit(10),

@@ -4,10 +4,10 @@ import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/use-auth";
 import {
-  Pill, Search, Plus, AlertTriangle, Calendar, Package, ClipboardList,
-  TrendingUp, TrendingDown, ChevronRight, X, Check, Upload, Clock,
-  BarChart3, Brain, ShieldCheck, Thermometer, Beaker, Eye, Edit2, Trash2,
-  FileText, Bell, RefreshCw, Filter, Download, Star,
+  Pill, Search, Plus, AlertTriangle, Calendar, Package,
+  TrendingUp, X, Check, Clock,
+  BarChart3, Brain, ShieldCheck, Thermometer, Edit2, Trash2,
+  FileText, Star,
 } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -245,7 +245,7 @@ export default function PharmacyPage() {
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [showModal, setShowModal] = useState(false);
   const [editItem, setEditItem] = useState<Medicine | null>(null);
-  const [saving, setSaving] = useState(false);
+  const [, setSaving] = useState(false);
 
   const businessId = profile?.business_id;
 
@@ -333,7 +333,7 @@ export default function PharmacyPage() {
     `📋 ${pendingRx} prescription${pendingRx !== 1 ? "s" : ""} awaiting pharmacist verification.`,
   ];
 
-  // ── Top movers (mock) ─────────────────────────────────────────────────────────
+  // ── Top movers by inventory value ────────────────────────────────────────────
   const topMovers = [...medicines].sort((a, b) => b.selling_price * b.stock_quantity - a.selling_price * a.stock_quantity).slice(0, 5);
 
   if (loading) {

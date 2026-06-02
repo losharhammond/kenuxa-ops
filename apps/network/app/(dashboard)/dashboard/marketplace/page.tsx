@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import Image from "next/image";
 import { Header } from "@/components/layout/header";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -8,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatCurrency } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
+import { useRoleGuard } from "@/lib/hooks/use-role-guard";
 import {
   Search, MapPin, LayoutGrid, List, Package, Store, ShoppingBag,
   Star, CheckCircle2, SlidersHorizontal, X, Loader2, AlertCircle, Send,
@@ -31,10 +33,10 @@ interface Listing {
 
 const CATEGORIES = ["All", "Electronics", "Food & Groceries", "Fashion", "Health & Beauty", "Home", "Agriculture", "Construction", "Other"];
 const INPUT_CLS = "w-full bg-[#07080f] border border-white/7 rounded-lg px-3 h-9 text-sm text-[#f1f5f9] placeholder:text-[#374151] outline-none focus:border-[rgba(255,101,36,0.4)] transition-colors";
-const TEXTAREA_CLS = "w-full bg-[#07080f] border border-white/7 rounded-lg px-3 py-2 text-sm text-[#f1f5f9] placeholder:text-[#374151] outline-none focus:border-[rgba(255,101,36,0.4)] resize-none";
 const DEFAULT_PRODUCT = { name: "", category: "Electronics", price: "", compare_price: "", stock_qty: "10", city: "" };
 
 export default function MarketplacePage() {
+  useRoleGuard("marketplace.buy");
   const supabase = createClient();
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
@@ -173,7 +175,7 @@ export default function MarketplacePage() {
               <Card key={p.id} className="overflow-hidden hover:border-white/20 hover:bg-[#161b2e] transition-all cursor-pointer flex flex-col">
                 <div className="w-full aspect-square bg-[rgba(255,101,36,0.06)] flex items-center justify-center">
                   {p.image_url ? (
-                    <img src={p.image_url} alt={p.name} className="w-full h-full object-cover" />
+                    <Image src={p.image_url} alt={p.name} width={200} height={200} className="w-full h-full object-cover" />
                   ) : (
                     <Package size={32} className="text-[#374151]" />
                   )}
@@ -221,7 +223,7 @@ export default function MarketplacePage() {
                 <div className="flex items-center gap-4">
                   <div className="w-16 h-16 bg-[rgba(255,101,36,0.06)] rounded-xl overflow-hidden flex items-center justify-center flex-shrink-0">
                     {p.image_url ? (
-                      <img src={p.image_url} alt={p.name} className="w-full h-full object-cover" />
+                      <Image src={p.image_url} alt={p.name} width={64} height={64} className="w-full h-full object-cover" />
                     ) : (
                       <Package size={24} className="text-[#374151]" />
                     )}

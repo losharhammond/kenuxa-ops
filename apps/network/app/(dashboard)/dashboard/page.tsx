@@ -15,11 +15,11 @@ import { IndustryBanner } from "@/components/ui/industry-banner";
 import type { Role } from "@/lib/rbac";
 import {
   Monitor, Package, FileText, Users, Briefcase, Factory,
-  Sparkles, AlertTriangle, TrendingUp, Zap, Compass, Gift,
-  ShoppingBag, CheckCircle2, Clock, ArrowRight, Truck,
-  Wrench, CreditCard, ClipboardList, Pen, Star, Map,
-  Landmark, Wallet, Shield, Globe, BarChart3, Bell,
-  BadgeCheck, DollarSign, ChevronRight, Activity,
+  Sparkles, AlertTriangle, TrendingUp, Zap,
+  ShoppingBag, ArrowRight, Truck,
+  Wrench, CreditCard, ClipboardList, Pen, Map,
+  Landmark, Wallet, Shield, Globe, BarChart3,
+  BadgeCheck, ChevronRight, Activity,
   Search, Flame, MessageSquare, HandCoins, Award,
 } from "lucide-react";
 
@@ -456,7 +456,6 @@ function CustomerHome({ profile }: { profile: ReturnType<typeof useAuth>["profil
 // ─────────────────────────────────────────────────────────────
 function FreelancerHome({ profile }: { profile: ReturnType<typeof useAuth>["profile"] }) {
   const supabase = createClient();
-  const [earnings, setEarnings] = useState({ month: 0, total: 0 });
   const [walletBalance, setWalletBalance] = useState(0);
   const [kenuxPoints, setKenuxPoints] = useState(0);
   const [recentProjects, setRecentProjects] = useState<{ id: string; title: string; status: string; budget: number | null; created_at: string }[]>([]);
@@ -749,7 +748,7 @@ function SupplierHome({ profile }: { profile: ReturnType<typeof useAuth>["profil
 // ─────────────────────────────────────────────────────────────
 function RiderHome({ profile }: { profile: ReturnType<typeof useAuth>["profile"] }) {
   const supabase = createClient();
-  const [runs, setRuns] = useState<{ id: string; status: string; customer_name: string | null; delivery_address: string | null; created_at: string }[]>([]);
+  const [runs, setRuns] = useState<{ id: string; status: string; recipient_name: string | null; delivery_address: string | null; created_at: string }[]>([]);
   const [earnings, setEarnings] = useState(0);
   const [loading, setLoading] = useState(true);
 
@@ -757,7 +756,7 @@ function RiderHome({ profile }: { profile: ReturnType<typeof useAuth>["profile"]
     if (!profile?.id) { setLoading(false); return; }
     setLoading(true);
     const [runsRes, walletRes] = await Promise.all([
-      supabase.from("delivery_runs").select("id,status,customer_name,delivery_address,created_at").eq("rider_id", profile.id).order("created_at", { ascending: false }).limit(5),
+      supabase.from("delivery_orders").select("id,status,recipient_name,delivery_address,created_at").eq("rider_id", profile.id).order("created_at", { ascending: false }).limit(5),
       supabase.from("wallets").select("balance").eq("user_id", profile.id).eq("type", "personal").single(),
     ]);
     setRuns((runsRes.data ?? []) as typeof runs);
@@ -813,7 +812,7 @@ function RiderHome({ profile }: { profile: ReturnType<typeof useAuth>["profile"]
                   <Truck size={12} className="text-[#3B82F6]" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-[#f1f5f9] truncate">{run.customer_name ?? "Customer"}</p>
+                  <p className="text-sm font-medium text-[#f1f5f9] truncate">{run.recipient_name ?? "Customer"}</p>
                   <p className="text-xs text-[#374151] truncate">{run.delivery_address ?? "—"}</p>
                 </div>
                 <span className={`text-[10px] px-2 py-0.5 rounded-full capitalize ${run.status === "delivered" ? "bg-[rgba(16,185,129,0.1)] text-[#10b981]" : run.status === "transit" ? "bg-[rgba(59,130,246,0.1)] text-[#3B82F6]" : "bg-[rgba(245,158,11,0.1)] text-[#F59E0B]"}`}>
@@ -907,6 +906,110 @@ function FinancialPartnerHome({ profile }: { profile: ReturnType<typeof useAuth>
 }
 
 // ─────────────────────────────────────────────────────────────
+// RECRUITER HOME
+// ─────────────────────────────────────────────────────────────
+function RecruiterHome({ profile }: { profile: ReturnType<typeof useAuth>["profile"] }) {
+  const supabase = createClient();
+  const [postings, setPostings] = useState(0);
+  const [applications, setApplications] = useState(0);
+  const [recentJobs, setRecentJobs] = useState<{ id: string; title: string; status: string; application_count: number; created_at: string }[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    const { data: bizData } = await supabase
+      .from("businesses")
+      .select("id")
+      .eq("owner_id", profile?.id ?? "")
+      .single();
+
+    const bizId = (bizData as { id?: string } | null)?.id ?? null;
+
+    const [postRes, appRes, jobsRes] = await Promise.all([
+      supabase.from("job_listings").select("id", { count: "exact", head: true })
+        .eq(bizId ? "business_id" : "posted_by", bizId ?? profile?.id ?? ""),
+      supabase.from("job_applications").select("id", { count: "exact", head: true })
+        .eq("recruiter_id", profile?.id ?? ""),
+      supabase.from("job_listings")
+        .select("id,title,status,created_at")
+        .eq(bizId ? "business_id" : "posted_by", bizId ?? profile?.id ?? "")
+        .order("created_at", { ascending: false })
+        .limit(5),
+    ]);
+    setPostings(postRes.count ?? 0);
+    setApplications(appRes.count ?? 0);
+    setRecentJobs(((jobsRes.data ?? []) as unknown as typeof recentJobs).map((j) => ({ ...j, application_count: 0 })));
+    setLoading(false);
+  }, [profile?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => { load(); }, [load]);
+
+  return (
+    <>
+      <Header title="Dashboard" subtitle="Recruiter Hub" />
+      <div className="p-6 space-y-6">
+        <WelcomeBanner
+          name={profile?.full_name ?? ""}
+          subtitle="Post jobs, review talent, and build your team through the KENUXA Talent Network."
+          cta="Post a Job"
+          ctaHref="/dashboard/jobs"
+          icon={Users}
+          color="#8B5CF6"
+        />
+        <div className="grid grid-cols-3 gap-4">
+          <div className="p-4 rounded-xl bg-[#111624] border border-white/7">
+            <p className="text-[10px] text-[#374151] uppercase tracking-widest mb-1">Active Postings</p>
+            <p className="text-2xl font-bold text-[#f1f5f9]">{loading ? "—" : postings}</p>
+          </div>
+          <div className="p-4 rounded-xl bg-[#111624] border border-white/7">
+            <p className="text-[10px] text-[#374151] uppercase tracking-widest mb-1">Applications</p>
+            <p className="text-2xl font-bold text-[#f1f5f9]">{loading ? "—" : applications}</p>
+          </div>
+          <Link href="/dashboard/talent">
+            <div className="p-4 rounded-xl bg-[rgba(139,92,246,0.08)] border border-[rgba(139,92,246,0.2)] hover:border-[rgba(139,92,246,0.4)] transition-colors cursor-pointer">
+              <p className="text-[10px] text-[#8B5CF6] uppercase tracking-widest mb-1">Talent</p>
+              <p className="text-xl font-bold text-[#f1f5f9]">Browse</p>
+            </div>
+          </Link>
+        </div>
+        <QuickActions actions={[
+          { label: "Post Job",     href: "/dashboard/jobs",        icon: Briefcase,   color: "#8B5CF6", bg: "rgba(139,92,246,0.1)" },
+          { label: "Talent Pool",  href: "/dashboard/talent",      icon: BadgeCheck,  color: "#10b981", bg: "rgba(16,185,129,0.1)" },
+          { label: "Freelancers",  href: "/dashboard/freelancers", icon: Pen,         color: "#3B82F6", bg: "rgba(59,130,246,0.1)" },
+          { label: "Analytics",    href: "/dashboard/analytics",   icon: BarChart3,   color: "#F59E0B", bg: "rgba(245,158,11,0.1)" },
+          { label: "KENUX",        href: "/dashboard/kenux",       icon: Zap,         color: "#FF8B5E", bg: "rgba(255,101,36,0.1)" },
+          { label: "Community",    href: "/dashboard/community",   icon: MessageSquare, color: "#64748b", bg: "rgba(100,116,139,0.1)" },
+        ]} />
+        {recentJobs.length > 0 && (
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle>Recent Job Postings</CardTitle>
+            </CardHeader>
+            <CardContent className="pt-0 space-y-2">
+              {recentJobs.map((job) => (
+                <Link key={job.id} href="/dashboard/jobs">
+                  <div className="flex items-center gap-3 py-2.5 px-3 rounded-lg hover:bg-white/3 transition-colors">
+                    <div className="w-8 h-8 rounded-lg bg-[rgba(139,92,246,0.1)] flex items-center justify-center flex-shrink-0">
+                      <Briefcase size={13} className="text-[#8B5CF6]" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-[#f1f5f9] truncate">{job.title}</p>
+                    </div>
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full capitalize flex-shrink-0 ${
+                      job.status === "active" ? "bg-[rgba(16,185,129,0.1)] text-[#10b981]" : "bg-white/5 text-[#64748b]"
+                    }`}>{job.status}</span>
+                  </div>
+                </Link>
+              ))}
+            </CardContent>
+          </Card>
+        )}
+      </div>
+    </>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
 // ROOT DASHBOARD — dispatches per role
 // ─────────────────────────────────────────────────────────────
 export default function DashboardPage() {
@@ -933,9 +1036,14 @@ export default function DashboardPage() {
     return <FreelancerHome profile={profile} />;
   }
 
-  // Job Seeker / Recruiter
-  if (["job_seeker", "recruiter"].includes(currentRole)) {
+  // Job Seeker
+  if (currentRole === "job_seeker") {
     return <JobSeekerHome profile={profile} />;
+  }
+
+  // Recruiter
+  if (currentRole === "recruiter") {
+    return <RecruiterHome profile={profile} />;
   }
 
   // Supplier

@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback } from "react";
+import Image from "next/image";
 import { Header } from "@/components/layout/header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,9 +11,9 @@ import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/use-auth";
 import {
   MessageSquare, Heart, Share2, Bookmark, MoreHorizontal,
-  Image as ImageIcon, Smile, Send, TrendingUp, Users,
+  Image as ImageIcon, Send, TrendingUp,
   Briefcase, Megaphone, Trophy, Zap, Building2, Globe,
-  Plus, CheckCircle2, Star, Loader2,
+  Loader2,
 } from "lucide-react";
 import { ImageUpload } from "@/components/ui/image-upload";
 
@@ -54,7 +55,7 @@ const POST_TYPE_STYLES: Record<string, { color: string; bg: string; label: strin
 
 // ─── Post Card ────────────────────────────────────────────────────────────────
 
-function PostCard({ post, onLike }: { post: Post; onLike: (id: string) => void }) {
+function PostCard({ post, onLike, currentUserName }: { post: Post; onLike: (id: string) => void; currentUserName: string }) {
   const [showComments, setShowComments] = useState(false);
   const [comments, setComments] = useState<Comment[]>([]);
   const [commentText, setCommentText] = useState("");
@@ -79,8 +80,8 @@ function PostCard({ post, onLike }: { post: Post; onLike: (id: string) => void }
 
   const submitComment = async () => {
     if (!commentText.trim()) return;
-    await supabase.from("post_comments").insert({ post_id: post.id, content: commentText, author_name: "You" });
-    setComments((prev) => [...prev, { id: Date.now().toString(), author_name: "You", content: commentText, created_at: new Date().toISOString() }]);
+    await supabase.from("post_comments").insert({ post_id: post.id, content: commentText, author_name: currentUserName });
+    setComments((prev) => [...prev, { id: Date.now().toString(), author_name: currentUserName, content: commentText, created_at: new Date().toISOString() }]);
     setCommentText("");
   };
 
@@ -92,7 +93,7 @@ function PostCard({ post, onLike }: { post: Post; onLike: (id: string) => void }
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[rgba(255,101,36,0.2)] to-[rgba(139,92,246,0.15)] flex items-center justify-center text-sm font-bold text-[#FF8B5E] flex-shrink-0">
               {post.author_avatar ? (
-                <img src={post.author_avatar} alt="" className="w-full h-full rounded-xl object-cover" />
+                <Image src={post.author_avatar} alt="" width={40} height={40} className="w-full h-full rounded-xl object-cover" />
               ) : (
                 post.author_name[0]
               )}
@@ -121,7 +122,7 @@ function PostCard({ post, onLike }: { post: Post; onLike: (id: string) => void }
 
         {post.image_url && (
           <div className="mt-3 rounded-xl overflow-hidden border border-white/7">
-            <img src={post.image_url} alt="" className="w-full max-h-64 object-cover" />
+            <Image src={post.image_url} alt="" width={800} height={256} className="w-full max-h-64 object-cover" />
           </div>
         )}
 
@@ -285,7 +286,6 @@ export default function CommunityPage() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<FeedFilter>("all");
-  const [trendingTopics, setTrendingTopics] = useState<string[]>([]);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -391,7 +391,7 @@ export default function CommunityPage() {
             ) : (
               <div className="space-y-4">
                 {posts.map((post) => (
-                  <PostCard key={post.id} post={post} onLike={handleLike} />
+                  <PostCard key={post.id} post={post} onLike={handleLike} currentUserName={profile?.full_name ?? "Anonymous"} />
                 ))}
               </div>
             )}

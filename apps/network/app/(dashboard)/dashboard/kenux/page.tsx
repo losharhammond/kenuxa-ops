@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { Header } from "@/components/layout/header";
 import { createClient } from "@/lib/supabase/client";
@@ -8,7 +8,7 @@ import { useAuth } from "@/lib/hooks/use-auth";
 import {
   Zap, TrendingUp, ArrowDownLeft, ArrowUpRight,
   Gift, Sparkles, Megaphone, Package, CreditCard,
-  Loader2, CheckCircle, Shield, AlertCircle,
+  Loader2, CheckCircle2, Shield, AlertCircle,
 } from "lucide-react";
 
 interface RewardsData {
@@ -25,6 +25,13 @@ interface KenuxTx {
   created_at: string;
 }
 
+interface KenuxBundle {
+  ghsAmount: number;
+  kenuxAmount: number;
+  label: string;
+  popular?: boolean;
+}
+
 const TIER_CONFIG = {
   bronze:   { color: "#cd7f32", next: "Silver",   nextAt: 1000 },
   silver:   { color: "#94a3b8", next: "Gold",     nextAt: 5000 },
@@ -35,7 +42,7 @@ const TIER_CONFIG = {
 const EARN_WAYS = [
   { icon: CreditCard,  label: "Make a purchase",         reward: "+5% back in KENUX",   color: "#10b981" },
   { icon: Gift,        label: "Refer a friend",           reward: "+500 KNX per referral", color: "#8b5cf6" },
-  { icon: CheckCircle, label: "Complete your profile",    reward: "+200 KNX",             color: "#3b82f6" },
+  { icon: CheckCircle2, label: "Complete your profile",    reward: "+200 KNX",             color: "#3b82f6" },
   { icon: Shield,      label: "Verify your identity",     reward: "+500 KNX",             color: "#f59e0b" },
   { icon: TrendingUp,  label: "Review a business",        reward: "+50 KNX each",         color: "#ec4899" },
 ];
@@ -46,16 +53,6 @@ const SPEND_WAYS = [
   { icon: Package,    label: "Platform subscription",  desc: "Pay monthly fee with KENUX",          cost: "Save 10%" },
 ];
 
-const BUY_AMOUNTS = [
-  { ghs: 10,   knx: 100  },
-  { ghs: 25,   knx: 250  },
-  { ghs: 50,   knx: 500  },
-  { ghs: 100,  knx: 1000 },
-  { ghs: 250,  knx: 2500 },
-  { ghs: 500,  knx: 5000 },
-];
-
-
 function relTime(iso: string) {
   const d = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000);
   if (d === 0) return "Today";
@@ -63,7 +60,7 @@ function relTime(iso: string) {
   return `${d}d ago`;
 }
 
-export default function KenuxPage() {
+function KenuxPageInner() {
   const supabase = createClient();
   const { user } = useAuth();
   const searchParams = useSearchParams();
@@ -71,22 +68,49 @@ export default function KenuxPage() {
   const paymentError   = searchParams.get("error");
   const [rewards, setRewards] = useState<RewardsData | null>(null);
   const [txs, setTxs] = useState<KenuxTx[]>([]);
+  const [bundles, setBundles] = useState<KenuxBundle[]>([]);
+  const [countryCode, setCountryCode] = useState("GH");
   const [loading, setLoading] = useState(true);
   const [buying, setBuying] = useState(false);
   const [selected, setSelected] = useState<number | null>(null);
-  const [buySuccess, setBuySuccess] = useState("");
+  const [buySuccess] = useState("");
   const [buyError, setBuyError] = useState("");
   const [tab, setTab] = useState<"overview" | "earn" | "spend" | "history">("overview");
 
   const load = useCallback(async () => {
     if (!user?.id) { setLoading(false); return; }
     setLoading(true);
-    const [rewardsRes, txsRes] = await Promise.all([
+
+    // Detect country from browser locale for PPP pricing
+    const detected = typeof navigator !== "undefined"
+      ? (navigator.language?.split("-")[1] ?? "GH").toUpperCase()
+      : "GH";
+    setCountryCode(detected);
+
+    const [rewardsRes, txsRes, pricingRes] = await Promise.all([
       supabase.from("rewards_accounts").select("points,lifetime_points,tier").eq("user_id", user.id).single(),
-      supabase.from("kenux_transactions").select("*").eq("user_id", user.id).order("created_at", { ascending: false }).limit(30),
+      supabase.from("kenux_ledger").select("id, entry_type, points, reason, created_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(30),
+      fetch(`/api/pricing/kenux?country=${detected}`).then((r) => r.json()).catch(() => null),
     ]);
+
     setRewards(rewardsRes.data as RewardsData | null ?? { points: 0, lifetime_points: 0, tier: "bronze" });
-    setTxs((txsRes.data ?? []) as KenuxTx[]);
+    const raw = (txsRes.data ?? []) as { id: string; entry_type: string; points: number; reason: string | null; created_at: string }[];
+    setTxs(raw.map((r) => ({ id: r.id, type: r.entry_type as "earn" | "spend", amount: r.points, description: r.reason ?? (r.entry_type === "earn" ? "KENUX earned" : "KENUX spent"), created_at: r.created_at })));
+
+    if (pricingRes?.bundles?.length) {
+      setBundles(pricingRes.bundles as KenuxBundle[]);
+    } else {
+      // Fallback bundles (Ghana defaults)
+      setBundles([
+        { ghsAmount: 5,   kenuxAmount: 50,   label: "Starter" },
+        { ghsAmount: 25,  kenuxAmount: 250,  label: "Basic" },
+        { ghsAmount: 50,  kenuxAmount: 500,  label: "Standard" },
+        { ghsAmount: 100, kenuxAmount: 1000, label: "Value", popular: true },
+        { ghsAmount: 250, kenuxAmount: 2500, label: "Premium" },
+        { ghsAmount: 500, kenuxAmount: 5000, label: "Enterprise" },
+      ]);
+    }
+
     setLoading(false);
   }, [user?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -96,17 +120,17 @@ export default function KenuxPage() {
     if (selected === null) return;
     setBuying(true);
     setBuyError("");
-    const pkg = BUY_AMOUNTS[selected];
+    const pkg = bundles[selected];
     if (!pkg) { setBuying(false); return; }
 
     const res = await fetch("/api/payments/paystack/initialize", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        amount: pkg.ghs * 100,
+        amount: pkg.ghsAmount * 100,
         currency: "GHS",
         purpose: "kenux_purchase",
-        metadata: { kenux_amount: pkg.knx },
+        metadata: { kenux_amount: pkg.kenuxAmount, country: countryCode },
       }),
     });
     const data = await res.json();
@@ -128,7 +152,7 @@ export default function KenuxPage() {
       <Header title="KENUX" subtitle="Your platform utility currency" />
       {paymentSuccess === "purchase" && (
         <div className="mx-6 mt-4 flex items-center gap-3 p-3 rounded-xl bg-[rgba(16,185,129,0.1)] border border-[rgba(16,185,129,0.2)]">
-          <CheckCircle size={14} className="text-[#10b981] flex-shrink-0" />
+          <CheckCircle2 size={14} className="text-[#10b981] flex-shrink-0" />
           <p className="text-sm text-[#10b981] font-medium">KENUX purchased successfully! Your balance has been updated.</p>
         </div>
       )}
@@ -245,15 +269,21 @@ export default function KenuxPage() {
                 <div>
                   <p className="text-xs font-semibold text-[#374151] uppercase tracking-widest mb-3">Buy KENUX</p>
                   <div className="grid grid-cols-3 gap-2 mb-4">
-                    {BUY_AMOUNTS.map((pkg, i) => (
+                    {bundles.map((pkg, i) => (
                       <button key={i} onClick={() => setSelected(i)}
-                        className={`p-3 rounded-xl border text-center transition-all ${
+                        className={`relative p-3 rounded-xl border text-center transition-all ${
                           selected === i
                             ? "border-[#FF6524] bg-[rgba(255,101,36,0.1)] text-[#FF8B5E]"
                             : "border-white/7 bg-[#111624] text-[#64748b] hover:border-white/15"
                         }`}>
-                        <p className="text-sm font-bold text-[#f1f5f9]">{pkg.knx.toLocaleString()} KNX</p>
-                        <p className="text-[10px] mt-0.5">GH₵ {pkg.ghs}</p>
+                        {pkg.popular && (
+                          <span className="absolute -top-2 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full bg-[#FF6524] text-white text-[9px] font-bold uppercase tracking-wide whitespace-nowrap">
+                            Popular
+                          </span>
+                        )}
+                        <p className="text-sm font-bold text-[#f1f5f9]">{pkg.kenuxAmount.toLocaleString()} KNX</p>
+                        <p className="text-[10px] mt-0.5">GH₵ {pkg.ghsAmount}</p>
+                        <p className="text-[9px] text-[#374151] mt-0.5 capitalize">{pkg.label}</p>
                       </button>
                     ))}
                   </div>
@@ -291,5 +321,13 @@ export default function KenuxPage() {
         )}
       </div>
     </>
+  );
+}
+
+export default function KenuxPage() {
+  return (
+    <Suspense>
+      <KenuxPageInner />
+    </Suspense>
   );
 }

@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/utils";
 import {
   MessageCircle, Mail, Phone, MapPin, Clock,
-  ShoppingBag, Star, Megaphone, MessageSquare, PlusCircle, CheckCircle2,
+  ShoppingBag, Star, Megaphone, MessageSquare, PlusCircle,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/use-auth";

@@ -3,10 +3,10 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import {
-  Activity, Server, Database, Wifi, AlertTriangle,
+  Activity, Server, Database, AlertTriangle,
   CheckCircle, XCircle, Clock, RefreshCw, Zap,
-  TrendingUp, Shield, Eye, Bell, Loader2,
-  ArrowUp, ArrowDown, BarChart3, Users,
+  Shield, Eye, Bell, Loader2,
+  BarChart3, Users,
 } from "lucide-react";
 
 interface ServiceStatus {
@@ -26,10 +26,6 @@ interface AlertItem {
   resolved: boolean;
 }
 
-interface MetricPoint {
-  ts: string;
-  value: number;
-}
 
 const STATUS_COLORS: Record<string, string> = {
   operational: "#10b981",
@@ -129,21 +125,22 @@ export default function NOCPage() {
     });
     setAlerts(alertItems);
 
-    // Live counters
-    const [userRes, txRes] = await Promise.all([
-      supabase.from("user_profiles").select("id", { count: "exact", head: true }),
-      supabase.from("wallet_transactions")
-        .select("id", { count: "exact", head: true })
-        .gte("created_at", new Date(Date.now() - 3600000).toISOString()),
-    ]);
+    // Live counters (supplemental — main metrics from /api/admin/health)
+    const userRes = await supabase.from("user_profiles").select("id", { count: "exact", head: true });
+
+    // Fetch real health metrics
+    const healthRes = await fetch("/api/admin/health").then((r) => r.ok ? r.json() : null).catch(() => null) as {
+      total_users: number; tx_last_hour: number; payment_success_rate: number;
+      error_count_hour: number; avg_latency_ms: number | null; db_connections: number | null;
+    } | null;
 
     setMetrics({
-      activeUsers:    userRes.count ?? 0,
-      requestsMin:    Math.floor(Math.random() * 400 + 600),
-      errorRate:      parseFloat((Math.random() * 0.5).toFixed(2)),
-      avgLatency:     Math.floor(Math.random() * 20 + 35),
-      dbConnections:  Math.floor(Math.random() * 30 + 20),
-      paymentSuccess: parseFloat((98.5 + Math.random() * 1.5).toFixed(1)),
+      activeUsers:    healthRes?.total_users    ?? userRes.count ?? 0,
+      requestsMin:    healthRes?.tx_last_hour   ?? 0,
+      errorRate:      healthRes ? parseFloat(((100 - healthRes.payment_success_rate)).toFixed(2)) : 0,
+      avgLatency:     healthRes?.avg_latency_ms ?? 0,
+      dbConnections:  healthRes?.db_connections ?? 0,
+      paymentSuccess: healthRes?.payment_success_rate ?? 100,
     });
 
     setLastRefresh(new Date());

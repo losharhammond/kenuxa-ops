@@ -10,6 +10,7 @@ import { formatCurrency, timeAgo } from "@/lib/utils";
 import { Search, UserPlus, MessageSquare, Users, Star, TrendingUp, Gift } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/use-auth";
+import { useRoleGuard } from "@/lib/hooks/use-role-guard";
 
 interface Customer {
   id: string;
@@ -46,6 +47,7 @@ const SEGMENTS = [
 ];
 
 export default function CRMPage() {
+  useRoleGuard("crm.view");
   const { profile } = useAuth();
   const supabase = createClient();
   const [customers, setCustomers] = useState<Customer[]>([]);
