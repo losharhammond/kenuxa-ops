@@ -79,6 +79,7 @@ export default function IdentityPage() {
 
   const load = useCallback(async () => {
     setLoading(true);
+    try {
     const profilePhotoRes = await supabase.from("user_profiles").select("avatar_url").eq("id", user?.id ?? "").single();
     const pPhoto = (profilePhotoRes.data as { avatar_url?: string } | null)?.avatar_url;
     if (pPhoto) setProfilePhoto(pPhoto);
@@ -139,7 +140,9 @@ export default function IdentityPage() {
       reviews_received: reviewCount,
       jobs_completed: jobsCompleted,
     });
-    setLoading(false);
+    } finally {
+      setLoading(false);
+    }
   }, [supabase, profile, user]);
 
   useEffect(() => { load(); }, [load]);

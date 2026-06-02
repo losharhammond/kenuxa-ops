@@ -70,13 +70,16 @@ export default function SkillsMarketplacePage() {
 
   const load = useCallback(async () => {
     setLoading(true);
+    try {
     const { data } = await supabase
       .from("skill_profiles")
       .select("*")
       .order("rating", { ascending: false });
 
     setProfiles((data as SkillProfile[]) ?? []);
-    setLoading(false);
+    } finally {
+      setLoading(false);
+    }
   }, [supabase]);
 
   useEffect(() => { load(); }, [load]);

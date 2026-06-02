@@ -1,4 +1,4 @@
-import { prisma } from '../lib/prisma.js'
+import { ProfileModel }   from '../models/profile.model.js'
 import { NotFoundError } from './auth.service.js'
 import type { AcademyProfile, UpdateProfilePayload } from '@kenuxa/shared-types'
 
@@ -32,26 +32,23 @@ function mapProfile(p: {
 
 export class ProfileService {
   async getProfile(supabaseUserId: string): Promise<AcademyProfile> {
-    const profile = await prisma.profile.findUnique({ where: { supabaseUserId } })
+    const profile = await ProfileModel.findByUserId(supabaseUserId)
     if (!profile) throw new NotFoundError('Profile not found')
     return mapProfile(profile)
   }
 
   async updateProfile(supabaseUserId: string, data: UpdateProfilePayload): Promise<AcademyProfile> {
-    const existing = await prisma.profile.findUnique({ where: { supabaseUserId } })
+    const existing = await ProfileModel.findByUserId(supabaseUserId)
     if (!existing) throw new NotFoundError('Profile not found')
 
-    const updated = await prisma.profile.update({
-      where: { supabaseUserId },
-      data: {
-        ...(data.fullName  !== undefined ? { fullName:  data.fullName } : {}),
-        ...(data.bio       !== undefined ? { bio:       data.bio } : {}),
-        ...(data.avatarUrl !== undefined ? { avatarUrl: data.avatarUrl } : {}),
-        ...(data.location  !== undefined ? { location:  data.location } : {}),
-        ...(data.interests !== undefined ? { interests: data.interests } : {}),
-        ...(data.goals     !== undefined ? { goals:     data.goals } : {}),
-        ...(data.metadata  !== undefined ? { metadata:  data.metadata as object } : {}),
-      },
+    const updated = await ProfileModel.update(supabaseUserId, {
+      ...(data.fullName  !== undefined ? { fullName:  data.fullName } : {}),
+      ...(data.bio       !== undefined ? { bio:       data.bio } : {}),
+      ...(data.avatarUrl !== undefined ? { avatarUrl: data.avatarUrl } : {}),
+      ...(data.location  !== undefined ? { location:  data.location } : {}),
+      ...(data.interests !== undefined ? { interests: data.interests } : {}),
+      ...(data.goals     !== undefined ? { goals:     data.goals } : {}),
+      ...(data.metadata  !== undefined ? { metadata:  data.metadata as object } : {}),
     })
 
     return mapProfile(updated)

@@ -71,6 +71,7 @@ export default function TreasuryDashboard() {
 
   const load = useCallback(async () => {
     setLoading(true);
+    try {
     const [circulationRes, earnedRes, spentRes, walletRes, revenueRes, txRes, ratesRes] = await Promise.all([
       supabase.from("rewards_accounts").select("points"),
       supabase.from("kenux_ledger").select("points").eq("entry_type", "earn"),
@@ -111,7 +112,9 @@ export default function TreasuryDashboard() {
     });
     setRates((ratesRes.data ?? []) as ExchangeRate[]);
     setLastRefresh(new Date());
-    setLoading(false);
+    } finally {
+      setLoading(false);
+    }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);

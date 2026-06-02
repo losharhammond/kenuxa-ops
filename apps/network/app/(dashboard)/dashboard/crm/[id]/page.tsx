@@ -71,6 +71,7 @@ export default function CustomerDetailPage() {
 
   const load = useCallback(async () => {
     setLoading(true);
+    try {
     const [{ data: cust }, { data: sales }, { data: logs }] = await Promise.all([
       supabase
         .from("crm_customers")
@@ -93,7 +94,9 @@ export default function CustomerDetailPage() {
     setCustomer(cust as Customer);
     setPurchases((sales as Purchase[]) ?? []);
     setInteractions((logs as Interaction[]) ?? []);
-    setLoading(false);
+    } finally {
+      setLoading(false);
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 

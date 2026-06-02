@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { trackRevenue, calcTransactionFee } from "@/lib/revenue/track";
 
-// Service-role admin client — only used after Paystack signature is verified server-side
-const adminSupabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+// Lazy service-role client — avoids module-level init crashing builds
+let _admin: SupabaseClient | null = null;
+function getAdmin(): SupabaseClient {
+  if (!_admin) _admin = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+  return _admin;
+}
 
 export async function GET(req: NextRequest) {
   const reference = req.nextUrl.searchParams.get("reference");
@@ -34,7 +38,7 @@ export async function GET(req: NextRequest) {
 
   // SECURITY: resolve the real user from OUR database record for this reference.
   // Never trust user_id from Paystack metadata — it is user-supplied during initialization.
-  const { data: txRecord } = await adminSupabase
+  const { data: txRecord } = await getAdmin()
     .from("wallet_transactions")
     .select("user_id, status, metadata")
     .eq("reference", reference)
@@ -54,7 +58,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(successPage);
   }
 
-  const supabase = adminSupabase;
+  const supabase = getAdmin();
   const userId = txRecord.user_id;
   const purpose = (txRecord.metadata as { purpose?: string } | null)?.purpose ?? "wallet_topup";
   const amountGHS = (paystackData.amount ?? 0) / 100;

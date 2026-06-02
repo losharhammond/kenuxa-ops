@@ -12,6 +12,8 @@
     "dev:core":     "turbo run dev --filter=@kenuxa/core",
     "dev:reach":    "turbo run dev --filter=@kenuxa/reach",
     "dev:network":  "turbo run dev --filter=@kenuxa/network",
+    "dev:academy":  "turbo run dev --filter=@kenuxa/academy",
+    "dev:identity": "turbo run dev --filter=@kenuxa/identity-service",
     "build:pkgs":   "turbo run build --filter=./packages/*"
   },
   "workspaces": [
@@ -19,11 +21,15 @@
     "apps/ops",
     "apps/reach",
     "apps/network",
-    "packages/*"
+    "apps/academy",
+    "packages/*",
+    "services/*"
   ],
   "devDependencies": {
-    "turbo":      "^2.5.0",
-    "typescript": "^5.7.0"
+    "@biomejs/biome": "^1.9.0",
+    "prettier":       "^3.4.0",
+    "turbo":          "^2.5.0",
+    "typescript":     "^5.7.0"
   },
   "engines": {
     "node": ">=20.0.0",

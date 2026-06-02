@@ -63,18 +63,21 @@ export default function NotificationsPage() {
   const load = useCallback(async () => {
     if (!user?.id) { setNotifs(DEMO); setLoading(false); return; }
     setLoading(true);
-    const { data, error } = await supabase
-      .from("notifications")
-      .select("*")
-      .eq("user_id", user.id)
-      .order("created_at", { ascending: false })
-      .limit(50);
-    if (error || !data || data.length === 0) {
-      setNotifs(DEMO);
-    } else {
-      setNotifs(data as Notification[]);
+    try {
+      const { data, error } = await supabase
+        .from("notifications")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(50);
+      if (error || !data || data.length === 0) {
+        setNotifs(DEMO);
+      } else {
+        setNotifs(data as Notification[]);
+      }
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }, [user?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);

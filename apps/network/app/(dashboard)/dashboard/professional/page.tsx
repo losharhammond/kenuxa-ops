@@ -181,6 +181,7 @@ export default function ProfessionalPage() {
   const load = useCallback(async () => {
     if (!businessId) return;
     setLoading(true);
+    try {
 
     const [projRes, cliRes, timeRes] = await Promise.all([
       supabase.from("professional_projects").select("*").eq("business_id", businessId).order("created_at", { ascending: false }),
@@ -198,7 +199,9 @@ export default function ProfessionalPage() {
     if (projData.length > 0 && !timeForm.project_id) {
       setTimeForm((f) => ({ ...f, project_id: projData[0]!.id }));
     }
-    setLoading(false);
+    } finally {
+      setLoading(false);
+    }
   }, [businessId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);

@@ -3,10 +3,13 @@
  * The same Supabase project powers KENUXA NETWORK and KENUXA ACADEMY,
  * so any Network user can log in to Academy with the same credentials.
  *
- * On first Academy login we auto-provision the Academy profile +
- * identity state rows so the rest of the app always has data to work with.
+ * On first Academy login, ensureAcademyUser() auto-provisions the
+ * AcademyUserMeta, Profile, and IdentityState rows.
  */
-import { prisma } from '../lib/prisma.js'
+import { UserModel }          from '../models/user.model.js'
+import { ProfileModel }        from '../models/profile.model.js'
+import { IdentityStateModel }  from '../models/identity-state.model.js'
+import { prisma }              from '../lib/prisma.js'
 
 // ─── Error types ─────────────────────────────────────────────
 
@@ -38,9 +41,9 @@ interface SupabaseAuthResponse {
   expires_in:    number
   refresh_token: string
   user: {
-    id:              string
-    email:           string
-    user_metadata?:  Record<string, unknown>
+    id:             string
+    email:          string
+    user_metadata?: Record<string, unknown>
   }
 }
 
@@ -60,14 +63,11 @@ function supabaseAuthUrl(path: string): string {
 function supabaseHeaders(): Record<string, string> {
   const key = process.env['SUPABASE_ANON_KEY']
   if (!key) throw new Error('SUPABASE_ANON_KEY environment variable is required')
-  return {
-    'Content-Type':  'application/json',
-    'apikey':        key,
-  }
+  return { 'Content-Type': 'application/json', apikey: key }
 }
 
 async function supabaseFetch(path: string, body: unknown): Promise<SupabaseAuthResponse> {
-  const res = await fetch(supabaseAuthUrl(path), {
+  const res  = await fetch(supabaseAuthUrl(path), {
     method:  'POST',
     headers: supabaseHeaders(),
     body:    JSON.stringify(body),
@@ -85,26 +85,20 @@ async function supabaseFetch(path: string, body: unknown): Promise<SupabaseAuthR
 // ─── Academy provisioning ─────────────────────────────────────
 
 /**
- * Ensure Academy-specific rows exist for this Supabase user.
- * Called on every login so returning Network users get provisioned on first Academy access.
+ * Idempotent — ensures Academy rows exist for this Supabase user.
+ * Called on every login so returning Network users are auto-provisioned.
  */
 export async function ensureAcademyUser(
   supabaseUserId: string,
-  email: string,
-  fullName?: string,
+  email:          string,
+  fullName?:      string,
 ): Promise<void> {
-  const existing = await prisma.academyUserMeta.findUnique({
-    where: { supabaseUserId },
-  })
+  const existing = await UserModel.findBySupabaseId(supabaseUserId)
   if (existing) return
 
   await prisma.$transaction([
     prisma.academyUserMeta.create({
-      data: {
-        supabaseUserId,
-        email,
-        role: 'learner',
-      },
+      data: { supabaseUserId, email, role: 'learner' },
     }),
     prisma.profile.create({
       data: {
@@ -136,14 +130,9 @@ export class AuthService {
     const resp = await supabaseFetch('/signup', {
       email:    data.email,
       password: data.password,
-      data: {
-        full_name:  data.fullName,
-        academy_role: 'learner',
-      },
+      data:     { full_name: data.fullName, academy_role: 'learner' },
     })
-
     await ensureAcademyUser(resp.user.id, resp.user.email, data.fullName)
-
     return this.buildResponse(resp)
   }
 
@@ -152,10 +141,8 @@ export class AuthService {
       email:    data.email,
       password: data.password,
     })
-
     const fullName = resp.user.user_metadata?.['full_name'] as string | undefined
     await ensureAcademyUser(resp.user.id, resp.user.email, fullName)
-
     return this.buildResponse(resp)
   }
 
@@ -166,16 +153,24 @@ export class AuthService {
     return this.buildResponse(resp)
   }
 
+  async getMe(supabaseUserId: string, email: string) {
+    const meta = await UserModel.findBySupabaseId(supabaseUserId)
+    return {
+      id:        supabaseUserId,
+      email,
+      role:      meta?.role ?? 'learner',
+      createdAt: meta?.createdAt.toISOString(),
+      updatedAt: meta?.updatedAt.toISOString(),
+    }
+  }
+
   private buildResponse(resp: SupabaseAuthResponse) {
     return {
-      accessToken:   resp.access_token,
-      refreshToken:  resp.refresh_token,
-      tokenType:     'Bearer' as const,
-      expiresIn:     resp.expires_in,
-      user: {
-        id:    resp.user.id,
-        email: resp.user.email,
-      },
+      accessToken:  resp.access_token,
+      refreshToken: resp.refresh_token,
+      tokenType:    'Bearer' as const,
+      expiresIn:    resp.expires_in,
+      user: { id: resp.user.id, email: resp.user.email },
     }
   }
 }

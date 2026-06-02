@@ -107,15 +107,18 @@ function BusinessHome({ profile, role }: { profile: ReturnType<typeof useAuth>["
 
   const load = useCallback(async () => {
     setLoading(true);
-    const [apiStats, salesRes, stockRes] = await Promise.all([
-      fetch("/api/analytics").then((r) => r.json()).catch(() => null),
-      supabase.from("sales").select("id,receipt_no,customer_name,total_amount,payment_method,created_at").order("created_at", { ascending: false }).limit(5),
-      supabase.from("products").select("id,name,stock_qty,sku").filter("stock_qty", "lte", "low_stock_threshold").eq("is_active", true).order("stock_qty", { ascending: true }).limit(4),
-    ]);
-    if (apiStats?.data) setStats((p) => ({ ...p, ...apiStats.data }));
-    setRecentSales((salesRes.data ?? []) as typeof recentSales);
-    setLowStock((stockRes.data ?? []) as typeof lowStock);
-    setLoading(false);
+    try {
+      const [apiStats, salesRes, stockRes] = await Promise.all([
+        fetch("/api/analytics").then((r) => r.json()).catch(() => null),
+        supabase.from("sales").select("id,receipt_no,customer_name,total_amount,payment_method,created_at").order("created_at", { ascending: false }).limit(5),
+        supabase.from("products").select("id,name,stock_qty,sku").filter("stock_qty", "lte", "low_stock_threshold").eq("is_active", true).order("stock_qty", { ascending: true }).limit(4),
+      ]);
+      if (apiStats?.data) setStats((p) => ({ ...p, ...apiStats.data }));
+      setRecentSales((salesRes.data ?? []) as typeof recentSales);
+      setLowStock((stockRes.data ?? []) as typeof lowStock);
+    } finally {
+      setLoading(false);
+    }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);
@@ -310,18 +313,21 @@ function CustomerHome({ profile }: { profile: ReturnType<typeof useAuth>["profil
   const load = useCallback(async () => {
     if (!profile?.id) { setLoading(false); return; }
     setLoading(true);
-    const [walletRes, rewardsRes, ordersRes] = await Promise.all([
-      supabase.from("wallets").select("balance").eq("user_id", profile.id).eq("type", "personal").single(),
-      supabase.from("rewards_accounts").select("points").eq("user_id", profile.id).single(),
-      supabase.from("orders").select("id,total_amount,status,created_at").eq("buyer_id", profile.id).order("created_at", { ascending: false }).limit(5),
-    ]);
-    setWalletBalance((walletRes.data as { balance: number } | null)?.balance ?? 0);
-    setKenuxPoints((rewardsRes.data as { points: number } | null)?.points ?? 0);
-    setRecentOrders(((ordersRes.data ?? []) as unknown[]).map((r) => {
-      const row = r as Record<string, unknown>;
-      return { id: String(row.id ?? ""), amount: Number(row.total_amount ?? 0), status: String(row.status ?? ""), created_at: String(row.created_at ?? "") };
-    }));
-    setLoading(false);
+    try {
+      const [walletRes, rewardsRes, ordersRes] = await Promise.all([
+        supabase.from("wallets").select("balance").eq("user_id", profile.id).eq("type", "personal").single(),
+        supabase.from("rewards_accounts").select("points").eq("user_id", profile.id).single(),
+        supabase.from("orders").select("id,total_amount,status,created_at").eq("buyer_id", profile.id).order("created_at", { ascending: false }).limit(5),
+      ]);
+      setWalletBalance((walletRes.data as { balance: number } | null)?.balance ?? 0);
+      setKenuxPoints((rewardsRes.data as { points: number } | null)?.points ?? 0);
+      setRecentOrders(((ordersRes.data ?? []) as unknown[]).map((r) => {
+        const row = r as Record<string, unknown>;
+        return { id: String(row.id ?? ""), amount: Number(row.total_amount ?? 0), status: String(row.status ?? ""), created_at: String(row.created_at ?? "") };
+      }));
+    } finally {
+      setLoading(false);
+    }
   }, [profile?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);
@@ -464,15 +470,18 @@ function FreelancerHome({ profile }: { profile: ReturnType<typeof useAuth>["prof
   const load = useCallback(async () => {
     if (!profile?.id) { setLoading(false); return; }
     setLoading(true);
-    const [walletRes, rewardsRes, projectsRes] = await Promise.all([
-      supabase.from("wallets").select("balance").eq("user_id", profile.id).eq("type", "personal").single(),
-      supabase.from("rewards_accounts").select("points").eq("user_id", profile.id).single(),
-      supabase.from("freelancer_projects").select("id,title,status,budget,created_at").eq("freelancer_id", profile.id).order("created_at", { ascending: false }).limit(5),
-    ]);
-    setWalletBalance((walletRes.data as { balance: number } | null)?.balance ?? 0);
-    setKenuxPoints((rewardsRes.data as { points: number } | null)?.points ?? 0);
-    setRecentProjects((projectsRes.data ?? []) as typeof recentProjects);
-    setLoading(false);
+    try {
+      const [walletRes, rewardsRes, projectsRes] = await Promise.all([
+        supabase.from("wallets").select("balance").eq("user_id", profile.id).eq("type", "personal").single(),
+        supabase.from("rewards_accounts").select("points").eq("user_id", profile.id).single(),
+        supabase.from("freelancer_projects").select("id,title,status,budget,created_at").eq("freelancer_id", profile.id).order("created_at", { ascending: false }).limit(5),
+      ]);
+      setWalletBalance((walletRes.data as { balance: number } | null)?.balance ?? 0);
+      setKenuxPoints((rewardsRes.data as { points: number } | null)?.points ?? 0);
+      setRecentProjects((projectsRes.data ?? []) as typeof recentProjects);
+    } finally {
+      setLoading(false);
+    }
   }, [profile?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);
@@ -567,15 +576,18 @@ function JobSeekerHome({ profile }: { profile: ReturnType<typeof useAuth>["profi
 
   const load = useCallback(async () => {
     setLoading(true);
-    const [jobsRes, appsRes] = await Promise.all([
-      supabase.from("job_listings").select("id,title,business_name,location,job_type,created_at").eq("status", "active").order("created_at", { ascending: false }).limit(6),
-      profile?.id
-        ? supabase.from("job_applications").select("id", { count: "exact", head: true }).eq("applicant_id", profile.id)
-        : Promise.resolve({ count: 0 }),
-    ]);
-    setJobs((jobsRes.data ?? []) as typeof jobs);
-    setApplications((appsRes as { count: number | null }).count ?? 0);
-    setLoading(false);
+    try {
+      const [jobsRes, appsRes] = await Promise.all([
+        supabase.from("job_listings").select("id,title,business_name,location,job_type,created_at").eq("status", "active").order("created_at", { ascending: false }).limit(6),
+        profile?.id
+          ? supabase.from("job_applications").select("id", { count: "exact", head: true }).eq("applicant_id", profile.id)
+          : Promise.resolve({ count: 0 }),
+      ]);
+      setJobs((jobsRes.data ?? []) as typeof jobs);
+      setApplications((appsRes as { count: number | null }).count ?? 0);
+    } finally {
+      setLoading(false);
+    }
   }, [profile?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);
@@ -657,13 +669,16 @@ function SupplierHome({ profile }: { profile: ReturnType<typeof useAuth>["profil
 
   const load = useCallback(async () => {
     setLoading(true);
-    const [rfqRes, walletRes] = await Promise.all([
-      supabase.from("rfqs").select("id,title,budget,status,created_at").eq("status", "open").order("created_at", { ascending: false }).limit(5),
-      profile?.id ? supabase.from("wallets").select("balance").eq("user_id", profile.id).eq("type", "personal").single() : Promise.resolve({ data: null }),
-    ]);
-    setRfqs((rfqRes.data ?? []) as typeof rfqs);
-    setWalletBalance((walletRes.data as { balance: number } | null)?.balance ?? 0);
-    setLoading(false);
+    try {
+      const [rfqRes, walletRes] = await Promise.all([
+        supabase.from("rfqs").select("id,title,budget,status,created_at").eq("status", "open").order("created_at", { ascending: false }).limit(5),
+        profile?.id ? supabase.from("wallets").select("balance").eq("user_id", profile.id).eq("type", "personal").single() : Promise.resolve({ data: null }),
+      ]);
+      setRfqs((rfqRes.data ?? []) as typeof rfqs);
+      setWalletBalance((walletRes.data as { balance: number } | null)?.balance ?? 0);
+    } finally {
+      setLoading(false);
+    }
   }, [profile?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);
@@ -755,13 +770,16 @@ function RiderHome({ profile }: { profile: ReturnType<typeof useAuth>["profile"]
   const load = useCallback(async () => {
     if (!profile?.id) { setLoading(false); return; }
     setLoading(true);
-    const [runsRes, walletRes] = await Promise.all([
-      supabase.from("delivery_orders").select("id,status,recipient_name,delivery_address,created_at").eq("rider_id", profile.id).order("created_at", { ascending: false }).limit(5),
-      supabase.from("wallets").select("balance").eq("user_id", profile.id).eq("type", "personal").single(),
-    ]);
-    setRuns((runsRes.data ?? []) as typeof runs);
-    setEarnings((walletRes.data as { balance: number } | null)?.balance ?? 0);
-    setLoading(false);
+    try {
+      const [runsRes, walletRes] = await Promise.all([
+        supabase.from("delivery_orders").select("id,status,recipient_name,delivery_address,created_at").eq("rider_id", profile.id).order("created_at", { ascending: false }).limit(5),
+        supabase.from("wallets").select("balance").eq("user_id", profile.id).eq("type", "personal").single(),
+      ]);
+      setRuns((runsRes.data ?? []) as typeof runs);
+      setEarnings((walletRes.data as { balance: number } | null)?.balance ?? 0);
+    } finally {
+      setLoading(false);
+    }
   }, [profile?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);
@@ -839,12 +857,15 @@ function FinancialPartnerHome({ profile }: { profile: ReturnType<typeof useAuth>
 
   const load = useCallback(async () => {
     setLoading(true);
-    const { data } = await supabase.from("loan_applications").select("status,amount");
-    const rows = (data ?? []) as { status: string; amount: number }[];
-    setPending(rows.filter((r) => r.status === "pending").length);
-    setActive(rows.filter((r) => ["approved", "disbursed", "repaying"].includes(r.status)).length);
-    setTotalDeployed(rows.filter((r) => ["disbursed", "repaying"].includes(r.status)).reduce((s, r) => s + r.amount, 0));
-    setLoading(false);
+    try {
+      const { data } = await supabase.from("loan_applications").select("status,amount");
+      const rows = (data ?? []) as { status: string; amount: number }[];
+      setPending(rows.filter((r) => r.status === "pending").length);
+      setActive(rows.filter((r) => ["approved", "disbursed", "repaying"].includes(r.status)).length);
+      setTotalDeployed(rows.filter((r) => ["disbursed", "repaying"].includes(r.status)).reduce((s, r) => s + r.amount, 0));
+    } finally {
+      setLoading(false);
+    }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);
@@ -917,29 +938,32 @@ function RecruiterHome({ profile }: { profile: ReturnType<typeof useAuth>["profi
 
   const load = useCallback(async () => {
     setLoading(true);
-    const { data: bizData } = await supabase
-      .from("businesses")
-      .select("id")
-      .eq("owner_id", profile?.id ?? "")
-      .single();
+    try {
+      const { data: bizData } = await supabase
+        .from("businesses")
+        .select("id")
+        .eq("owner_id", profile?.id ?? "")
+        .single();
 
-    const bizId = (bizData as { id?: string } | null)?.id ?? null;
+      const bizId = (bizData as { id?: string } | null)?.id ?? null;
 
-    const [postRes, appRes, jobsRes] = await Promise.all([
-      supabase.from("job_listings").select("id", { count: "exact", head: true })
-        .eq(bizId ? "business_id" : "posted_by", bizId ?? profile?.id ?? ""),
-      supabase.from("job_applications").select("id", { count: "exact", head: true })
-        .eq("recruiter_id", profile?.id ?? ""),
-      supabase.from("job_listings")
-        .select("id,title,status,created_at")
-        .eq(bizId ? "business_id" : "posted_by", bizId ?? profile?.id ?? "")
-        .order("created_at", { ascending: false })
-        .limit(5),
-    ]);
-    setPostings(postRes.count ?? 0);
-    setApplications(appRes.count ?? 0);
-    setRecentJobs(((jobsRes.data ?? []) as unknown as typeof recentJobs).map((j) => ({ ...j, application_count: 0 })));
-    setLoading(false);
+      const [postRes, appRes, jobsRes] = await Promise.all([
+        supabase.from("job_listings").select("id", { count: "exact", head: true })
+          .eq(bizId ? "business_id" : "posted_by", bizId ?? profile?.id ?? ""),
+        supabase.from("job_applications").select("id", { count: "exact", head: true })
+          .eq("recruiter_id", profile?.id ?? ""),
+        supabase.from("job_listings")
+          .select("id,title,status,created_at")
+          .eq(bizId ? "business_id" : "posted_by", bizId ?? profile?.id ?? "")
+          .order("created_at", { ascending: false })
+          .limit(5),
+      ]);
+      setPostings(postRes.count ?? 0);
+      setApplications(appRes.count ?? 0);
+      setRecentJobs(((jobsRes.data ?? []) as unknown as typeof recentJobs).map((j) => ({ ...j, application_count: 0 })));
+    } finally {
+      setLoading(false);
+    }
   }, [profile?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);

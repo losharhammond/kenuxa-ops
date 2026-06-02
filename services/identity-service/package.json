@@ -12,10 +12,12 @@
     "db:migrate:prod": "prisma migrate deploy",
     "db:studio": "prisma studio",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint src --ext .ts"
+    "lint": "eslint",
+    "format": "prettier --write \"src/**/*.ts\""
   },
   "dependencies": {
     "@kenuxa/shared-types": "workspace:*",
+    "@kenuxa/utils": "workspace:*",
     "@prisma/client": "^5.22.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
@@ -26,10 +28,15 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@eslint/js": "^9.18.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/node": "^22.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.20.0",
+    "@typescript-eslint/parser": "^8.20.0",
+    "eslint": "^9.18.0",
+    "prettier": "^3.4.0",
     "prisma": "^5.22.0",
     "tsx": "^4.19.0",
     "typescript": "^5.7.0"

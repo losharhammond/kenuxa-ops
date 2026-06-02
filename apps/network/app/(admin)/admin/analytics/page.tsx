@@ -42,6 +42,7 @@ export default function AdminAnalyticsPage() {
 
   const load = useCallback(async () => {
     setLoading(true);
+    try {
 
     const months = MONTH_NAMES;
     const now = new Date();
@@ -106,7 +107,9 @@ export default function AdminAnalyticsPage() {
       ]);
     }
 
-    setLoading(false);
+    } finally {
+      setLoading(false);
+    }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);

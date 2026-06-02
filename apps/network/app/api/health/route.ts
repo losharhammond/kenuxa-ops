@@ -1,12 +1,16 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 export const dynamic = "force-dynamic";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+let _sb: SupabaseClient | null = null;
+function getSb() {
+  if (!_sb) _sb = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+  return _sb;
+}
 
 export async function GET() {
   const start = Date.now();
@@ -15,7 +19,7 @@ export async function GET() {
   // ── Database ping ────────────────────────────────────────────
   const dbStart = Date.now();
   try {
-    await supabase.from("user_profiles").select("id", { count: "exact", head: true });
+    await getSb().from("user_profiles").select("id", { count: "exact", head: true });
     checks.database = { status: "ok", latency_ms: Date.now() - dbStart };
   } catch (e) {
     checks.database = { status: "error", detail: String(e), latency_ms: Date.now() - dbStart };
@@ -23,7 +27,7 @@ export async function GET() {
 
   // ── Exchange rates freshness ─────────────────────────────────
   try {
-    const { data } = await supabase
+    const { data } = await getSb()
       .from("exchange_rates")
       .select("fetched_at")
       .order("fetched_at", { ascending: false })

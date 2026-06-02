@@ -68,6 +68,7 @@ export default function ReputationPage() {
     if (!profile?.business_id) return;
     async function load() {
       setLoading(true);
+      try {
       const [{ data: revData }, { data: disData }, { data: repData }] = await Promise.all([
         supabase
           .from("business_reviews")
@@ -107,7 +108,9 @@ export default function ReputationPage() {
           response_score:     r.response_score ?? 0,
         });
       }
-      setLoading(false);
+      } finally {
+        setLoading(false);
+      }
     }
     load();
   // eslint-disable-next-line react-hooks/exhaustive-deps

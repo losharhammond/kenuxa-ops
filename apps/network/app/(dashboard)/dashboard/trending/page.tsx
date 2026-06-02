@@ -46,6 +46,7 @@ export default function TrendingPage() {
 
   const load = useCallback(async () => {
     setLoading(true);
+    try {
     const [bizRes, prodRes, jobRes] = await Promise.all([
       supabase
         .from("businesses")
@@ -69,7 +70,9 @@ export default function TrendingPage() {
     setBusinesses((bizRes.data as TrendingBusiness[]) ?? []);
     setProducts((prodRes.data as TrendingProduct[]) ?? []);
     setJobs((jobRes.data as TrendingJob[]) ?? []);
-    setLoading(false);
+    } finally {
+      setLoading(false);
+    }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);

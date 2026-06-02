@@ -1,0 +1,28 @@
+version: "3.9"
+
+# KENUXA ACADEMY — Local PostgreSQL for identity-service
+# Use this if you don't want to reuse the Supabase project for Academy-specific tables.
+# Run: docker compose -f infrastructure/db/docker-compose.academy.yml up -d
+
+services:
+  academy-db:
+    image: postgres:16-alpine
+    container_name: kenuxa_academy_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER:     academy
+      POSTGRES_PASSWORD: academy_dev_password
+      POSTGRES_DB:       kenuxa_academy
+    ports:
+      - "5433:5432"    # port 5433 to avoid conflict with other Postgres instances
+    volumes:
+      - academy_db_data:/var/lib/postgresql/data
+      - ./init/academy.sql:/docker-entrypoint-initdb.d/01_init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U academy -d kenuxa_academy"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  academy_db_data:

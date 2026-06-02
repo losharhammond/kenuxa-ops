@@ -65,6 +65,7 @@ export default function FinancePartnerPage() {
   const load = useCallback(async () => {
     if (!user?.id) { setLoading(false); return; }
     setLoading(true);
+    try {
     const { data } = await supabase
       .from("loan_applications")
       .select("*, businesses(name), user_profiles(full_name), credit_profiles(kenuxa_score)")
@@ -88,7 +89,9 @@ export default function FinancePartnerPage() {
         };
       })
     );
-    setLoading(false);
+    } finally {
+      setLoading(false);
+    }
   }, [user?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);

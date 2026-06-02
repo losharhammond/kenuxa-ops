@@ -42,6 +42,7 @@ export default function AdminLogsPage() {
 
   const load = useCallback(async () => {
     setLoading(true);
+    try {
     let q = supabase
       .from("audit_logs")
       .select("id, category, action, actor, target, ip_address, created_at, severity, metadata")
@@ -53,7 +54,9 @@ export default function AdminLogsPage() {
 
     const { data } = await q;
     setLogs((data as AuditLog[]) ?? []);
-    setLoading(false);
+    } finally {
+      setLoading(false);
+    }
   }, [category, search]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);

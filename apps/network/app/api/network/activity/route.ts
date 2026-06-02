@@ -6,12 +6,16 @@
 import { NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-const adminSupabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+let _admin: SupabaseClient | null = null;
+function getAdmin(): SupabaseClient {
+  if (!_admin) _admin = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+  return _admin;
+}
 
 export async function GET() {
   const cookieStore = await cookies();
@@ -41,17 +45,17 @@ export async function GET() {
     recentActivityRes,
   ] = await Promise.all([
     // New businesses in last 24h
-    adminSupabase.from("businesses").select("id", { count: "exact", head: true }).gte("created_at", since),
+    getAdmin().from("businesses").select("id", { count: "exact", head: true }).gte("created_at", since),
     // New users in last 24h
-    adminSupabase.from("user_profiles").select("id", { count: "exact", head: true }).gte("created_at", since),
+    getAdmin().from("user_profiles").select("id", { count: "exact", head: true }).gte("created_at", since),
     // New jobs posted in last 24h
-    adminSupabase.from("job_listings").select("id", { count: "exact", head: true }).gte("created_at", since),
+    getAdmin().from("job_listings").select("id", { count: "exact", head: true }).gte("created_at", since),
     // Sales count in last 24h
-    adminSupabase.from("sales").select("id", { count: "exact", head: true }).gte("created_at", since),
+    getAdmin().from("sales").select("id", { count: "exact", head: true }).gte("created_at", since),
     // KENUX earned in last 24h
-    adminSupabase.from("kenux_ledger").select("points").eq("entry_type", "earn").gte("created_at", since),
+    getAdmin().from("kenux_ledger").select("points").eq("entry_type", "earn").gte("created_at", since),
     // User's personal activity feed
-    adminSupabase.from("activity_feed")
+    getAdmin().from("activity_feed")
       .select("id, type, title, body, read, created_at")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false })

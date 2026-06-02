@@ -1,16 +1,20 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+let _sb: SupabaseClient | null = null;
+function getSb(): SupabaseClient {
+  if (!_sb) _sb = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+  return _sb;
+}
 
 const SUPPORTED = ["GHS","NGN","KES","ZAR","ETB","UGX","TZS","RWF","XOF","ZMW","MWK","SLL","MZN"];
 
 export async function GET() {
   // Try cached rates first (< 1 hour old)
-  const { data: cached } = await supabase
+  const { data: cached } = await getSb()
     .from("exchange_rates")
     .select("*")
     .gte("fetched_at", new Date(Date.now() - 3600000).toISOString());
@@ -52,7 +56,7 @@ export async function GET() {
         source: "openexchangerates",
         fetched_at: new Date().toISOString(),
       }));
-      await supabase.from("exchange_rates").upsert(upserts, { onConflict: "from_currency,to_currency" });
+      await getSb().from("exchange_rates").upsert(upserts, { onConflict: "from_currency,to_currency" });
 
       return NextResponse.json({ base: "USD", rates: data.rates, cached: false, fetched_at: new Date().toISOString() });
     }
@@ -61,7 +65,7 @@ export async function GET() {
   }
 
   // Return stale cache
-  const { data: stale } = await supabase.from("exchange_rates").select("*");
+  const { data: stale } = await getSb().from("exchange_rates").select("*");
   const rates: Record<string, number> = {};
   for (const r of stale ?? []) {
     rates[r.to_currency] = r.rate;

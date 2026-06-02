@@ -59,13 +59,16 @@ export default function InvoiceDetailPage() {
 
   const load = useCallback(async () => {
     setLoading(true);
+    try {
     const { data } = await supabase
       .from("invoices")
       .select("*")
       .eq("id", id)
       .single();
     setInvoice(data as Invoice);
-    setLoading(false);
+    } finally {
+      setLoading(false);
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 

@@ -25,7 +25,7 @@ export default function RegisterPage() {
       password,
       options: {
         data: { full_name: fullName, academy_role: 'learner' },
-        emailRedirectTo: `${location.origin}/auth/callback`,
+        emailRedirectTo: `${process.env['NEXT_PUBLIC_APP_URL'] ?? 'http://localhost:3003'}/auth/callback`,
       },
     })
 

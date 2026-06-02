@@ -1,12 +1,16 @@
 ﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 
-const adminSupabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+let _admin: SupabaseClient | null = null;
+function getAdmin(): SupabaseClient {
+  if (!_admin) _admin = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+  return _admin;
+}
 
 /**
  * Security Events API
@@ -35,7 +39,7 @@ export async function GET(req: NextRequest) {
   const user = await getUserFromCookies();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { data: profile } = await adminSupabase
+  const { data: profile } = await getAdmin()
     .from("user_profiles")
     .select("role")
     .eq("id", user.id)
@@ -49,7 +53,7 @@ export async function GET(req: NextRequest) {
   const limit  = Math.min(parseInt(searchParams.get("limit") ?? "50", 10), 200);
   const userId = searchParams.get("user_id");
 
-  let query = adminSupabase
+  let query = getAdmin()
     .from("security_events")
     .select("*")
     .order("created_at", { ascending: false })
@@ -93,7 +97,7 @@ export async function POST(req: NextRequest) {
     ?? req.headers.get("x-real-ip")
     ?? "unknown";
 
-  const { error } = await adminSupabase.from("security_events").insert({
+  const { error } = await getAdmin().from("security_events").insert({
     user_id:    body.user_id ?? userId,
     event_type: body.event_type,
     severity:   body.severity ?? "info",

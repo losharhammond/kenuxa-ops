@@ -129,6 +129,7 @@ export default function TalentProfilePage() {
   const load = useCallback(async () => {
     if (!user?.id) return;
     setLoading(true);
+    try {
     const { data } = await supabase
       .from("freelancer_profiles")
       .select("*")
@@ -154,7 +155,9 @@ export default function TalentProfilePage() {
       .order("year", { ascending: false });
     setEducation((eduData as Education[]) ?? []);
 
-    setLoading(false);
+    } finally {
+      setLoading(false);
+    }
   }, [user?.id, authProfile?.full_name]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);

@@ -70,6 +70,7 @@ function DirectoryContent() {
 
   const load = useCallback(async () => {
     setLoading(true);
+    try {
 
     let q = supabase
       .from("businesses")
@@ -84,7 +85,9 @@ function DirectoryContent() {
     const { data, count } = await q;
     setBusinesses((data as Business[]) ?? []);
     setTotal(count ?? 0);
-    setLoading(false);
+    } finally {
+      setLoading(false);
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query, city, category, sort]);
 

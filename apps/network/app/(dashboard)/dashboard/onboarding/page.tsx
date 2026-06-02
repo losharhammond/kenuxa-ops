@@ -83,18 +83,21 @@ export default function OnboardingHub() {
   async function handleContinue() {
     if (!selected || !user) return;
     setLoading(true);
+    try {
+      const roleObj = ROLES.find((r) => r.id === selected)!;
 
-    const roleObj = ROLES.find((r) => r.id === selected)!;
+      // Update the user's role
+      await supabase
+        .from("user_profiles")
+        .update({ role: selected, onboarding_completed: selected === "customer" })
+        .eq("id", user.id);
 
-    // Update the user's role
-    await supabase
-      .from("user_profiles")
-      .update({ role: selected, onboarding_completed: selected === "customer" })
-      .eq("id", user.id);
-
-    // Welcome bonus already provisioned via /api/onboarding/provision on OAuth callback
-    // Route to role-specific onboarding or directly to dashboard
-    router.push(roleObj.href);
+      // Welcome bonus already provisioned via /api/onboarding/provision on OAuth callback
+      // Route to role-specific onboarding or directly to dashboard
+      router.push(roleObj.href);
+    } catch {
+      setLoading(false);
+    }
   }
 
   return (

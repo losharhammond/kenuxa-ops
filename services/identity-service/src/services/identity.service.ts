@@ -1,10 +1,7 @@
-import { prisma } from '../lib/prisma.js'
-import { NotFoundError } from './auth.service.js'
+import { IdentityStateModel } from '../models/identity-state.model.js'
+import { NotFoundError }       from './auth.service.js'
+import { clampScore }          from '@kenuxa/utils'
 import type { IdentityState, UpdateIdentityStatePayload } from '@kenuxa/shared-types'
-
-function clamp(v: number): number {
-  return Math.max(0, Math.min(100, v))
-}
 
 function mapState(s: {
   id: string
@@ -36,26 +33,23 @@ function mapState(s: {
 
 export class IdentityService {
   async getState(supabaseUserId: string): Promise<IdentityState> {
-    const state = await prisma.identityState.findUnique({ where: { supabaseUserId } })
+    const state = await IdentityStateModel.findByUserId(supabaseUserId)
     if (!state) throw new NotFoundError('Identity state not found')
     return mapState(state)
   }
 
   async updateState(supabaseUserId: string, data: UpdateIdentityStatePayload): Promise<IdentityState> {
-    const existing = await prisma.identityState.findUnique({ where: { supabaseUserId } })
+    const existing = await IdentityStateModel.findByUserId(supabaseUserId)
     if (!existing) throw new NotFoundError('Identity state not found')
 
-    const updated = await prisma.identityState.update({
-      where: { supabaseUserId },
-      data: {
-        ...(data.cognitiveScore  !== undefined ? { cognitiveScore:  clamp(data.cognitiveScore) } : {}),
-        ...(data.creativeScore   !== undefined ? { creativeScore:   clamp(data.creativeScore) } : {}),
-        ...(data.socialScore     !== undefined ? { socialScore:     clamp(data.socialScore) } : {}),
-        ...(data.emotionalScore  !== undefined ? { emotionalScore:  clamp(data.emotionalScore) } : {}),
-        ...(data.practicalScore  !== undefined ? { practicalScore:  clamp(data.practicalScore) } : {}),
-        ...(data.leadershipScore !== undefined ? { leadershipScore: clamp(data.leadershipScore) } : {}),
-        ...(data.economicScore   !== undefined ? { economicScore:   clamp(data.economicScore) } : {}),
-      },
+    const updated = await IdentityStateModel.update(supabaseUserId, {
+      ...(data.cognitiveScore  !== undefined ? { cognitiveScore:  clampScore(data.cognitiveScore) } : {}),
+      ...(data.creativeScore   !== undefined ? { creativeScore:   clampScore(data.creativeScore) } : {}),
+      ...(data.socialScore     !== undefined ? { socialScore:     clampScore(data.socialScore) } : {}),
+      ...(data.emotionalScore  !== undefined ? { emotionalScore:  clampScore(data.emotionalScore) } : {}),
+      ...(data.practicalScore  !== undefined ? { practicalScore:  clampScore(data.practicalScore) } : {}),
+      ...(data.leadershipScore !== undefined ? { leadershipScore: clampScore(data.leadershipScore) } : {}),
+      ...(data.economicScore   !== undefined ? { economicScore:   clampScore(data.economicScore) } : {}),
     })
 
     return mapState(updated)

@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { createClient as createServerClient } from "@/lib/supabase/server";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+let _sb: SupabaseClient | null = null;
+function getSb() {
+  if (!_sb) _sb = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+  return _sb;
+}
 
 // Fallback prices (GHS per kg) — updated periodically
 const FALLBACK_PRICES = [
@@ -29,7 +33,7 @@ export async function GET(req: NextRequest) {
 
   // Try fetching from DB first (if commodity_prices table exists)
   try {
-    let query = supabase
+    let query = getSb()
       .from("commodity_prices")
       .select("crop, price, unit, change_24h, category, updated_at")
       .eq("country", country)
@@ -80,7 +84,7 @@ export async function POST(req: NextRequest) {
   const { data: { user } } = await userClient.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { data: profile } = await supabase
+  const { data: profile } = await getSb()
     .from("user_profiles")
     .select("role")
     .eq("id", user.id)
@@ -99,7 +103,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "crop, price, unit, and category are required" }, { status: 400 });
   }
 
-  const { error } = await supabase.from("commodity_prices").upsert({
+  const { error } = await getSb().from("commodity_prices").upsert({
     crop, price, unit,
     change_24h: change,
     category,

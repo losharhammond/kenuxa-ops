@@ -309,6 +309,7 @@ export default function MobileMoneyPage() {
   const load = useCallback(async () => {
     if (!bizId) return;
     setLoading(true);
+    try {
     const today = new Date().toISOString().slice(0, 10);
 
     const [floatRes, txRes, statsRes] = await Promise.all([
@@ -358,7 +359,9 @@ export default function MobileMoneyPage() {
       setAiInsight("💡 Peak MoMo hours in Ghana are 8AM–10AM and 4PM–7PM. Ensure your float is topped up before these windows.");
     }
 
-    setLoading(false);
+    } finally {
+      setLoading(false);
+    }
   }, [bizId, supabase]);
 
   useEffect(() => { load(); }, [load]);

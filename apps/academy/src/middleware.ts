@@ -1,5 +1,8 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
+import { createServerClient } from '@supabase/ssr'
+import type { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies'
+
+type CookieItem = { name: string; value: string; options?: Partial<ResponseCookie> }
 
 const PUBLIC_PATHS = ['/', '/auth/login', '/auth/register', '/auth/callback']
 
@@ -24,12 +27,16 @@ export async function middleware(request: NextRequest) {
     {
       cookies: {
         getAll: () => request.cookies.getAll(),
-        setAll: (cookiesToSet: Array<{ name: string; value: string; options?: CookieOptions }>) => {
+        setAll: (cookiesToSet: CookieItem[]) => {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
           response = NextResponse.next({ request })
-          cookiesToSet.forEach(({ name, value, options }) =>
-            response.cookies.set(name, value, options),
-          )
+          cookiesToSet.forEach(({ name, value, options }) => {
+            if (options !== undefined) {
+              response.cookies.set(name, value, options)
+            } else {
+              response.cookies.set(name, value)
+            }
+          })
         },
       },
     },

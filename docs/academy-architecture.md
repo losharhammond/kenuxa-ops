@@ -2,42 +2,74 @@
 
 ## Overview
 
-KENUXA ACADEMY is the human development product in the KENUXA ecosystem. Phase 1 establishes the complete identity foundation: users, profiles, and a seven-dimension identity state model.
+KENUXA ACADEMY is the human development product in the KENUXA ecosystem. Phase 1 establishes the complete identity foundation: shared ecosystem auth, Academy-specific profiles, and a seven-dimension identity state model.
 
-## System Design
+## Shared Auth Principle
+
+```
+┌─────────────────────┐     ┌──────────────────────┐
+│  KENUXA NETWORK     │     │  KENUXA ACADEMY       │
+│  (port 3002)        │     │  (port 3003)          │
+│                     │     │                       │
+│  supabase.auth      │     │  supabase.auth        │
+└──────────┬──────────┘     └──────────┬────────────┘
+           │                           │
+           └─────────┬─────────────────┘
+                     │  SAME Supabase Project
+                     │  SAME JWT_SECRET
+                     ▼
+           ┌──────────────────┐
+           │   Supabase Auth  │
+           │   (users table)  │
+           └──────────────────┘
+```
+
+A user registered on KENUXA NETWORK can sign in to KENUXA ACADEMY with the **exact same email + password**. On first Academy login, Academy-specific rows (profile, identity state) are auto-provisioned.
+
+## Full System Design
 
 ```
 ┌─────────────────────────────────────────────┐
-│              apps/academy (Next.js)          │
-│  port 3003  — App Router, TypeScript, RSC    │
+│           apps/academy (Next.js)            │
+│  port 3003  — App Router, TypeScript, RSC   │
 │                                             │
-│  /              → Landing page              │
-│  /auth/register → Register form             │
-│  /auth/login    → Login form                │
-│  /dashboard     → Profile + Identity scores │
+│  /              → Landing                  │
+│  /auth/register → Register (Supabase Auth)  │
+│  /auth/login    → Login   (Supabase Auth)   │
+│  /auth/callback → OAuth callback            │
+│  /dashboard     → Profile + scores + wallet │
+│                                             │
+│  middleware.ts  → Supabase session guard    │
 └───────────────┬─────────────────────────────┘
-                │ HTTP  /auth  /profile  /identity
+                │ HTTP  (Supabase JWT as Bearer)
                 ▼
 ┌─────────────────────────────────────────────┐
 │       services/identity-service             │
-│  port 4001  — Express, Prisma, bcrypt, jose │
+│  port 4001  — Express, Prisma, jose         │
 │                                             │
-│  POST /auth/register                        │
-│  POST /auth/login                           │
-│  GET  /auth/me                              │
-│  GET  /profile                              │
-│  PUT  /profile                              │
-│  GET  /identity/state                       │
-│  PUT  /identity/state                       │
-└───────────────┬─────────────────────────────┘
-                │ Prisma ORM
-                ▼
-┌─────────────────────────────────────────────┐
-│           PostgreSQL Database               │
-│  academy_users                              │
-│  academy_profiles                           │
-│  academy_identity_states                    │
-└─────────────────────────────────────────────┘
+│  POST /auth/register   → Supabase signup    │
+│  POST /auth/login      → Supabase password  │
+│  POST /auth/refresh    → Supabase refresh   │
+│  GET  /auth/me         → user meta          │
+│  POST /auth/provision  → idempotent setup   │
+│  GET  /profile         → Academy profile    │
+│  PUT  /profile         → Update profile     │
+│  GET  /identity/state  → 7-dim scores       │
+│  PUT  /identity/state  → Update scores      │
+│  GET  /wallet/balance  → proxies → CORE     │
+│  GET  /wallet/txns     → proxies → CORE     │
+└────────┬──────────────────┬─────────────────┘
+         │ Prisma ORM        │ HTTP → KENUXA CORE
+         ▼                   ▼
+  ┌──────────────┐   ┌──────────────────┐
+  │  PostgreSQL  │   │  KENUXA CORE     │
+  │  (Academy    │   │  port 3000       │
+  │   tables)    │   │  /api/wallet/... │
+  └──────────────┘   └──────────────────┘
+         │
+   Verifies tokens via
+   SUPABASE_JWT_SECRET
+   (shared with Network)
 ```
 
 ## Folder Structure
@@ -45,73 +77,109 @@ KENUXA ACADEMY is the human development product in the KENUXA ecosystem. Phase 1
 ```
 services/identity-service/
 ├── prisma/
-│   └── schema.prisma          # DB schema: User, Profile, IdentityState
+│   └── schema.prisma          # AcademyUserMeta, Profile, IdentityState
 ├── src/
-│   ├── controllers/           # HTTP layer only — parse input, call service, respond
+│   ├── controllers/           # HTTP only — no business logic
 │   │   ├── auth.controller.ts
 │   │   ├── profile.controller.ts
-│   │   └── identity.controller.ts
-│   ├── services/              # Business logic only — no req/res objects
-│   │   ├── auth.service.ts
+│   │   ├── identity.controller.ts
+│   │   └── wallet.controller.ts
+│   ├── services/              # Business logic — no req/res objects
+│   │   ├── auth.service.ts    # delegates to Supabase Auth REST API
 │   │   ├── profile.service.ts
-│   │   └── identity.service.ts
-│   ├── routes/                # Route → controller mapping
+│   │   ├── identity.service.ts
+│   │   └── wallet.service.ts  # proxies to KENUXA CORE
+│   ├── routes/
 │   │   ├── auth.routes.ts
 │   │   ├── profile.routes.ts
-│   │   └── identity.routes.ts
+│   │   ├── identity.routes.ts
+│   │   ├── wallet.routes.ts
+│   │   └── provision.routes.ts
 │   ├── middleware/
-│   │   ├── auth.middleware.ts  # JWT verification, attaches req.user
-│   │   └── error.middleware.ts # Centralised error → HTTP response
+│   │   ├── auth.middleware.ts  # verifies Supabase JWT via SUPABASE_JWT_SECRET
+│   │   └── error.middleware.ts
 │   ├── lib/
 │   │   ├── prisma.ts           # Singleton PrismaClient
-│   │   └── jwt.ts              # signToken / verifyToken (jose, HS256)
-│   ├── app.ts                  # Express app config
-│   └── server.ts               # DB connect + listen
+│   │   └── jwt.ts              # verifySupabaseToken (jose)
+│   ├── app.ts
+│   └── server.ts
+
+apps/academy/
+├── src/
+│   ├── app/
+│   │   ├── auth/
+│   │   │   ├── login/page.tsx      # Supabase signInWithPassword
+│   │   │   ├── register/page.tsx   # Supabase signUp
+│   │   │   └── callback/route.ts   # OAuth + magic link exchange
+│   │   ├── dashboard/
+│   │   │   ├── page.tsx            # Server component — RSC data fetch
+│   │   │   └── DashboardClient.tsx # Client — sign out, interactive UI
+│   │   └── page.tsx               # Landing
+│   ├── lib/
+│   │   ├── supabase/
+│   │   │   ├── client.ts          # createBrowserClient
+│   │   │   └── server.ts          # createServerClient
+│   │   └── identity-client.ts     # calls identity-service with Supabase JWT
+│   └── middleware.ts              # Supabase session guard
 ```
 
 ## Architecture Rules
 
-| Layer       | Responsibility                        | Rule                        |
-|-------------|---------------------------------------|-----------------------------|
-| Controller  | Parse request, validate with Zod      | No business logic           |
-| Service     | Business logic, DB interaction        | No req/res objects          |
-| Middleware  | Cross-cutting: auth, errors           | Pure functions              |
-| Routes      | Map URL + method to controller        | No logic                    |
+| Layer      | Responsibility                    | Rule                 |
+|------------|-----------------------------------|----------------------|
+| Controller | Parse request, validate with Zod  | No business logic    |
+| Service    | Business logic, external API      | No req/res objects   |
+| Middleware | JWT verification, error handling  | Pure functions       |
+| Routes     | URL + method → controller         | No logic             |
 
-## Shared Packages Used
+## Auth Flow
 
-- `@kenuxa/shared-types` — `AcademyUser`, `AcademyProfile`, `IdentityState`, payloads
-- `@kenuxa/auth` — not used directly (identity-service owns its own JWT for Phase 1)
+```
+1. User signs in (Supabase email+password)
+   → Supabase issues access_token (HS256, signed with SUPABASE_JWT_SECRET)
 
-## Identity State Model
+2. Academy web app stores token in Supabase cookie (SSR-safe)
 
-Seven dimensions of human development, each scored 0–100:
+3. API calls from browser: Authorization: Bearer <supabase_access_token>
 
-| Dimension   | Measures                                  |
-|-------------|-------------------------------------------|
-| Cognitive   | Learning speed, reasoning, problem-solving|
-| Creative    | Ideation, innovation, artistic thinking   |
-| Social      | Communication, collaboration, networking  |
-| Emotional   | Self-awareness, empathy, resilience       |
-| Practical   | Execution, discipline, life skills        |
-| Leadership  | Vision, influence, decision-making        |
-| Economic    | Financial literacy, value creation        |
+4. Identity-service middleware calls verifySupabaseToken()
+   → jwtVerify using SUPABASE_JWT_SECRET
+   → extracts sub (user UUID), email, role
 
-All scores default to 0. Future phases will populate via assessments, learning events, and AI inference.
+5. First Academy access → POST /auth/provision
+   → ensures academy_user_meta + profile + identity_state rows exist
+   → idempotent, safe to call on every login
+```
 
-## Future Phase Compatibility
+## Data Ownership
 
-Every model includes a `metadata JSON` column as the extension point:
+| Data                | Owned by         | Accessed via         |
+|---------------------|------------------|----------------------|
+| User accounts       | Supabase Auth    | Supabase SDK         |
+| KENUX wallet        | KENUXA CORE      | /api/wallet/*        |
+| Events / graph      | KENUXA CORE      | Future phases        |
+| Academy profile     | Identity Service | /profile             |
+| Identity scores     | Identity Service | /identity/state      |
 
-- **Phase 5 (Knowledge Graph)**: knowledge graph node IDs stored in `profile.metadata`
-- **Phase 6 (AI)**: vector embedding refs stored in `identityState.metadata`
-- **Phase 8 (Marketplace)**: skill credentials stored in `profile.metadata`
-- **Phase 9 (Innovation)**: project refs stored in `profile.metadata`
+## Identity State — Seven Dimensions
 
-## Security
+| Dimension   | Measures                                    |
+|-------------|---------------------------------------------|
+| Cognitive   | Learning, reasoning, problem-solving        |
+| Creative    | Ideation, innovation, artistic thinking     |
+| Social      | Communication, collaboration, networking    |
+| Emotional   | Self-awareness, empathy, resilience         |
+| Practical   | Execution, discipline, life skills          |
+| Leadership  | Vision, influence, decision-making          |
+| Economic    | Financial literacy, value creation          |
 
-- Passwords hashed with bcrypt (12 rounds)
-- JWT HS256 tokens, 24h TTL
-- Helmet.js security headers
-- CORS restricted to Academy frontend origin
-- Input validation with Zod on all endpoints
+Scores default to 0. Future phases populate via assessments + AI inference.
+
+## Future Phase Extension Points
+
+Every model includes a `metadata JSON` column:
+
+- **Phase 5 (Knowledge Graph)**: graph node IDs in `profile.metadata`
+- **Phase 6 (AI)**: vector embedding refs in `identityState.metadata`
+- **Phase 8 (Marketplace)**: skill credential badges in `profile.metadata`
+- **Phase 9 (Innovation)**: project + team refs in `profile.metadata`

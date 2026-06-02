@@ -72,14 +72,17 @@ export default function ActivityPage() {
   const load = useCallback(async () => {
     if (!user?.id) { setFeed([]); setLoading(false); return; }
     setLoading(true);
-    const { data } = await supabase
-      .from("activity_feed")
-      .select("*")
-      .eq("user_id", user.id)
-      .order("created_at", { ascending: false })
-      .limit(100);
-    setFeed((data as FeedItem[]) ?? []);
-    setLoading(false);
+    try {
+      const { data } = await supabase
+        .from("activity_feed")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(100);
+      setFeed((data as FeedItem[]) ?? []);
+    } finally {
+      setLoading(false);
+    }
   }, [user?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load(); }, [load]);
