@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
   const category   = searchParams.get("category");
   const city       = searchParams.get("city");
   const verified   = searchParams.get("verified");
-  const limit      = parseInt(searchParams.get("limit") || "50");
+  const limit      = parseInt(searchParams.get("limit") || "50", 10);
 
   let query = supabase
     .from("suppliers")

@@ -4,14 +4,19 @@ import { getGateway } from "@/lib/payments/gateway";
 
 export async function GET(request: NextRequest) {
   const supabase = await createClient();
+  // Auth required before returning any transaction data
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   const { searchParams } = new URL(request.url);
   const type = searchParams.get("type"); // debit | credit
   const method = searchParams.get("method");
-  const limit = Number(searchParams.get("limit") ?? "30");
+  const limit = Math.min(Number(searchParams.get("limit") ?? "30"), 200);
 
   let query = supabase
     .from("payment_transactions")
     .select("*")
+    .eq("sender_id", user.id)
     .order("created_at", { ascending: false })
     .limit(limit);
 
@@ -21,11 +26,11 @@ export async function GET(request: NextRequest) {
   const { data, error } = await query;
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-  // Wallet balance
-  const { data: { user } } = await supabase.auth.getUser();
-  const { data: wallet } = user
-    ? await supabase.from("wallets").select("balance, currency").eq("owner_id", user.id).single()
-    : { data: null };
+  const { data: wallet } = await supabase
+    .from("wallets")
+    .select("balance, currency")
+    .eq("owner_id", user.id)
+    .single();
 
   return NextResponse.json({ data, wallet });
 }

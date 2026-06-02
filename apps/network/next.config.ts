@@ -61,7 +61,7 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  ...(isDocker ? { output: "standalone" } : { outputFileTracing: false }),
+  ...(isDocker ? { output: "standalone" } : {}),
 };
 
 // Sentry configuration — only active in production or when DSN is set

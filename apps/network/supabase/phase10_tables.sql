@@ -95,4 +95,7 @@ CREATE POLICY "payment_transactions_admin" ON payment_transactions FOR ALL
 CREATE INDEX IF NOT EXISTS idx_commodity_prices_country ON commodity_prices(country);
 CREATE INDEX IF NOT EXISTS idx_subscriptions_user ON subscriptions(user_id);
 CREATE INDEX IF NOT EXISTS idx_payment_transactions_sender ON payment_transactions(sender_id);
+CREATE INDEX IF NOT EXISTS idx_payment_transactions_recipient ON payment_transactions(recipient_id);
 CREATE INDEX IF NOT EXISTS idx_payment_transactions_reference ON payment_transactions(reference);
+CREATE INDEX IF NOT EXISTS idx_payment_transactions_status ON payment_transactions(status);
+CREATE INDEX IF NOT EXISTS idx_payment_transactions_created ON payment_transactions(created_at DESC);

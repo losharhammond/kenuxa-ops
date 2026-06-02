@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
   const businessId = searchParams.get("business_id");
   const q          = searchParams.get("q") || "";
   const segment    = searchParams.get("segment") || "";
-  const limit      = parseInt(searchParams.get("limit") || "50");
+  const limit      = parseInt(searchParams.get("limit") || "50", 10);
 
   let query = supabase
     .from("crm_customers")

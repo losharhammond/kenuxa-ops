@@ -27,7 +27,6 @@ const COUNTRIES = [
 
 export default function RegisterPage() {
   const router = useRouter();
-  const supabase = createClient();
 
   const [firstName, setFirstName]     = useState("");
   const [lastName, setLastName]       = useState("");
@@ -50,6 +49,7 @@ export default function RegisterPage() {
     setLoading(true);
     setError("");
 
+    const supabase = createClient();
     const { error: signUpError } = await supabase.auth.signUp({
       email,
       password,
@@ -70,16 +70,23 @@ export default function RegisterPage() {
       setLoading(false);
     } else {
       try { await fetch("/api/onboarding/provision", { method: "POST" }); } catch { /* non-blocking */ }
-      router.push("/dashboard/onboarding");
+      router.push("/onboarding");
     }
   };
 
   const handleOAuth = async (provider: "google" | "facebook" | "apple" | "azure") => {
     setOauthLoading(provider);
-    await supabase.auth.signInWithOAuth({
+    const supabase = createClient();
+    const { error } = await supabase.auth.signInWithOAuth({
       provider,
-      options: { redirectTo: `${window.location.origin}/dashboard` },
+      options: {
+        redirectTo: `${window.location.origin}/api/auth/callback?redirect=${encodeURIComponent("/onboarding")}`,
+      },
     });
+    if (error) {
+      setError(error.message);
+      setOauthLoading(null);
+    }
   };
 
   const inputCls = "w-full bg-[#111624] border border-white/10 rounded-xl px-3.5 h-11 text-sm text-[#f1f5f9] outline-none focus:border-[#FF6524] transition-colors placeholder-[#374151]";

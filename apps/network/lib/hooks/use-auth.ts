@@ -51,12 +51,13 @@ export function useAuth(): AuthState {
   );
 
   useEffect(() => {
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      const profile = session?.user ? await loadProfile(session.user.id) : null;
+    // Use getUser() (server-validated) instead of getSession() (local storage, insecure)
+    supabase.auth.getUser().then(async ({ data: { user } }) => {
+      const profile = user ? await loadProfile(user.id) : null;
       setState({
-        user: session?.user ?? null,
+        user: user ?? null,
         profile,
-        session,
+        session: null,
         loading: false,
         role: (profile?.role ?? null) as Role | null,
       });
@@ -69,7 +70,7 @@ export function useAuth(): AuthState {
       setState({
         user: session?.user ?? null,
         profile,
-        session,
+        session: session ?? null,
         loading: false,
         role: (profile?.role ?? null) as Role | null,
       });

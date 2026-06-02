@@ -176,7 +176,7 @@ CREATE TABLE IF NOT EXISTS notifications (
 );
 
 CREATE INDEX IF NOT EXISTS idx_notifications_user_id    ON notifications (user_id);
-CREATE INDEX IF NOT EXISTS idx_notifications_read       ON notifications (read);
+CREATE INDEX IF NOT EXISTS idx_notifications_read       ON notifications (read_at);
 CREATE INDEX IF NOT EXISTS idx_notifications_created_at ON notifications (created_at DESC);
 
 -- ── KYC Documents ─────────────────────────────────────────────
@@ -235,6 +235,7 @@ CREATE TABLE IF NOT EXISTS audit_logs (
 );
 
 CREATE INDEX IF NOT EXISTS idx_audit_logs_actor_id   ON audit_logs (actor_id);
+CREATE INDEX IF NOT EXISTS idx_audit_logs_actor      ON audit_logs (actor);
 CREATE INDEX IF NOT EXISTS idx_audit_logs_category   ON audit_logs (category);
 CREATE INDEX IF NOT EXISTS idx_audit_logs_severity   ON audit_logs (severity);
 CREATE INDEX IF NOT EXISTS idx_audit_logs_created_at ON audit_logs (created_at DESC);
@@ -462,14 +463,14 @@ CREATE POLICY "exchange_rates_read_all" ON exchange_rates FOR SELECT USING (true
 -- Platform revenue: service role only
 CREATE POLICY "platform_revenue_service_only" ON platform_revenue USING (false);
 
--- KENUX ledger: users see own records
+-- KENUX ledger: users see own records; only service_role can insert
 CREATE POLICY "kenux_ledger_own" ON kenux_ledger FOR SELECT USING (auth.uid() = user_id);
-CREATE POLICY "kenux_ledger_insert_service" ON kenux_ledger FOR INSERT WITH CHECK (true);
+CREATE POLICY "kenux_ledger_insert_service" ON kenux_ledger FOR INSERT WITH CHECK (auth.role() = 'service_role');
 
--- Rewards: users see own
+-- Rewards: users see own; only service_role can write (RPCs use SECURITY DEFINER)
 CREATE POLICY "rewards_own_select" ON rewards_accounts FOR SELECT USING (auth.uid() = user_id);
-CREATE POLICY "rewards_own_upsert" ON rewards_accounts FOR INSERT WITH CHECK (auth.uid() = user_id);
-CREATE POLICY "rewards_own_update" ON rewards_accounts FOR UPDATE USING (auth.uid() = user_id);
+CREATE POLICY "rewards_own_upsert" ON rewards_accounts FOR INSERT WITH CHECK (auth.role() = 'service_role');
+CREATE POLICY "rewards_own_update" ON rewards_accounts FOR UPDATE USING (auth.role() = 'service_role');
 
 -- Subscriptions
 CREATE POLICY "subs_own"    ON subscriptions FOR SELECT USING (auth.uid() = user_id);
@@ -477,24 +478,24 @@ CREATE POLICY "subs_insert" ON subscriptions FOR INSERT WITH CHECK (auth.uid() =
 
 -- Wallets
 CREATE POLICY "wallets_own_select" ON wallets FOR SELECT USING (auth.uid() = user_id);
-CREATE POLICY "wallets_service"    ON wallets FOR ALL  USING (true);
+CREATE POLICY "wallets_service"    ON wallets FOR ALL  USING (auth.role() = 'service_role');
 
--- Business wallets: service-role + owner
-CREATE POLICY "biz_wallets_service" ON business_wallets FOR ALL USING (true);
+-- Business wallets: service-role only for mutations
+CREATE POLICY "biz_wallets_service" ON business_wallets FOR ALL USING (auth.role() = 'service_role');
 
 -- Wallet transactions: own records
 CREATE POLICY "wallet_tx_own"     ON wallet_transactions FOR SELECT USING (auth.uid() = user_id);
-CREATE POLICY "wallet_tx_service" ON wallet_transactions FOR INSERT WITH CHECK (true);
-CREATE POLICY "wallet_tx_update"  ON wallet_transactions FOR UPDATE USING (true);
+CREATE POLICY "wallet_tx_service" ON wallet_transactions FOR INSERT WITH CHECK (auth.role() = 'service_role');
+CREATE POLICY "wallet_tx_update"  ON wallet_transactions FOR UPDATE USING (auth.role() = 'service_role');
 
 -- Activity feed: own only
 CREATE POLICY "activity_own" ON activity_feed FOR SELECT USING (auth.uid() = user_id);
-CREATE POLICY "activity_ins" ON activity_feed FOR INSERT WITH CHECK (true);
+CREATE POLICY "activity_ins" ON activity_feed FOR INSERT WITH CHECK (auth.role() = 'service_role');
 
 -- Notifications: own only
 CREATE POLICY "notif_own"    ON notifications FOR SELECT USING (auth.uid() = user_id);
 CREATE POLICY "notif_upd"    ON notifications FOR UPDATE USING (auth.uid() = user_id);
-CREATE POLICY "notif_ins"    ON notifications FOR INSERT WITH CHECK (true);
+CREATE POLICY "notif_ins"    ON notifications FOR INSERT WITH CHECK (auth.role() = 'service_role');
 
 -- ── Notification helpers ──────────────────────────────────────
 CREATE OR REPLACE FUNCTION mark_all_notifications_read(p_user_id UUID)
@@ -512,24 +513,24 @@ $$;
 -- KYC: own + service
 CREATE POLICY "kyc_own"     ON kyc_documents FOR SELECT USING (auth.uid() = user_id);
 CREATE POLICY "kyc_insert"  ON kyc_documents FOR INSERT WITH CHECK (auth.uid() = user_id);
-CREATE POLICY "kyc_service" ON kyc_documents FOR UPDATE USING (true);
+CREATE POLICY "kyc_service" ON kyc_documents FOR UPDATE USING (auth.role() = 'service_role');
 
 -- Disputes: own
 CREATE POLICY "disputes_own"    ON disputes FOR SELECT USING (auth.uid() = initiator_id OR auth.uid() = respondent_id);
 CREATE POLICY "disputes_insert" ON disputes FOR INSERT WITH CHECK (auth.uid() = initiator_id);
-CREATE POLICY "disputes_update" ON disputes FOR UPDATE USING (true);
+CREATE POLICY "disputes_update" ON disputes FOR UPDATE USING (auth.role() = 'service_role');
 
--- Audit logs: service only
-CREATE POLICY "audit_service" ON audit_logs FOR ALL USING (true);
+-- Audit logs: service role only (admins read via service_role client)
+CREATE POLICY "audit_service" ON audit_logs FOR ALL USING (auth.role() = 'service_role');
 
--- Credit profiles: own
+-- Credit profiles: own read; service role for writes
 CREATE POLICY "credit_own"    ON credit_profiles FOR SELECT USING (auth.uid() = user_id);
-CREATE POLICY "credit_upsert" ON credit_profiles FOR ALL  USING (true);
+CREATE POLICY "credit_upsert" ON credit_profiles FOR ALL  USING (auth.role() = 'service_role');
 
 -- Loan applications: own
 CREATE POLICY "loans_own_select" ON loan_applications FOR SELECT USING (auth.uid() = user_id);
 CREATE POLICY "loans_own_insert" ON loan_applications FOR INSERT WITH CHECK (auth.uid() = user_id);
-CREATE POLICY "loans_service"    ON loan_applications FOR UPDATE USING (true);
+CREATE POLICY "loans_service"    ON loan_applications FOR UPDATE USING (auth.role() = 'service_role');
 
 -- ── GRANTS ────────────────────────────────────────────────────
 GRANT SELECT ON exchange_rates     TO anon, authenticated;

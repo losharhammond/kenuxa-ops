@@ -32,13 +32,13 @@ const SELF_ACTIVATABLE: Role[] = ["customer", "job_seeker", "freelancer",
 
 export function useRoles(): RolesState {
   const { user } = useAuth();
-  const supabase = createClient();
   const [activeRoles, setActiveRoles] = useState<ActiveRole[]>([]);
   const [activeContext, setActiveContext] = useState<Role>("customer");
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
     if (!user?.id) { setLoading(false); return; }
+    const supabase = createClient();
 
     const [rolesRes, contextRes] = await Promise.all([
       supabase.from("user_roles").select("role, activated_at, metadata").eq("user_id", user.id),
@@ -60,12 +60,13 @@ export function useRoles(): RolesState {
     const ctx = (contextRes.data?.active_role ?? "customer") as Role;
     setActiveContext(ctx);
     setLoading(false);
-  }, [user?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [user?.id]);
 
   useEffect(() => { load(); }, [load]);
 
   const activateRole = useCallback(async (role: Role, metadata?: Record<string, string>) => {
     if (!user?.id) return;
+    const supabase = createClient();
     await supabase.from("user_roles").upsert({
       user_id: user.id,
       role,
@@ -74,17 +75,18 @@ export function useRoles(): RolesState {
       metadata: metadata ?? null,
     });
     await load();
-  }, [user?.id, load]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [user?.id, load]);
 
   const switchContext = useCallback(async (role: Role) => {
     if (!user?.id) return;
+    const supabase = createClient();
     const prevRole = activeContext;
     setActiveContext(role);
     await Promise.all([
       supabase.from("user_contexts").upsert({ user_id: user.id, active_role: role, updated_at: new Date().toISOString() }),
       supabase.from("role_switch_history").insert({ user_id: user.id, from_role: prevRole, to_role: role }),
     ]);
-  }, [user?.id, activeContext]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [user?.id, activeContext]);
 
   const canActivate = useCallback((role: Role) => {
     if (ASSIGNED_ROLES.includes(role)) return false;

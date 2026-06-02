@@ -145,7 +145,7 @@ SELECT
    WHERE created_at >= now() - INTERVAL '24h')                           AS gmv_today,
   (SELECT COUNT(*) FROM sales WHERE created_at >= now() - INTERVAL '24h') AS transactions_today,
   -- KYC
-  (SELECT COUNT(*) FROM kyc_verifications WHERE status = 'pending')      AS pending_kyc,
+  (SELECT COUNT(*) FROM kyc_documents WHERE status = 'pending')          AS pending_kyc,
   -- Active subscriptions
   (SELECT COUNT(*) FROM subscriptions WHERE status = 'active')           AS active_subscriptions;
 

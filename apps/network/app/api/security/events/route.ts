@@ -46,7 +46,7 @@ export async function GET(req: NextRequest) {
   );
 
   const { searchParams } = req.nextUrl;
-  const limit  = Math.min(parseInt(searchParams.get("limit") ?? "50"), 200);
+  const limit  = Math.min(parseInt(searchParams.get("limit") ?? "50", 10), 200);
   const userId = searchParams.get("user_id");
 
   let query = adminSupabase

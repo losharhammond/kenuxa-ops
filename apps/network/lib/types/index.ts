@@ -8,7 +8,7 @@ export type BusinessType =
 export type UserRole =
   | "super_admin" | "country_admin" | "business_owner" | "branch_manager"
   | "cashier" | "employee" | "customer" | "supplier" | "delivery_rider"
-  | "recruiter" | "job_seeker" | "financial_partner";
+  | "recruiter" | "job_seeker" | "financial_partner" | "freelancer";
 
 export type BusinessStatus = "active" | "suspended" | "pending" | "closed";
 export type VerificationStatus = "unverified" | "pending" | "verified" | "rejected";

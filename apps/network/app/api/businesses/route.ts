@@ -6,8 +6,8 @@ export async function GET(req: NextRequest) {
   const query    = searchParams.get("q") || "";
   const city     = searchParams.get("city") || "";
   const category = searchParams.get("category") || "";
-  const limit    = parseInt(searchParams.get("limit") || "20");
-  const offset   = parseInt(searchParams.get("offset") || "0");
+  const limit    = parseInt(searchParams.get("limit") || "20", 10);
+  const offset   = parseInt(searchParams.get("offset") || "0", 10);
 
   const supabase = await createClient();
 

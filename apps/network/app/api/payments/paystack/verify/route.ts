@@ -1,47 +1,74 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
+import { createClient } from "@supabase/supabase-js";
 import { trackRevenue, calcTransactionFee } from "@/lib/revenue/track";
+
+// Service-role admin client — only used after Paystack signature is verified server-side
+const adminSupabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 export async function GET(req: NextRequest) {
   const reference = req.nextUrl.searchParams.get("reference");
   if (!reference) return NextResponse.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/dashboard/wallet?error=missing_reference`);
 
-  const paystackRes = await fetch(`https://api.paystack.co/transaction/verify/${reference}`, {
-    headers: { Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}` },
-  });
-  const { data } = await paystackRes.json();
+  // Sanitise reference — must be our own format to prevent SSRF via reference param
+  if (!/^[A-Za-z0-9_\-]{5,100}$/.test(reference)) {
+    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/dashboard/wallet?error=invalid_reference`);
+  }
 
-  if (!data || data.status !== "success") {
+  let paystackData: { status?: string; amount?: number; currency?: string; id?: number; metadata?: { user_id?: string; purpose?: string } };
+  try {
+    const paystackRes = await fetch(`https://api.paystack.co/transaction/verify/${encodeURIComponent(reference)}`, {
+      headers: { Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}` },
+    });
+    const json = await paystackRes.json();
+    paystackData = json.data ?? {};
+  } catch {
     return NextResponse.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/dashboard/wallet?error=payment_failed`);
   }
 
-  const cookieStore = await cookies();
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    {
-      cookies: {
-        getAll: () => cookieStore.getAll(),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        setAll: (items: any[]) => items.forEach(({ name, value, options }: any) => cookieStore.set(name, value, options)),
-      },
-    }
-  );
+  if (!paystackData || paystackData.status !== "success") {
+    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/dashboard/wallet?error=payment_failed`);
+  }
 
-  const userId = data.metadata?.user_id;
-  const purpose = data.metadata?.purpose ?? "wallet_topup";
-  const amountGHS = data.amount / 100;
+  // SECURITY: resolve the real user from OUR database record for this reference.
+  // Never trust user_id from Paystack metadata — it is user-supplied during initialization.
+  const { data: txRecord } = await adminSupabase
+    .from("wallet_transactions")
+    .select("user_id, status, metadata")
+    .eq("reference", reference)
+    .single();
+
+  if (!txRecord) {
+    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/dashboard/wallet?error=payment_failed`);
+  }
+
+  // Idempotency: if already completed, just redirect to success
+  if (txRecord.status === "completed") {
+    const purpose = (txRecord.metadata as { purpose?: string } | null)?.purpose ?? "wallet_topup";
+    const amountGHS = (paystackData.amount ?? 0) / 100;
+    const successPage = purpose === "kenux_purchase"
+      ? `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/kenux?success=purchase&amount=${amountGHS}`
+      : `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/wallet?success=topup&amount=${amountGHS}`;
+    return NextResponse.redirect(successPage);
+  }
+
+  const supabase = adminSupabase;
+  const userId = txRecord.user_id;
+  const purpose = (txRecord.metadata as { purpose?: string } | null)?.purpose ?? "wallet_topup";
+  const amountGHS = (paystackData.amount ?? 0) / 100;
 
   // Mark transaction completed
   await supabase
     .from("wallet_transactions")
-    .update({ status: "completed", provider_reference: data.id, settled_at: new Date().toISOString() })
-    .eq("reference", reference);
+    .update({ status: "completed", provider_reference: paystackData.id, settled_at: new Date().toISOString() })
+    .eq("reference", reference)
+    .eq("status", "pending");
 
   if (purpose === "wallet_topup") {
     // Double-entry: credit user wallet
-    await supabase.rpc("wallet_credit", { p_user_id: userId, p_amount: amountGHS, p_currency: data.currency });
+    await supabase.rpc("wallet_credit", { p_user_id: userId, p_amount: amountGHS, p_currency: paystackData.currency ?? "GHS" });
     // Track platform transaction fee revenue
     const fee = calcTransactionFee(amountGHS);
     await trackRevenue({ source: "transaction_fee", amount: fee, userId, reference });
@@ -73,3 +100,4 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.redirect(successPage);
 }
+

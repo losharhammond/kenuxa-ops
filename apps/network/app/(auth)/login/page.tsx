@@ -78,7 +78,8 @@ function LoginForm() {
   const [oauthLoading, setOauthLoading] = useState<string | null>(null);
   const router  = useRouter();
   const params  = useSearchParams();
-  const redirect = params.get("redirect") ?? "/dashboard";
+  const rawRedirect = params.get("redirect") ?? "/dashboard";
+  const redirect = rawRedirect.startsWith("/") && !rawRedirect.startsWith("//") ? rawRedirect : "/dashboard";
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -4,7 +4,7 @@ import { createServerClient } from "@supabase/ssr";
 
 type CookieItem = { name: string; value: string; options?: any };
 
-const PUBLIC_PATHS = ["/", "/login", "/register", "/directory", "/api/search", "/api/businesses", "/find"];
+const PUBLIC_PATHS = ["/", "/login", "/register", "/forgot-password", "/reset-password", "/onboarding", "/directory", "/api/search", "/api/businesses", "/find"];
 
 // ─── In-memory rate limiter (Edge-compatible) ──────────────────────────────
 // Tracks request counts per IP per minute window.
@@ -187,7 +187,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // ── Redirect authenticated users away from auth pages ────────────────────
-  if (user && (pathname === "/login" || pathname === "/register" || pathname === "/onboarding")) {
+  if (user && (pathname === "/login" || pathname === "/register")) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 

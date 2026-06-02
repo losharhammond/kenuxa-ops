@@ -96,8 +96,9 @@ export function ImageUpload({
   const onDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     setDragging(false);
-    if (!disabled) handleFile(e.dataTransfer.files[0]);
-  }, [disabled]); // eslint-disable-line react-hooks/exhaustive-deps
+    const file = e.dataTransfer.files[0];
+    if (!disabled && file) upload(file);
+  }, [disabled, upload]);
 
   const remove = (e: React.MouseEvent) => {
     e.stopPropagation();

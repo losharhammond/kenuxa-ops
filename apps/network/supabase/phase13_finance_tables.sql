@@ -20,6 +20,16 @@ CREATE TABLE IF NOT EXISTS pending_settlements (
 CREATE INDEX IF NOT EXISTS idx_settlements_status  ON pending_settlements(status, due_date);
 CREATE INDEX IF NOT EXISTS idx_settlements_biz     ON pending_settlements(business_id);
 
+ALTER TABLE pending_settlements ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "settlements_admin_all" ON pending_settlements
+  USING (
+    EXISTS (SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role IN ('super_admin','country_admin'))
+  );
+
+CREATE POLICY "settlements_business_view" ON pending_settlements
+  FOR SELECT USING (business_id = auth.uid());
+
 -- ── escrow_holds ──────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS escrow_holds (
   id           UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
