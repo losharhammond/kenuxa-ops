@@ -92,6 +92,13 @@ GRANT ALL ON identity_verifications TO authenticated;
 CREATE INDEX IF NOT EXISTS idx_identity_verif_user ON identity_verifications(user_id);
 CREATE INDEX IF NOT EXISTS idx_identity_verif_status ON identity_verifications(status);
 
+-- ── PREREQUISITE: wallets.user_id (schema.sql used owner_id) ────────────────
+-- Adds user_id if wallets was created by schema.sql with owner_id instead.
+ALTER TABLE IF EXISTS wallets ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE;
+UPDATE wallets SET user_id = owner_id WHERE user_id IS NULL AND owner_id IS NOT NULL;
+-- Also add status column if missing
+ALTER TABLE IF EXISTS wallets ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'active';
+
 -- ─── 84. WALLETS ─────────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS wallets (
   id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -386,6 +393,14 @@ CREATE POLICY "Users see own feed" ON activity_feed FOR ALL
   USING (user_id = auth.uid()) WITH CHECK (user_id = auth.uid());
 GRANT ALL ON activity_feed TO authenticated;
 CREATE INDEX IF NOT EXISTS idx_activity_feed_user ON activity_feed(user_id, created_at DESC);
+
+-- ── PREREQUISITE: notifications column aliases ────────────────────────────
+ALTER TABLE IF EXISTS notifications ADD COLUMN IF NOT EXISTS read     BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE IF EXISTS notifications ADD COLUMN IF NOT EXISTS read_at  TIMESTAMPTZ;
+ALTER TABLE IF EXISTS notifications ADD COLUMN IF NOT EXISTS action_url TEXT;
+ALTER TABLE IF EXISTS notifications ADD COLUMN IF NOT EXISTS category  TEXT NOT NULL DEFAULT 'general';
+-- Keep is_read in sync with read
+UPDATE notifications SET read = is_read WHERE read IS DISTINCT FROM is_read AND is_read IS NOT NULL;
 
 -- ─── 97. NOTIFICATIONS ───────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS notifications (

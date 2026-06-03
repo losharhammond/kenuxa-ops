@@ -4,6 +4,13 @@
 -- Security, Audit, Exchange Rates, Repayments
 -- ============================================================
 
+-- ── PREREQUISITE: wallets.user_id (schema.sql used owner_id) ────────────────
+-- Adds user_id if wallets was created by schema.sql with owner_id instead.
+ALTER TABLE IF EXISTS wallets ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE;
+UPDATE wallets SET user_id = owner_id WHERE user_id IS NULL AND owner_id IS NOT NULL;
+-- Also add status column if missing
+ALTER TABLE IF EXISTS wallets ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'active';
+
 -- ── PREREQUISITES ───────────────────────────────────────────────────────────
 ALTER TABLE IF EXISTS wallets ADD COLUMN IF NOT EXISTS type TEXT NOT NULL DEFAULT 'personal';
 ALTER TABLE IF EXISTS wallets ADD COLUMN IF NOT EXISTS last_tx_at TIMESTAMPTZ;
@@ -329,6 +336,14 @@ CREATE INDEX IF NOT EXISTS idx_loan_applications_status       ON loan_applicatio
 CREATE INDEX IF NOT EXISTS idx_kyc_documents_user_id          ON kyc_documents(user_id);
 CREATE INDEX IF NOT EXISTS idx_kyc_documents_status           ON kyc_documents(status);
 CREATE INDEX IF NOT EXISTS idx_notifications_user_id          ON notifications(user_id);
+-- ── PREREQUISITE: notifications column aliases ────────────────────────────
+ALTER TABLE IF EXISTS notifications ADD COLUMN IF NOT EXISTS read     BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE IF EXISTS notifications ADD COLUMN IF NOT EXISTS read_at  TIMESTAMPTZ;
+ALTER TABLE IF EXISTS notifications ADD COLUMN IF NOT EXISTS action_url TEXT;
+ALTER TABLE IF EXISTS notifications ADD COLUMN IF NOT EXISTS category  TEXT NOT NULL DEFAULT 'general';
+-- Keep is_read in sync with read
+UPDATE notifications SET read = is_read WHERE read IS DISTINCT FROM is_read AND is_read IS NOT NULL;
+
 CREATE INDEX IF NOT EXISTS idx_notifications_read             ON notifications(user_id, read);
 CREATE INDEX IF NOT EXISTS idx_audit_logs_user_id             ON audit_logs(user_id);
 CREATE INDEX IF NOT EXISTS idx_audit_logs_created_at          ON audit_logs(created_at DESC);

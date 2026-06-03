@@ -3,10 +3,18 @@
 -- Run after: phase15_missing_tables.sql
 -- ============================================================
 
+-- ── PREREQUISITE: wallets.user_id (schema.sql used owner_id) ────────────────
+-- Adds user_id if wallets was created by schema.sql with owner_id instead.
+ALTER TABLE IF EXISTS wallets ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE;
+UPDATE wallets SET user_id = owner_id WHERE user_id IS NULL AND owner_id IS NOT NULL;
+-- Also add status column if missing
+ALTER TABLE IF EXISTS wallets ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'active';
+
 -- ── PREREQUISITES: ensure columns exist on tables created by earlier phases ──
 -- Safe to run multiple times (ADD COLUMN IF NOT EXISTS)
 
 -- kenux_ledger may have been created by phase12 without these columns
+ALTER TABLE IF EXISTS kenux_ledger ADD COLUMN IF NOT EXISTS reason      TEXT;
 ALTER TABLE IF EXISTS kenux_ledger ADD COLUMN IF NOT EXISTS balance_after INTEGER NOT NULL DEFAULT 0;
 ALTER TABLE IF EXISTS kenux_ledger ADD COLUMN IF NOT EXISTS description  TEXT;
 ALTER TABLE IF EXISTS kenux_ledger ADD COLUMN IF NOT EXISTS reference    TEXT;
@@ -37,6 +45,14 @@ ALTER TABLE IF EXISTS audit_logs ADD COLUMN IF NOT EXISTS target_id  UUID;
 ALTER TABLE IF EXISTS audit_logs ADD COLUMN IF NOT EXISTS ip_address INET;
 ALTER TABLE IF EXISTS audit_logs ADD COLUMN IF NOT EXISTS user_agent TEXT;
 ALTER TABLE IF EXISTS audit_logs ADD COLUMN IF NOT EXISTS actor_id   UUID;
+
+-- ── PREREQUISITE: notifications column aliases ────────────────────────────
+ALTER TABLE IF EXISTS notifications ADD COLUMN IF NOT EXISTS read     BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE IF EXISTS notifications ADD COLUMN IF NOT EXISTS read_at  TIMESTAMPTZ;
+ALTER TABLE IF EXISTS notifications ADD COLUMN IF NOT EXISTS action_url TEXT;
+ALTER TABLE IF EXISTS notifications ADD COLUMN IF NOT EXISTS category  TEXT NOT NULL DEFAULT 'general';
+-- Keep is_read in sync with read
+UPDATE notifications SET read = is_read WHERE read IS DISTINCT FROM is_read AND is_read IS NOT NULL;
 
 -- platform_revenue: add revenue_type if it was created without it (phase6 only has 'source')
 ALTER TABLE IF EXISTS platform_revenue ADD COLUMN IF NOT EXISTS revenue_type TEXT;

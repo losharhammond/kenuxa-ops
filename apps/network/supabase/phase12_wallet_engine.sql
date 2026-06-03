@@ -3,6 +3,13 @@
 --           Platform Metrics Views, MRR/ARR, KENUX Economy
 -- ============================================================
 
+-- ── PREREQUISITE: wallets.user_id (schema.sql used owner_id) ────────────────
+-- Adds user_id if wallets was created by schema.sql with owner_id instead.
+ALTER TABLE IF EXISTS wallets ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE;
+UPDATE wallets SET user_id = owner_id WHERE user_id IS NULL AND owner_id IS NOT NULL;
+-- Also add status column if missing
+ALTER TABLE IF EXISTS wallets ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'active';
+
 -- ── PREREQUISITE: ensure platform_revenue.revenue_type exists ───────────────
 ALTER TABLE IF EXISTS platform_revenue ADD COLUMN IF NOT EXISTS revenue_type TEXT;
 UPDATE platform_revenue SET revenue_type = source WHERE revenue_type IS NULL;
@@ -137,6 +144,17 @@ BEGIN
   );
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- ── PREREQUISITE: kenux_ledger.reason alias ──────────────────────────────
+ALTER TABLE IF EXISTS kenux_ledger ADD COLUMN IF NOT EXISTS reason TEXT;
+-- sync reason from description if description exists
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='kenux_ledger' AND column_name='description') THEN
+    UPDATE kenux_ledger SET reason = description WHERE reason IS NULL AND description IS NOT NULL;
+  END IF;
+END;
+$$;
 
 -- ── kenux_credit: credit KENUX reward points ─────────────────
 CREATE OR REPLACE FUNCTION kenux_credit(

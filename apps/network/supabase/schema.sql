@@ -580,10 +580,10 @@ CREATE TABLE delivery_orders (
 
 CREATE TABLE wallets (
   id          UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  owner_id    UUID NOT NULL REFERENCES user_profiles(id),
-  business_id UUID REFERENCES businesses(id),
+  user_id     UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   balance     NUMERIC(15,2) NOT NULL DEFAULT 0,
   currency    TEXT NOT NULL DEFAULT 'GHS',
+  status      TEXT NOT NULL DEFAULT 'active',
   is_locked   BOOLEAN DEFAULT FALSE,
   created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()

@@ -4,6 +4,13 @@
 -- Run after phase5_migration.sql
 -- ============================================================
 
+-- ── PREREQUISITE: wallets.user_id (schema.sql used owner_id) ────────────────
+-- Adds user_id if wallets was created by schema.sql with owner_id instead.
+ALTER TABLE IF EXISTS wallets ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE;
+UPDATE wallets SET user_id = owner_id WHERE user_id IS NULL AND owner_id IS NOT NULL;
+-- Also add status column if missing
+ALTER TABLE IF EXISTS wallets ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'active';
+
 -- ── 100: Wallet transactions (double-entry) ──────────────────
 CREATE TABLE IF NOT EXISTS wallet_transactions (
   id                 UUID PRIMARY KEY DEFAULT gen_random_uuid(),
