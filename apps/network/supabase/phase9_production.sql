@@ -337,21 +337,34 @@ ALTER TABLE paystack_transfers   ENABLE ROW LEVEL SECURITY;
 ALTER TABLE escrow_holds         ENABLE ROW LEVEL SECURITY;
 
 -- Users see only their own data
-CREATE POLICY IF NOT EXISTS "credit_profiles_self"    ON credit_profiles    FOR ALL USING (user_id = auth.uid());
-CREATE POLICY IF NOT EXISTS "kenux_txs_self"          ON kenux_transactions  FOR ALL USING (user_id = auth.uid());
-CREATE POLICY IF NOT EXISTS "rewards_self"            ON rewards_accounts    FOR ALL USING (user_id = auth.uid());
-CREATE POLICY IF NOT EXISTS "wallets_self"            ON wallets             FOR ALL USING (user_id = auth.uid());
-CREATE POLICY IF NOT EXISTS "wallet_txs_self"         ON wallet_transactions FOR ALL USING (user_id = auth.uid());
-CREATE POLICY IF NOT EXISTS "loans_self"              ON loan_applications   FOR ALL USING (user_id = auth.uid());
-CREATE POLICY IF NOT EXISTS "loan_repayments_self"    ON loan_repayments     FOR ALL USING (user_id = auth.uid());
-CREATE POLICY IF NOT EXISTS "kyc_self"                ON kyc_documents       FOR ALL USING (user_id = auth.uid());
-CREATE POLICY IF NOT EXISTS "notifications_self"      ON notifications       FOR ALL USING (user_id = auth.uid());
-CREATE POLICY IF NOT EXISTS "security_events_self"    ON security_events     FOR SELECT USING (user_id = auth.uid());
-CREATE POLICY IF NOT EXISTS "paystack_transfers_self" ON paystack_transfers  FOR SELECT USING (user_id = auth.uid());
-CREATE POLICY IF NOT EXISTS "escrow_buyer"            ON escrow_holds        FOR SELECT USING (buyer_id = auth.uid() OR seller_id = auth.uid());
+DROP POLICY IF EXISTS "credit_profiles_self" ON credit_profiles;
+CREATE POLICY "credit_profiles_self"    ON credit_profiles    FOR ALL USING (user_id = auth.uid());
+DROP POLICY IF EXISTS "kenux_txs_self" ON kenux_transactions;
+CREATE POLICY "kenux_txs_self"          ON kenux_transactions  FOR ALL USING (user_id = auth.uid());
+DROP POLICY IF EXISTS "rewards_self" ON rewards_accounts;
+CREATE POLICY "rewards_self"            ON rewards_accounts    FOR ALL USING (user_id = auth.uid());
+DROP POLICY IF EXISTS "wallets_self" ON wallets;
+CREATE POLICY "wallets_self"            ON wallets             FOR ALL USING (user_id = auth.uid());
+DROP POLICY IF EXISTS "wallet_txs_self" ON wallet_transactions;
+CREATE POLICY "wallet_txs_self"         ON wallet_transactions FOR ALL USING (user_id = auth.uid());
+DROP POLICY IF EXISTS "loans_self" ON loan_applications;
+CREATE POLICY "loans_self"              ON loan_applications   FOR ALL USING (user_id = auth.uid());
+DROP POLICY IF EXISTS "loan_repayments_self" ON loan_repayments;
+CREATE POLICY "loan_repayments_self"    ON loan_repayments     FOR ALL USING (user_id = auth.uid());
+DROP POLICY IF EXISTS "kyc_self" ON kyc_documents;
+CREATE POLICY "kyc_self"                ON kyc_documents       FOR ALL USING (user_id = auth.uid());
+DROP POLICY IF EXISTS "notifications_self" ON notifications;
+CREATE POLICY "notifications_self"      ON notifications       FOR ALL USING (user_id = auth.uid());
+DROP POLICY IF EXISTS "security_events_self" ON security_events;
+CREATE POLICY "security_events_self"    ON security_events     FOR SELECT USING (user_id = auth.uid());
+DROP POLICY IF EXISTS "paystack_transfers_self" ON paystack_transfers;
+CREATE POLICY "paystack_transfers_self" ON paystack_transfers  FOR SELECT USING (user_id = auth.uid());
+DROP POLICY IF EXISTS "escrow_buyer" ON escrow_holds;
+CREATE POLICY "escrow_buyer"            ON escrow_holds        FOR SELECT USING (buyer_id = auth.uid() OR seller_id = auth.uid());
 
 -- Admins see everything (via service role or admin check)
-CREATE POLICY IF NOT EXISTS "audit_logs_admin" ON audit_logs FOR SELECT USING (
+DROP POLICY IF EXISTS "audit_logs_admin" ON audit_logs;
+CREATE POLICY "audit_logs_admin" ON audit_logs FOR SELECT USING (
   EXISTS (SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role IN ('super_admin','country_admin'))
 );
 
@@ -361,14 +374,18 @@ ALTER TABLE platform_revenue ENABLE ROW LEVEL SECURITY;
 ALTER TABLE pending_settlements ENABLE ROW LEVEL SECURITY;
 ALTER TABLE paystack_transfers ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY IF NOT EXISTS "exchange_rates_public"   ON exchange_rates      FOR SELECT USING (true);
-CREATE POLICY IF NOT EXISTS "platform_revenue_admin"  ON platform_revenue    FOR SELECT USING (
+DROP POLICY IF EXISTS "exchange_rates_public" ON exchange_rates;
+CREATE POLICY "exchange_rates_public"   ON exchange_rates      FOR SELECT USING (true);
+DROP POLICY IF EXISTS "platform_revenue_admin" ON platform_revenue;
+CREATE POLICY "platform_revenue_admin"  ON platform_revenue    FOR SELECT USING (
   EXISTS (SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role IN ('super_admin','country_admin','financial_partner'))
 );
-CREATE POLICY IF NOT EXISTS "settlements_admin"       ON pending_settlements FOR SELECT USING (
+DROP POLICY IF EXISTS "settlements_admin" ON pending_settlements;
+CREATE POLICY "settlements_admin"       ON pending_settlements FOR SELECT USING (
   EXISTS (SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role IN ('super_admin','country_admin'))
 );
-CREATE POLICY IF NOT EXISTS "paystack_transfers_admin" ON paystack_transfers FOR SELECT USING (
+DROP POLICY IF EXISTS "paystack_transfers_admin" ON paystack_transfers;
+CREATE POLICY "paystack_transfers_admin" ON paystack_transfers FOR SELECT USING (
   user_id = auth.uid() OR EXISTS (SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role IN ('super_admin','country_admin'))
 );
 

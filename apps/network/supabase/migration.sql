@@ -58,7 +58,8 @@ CREATE INDEX IF NOT EXISTS idx_inventory_items_business ON inventory_items(busin
 CREATE INDEX IF NOT EXISTS idx_inventory_items_name     ON inventory_items USING GIN(name gin_trgm_ops);
 
 ALTER TABLE inventory_items ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS "inventory_items_owner" ON inventory_items
+DROP POLICY IF EXISTS "inventory_items_owner" ON inventory_items;
+CREATE POLICY "inventory_items_owner" ON inventory_items
   FOR ALL USING (
     business_id IN (SELECT id FROM businesses WHERE owner_id = auth.uid())
   );
@@ -91,7 +92,8 @@ CREATE TABLE IF NOT EXISTS business_staff (
 
 CREATE INDEX IF NOT EXISTS idx_business_staff_business ON business_staff(business_id);
 ALTER TABLE business_staff ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS "business_staff_owner" ON business_staff
+DROP POLICY IF EXISTS "business_staff_owner" ON business_staff;
+CREATE POLICY "business_staff_owner" ON business_staff
   FOR ALL USING (
     business_id IN (SELECT id FROM businesses WHERE owner_id = auth.uid())
   );
@@ -115,7 +117,8 @@ CREATE TABLE IF NOT EXISTS business_expenses (
 
 CREATE INDEX IF NOT EXISTS idx_business_expenses_business ON business_expenses(business_id);
 ALTER TABLE business_expenses ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS "business_expenses_owner" ON business_expenses
+DROP POLICY IF EXISTS "business_expenses_owner" ON business_expenses;
+CREATE POLICY "business_expenses_owner" ON business_expenses
   FOR ALL USING (
     business_id IN (SELECT id FROM businesses WHERE owner_id = auth.uid())
   );
@@ -146,8 +149,10 @@ CREATE TABLE IF NOT EXISTS feature_flags (
 
 -- RLS: only super_admin can write; authenticated users can read
 ALTER TABLE feature_flags ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS "feature_flags_read"  ON feature_flags FOR SELECT TO authenticated USING (true);
-CREATE POLICY IF NOT EXISTS "feature_flags_write" ON feature_flags FOR ALL
+DROP POLICY IF EXISTS "feature_flags_read" ON feature_flags;
+CREATE POLICY "feature_flags_read"  ON feature_flags FOR SELECT TO authenticated USING (true);
+DROP POLICY IF EXISTS "feature_flags_write" ON feature_flags;
+CREATE POLICY "feature_flags_write" ON feature_flags FOR ALL
   USING (
     (SELECT role FROM user_profiles WHERE id = auth.uid()) = 'super_admin'
   );
@@ -245,7 +250,8 @@ CREATE INDEX IF NOT EXISTS idx_audit_logs_category ON audit_logs(category);
 CREATE INDEX IF NOT EXISTS idx_audit_logs_created  ON audit_logs(created_at DESC);
 
 ALTER TABLE audit_logs ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS "audit_logs_admin" ON audit_logs
+DROP POLICY IF EXISTS "audit_logs_admin" ON audit_logs;
+CREATE POLICY "audit_logs_admin" ON audit_logs
   FOR ALL USING (
     (SELECT role FROM user_profiles WHERE id = auth.uid()) IN ('super_admin', 'country_admin')
   );
@@ -271,7 +277,8 @@ CREATE TABLE IF NOT EXISTS kyc_submissions (
 );
 
 ALTER TABLE kyc_submissions ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS "kyc_admin_read" ON kyc_submissions
+DROP POLICY IF EXISTS "kyc_admin_read" ON kyc_submissions;
+CREATE POLICY "kyc_admin_read" ON kyc_submissions
   FOR ALL USING (
     (SELECT role FROM user_profiles WHERE id = auth.uid()) IN ('super_admin', 'country_admin')
     OR business_id IN (SELECT id FROM businesses WHERE owner_id = auth.uid())
@@ -292,7 +299,8 @@ CREATE TABLE IF NOT EXISTS fraud_alerts (
 );
 
 ALTER TABLE fraud_alerts ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS "fraud_alerts_admin" ON fraud_alerts
+DROP POLICY IF EXISTS "fraud_alerts_admin" ON fraud_alerts;
+CREATE POLICY "fraud_alerts_admin" ON fraud_alerts
   FOR ALL USING (
     (SELECT role FROM user_profiles WHERE id = auth.uid()) IN ('super_admin', 'country_admin')
   );
@@ -323,7 +331,8 @@ CREATE INDEX IF NOT EXISTS idx_payments_business ON payments(business_id);
 CREATE INDEX IF NOT EXISTS idx_payments_created  ON payments(created_at DESC);
 
 ALTER TABLE payments ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS "payments_owner" ON payments
+DROP POLICY IF EXISTS "payments_owner" ON payments;
+CREATE POLICY "payments_owner" ON payments
   FOR ALL USING (
     business_id IN (SELECT id FROM businesses WHERE owner_id = auth.uid())
   );

@@ -42,13 +42,16 @@ CREATE TABLE IF NOT EXISTS kyc_documents (
 
 ALTER TABLE kyc_documents ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY IF NOT EXISTS kyc_own_select ON kyc_documents
+DROP POLICY IF EXISTS kyc_own_select ON kyc_documents;
+CREATE POLICY kyc_own_select ON kyc_documents
   FOR SELECT USING (auth.uid() = user_id);
 
-CREATE POLICY IF NOT EXISTS kyc_own_insert ON kyc_documents
+DROP POLICY IF EXISTS kyc_own_insert ON kyc_documents;
+CREATE POLICY kyc_own_insert ON kyc_documents
   FOR INSERT WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY IF NOT EXISTS kyc_admin_all ON kyc_documents
+DROP POLICY IF EXISTS kyc_admin_all ON kyc_documents;
+CREATE POLICY kyc_admin_all ON kyc_documents
   FOR ALL USING (
     EXISTS (SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role IN ('super_admin','country_admin','compliance_officer'))
   );
@@ -75,23 +78,28 @@ CREATE TABLE IF NOT EXISTS loan_applications (
 
 ALTER TABLE loan_applications ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY IF NOT EXISTS loan_own_select ON loan_applications
+DROP POLICY IF EXISTS loan_own_select ON loan_applications;
+CREATE POLICY loan_own_select ON loan_applications
   FOR SELECT USING (auth.uid() = user_id);
 
-CREATE POLICY IF NOT EXISTS loan_own_insert ON loan_applications
+DROP POLICY IF EXISTS loan_own_insert ON loan_applications;
+CREATE POLICY loan_own_insert ON loan_applications
   FOR INSERT WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY IF NOT EXISTS loan_partner_select ON loan_applications
+DROP POLICY IF EXISTS loan_partner_select ON loan_applications;
+CREATE POLICY loan_partner_select ON loan_applications
   FOR SELECT USING (
     EXISTS (SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role = 'financial_partner')
   );
 
-CREATE POLICY IF NOT EXISTS loan_partner_update ON loan_applications
+DROP POLICY IF EXISTS loan_partner_update ON loan_applications;
+CREATE POLICY loan_partner_update ON loan_applications
   FOR UPDATE USING (
     EXISTS (SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role IN ('financial_partner','super_admin','country_admin'))
   );
 
-CREATE POLICY IF NOT EXISTS loan_admin_all ON loan_applications
+DROP POLICY IF EXISTS loan_admin_all ON loan_applications;
+CREATE POLICY loan_admin_all ON loan_applications
   FOR ALL USING (
     EXISTS (SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role IN ('super_admin','country_admin'))
   );
@@ -113,10 +121,12 @@ CREATE TABLE IF NOT EXISTS loan_repayments (
 
 ALTER TABLE loan_repayments ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY IF NOT EXISTS repayment_own_select ON loan_repayments
+DROP POLICY IF EXISTS repayment_own_select ON loan_repayments;
+CREATE POLICY repayment_own_select ON loan_repayments
   FOR SELECT USING (auth.uid() = user_id);
 
-CREATE POLICY IF NOT EXISTS repayment_admin_all ON loan_repayments
+DROP POLICY IF EXISTS repayment_admin_all ON loan_repayments;
+CREATE POLICY repayment_admin_all ON loan_repayments
   FOR ALL USING (
     EXISTS (SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role IN ('super_admin','country_admin','financial_partner'))
   );
@@ -135,7 +145,8 @@ CREATE TABLE IF NOT EXISTS exchange_rates (
 
 ALTER TABLE exchange_rates ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY IF NOT EXISTS exchange_rates_public_read ON exchange_rates
+DROP POLICY IF EXISTS exchange_rates_public_read ON exchange_rates;
+CREATE POLICY exchange_rates_public_read ON exchange_rates
   FOR SELECT USING (true);
 
 -- ── platform_revenue ───────────────────────────────────────
@@ -153,7 +164,8 @@ CREATE TABLE IF NOT EXISTS platform_revenue (
 
 ALTER TABLE platform_revenue ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY IF NOT EXISTS revenue_admin_only ON platform_revenue
+DROP POLICY IF EXISTS revenue_admin_only ON platform_revenue;
+CREATE POLICY revenue_admin_only ON platform_revenue
   FOR ALL USING (
     EXISTS (SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role IN ('super_admin','country_admin'))
   );
