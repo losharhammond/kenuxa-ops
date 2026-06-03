@@ -2,7 +2,8 @@
   "name": "@kenuxa/network",
   "version": "1.0.0",
   "private": true,
-  "description": "KENUXA BUSINESS NETWORK — The Operating System for Africa's SME Economy",
+  "description": "KENUXA BUSINESS NETWORK — The Operating System for Ghana's SME Economy",
+  "packageManager": "npm@10.9.2",
   "scripts": {
     "dev": "next dev --port 3002",
     "build": "next build",
@@ -15,7 +16,6 @@
     "test:e2e:headed": "playwright test --headed"
   },
   "dependencies": {
-    "@kenuxa/shared-types": "workspace:*",
     "@sentry/nextjs": "^10.55.0",
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.47.10",
