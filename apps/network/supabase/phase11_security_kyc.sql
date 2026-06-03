@@ -2,6 +2,16 @@
 -- Phase 11: Security Events Enhancement + KYC Storage
 -- ============================================================
 
+-- ── PREREQUISITE: ensure audit_logs has extended columns ────────────────────
+ALTER TABLE IF EXISTS audit_logs ADD COLUMN IF NOT EXISTS category   TEXT NOT NULL DEFAULT 'general';
+ALTER TABLE IF EXISTS audit_logs ADD COLUMN IF NOT EXISTS severity   TEXT NOT NULL DEFAULT 'info';
+ALTER TABLE IF EXISTS audit_logs ADD COLUMN IF NOT EXISTS actor      TEXT;
+ALTER TABLE IF EXISTS audit_logs ADD COLUMN IF NOT EXISTS actor_id   UUID;
+ALTER TABLE IF EXISTS audit_logs ADD COLUMN IF NOT EXISTS target     TEXT;
+ALTER TABLE IF EXISTS audit_logs ADD COLUMN IF NOT EXISTS target_id  UUID;
+ALTER TABLE IF EXISTS audit_logs ADD COLUMN IF NOT EXISTS ip_address INET;
+ALTER TABLE IF EXISTS audit_logs ADD COLUMN IF NOT EXISTS user_agent TEXT;
+
 -- Ensure security_events has required columns
 ALTER TABLE IF EXISTS security_events
   ADD COLUMN IF NOT EXISTS ip_address  text,

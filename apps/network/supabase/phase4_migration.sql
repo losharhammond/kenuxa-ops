@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS rfqs (
   budget_max    NUMERIC(12,2),
   deadline      DATE,
   status        TEXT NOT NULL DEFAULT 'open',
+  created_by    UUID REFERENCES auth.users(id),
   bids_count    INT NOT NULL DEFAULT 0,
   created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at    TIMESTAMPTZ NOT NULL DEFAULT now()
@@ -56,6 +57,7 @@ CREATE POLICY "Open RFQs are public"       ON rfqs FOR SELECT USING (true);
 CREATE POLICY "Businesses manage own RFQs" ON rfqs FOR ALL
   USING (business_id IN (SELECT business_id FROM user_profiles WHERE id = auth.uid()));
 
+ALTER TABLE rfqs ADD COLUMN IF NOT EXISTS created_by UUID REFERENCES auth.users(id);
 GRANT ALL ON rfqs TO authenticated;
 GRANT SELECT ON rfqs TO anon;
 
@@ -86,7 +88,9 @@ CREATE POLICY "Bids visible to RFQ owner and bidder" ON rfq_bids FOR SELECT
       WHERE r.id = rfq_id AND up.id = auth.uid()
     )
   );
+DROP POLICY IF EXISTS "Auth users can bid" ON rfq_bids;
 CREATE POLICY "Auth users can bid"      ON rfq_bids FOR INSERT WITH CHECK (auth.uid() = bidder_id);
+DROP POLICY IF EXISTS "Bidders manage own bids" ON rfq_bids;
 CREATE POLICY "Bidders manage own bids" ON rfq_bids FOR UPDATE USING (auth.uid() = bidder_id);
 
 GRANT ALL ON rfq_bids TO authenticated;
@@ -564,7 +568,15 @@ ALTER TABLE invoices ADD COLUMN IF NOT EXISTS tin                TEXT;       -- 
 ALTER TABLE invoices ADD COLUMN IF NOT EXISTS invoice_number     TEXT;       -- alias for invoice_no (API compat)
 ALTER TABLE invoices ADD COLUMN IF NOT EXISTS client_name        TEXT;       -- denormalized client name
 ALTER TABLE invoices ADD COLUMN IF NOT EXISTS client_email       TEXT;       -- denormalized client email
-ALTER TABLE invoices ADD COLUMN IF NOT EXISTS tax                NUMERIC(15,2) GENERATED ALWAYS AS (tax_amount) STORED;
+-- Add tax as plain alias column (GENERATED columns can conflict with existing constraints)
+DO $
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='invoices' AND column_name='tax') THEN
+    ALTER TABLE invoices ADD COLUMN tax NUMERIC(15,2);
+    UPDATE invoices SET tax = tax_amount WHERE tax IS NULL AND tax_amount IS NOT NULL;
+  END IF;
+END;
+$;
 
 -- Index for fast GRA status lookups
 CREATE INDEX IF NOT EXISTS idx_invoices_gra_status ON invoices(gra_status) WHERE gra_status IS NOT NULL;

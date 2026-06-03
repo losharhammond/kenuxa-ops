@@ -71,9 +71,11 @@ CREATE INDEX IF NOT EXISTS idx_referrals_code     ON referrals(referral_code);
 -- RLS
 ALTER TABLE referrals ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Users see own referrals (as referrer)" ON referrals;
 CREATE POLICY "Users see own referrals (as referrer)" ON referrals
   FOR SELECT USING (auth.uid() = referrer_id);
 
+DROP POLICY IF EXISTS "Service role full access referrals" ON referrals;
 CREATE POLICY "Service role full access referrals" ON referrals
   FOR ALL USING (auth.role() = 'service_role');
 

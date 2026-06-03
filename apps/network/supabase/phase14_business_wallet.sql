@@ -3,6 +3,10 @@
 -- Separates business finance from personal wallets
 -- ============================================================
 
+-- ── PREREQUISITE: ensure platform_revenue.revenue_type exists ───────────────
+ALTER TABLE IF EXISTS platform_revenue ADD COLUMN IF NOT EXISTS revenue_type TEXT;
+UPDATE platform_revenue SET revenue_type = source WHERE revenue_type IS NULL;
+
 -- ── business_members ─────────────────────────────────────────
 -- Junction table: which users belong to which businesses
 CREATE TABLE IF NOT EXISTS business_members (
@@ -20,6 +24,7 @@ CREATE INDEX IF NOT EXISTS idx_biz_members_user ON business_members(user_id);
 
 ALTER TABLE business_members ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "bm_owner_manage" ON business_members;
 CREATE POLICY "bm_owner_manage" ON business_members
   USING (
     EXISTS (
@@ -29,6 +34,7 @@ CREATE POLICY "bm_owner_manage" ON business_members
     )
   );
 
+DROP POLICY IF EXISTS "bm_member_view" ON business_members;
 CREATE POLICY "bm_member_view" ON business_members
   FOR SELECT USING (user_id = auth.uid());
 
@@ -47,6 +53,7 @@ CREATE INDEX IF NOT EXISTS idx_biz_wallet_biz ON business_wallets(business_id);
 
 ALTER TABLE business_wallets ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "biz_wallet_member" ON business_wallets;
 CREATE POLICY "biz_wallet_member" ON business_wallets
   FOR SELECT USING (
     EXISTS (
@@ -81,6 +88,7 @@ CREATE INDEX IF NOT EXISTS idx_bwt_ref      ON business_wallet_transactions(refe
 
 ALTER TABLE business_wallet_transactions ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "bwt_member_view" ON business_wallet_transactions;
 CREATE POLICY "bwt_member_view" ON business_wallet_transactions
   FOR SELECT USING (
     EXISTS (

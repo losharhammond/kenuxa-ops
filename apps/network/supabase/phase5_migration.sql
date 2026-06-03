@@ -117,7 +117,7 @@ CREATE INDEX IF NOT EXISTS idx_wallets_user ON wallets(user_id);
 CREATE TABLE IF NOT EXISTS rewards_accounts (
   user_id      UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   points       INT NOT NULL DEFAULT 0,
-  lifetime_pts INT NOT NULL DEFAULT 0,
+  lifetime_points INT NOT NULL DEFAULT 0,
   tier         TEXT NOT NULL DEFAULT 'bronze',
   updated_at   TIMESTAMPTZ NOT NULL DEFAULT now()
 );
@@ -221,7 +221,9 @@ CREATE TABLE IF NOT EXISTS freelancer_profiles (
   created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 ALTER TABLE freelancer_profiles ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Public read freelancer profiles" ON freelancer_profiles;
 CREATE POLICY "Public read freelancer profiles" ON freelancer_profiles FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Users manage own freelancer profile" ON freelancer_profiles;
 CREATE POLICY "Users manage own freelancer profile" ON freelancer_profiles FOR ALL
   USING (user_id = auth.uid()) WITH CHECK (user_id = auth.uid());
 GRANT ALL ON freelancer_profiles TO authenticated;
@@ -248,7 +250,9 @@ CREATE TABLE IF NOT EXISTS talent_profiles (
   updated_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 ALTER TABLE talent_profiles ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Public read talent profiles" ON talent_profiles;
 CREATE POLICY "Public read talent profiles" ON talent_profiles FOR SELECT USING (open_to_work = true);
+DROP POLICY IF EXISTS "Users manage own talent profile" ON talent_profiles;
 CREATE POLICY "Users manage own talent profile" ON talent_profiles FOR ALL
   USING (user_id = auth.uid()) WITH CHECK (user_id = auth.uid());
 GRANT ALL ON talent_profiles TO authenticated;
@@ -266,6 +270,7 @@ CREATE TABLE IF NOT EXISTS customer_profiles (
   created_at        TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 ALTER TABLE customer_profiles ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Users manage own customer profile" ON customer_profiles;
 CREATE POLICY "Users manage own customer profile" ON customer_profiles FOR ALL
   USING (user_id = auth.uid()) WITH CHECK (user_id = auth.uid());
 GRANT ALL ON customer_profiles TO authenticated;
@@ -285,10 +290,12 @@ CREATE TABLE IF NOT EXISTS business_members (
   UNIQUE (business_id, user_id, role)
 );
 ALTER TABLE business_members ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Business owners manage members" ON business_members;
 CREATE POLICY "Business owners manage members" ON business_members FOR ALL
   USING (
     EXISTS (SELECT 1 FROM businesses WHERE id = business_id AND owner_id = auth.uid())
   );
+DROP POLICY IF EXISTS "Members see own record" ON business_members;
 CREATE POLICY "Members see own record" ON business_members FOR SELECT
   USING (user_id = auth.uid());
 GRANT ALL ON business_members TO authenticated;
@@ -306,8 +313,10 @@ CREATE TABLE IF NOT EXISTS country_admins (
   created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 ALTER TABLE country_admins ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Super admins manage country admins" ON country_admins;
 CREATE POLICY "Super admins manage country admins" ON country_admins FOR ALL
   USING (EXISTS (SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role = 'super_admin'));
+DROP POLICY IF EXISTS "Country admins see own record" ON country_admins;
 CREATE POLICY "Country admins see own record" ON country_admins FOR SELECT
   USING (user_id = auth.uid());
 GRANT ALL ON country_admins TO authenticated;
@@ -328,8 +337,10 @@ CREATE TABLE IF NOT EXISTS financial_partners (
   created_at       TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 ALTER TABLE financial_partners ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "FP sees own record" ON financial_partners;
 CREATE POLICY "FP sees own record" ON financial_partners FOR SELECT
   USING (user_id = auth.uid());
+DROP POLICY IF EXISTS "Super admin manages FPs" ON financial_partners;
 CREATE POLICY "Super admin manages FPs" ON financial_partners FOR ALL
   USING (EXISTS (SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role = 'super_admin'));
 GRANT ALL ON financial_partners TO authenticated;
@@ -346,8 +357,10 @@ CREATE TABLE IF NOT EXISTS audit_logs (
   created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 ALTER TABLE audit_logs ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Admins read audit logs" ON audit_logs;
 CREATE POLICY "Admins read audit logs" ON audit_logs FOR SELECT
   USING (EXISTS (SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role IN ('super_admin','country_admin')));
+DROP POLICY IF EXISTS "System inserts audit logs" ON audit_logs;
 CREATE POLICY "System inserts audit logs" ON audit_logs FOR INSERT WITH CHECK (true);
 GRANT ALL ON audit_logs TO authenticated;
 CREATE INDEX IF NOT EXISTS idx_audit_logs_user ON audit_logs(user_id);
@@ -368,6 +381,7 @@ CREATE TABLE IF NOT EXISTS activity_feed (
   created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 ALTER TABLE activity_feed ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Users see own feed" ON activity_feed;
 CREATE POLICY "Users see own feed" ON activity_feed FOR ALL
   USING (user_id = auth.uid()) WITH CHECK (user_id = auth.uid());
 GRANT ALL ON activity_feed TO authenticated;
@@ -387,6 +401,7 @@ CREATE TABLE IF NOT EXISTS notifications (
   created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 ALTER TABLE notifications ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Users see own notifications" ON notifications;
 CREATE POLICY "Users see own notifications" ON notifications FOR ALL
   USING (user_id = auth.uid()) WITH CHECK (user_id = auth.uid());
 GRANT ALL ON notifications TO authenticated;

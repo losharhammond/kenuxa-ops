@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS wallet_transactions (
 CREATE INDEX IF NOT EXISTS wallet_txn_user_idx ON wallet_transactions(user_id, created_at DESC);
 CREATE INDEX IF NOT EXISTS wallet_txn_ref_idx  ON wallet_transactions(reference) WHERE reference IS NOT NULL;
 ALTER TABLE wallet_transactions ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "wallet_txn_owner" ON wallet_transactions;
 CREATE POLICY "wallet_txn_owner" ON wallet_transactions FOR ALL USING (auth.uid() = user_id);
 
 -- ── 101: Ledger journal entries ───────────────────────────────
@@ -39,6 +40,7 @@ CREATE TABLE IF NOT EXISTS ledger_entries (
   created_at     TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 ALTER TABLE ledger_entries ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "ledger_entries_owner" ON ledger_entries;
 CREATE POLICY "ledger_entries_owner" ON ledger_entries FOR SELECT USING (auth.uid() = user_id);
 
 -- ── 102: wallet_credit RPC ───────────────────────────────────
@@ -86,6 +88,7 @@ CREATE TABLE IF NOT EXISTS kenux_transactions (
 );
 CREATE INDEX IF NOT EXISTS kenux_txn_user_idx ON kenux_transactions(user_id, created_at DESC);
 ALTER TABLE kenux_transactions ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "kenux_txn_owner" ON kenux_transactions;
 CREATE POLICY "kenux_txn_owner" ON kenux_transactions FOR ALL USING (auth.uid() = user_id);
 
 -- kenux_credit RPC
@@ -127,6 +130,7 @@ CREATE TABLE IF NOT EXISTS subscriptions (
 );
 CREATE INDEX IF NOT EXISTS subscriptions_user_idx ON subscriptions(user_id, status);
 ALTER TABLE subscriptions ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "subscriptions_owner" ON subscriptions;
 CREATE POLICY "subscriptions_owner" ON subscriptions FOR ALL USING (auth.uid() = user_id);
 
 -- ── 105: Billing history ──────────────────────────────────────
@@ -144,6 +148,7 @@ CREATE TABLE IF NOT EXISTS billing_history (
   created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 ALTER TABLE billing_history ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "billing_history_owner" ON billing_history;
 CREATE POLICY "billing_history_owner" ON billing_history FOR SELECT USING (auth.uid() = user_id);
 
 -- ── 106: Credit profiles ──────────────────────────────────────
@@ -162,6 +167,7 @@ CREATE TABLE IF NOT EXISTS credit_profiles (
   updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 ALTER TABLE credit_profiles ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "credit_profiles_owner" ON credit_profiles;
 CREATE POLICY "credit_profiles_owner" ON credit_profiles FOR ALL USING (auth.uid() = user_id);
 
 -- ── 107: Exchange rates cache ─────────────────────────────────
@@ -215,7 +221,9 @@ CREATE TABLE IF NOT EXISTS orders (
 CREATE INDEX IF NOT EXISTS orders_buyer_idx  ON orders(buyer_id,  created_at DESC);
 CREATE INDEX IF NOT EXISTS orders_seller_idx ON orders(seller_id, created_at DESC);
 ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "orders_buyer" ON orders;
 CREATE POLICY "orders_buyer"  ON orders FOR SELECT USING (auth.uid() = buyer_id);
+DROP POLICY IF EXISTS "orders_seller" ON orders;
 CREATE POLICY "orders_seller" ON orders FOR SELECT USING (auth.uid() = seller_id);
 
 -- ── 110: Platform revenue (internal analytics) ───────────────

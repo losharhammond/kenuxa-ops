@@ -38,9 +38,11 @@ CREATE INDEX IF NOT EXISTS idx_ml_created   ON marketplace_listings(created_at D
 
 ALTER TABLE marketplace_listings ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "ml_public_read" ON marketplace_listings;
 CREATE POLICY "ml_public_read" ON marketplace_listings
   FOR SELECT USING (status = 'active');
 
+DROP POLICY IF EXISTS "ml_seller_all" ON marketplace_listings;
 CREATE POLICY "ml_seller_all" ON marketplace_listings
   FOR ALL USING (seller_id = auth.uid())
   WITH CHECK (seller_id = auth.uid());
@@ -75,9 +77,11 @@ CREATE INDEX IF NOT EXISTS idx_sl_status    ON service_listings(status);
 
 ALTER TABLE service_listings ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "sl_public_read" ON service_listings;
 CREATE POLICY "sl_public_read" ON service_listings
   FOR SELECT USING (status = 'active');
 
+DROP POLICY IF EXISTS "sl_owner_all" ON service_listings;
 CREATE POLICY "sl_owner_all" ON service_listings
   FOR ALL USING (user_id = auth.uid())
   WITH CHECK (user_id = auth.uid());
@@ -94,6 +98,9 @@ ALTER TABLE freelancer_profiles ADD COLUMN IF NOT EXISTS headline TEXT;
 -- ── Notifications: add message column as alias for body ──────
 -- (Some API routes historically used 'message'; we now use 'body' everywhere)
 -- No column needed — all routes have been updated to use 'body'
+
+-- ── Ensure rfqs.created_by exists (used in rfq_items policy below) ─────────
+ALTER TABLE IF EXISTS rfqs ADD COLUMN IF NOT EXISTS created_by UUID REFERENCES auth.users(id);
 
 -- ── rfq_items ────────────────────────────────────────────────
 -- Line items attached to RFQs
@@ -112,6 +119,7 @@ CREATE INDEX IF NOT EXISTS idx_rfq_items_rfq ON rfq_items(rfq_id);
 
 ALTER TABLE rfq_items ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "rfq_items_owner" ON rfq_items;
 CREATE POLICY "rfq_items_owner" ON rfq_items
   FOR ALL USING (
     EXISTS (

@@ -38,7 +38,9 @@ CREATE TABLE IF NOT EXISTS user_addons (
 CREATE INDEX IF NOT EXISTS idx_user_addons_user ON user_addons(user_id, status);
 
 ALTER TABLE user_addons ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "user_addons_owner" ON user_addons;
 CREATE POLICY "user_addons_owner" ON user_addons FOR ALL USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "user_addons_admin" ON user_addons;
 CREATE POLICY "user_addons_admin"  ON user_addons FOR ALL USING (auth.role() = 'service_role');
 
 -- ── Advertising / Sponsored listings table ───────────────────
@@ -62,8 +64,11 @@ CREATE INDEX IF NOT EXISTS idx_sponsored_status   ON sponsored_listings(status, 
 CREATE INDEX IF NOT EXISTS idx_sponsored_user     ON sponsored_listings(user_id);
 
 ALTER TABLE sponsored_listings ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "sponsored_owner" ON sponsored_listings;
 CREATE POLICY "sponsored_owner"   ON sponsored_listings FOR ALL USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "sponsored_service" ON sponsored_listings;
 CREATE POLICY "sponsored_service" ON sponsored_listings FOR ALL USING (auth.role() = 'service_role');
+DROP POLICY IF EXISTS "sponsored_public" ON sponsored_listings;
 CREATE POLICY "sponsored_public"  ON sponsored_listings FOR SELECT USING (status = 'active');
 
 -- ── Marketplace transaction fees ledger ──────────────────────
@@ -86,7 +91,9 @@ CREATE INDEX IF NOT EXISTS idx_mktfees_seller   ON marketplace_fees(seller_id, c
 CREATE INDEX IF NOT EXISTS idx_mktfees_status   ON marketplace_fees(status);
 
 ALTER TABLE marketplace_fees ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "mktfees_admin" ON marketplace_fees;
 CREATE POLICY "mktfees_admin"   ON marketplace_fees FOR ALL USING (auth.role() = 'service_role');
+DROP POLICY IF EXISTS "mktfees_seller" ON marketplace_fees;
 CREATE POLICY "mktfees_seller"  ON marketplace_fees FOR SELECT USING (auth.uid() = seller_id);
 
 -- ── API usage metering ────────────────────────────────────────
@@ -107,7 +114,9 @@ CREATE INDEX IF NOT EXISTS idx_api_usage_key   ON api_usage_logs(api_key_id, cre
 CREATE INDEX IF NOT EXISTS idx_api_usage_ts    ON api_usage_logs(created_at DESC);
 
 ALTER TABLE api_usage_logs ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "api_usage_admin" ON api_usage_logs;
 CREATE POLICY "api_usage_admin" ON api_usage_logs FOR ALL USING (auth.role() = 'service_role');
+DROP POLICY IF EXISTS "api_usage_owner" ON api_usage_logs;
 CREATE POLICY "api_usage_owner" ON api_usage_logs FOR SELECT USING (auth.uid() = user_id);
 
 -- ── Enhanced platform_metrics view (Module 48) ───────────────

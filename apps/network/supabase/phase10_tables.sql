@@ -35,7 +35,9 @@ ON CONFLICT (crop, country) DO NOTHING;
 
 -- RLS
 ALTER TABLE commodity_prices ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "commodity_prices_read_all" ON commodity_prices;
 CREATE POLICY "commodity_prices_read_all" ON commodity_prices FOR SELECT USING (true);
+DROP POLICY IF EXISTS "commodity_prices_admin_write" ON commodity_prices;
 CREATE POLICY "commodity_prices_admin_write" ON commodity_prices FOR ALL
   USING (EXISTS (SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role IN ('super_admin','country_admin')));
 
@@ -58,7 +60,9 @@ CREATE TABLE IF NOT EXISTS subscriptions (
 );
 
 ALTER TABLE subscriptions ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "subscriptions_self" ON subscriptions;
 CREATE POLICY "subscriptions_self" ON subscriptions FOR ALL USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "subscriptions_admin" ON subscriptions;
 CREATE POLICY "subscriptions_admin" ON subscriptions FOR ALL
   USING (EXISTS (SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role IN ('super_admin','country_admin')));
 
@@ -84,10 +88,13 @@ CREATE TABLE IF NOT EXISTS payment_transactions (
 );
 
 ALTER TABLE payment_transactions ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "payment_transactions_self" ON payment_transactions;
 CREATE POLICY "payment_transactions_self" ON payment_transactions FOR SELECT
   USING (auth.uid() = sender_id OR auth.uid() = recipient_id);
+DROP POLICY IF EXISTS "payment_transactions_insert_self" ON payment_transactions;
 CREATE POLICY "payment_transactions_insert_self" ON payment_transactions FOR INSERT
   WITH CHECK (auth.uid() = sender_id);
+DROP POLICY IF EXISTS "payment_transactions_admin" ON payment_transactions;
 CREATE POLICY "payment_transactions_admin" ON payment_transactions FOR ALL
   USING (EXISTS (SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role IN ('super_admin','country_admin')));
 

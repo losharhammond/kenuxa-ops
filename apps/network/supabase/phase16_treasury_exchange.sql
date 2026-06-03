@@ -3,6 +3,48 @@
 -- Run after: phase15_missing_tables.sql
 -- ============================================================
 
+-- ── PREREQUISITES: ensure columns exist on tables created by earlier phases ──
+-- Safe to run multiple times (ADD COLUMN IF NOT EXISTS)
+
+-- kenux_ledger may have been created by phase12 without these columns
+ALTER TABLE IF EXISTS kenux_ledger ADD COLUMN IF NOT EXISTS balance_after INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE IF EXISTS kenux_ledger ADD COLUMN IF NOT EXISTS description  TEXT;
+ALTER TABLE IF EXISTS kenux_ledger ADD COLUMN IF NOT EXISTS reference    TEXT;
+ALTER TABLE IF EXISTS kenux_ledger ADD COLUMN IF NOT EXISTS metadata     JSONB DEFAULT '{}'::jsonb;
+
+-- wallets may have been created by phase5 without type/last_tx_at
+ALTER TABLE IF EXISTS wallets ADD COLUMN IF NOT EXISTS type       TEXT NOT NULL DEFAULT 'personal';
+ALTER TABLE IF EXISTS wallets ADD COLUMN IF NOT EXISTS last_tx_at TIMESTAMPTZ;
+-- Ensure composite unique constraint exists for wallet_credit ON CONFLICT
+DO $
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint
+    WHERE conname = 'wallets_user_id_type_currency_key' AND conrelid = 'wallets'::regclass
+  ) THEN
+    -- Drop old single-column unique if present
+    ALTER TABLE wallets DROP CONSTRAINT IF EXISTS wallets_user_id_key;
+    ALTER TABLE wallets ADD CONSTRAINT wallets_user_id_type_currency_key UNIQUE (user_id, type, currency);
+  END IF;
+END;
+$;
+
+-- audit_logs may have been created by phase5 without category/severity/actor/target
+ALTER TABLE IF EXISTS audit_logs ADD COLUMN IF NOT EXISTS category   TEXT NOT NULL DEFAULT 'general';
+ALTER TABLE IF EXISTS audit_logs ADD COLUMN IF NOT EXISTS severity   TEXT NOT NULL DEFAULT 'info';
+ALTER TABLE IF EXISTS audit_logs ADD COLUMN IF NOT EXISTS actor      TEXT;
+ALTER TABLE IF EXISTS audit_logs ADD COLUMN IF NOT EXISTS target     TEXT;
+ALTER TABLE IF EXISTS audit_logs ADD COLUMN IF NOT EXISTS target_id  UUID;
+ALTER TABLE IF EXISTS audit_logs ADD COLUMN IF NOT EXISTS ip_address INET;
+ALTER TABLE IF EXISTS audit_logs ADD COLUMN IF NOT EXISTS user_agent TEXT;
+ALTER TABLE IF EXISTS audit_logs ADD COLUMN IF NOT EXISTS actor_id   UUID;
+
+-- platform_revenue: add revenue_type if it was created without it (phase6 only has 'source')
+ALTER TABLE IF EXISTS platform_revenue ADD COLUMN IF NOT EXISTS revenue_type TEXT;
+-- Back-fill revenue_type from source
+UPDATE platform_revenue SET revenue_type = source WHERE revenue_type IS NULL;
+
+
 -- ── Exchange Rates Cache ──────────────────────────────────────
 CREATE TABLE IF NOT EXISTS exchange_rates (
   id            UUID        DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -460,43 +502,63 @@ ALTER TABLE credit_profiles      ENABLE ROW LEVEL SECURITY;
 ALTER TABLE loan_applications    ENABLE ROW LEVEL SECURITY;
 
 -- Exchange rates: public read (needed for calculator/treasury UI)
+DROP POLICY IF EXISTS "exchange_rates_read_all" ON exchange_rates;
 CREATE POLICY "exchange_rates_read_all" ON exchange_rates FOR SELECT USING (true);
 
 -- Platform revenue: service role only
+DROP POLICY IF EXISTS "platform_revenue_service_only" ON platform_revenue;
 CREATE POLICY "platform_revenue_service_only" ON platform_revenue USING (false);
 
 -- KENUX ledger: users see own records; only service_role can insert
+DROP POLICY IF EXISTS "kenux_ledger_own" ON kenux_ledger;
 CREATE POLICY "kenux_ledger_own" ON kenux_ledger FOR SELECT USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "kenux_ledger_insert_service" ON kenux_ledger;
 CREATE POLICY "kenux_ledger_insert_service" ON kenux_ledger FOR INSERT WITH CHECK (auth.role() = 'service_role');
 
 -- Rewards: users see own; only service_role can write (RPCs use SECURITY DEFINER)
+DROP POLICY IF EXISTS "rewards_own_select" ON rewards_accounts;
 CREATE POLICY "rewards_own_select" ON rewards_accounts FOR SELECT USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "rewards_own_upsert" ON rewards_accounts;
 CREATE POLICY "rewards_own_upsert" ON rewards_accounts FOR INSERT WITH CHECK (auth.role() = 'service_role');
+DROP POLICY IF EXISTS "rewards_own_update" ON rewards_accounts;
 CREATE POLICY "rewards_own_update" ON rewards_accounts FOR UPDATE USING (auth.role() = 'service_role');
 
 -- Subscriptions
+DROP POLICY IF EXISTS "subs_own" ON subscriptions;
 CREATE POLICY "subs_own"    ON subscriptions FOR SELECT USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "subs_insert" ON subscriptions;
 CREATE POLICY "subs_insert" ON subscriptions FOR INSERT WITH CHECK (auth.uid() = user_id);
 
 -- Wallets
+DROP POLICY IF EXISTS "wallets_own_select" ON wallets;
 CREATE POLICY "wallets_own_select" ON wallets FOR SELECT USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "wallets_service" ON wallets;
 CREATE POLICY "wallets_service"    ON wallets FOR ALL  USING (auth.role() = 'service_role');
 
 -- Business wallets: service-role only for mutations
+DROP POLICY IF EXISTS "biz_wallets_service" ON business_wallets;
 CREATE POLICY "biz_wallets_service" ON business_wallets FOR ALL USING (auth.role() = 'service_role');
 
 -- Wallet transactions: own records
+DROP POLICY IF EXISTS "wallet_tx_own" ON wallet_transactions;
 CREATE POLICY "wallet_tx_own"     ON wallet_transactions FOR SELECT USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "wallet_tx_service" ON wallet_transactions;
 CREATE POLICY "wallet_tx_service" ON wallet_transactions FOR INSERT WITH CHECK (auth.role() = 'service_role');
+DROP POLICY IF EXISTS "wallet_tx_update" ON wallet_transactions;
 CREATE POLICY "wallet_tx_update"  ON wallet_transactions FOR UPDATE USING (auth.role() = 'service_role');
 
 -- Activity feed: own only
+DROP POLICY IF EXISTS "activity_own" ON activity_feed;
 CREATE POLICY "activity_own" ON activity_feed FOR SELECT USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "activity_ins" ON activity_feed;
 CREATE POLICY "activity_ins" ON activity_feed FOR INSERT WITH CHECK (auth.role() = 'service_role');
 
 -- Notifications: own only
+DROP POLICY IF EXISTS "notif_own" ON notifications;
 CREATE POLICY "notif_own"    ON notifications FOR SELECT USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "notif_upd" ON notifications;
 CREATE POLICY "notif_upd"    ON notifications FOR UPDATE USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "notif_ins" ON notifications;
 CREATE POLICY "notif_ins"    ON notifications FOR INSERT WITH CHECK (auth.role() = 'service_role');
 
 -- ── Notification helpers ──────────────────────────────────────
@@ -513,25 +575,37 @@ END;
 $$;
 
 -- KYC: own + service
+DROP POLICY IF EXISTS "kyc_own" ON kyc_documents;
 CREATE POLICY "kyc_own"     ON kyc_documents FOR SELECT USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "kyc_insert" ON kyc_documents;
 CREATE POLICY "kyc_insert"  ON kyc_documents FOR INSERT WITH CHECK (auth.uid() = user_id);
+DROP POLICY IF EXISTS "kyc_service" ON kyc_documents;
 CREATE POLICY "kyc_service" ON kyc_documents FOR UPDATE USING (auth.role() = 'service_role');
 
 -- Disputes: own
+DROP POLICY IF EXISTS "disputes_own" ON disputes;
 CREATE POLICY "disputes_own"    ON disputes FOR SELECT USING (auth.uid() = initiator_id OR auth.uid() = respondent_id);
+DROP POLICY IF EXISTS "disputes_insert" ON disputes;
 CREATE POLICY "disputes_insert" ON disputes FOR INSERT WITH CHECK (auth.uid() = initiator_id);
+DROP POLICY IF EXISTS "disputes_update" ON disputes;
 CREATE POLICY "disputes_update" ON disputes FOR UPDATE USING (auth.role() = 'service_role');
 
 -- Audit logs: service role only (admins read via service_role client)
+DROP POLICY IF EXISTS "audit_service" ON audit_logs;
 CREATE POLICY "audit_service" ON audit_logs FOR ALL USING (auth.role() = 'service_role');
 
 -- Credit profiles: own read; service role for writes
+DROP POLICY IF EXISTS "credit_own" ON credit_profiles;
 CREATE POLICY "credit_own"    ON credit_profiles FOR SELECT USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "credit_upsert" ON credit_profiles;
 CREATE POLICY "credit_upsert" ON credit_profiles FOR ALL  USING (auth.role() = 'service_role');
 
 -- Loan applications: own
+DROP POLICY IF EXISTS "loans_own_select" ON loan_applications;
 CREATE POLICY "loans_own_select" ON loan_applications FOR SELECT USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "loans_own_insert" ON loan_applications;
 CREATE POLICY "loans_own_insert" ON loan_applications FOR INSERT WITH CHECK (auth.uid() = user_id);
+DROP POLICY IF EXISTS "loans_service" ON loan_applications;
 CREATE POLICY "loans_service"    ON loan_applications FOR UPDATE USING (auth.role() = 'service_role');
 
 -- ── GRANTS ────────────────────────────────────────────────────

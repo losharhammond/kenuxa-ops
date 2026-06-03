@@ -4,6 +4,23 @@
 -- Security, Audit, Exchange Rates, Repayments
 -- ============================================================
 
+-- ── PREREQUISITES ───────────────────────────────────────────────────────────
+ALTER TABLE IF EXISTS wallets ADD COLUMN IF NOT EXISTS type TEXT NOT NULL DEFAULT 'personal';
+ALTER TABLE IF EXISTS wallets ADD COLUMN IF NOT EXISTS last_tx_at TIMESTAMPTZ;
+DO $
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint
+    WHERE conname = 'wallets_user_id_type_currency_key' AND conrelid = 'wallets'::regclass
+  ) THEN
+    ALTER TABLE wallets DROP CONSTRAINT IF EXISTS wallets_user_id_key;
+    ALTER TABLE wallets ADD CONSTRAINT wallets_user_id_type_currency_key UNIQUE (user_id, type, currency);
+  END IF;
+END;
+$;
+ALTER TABLE IF EXISTS platform_revenue ADD COLUMN IF NOT EXISTS revenue_type TEXT;
+UPDATE platform_revenue SET revenue_type = source WHERE revenue_type IS NULL;
+
 -- ── Credit Profiles ──────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS credit_profiles (
   id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),

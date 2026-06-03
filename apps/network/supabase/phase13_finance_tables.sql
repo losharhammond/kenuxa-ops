@@ -22,11 +22,13 @@ CREATE INDEX IF NOT EXISTS idx_settlements_biz     ON pending_settlements(busine
 
 ALTER TABLE pending_settlements ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "settlements_admin_all" ON pending_settlements;
 CREATE POLICY "settlements_admin_all" ON pending_settlements
   USING (
     EXISTS (SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role IN ('super_admin','country_admin'))
   );
 
+DROP POLICY IF EXISTS "settlements_business_view" ON pending_settlements;
 CREATE POLICY "settlements_business_view" ON pending_settlements
   FOR SELECT USING (business_id = auth.uid());
 
@@ -54,11 +56,13 @@ CREATE INDEX IF NOT EXISTS idx_escrow_seller   ON escrow_holds(seller_id);
 
 ALTER TABLE escrow_holds ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "escrow_admin_all" ON escrow_holds;
 CREATE POLICY "escrow_admin_all" ON escrow_holds
   USING (
     EXISTS (SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role IN ('super_admin','country_admin'))
   );
 
+DROP POLICY IF EXISTS "escrow_participant_view" ON escrow_holds;
 CREATE POLICY "escrow_participant_view" ON escrow_holds
   FOR SELECT USING (buyer_id = auth.uid() OR seller_id = auth.uid());
 
@@ -84,6 +88,7 @@ CREATE INDEX IF NOT EXISTS idx_paystack_transfers_status  ON paystack_transfers(
 
 ALTER TABLE paystack_transfers ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "pt_admin_all" ON paystack_transfers;
 CREATE POLICY "pt_admin_all" ON paystack_transfers
   USING (
     EXISTS (SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role IN ('super_admin','country_admin'))

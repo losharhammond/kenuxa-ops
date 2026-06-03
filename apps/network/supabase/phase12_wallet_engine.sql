@@ -3,6 +3,16 @@
 --           Platform Metrics Views, MRR/ARR, KENUX Economy
 -- ============================================================
 
+-- ── PREREQUISITE: ensure platform_revenue.revenue_type exists ───────────────
+ALTER TABLE IF EXISTS platform_revenue ADD COLUMN IF NOT EXISTS revenue_type TEXT;
+UPDATE platform_revenue SET revenue_type = source WHERE revenue_type IS NULL;
+
+-- ── PREREQUISITE: ensure kenux_ledger has balance_after/description ──────────
+ALTER TABLE IF EXISTS kenux_ledger ADD COLUMN IF NOT EXISTS balance_after INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE IF EXISTS kenux_ledger ADD COLUMN IF NOT EXISTS description  TEXT;
+ALTER TABLE IF EXISTS kenux_ledger ADD COLUMN IF NOT EXISTS reference    TEXT;
+ALTER TABLE IF EXISTS kenux_ledger ADD COLUMN IF NOT EXISTS metadata     JSONB DEFAULT '{}'::jsonb;
+
 -- ── wallet_credit: credit a user's wallet (double-entry) ─────
 CREATE OR REPLACE FUNCTION wallet_credit(
   p_user_id   UUID,
@@ -281,12 +291,15 @@ ALTER TABLE wallet_transfers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE kenux_ledger     ENABLE ROW LEVEL SECURITY;
 
 -- Users can only read their own ledger entries
+DROP POLICY IF EXISTS "wallet_ledger_owner" ON wallet_ledger;
 CREATE POLICY "wallet_ledger_owner" ON wallet_ledger
   FOR SELECT USING (user_id = auth.uid());
 
+DROP POLICY IF EXISTS "wallet_transfers_participant" ON wallet_transfers;
 CREATE POLICY "wallet_transfers_participant" ON wallet_transfers
   FOR SELECT USING (sender_id = auth.uid() OR receiver_id = auth.uid());
 
+DROP POLICY IF EXISTS "kenux_ledger_owner" ON kenux_ledger;
 CREATE POLICY "kenux_ledger_owner" ON kenux_ledger
   FOR SELECT USING (user_id = auth.uid());
 
