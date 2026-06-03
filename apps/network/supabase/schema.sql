@@ -21,7 +21,7 @@ CREATE TYPE verification_status AS ENUM ('unverified','pending','verified','reje
 CREATE TYPE user_role AS ENUM (
   'super_admin','country_admin','business_owner','branch_manager',
   'cashier','employee','customer','supplier','delivery_rider',
-  'recruiter','job_seeker','financial_partner'
+  'recruiter','job_seeker','financial_partner','freelancer'
 );
 
 CREATE TYPE order_status AS ENUM ('pending','confirmed','processing','shipped','delivered','cancelled','refunded');

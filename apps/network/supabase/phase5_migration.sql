@@ -28,7 +28,7 @@ CREATE POLICY "Admins manage all roles" ON user_roles FOR ALL
     EXISTS (
       SELECT 1 FROM user_profiles
       WHERE id = auth.uid()
-      AND role IN ('super_admin', 'country_admin', 'platform_admin')
+      AND role IN ('super_admin', 'country_admin')
     )
   );
 GRANT ALL ON user_roles TO authenticated;

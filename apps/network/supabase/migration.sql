@@ -4,6 +4,11 @@
 -- Run AFTER schema.sql in a fresh Supabase project
 -- ═══════════════════════════════════════════════════════════════════════════
 
+-- ─── 0. ENUM SAFETY — add missing values to existing enums ───────────────────
+-- ALTER TYPE ... ADD VALUE IF NOT EXISTS is safe to run multiple times.
+-- 'freelancer' was added to user_role after initial schema deployment.
+ALTER TYPE user_role ADD VALUE IF NOT EXISTS 'freelancer';
+
 -- ─── 1. USER PROFILES: add business_id shortcut column ────────────────────
 -- The app accesses profile.business_id directly for all business-scoped queries
 
@@ -605,19 +610,19 @@ ALTER TABLE escrow_holds        ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "admin_only_settlements" ON pending_settlements;
 CREATE POLICY "admin_only_settlements" ON pending_settlements
   USING (EXISTS (
-    SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role IN ('super_admin','platform_admin','finance_admin')
+    SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role IN ('super_admin','country_admin')
   ));
 
 DROP POLICY IF EXISTS "admin_only_fees" ON platform_fees;
 CREATE POLICY "admin_only_fees" ON platform_fees
   USING (EXISTS (
-    SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role IN ('super_admin','platform_admin','finance_admin')
+    SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role IN ('super_admin','country_admin')
   ));
 
 DROP POLICY IF EXISTS "admin_only_escrow" ON escrow_holds;
 CREATE POLICY "admin_only_escrow" ON escrow_holds
   USING (EXISTS (
-    SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role IN ('super_admin','platform_admin','finance_admin')
+    SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role IN ('super_admin','country_admin')
   ));
 
 -- ─── 29. PRODUCTS TABLE: ensure marketplace columns ──────────────────────────

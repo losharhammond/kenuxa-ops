@@ -53,7 +53,7 @@ CREATE POLICY kyc_own_insert ON kyc_documents
 DROP POLICY IF EXISTS kyc_admin_all ON kyc_documents;
 CREATE POLICY kyc_admin_all ON kyc_documents
   FOR ALL USING (
-    EXISTS (SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role IN ('super_admin','country_admin','compliance_officer'))
+    EXISTS (SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role IN ('super_admin','country_admin'))
   );
 
 -- ── loan_applications (idempotent) ─────────────────────────
