@@ -3,6 +3,10 @@
 -- Run after migration.sql
 -- =============================================================================
 
+-- ─── PREREQUISITE: ensure user_profiles.business_id exists ──────────────────
+-- This column is required by RLS policies below. Safe to run multiple times.
+ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS business_id UUID REFERENCES businesses(id);
+
 -- ─── 32. BUSINESSES: logo & banner URLs ──────────────────────────────────────
 ALTER TABLE businesses
   ADD COLUMN IF NOT EXISTS logo_url    TEXT,

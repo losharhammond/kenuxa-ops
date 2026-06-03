@@ -3,6 +3,10 @@
 -- Run after phase3_migration.sql
 -- =============================================================================
 
+-- ─── PREREQUISITE: ensure user_profiles.business_id exists ──────────────────
+-- Required by all RLS policies in this file. Safe to run multiple times.
+ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS business_id UUID REFERENCES businesses(id);
+
 -- ─── 45. LOAN_APPLICATIONS ───────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS loan_applications (
   id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
