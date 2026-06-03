@@ -16,7 +16,7 @@ ALTER TABLE IF EXISTS kenux_ledger ADD COLUMN IF NOT EXISTS metadata     JSONB D
 ALTER TABLE IF EXISTS wallets ADD COLUMN IF NOT EXISTS type       TEXT NOT NULL DEFAULT 'personal';
 ALTER TABLE IF EXISTS wallets ADD COLUMN IF NOT EXISTS last_tx_at TIMESTAMPTZ;
 -- Ensure composite unique constraint exists for wallet_credit ON CONFLICT
-DO $
+DO $$
 BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM pg_constraint
@@ -27,8 +27,7 @@ BEGIN
     ALTER TABLE wallets ADD CONSTRAINT wallets_user_id_type_currency_key UNIQUE (user_id, type, currency);
   END IF;
 END;
-$;
-
+$$;
 -- audit_logs may have been created by phase5 without category/severity/actor/target
 ALTER TABLE IF EXISTS audit_logs ADD COLUMN IF NOT EXISTS category   TEXT NOT NULL DEFAULT 'general';
 ALTER TABLE IF EXISTS audit_logs ADD COLUMN IF NOT EXISTS severity   TEXT NOT NULL DEFAULT 'info';

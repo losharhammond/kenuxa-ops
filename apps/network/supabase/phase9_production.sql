@@ -7,7 +7,7 @@
 -- ── PREREQUISITES ───────────────────────────────────────────────────────────
 ALTER TABLE IF EXISTS wallets ADD COLUMN IF NOT EXISTS type TEXT NOT NULL DEFAULT 'personal';
 ALTER TABLE IF EXISTS wallets ADD COLUMN IF NOT EXISTS last_tx_at TIMESTAMPTZ;
-DO $
+DO $$
 BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM pg_constraint
@@ -17,7 +17,7 @@ BEGIN
     ALTER TABLE wallets ADD CONSTRAINT wallets_user_id_type_currency_key UNIQUE (user_id, type, currency);
   END IF;
 END;
-$;
+$$;
 ALTER TABLE IF EXISTS platform_revenue ADD COLUMN IF NOT EXISTS revenue_type TEXT;
 UPDATE platform_revenue SET revenue_type = source WHERE revenue_type IS NULL;
 

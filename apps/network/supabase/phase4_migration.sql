@@ -569,15 +569,14 @@ ALTER TABLE invoices ADD COLUMN IF NOT EXISTS invoice_number     TEXT;       -- 
 ALTER TABLE invoices ADD COLUMN IF NOT EXISTS client_name        TEXT;       -- denormalized client name
 ALTER TABLE invoices ADD COLUMN IF NOT EXISTS client_email       TEXT;       -- denormalized client email
 -- Add tax as plain alias column (GENERATED columns can conflict with existing constraints)
-DO $
+DO $$
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='invoices' AND column_name='tax') THEN
     ALTER TABLE invoices ADD COLUMN tax NUMERIC(15,2);
     UPDATE invoices SET tax = tax_amount WHERE tax IS NULL AND tax_amount IS NOT NULL;
   END IF;
 END;
-$;
-
+$$;
 -- Index for fast GRA status lookups
 CREATE INDEX IF NOT EXISTS idx_invoices_gra_status ON invoices(gra_status) WHERE gra_status IS NOT NULL;
 
