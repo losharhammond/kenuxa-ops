@@ -74,8 +74,10 @@ const sentryWebpackPluginOptions = {
   transpileClientSDK:    true,
   tunnelRoute:           "/monitoring",
   hideSourceMaps:        true,
-  disableLogger:         true,
-  automaticVercelMonitors: true,
+  // Updated from deprecated options
+  webpack: {
+    treeshake: { removeDebugLogging: true },
+  },
 };
 
 export default withSentryConfig(nextConfig, sentryWebpackPluginOptions);
