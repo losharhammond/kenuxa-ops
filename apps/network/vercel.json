@@ -1,25 +1,9 @@
 {
   "crons": [
-    {
-      "path": "/api/treasury/refresh-rates",
-      "schedule": "0 6 * * *",
-      "headers": { "Authorization": "Bearer $CRON_SECRET" }
-    },
-    {
-      "path": "/api/cron/credit-batch",
-      "schedule": "0 2 * * *",
-      "headers": { "Authorization": "Bearer $CRON_SECRET" }
-    },
-    {
-      "path": "/api/cron/settlement-sweep",
-      "schedule": "0 3 * * *",
-      "headers": { "Authorization": "Bearer $CRON_SECRET" }
-    },
-    {
-      "path": "/api/cron/market-prices-update",
-      "schedule": "0 7 * * *",
-      "headers": { "Authorization": "Bearer $CRON_SECRET" }
-    }
+    { "path": "/api/treasury/refresh-rates",      "schedule": "0 6 * * *" },
+    { "path": "/api/cron/credit-batch",            "schedule": "0 2 * * *" },
+    { "path": "/api/cron/settlement-sweep",        "schedule": "0 3 * * *" },
+    { "path": "/api/cron/market-prices-update",    "schedule": "0 7 * * *" }
   ],
   "headers": [
     {
