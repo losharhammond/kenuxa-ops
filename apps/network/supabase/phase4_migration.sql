@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS loan_applications (
   updated_at    TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+ALTER TABLE IF EXISTS loan_applications ADD COLUMN IF NOT EXISTS business_id UUID REFERENCES businesses(id) ON DELETE CASCADE;
 ALTER TABLE loan_applications ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Businesses see own applications" ON loan_applications;
 DROP POLICY IF EXISTS "Businesses submit applications"  ON loan_applications;
@@ -50,6 +51,7 @@ CREATE TABLE IF NOT EXISTS rfqs (
   updated_at    TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+ALTER TABLE IF EXISTS rfqs ADD COLUMN IF NOT EXISTS business_id UUID REFERENCES businesses(id) ON DELETE CASCADE;
 ALTER TABLE rfqs ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Open RFQs are public"      ON rfqs;
 DROP POLICY IF EXISTS "Businesses manage own RFQs" ON rfqs;
@@ -167,6 +169,7 @@ CREATE TABLE IF NOT EXISTS momo_float_accounts (
   created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
   UNIQUE(business_id, network)
 );
+ALTER TABLE IF EXISTS momo_float_accounts ADD COLUMN IF NOT EXISTS business_id UUID REFERENCES businesses(id) ON DELETE CASCADE;
 ALTER TABLE momo_float_accounts ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Businesses manage own floats" ON momo_float_accounts;
 CREATE POLICY "Businesses manage own floats" ON momo_float_accounts FOR ALL
@@ -188,6 +191,7 @@ CREATE TABLE IF NOT EXISTS momo_transactions (
   status          TEXT NOT NULL DEFAULT 'completed',
   created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+ALTER TABLE IF EXISTS momo_transactions ADD COLUMN IF NOT EXISTS business_id UUID REFERENCES businesses(id) ON DELETE CASCADE;
 ALTER TABLE momo_transactions ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Businesses manage own momo_transactions" ON momo_transactions;
 CREATE POLICY "Businesses manage own momo_transactions" ON momo_transactions FOR ALL
@@ -210,6 +214,7 @@ CREATE TABLE IF NOT EXISTS menu_items (
   calories          INT,
   created_at        TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+ALTER TABLE IF EXISTS menu_items ADD COLUMN IF NOT EXISTS business_id UUID REFERENCES businesses(id) ON DELETE CASCADE;
 ALTER TABLE menu_items ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Menu items public read" ON menu_items;
 DROP POLICY IF EXISTS "Businesses manage own menu" ON menu_items;
@@ -229,6 +234,7 @@ CREATE TABLE IF NOT EXISTS restaurant_tables (
   current_order_id  UUID,
   created_at        TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+ALTER TABLE IF EXISTS restaurant_tables ADD COLUMN IF NOT EXISTS business_id UUID REFERENCES businesses(id) ON DELETE CASCADE;
 ALTER TABLE restaurant_tables ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Businesses manage own tables" ON restaurant_tables;
 CREATE POLICY "Businesses manage own tables" ON restaurant_tables FOR ALL
@@ -248,6 +254,7 @@ CREATE TABLE IF NOT EXISTS dining_orders (
   estimated_ready   TIMESTAMPTZ,
   created_at        TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+ALTER TABLE IF EXISTS dining_orders ADD COLUMN IF NOT EXISTS business_id UUID REFERENCES businesses(id) ON DELETE CASCADE;
 ALTER TABLE dining_orders ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Businesses manage own dining_orders" ON dining_orders;
 CREATE POLICY "Businesses manage own dining_orders" ON dining_orders FOR ALL
@@ -275,6 +282,7 @@ CREATE TABLE IF NOT EXISTS pharmacy_medicines (
   image_url             TEXT,
   created_at            TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+ALTER TABLE IF EXISTS pharmacy_medicines ADD COLUMN IF NOT EXISTS business_id UUID REFERENCES businesses(id) ON DELETE CASCADE;
 ALTER TABLE pharmacy_medicines ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Businesses manage own medicines" ON pharmacy_medicines;
 CREATE POLICY "Businesses manage own medicines" ON pharmacy_medicines FOR ALL
@@ -294,6 +302,7 @@ CREATE TABLE IF NOT EXISTS pharmacy_prescriptions (
   notes            TEXT,
   created_at       TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+ALTER TABLE IF EXISTS pharmacy_prescriptions ADD COLUMN IF NOT EXISTS business_id UUID REFERENCES businesses(id) ON DELETE CASCADE;
 ALTER TABLE pharmacy_prescriptions ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Businesses manage own prescriptions" ON pharmacy_prescriptions;
 CREATE POLICY "Businesses manage own prescriptions" ON pharmacy_prescriptions FOR ALL
@@ -316,6 +325,7 @@ CREATE TABLE IF NOT EXISTS hotel_rooms (
   created_at       TIMESTAMPTZ NOT NULL DEFAULT now(),
   UNIQUE(business_id, room_number)
 );
+ALTER TABLE IF EXISTS hotel_rooms ADD COLUMN IF NOT EXISTS business_id UUID REFERENCES businesses(id) ON DELETE CASCADE;
 ALTER TABLE hotel_rooms ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Businesses manage own hotel_rooms" ON hotel_rooms;
 CREATE POLICY "Businesses manage own hotel_rooms" ON hotel_rooms FOR ALL
@@ -341,6 +351,7 @@ CREATE TABLE IF NOT EXISTS hotel_reservations (
   special_requests TEXT,
   created_at       TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+ALTER TABLE IF EXISTS hotel_reservations ADD COLUMN IF NOT EXISTS business_id UUID REFERENCES businesses(id) ON DELETE CASCADE;
 ALTER TABLE hotel_reservations ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Businesses manage own hotel_reservations" ON hotel_reservations;
 CREATE POLICY "Businesses manage own hotel_reservations" ON hotel_reservations FOR ALL
@@ -365,6 +376,7 @@ CREATE TABLE IF NOT EXISTS farm_crops (
   notes                TEXT,
   created_at           TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+ALTER TABLE IF EXISTS farm_crops ADD COLUMN IF NOT EXISTS business_id UUID REFERENCES businesses(id) ON DELETE CASCADE;
 ALTER TABLE farm_crops ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Businesses manage own farm_crops" ON farm_crops;
 CREATE POLICY "Businesses manage own farm_crops" ON farm_crops FOR ALL
@@ -385,6 +397,7 @@ CREATE TABLE IF NOT EXISTS farm_produce (
   is_listed     BOOLEAN NOT NULL DEFAULT true,
   created_at    TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+ALTER TABLE IF EXISTS farm_produce ADD COLUMN IF NOT EXISTS business_id UUID REFERENCES businesses(id) ON DELETE CASCADE;
 ALTER TABLE farm_produce ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Farm produce public read" ON farm_produce;
 DROP POLICY IF EXISTS "Businesses manage own farm_produce" ON farm_produce;
@@ -409,6 +422,7 @@ CREATE TABLE IF NOT EXISTS clinic_patients (
   notes             TEXT,
   created_at        TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+ALTER TABLE IF EXISTS clinic_patients ADD COLUMN IF NOT EXISTS business_id UUID REFERENCES businesses(id) ON DELETE CASCADE;
 ALTER TABLE clinic_patients ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Businesses manage own clinic_patients" ON clinic_patients;
 CREATE POLICY "Businesses manage own clinic_patients" ON clinic_patients FOR ALL
@@ -433,6 +447,7 @@ CREATE TABLE IF NOT EXISTS clinic_appointments (
   is_paid          BOOLEAN NOT NULL DEFAULT false,
   created_at       TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+ALTER TABLE IF EXISTS clinic_appointments ADD COLUMN IF NOT EXISTS business_id UUID REFERENCES businesses(id) ON DELETE CASCADE;
 ALTER TABLE clinic_appointments ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Businesses manage own clinic_appointments" ON clinic_appointments;
 CREATE POLICY "Businesses manage own clinic_appointments" ON clinic_appointments FOR ALL
@@ -456,6 +471,7 @@ CREATE TABLE IF NOT EXISTS school_students (
   fees_owing       NUMERIC(10,2) NOT NULL DEFAULT 0,
   created_at       TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+ALTER TABLE IF EXISTS school_students ADD COLUMN IF NOT EXISTS business_id UUID REFERENCES businesses(id) ON DELETE CASCADE;
 ALTER TABLE school_students ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Businesses manage own school_students" ON school_students;
 CREATE POLICY "Businesses manage own school_students" ON school_students FOR ALL
@@ -473,6 +489,7 @@ CREATE TABLE IF NOT EXISTS school_attendance (
   status       TEXT NOT NULL DEFAULT 'present',
   created_at   TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+ALTER TABLE IF EXISTS school_attendance ADD COLUMN IF NOT EXISTS business_id UUID REFERENCES businesses(id) ON DELETE CASCADE;
 ALTER TABLE school_attendance ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Businesses manage own school_attendance" ON school_attendance;
 CREATE POLICY "Businesses manage own school_attendance" ON school_attendance FOR ALL
@@ -491,6 +508,7 @@ CREATE TABLE IF NOT EXISTS school_fee_payments (
   reference      TEXT,
   created_at     TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+ALTER TABLE IF EXISTS school_fee_payments ADD COLUMN IF NOT EXISTS business_id UUID REFERENCES businesses(id) ON DELETE CASCADE;
 ALTER TABLE school_fee_payments ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Businesses manage own school_fee_payments" ON school_fee_payments;
 CREATE POLICY "Businesses manage own school_fee_payments" ON school_fee_payments FOR ALL
@@ -511,6 +529,7 @@ CREATE TABLE IF NOT EXISTS professional_clients (
   notes        TEXT,
   created_at   TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+ALTER TABLE IF EXISTS professional_clients ADD COLUMN IF NOT EXISTS business_id UUID REFERENCES businesses(id) ON DELETE CASCADE;
 ALTER TABLE professional_clients ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Businesses manage own professional_clients" ON professional_clients;
 CREATE POLICY "Businesses manage own professional_clients" ON professional_clients FOR ALL
@@ -535,6 +554,7 @@ CREATE TABLE IF NOT EXISTS professional_projects (
   hourly_rate  NUMERIC(10,2) NOT NULL DEFAULT 150,
   created_at   TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+ALTER TABLE IF EXISTS professional_projects ADD COLUMN IF NOT EXISTS business_id UUID REFERENCES businesses(id) ON DELETE CASCADE;
 ALTER TABLE professional_projects ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Businesses manage own professional_projects" ON professional_projects;
 CREATE POLICY "Businesses manage own professional_projects" ON professional_projects FOR ALL
@@ -553,6 +573,7 @@ CREATE TABLE IF NOT EXISTS professional_time_entries (
   date          DATE NOT NULL DEFAULT CURRENT_DATE,
   created_at    TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+ALTER TABLE IF EXISTS professional_time_entries ADD COLUMN IF NOT EXISTS business_id UUID REFERENCES businesses(id) ON DELETE CASCADE;
 ALTER TABLE professional_time_entries ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Businesses manage own time_entries" ON professional_time_entries;
 CREATE POLICY "Businesses manage own time_entries" ON professional_time_entries FOR ALL

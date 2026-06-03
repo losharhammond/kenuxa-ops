@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS pending_settlements (
 CREATE INDEX IF NOT EXISTS idx_settlements_status  ON pending_settlements(status, due_date);
 CREATE INDEX IF NOT EXISTS idx_settlements_biz     ON pending_settlements(business_id);
 
+ALTER TABLE IF EXISTS pending_settlements ADD COLUMN IF NOT EXISTS business_id UUID REFERENCES auth.users(id);
 ALTER TABLE pending_settlements ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "settlements_admin_all" ON pending_settlements;
