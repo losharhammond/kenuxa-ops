@@ -9,8 +9,8 @@ ALTER TABLE businesses
   ADD COLUMN IF NOT EXISTS banner_url  TEXT,
   ADD COLUMN IF NOT EXISTS category    TEXT;
 
--- Back-fill category from business_type
-UPDATE businesses SET category = business_type WHERE category IS NULL AND business_type IS NOT NULL;
+-- Back-fill category from type (the businesses.type column is a business_type ENUM)
+UPDATE businesses SET category = type::TEXT WHERE category IS NULL AND type IS NOT NULL;
 
 -- ─── 33. FREELANCER_PROFILES ─────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS freelancer_profiles (

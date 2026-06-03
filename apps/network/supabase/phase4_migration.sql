@@ -116,7 +116,7 @@ ALTER TABLE businesses
   ADD COLUMN IF NOT EXISTS banner_url TEXT,
   ADD COLUMN IF NOT EXISTS category   TEXT;
 
-UPDATE businesses SET category = business_type WHERE category IS NULL AND business_type IS NOT NULL;
+UPDATE businesses SET category = type::TEXT WHERE category IS NULL AND type IS NOT NULL;
 
 -- ─── 49. PRODUCTS: image_url column ─────────────────────────────────────────
 ALTER TABLE inventory_items
