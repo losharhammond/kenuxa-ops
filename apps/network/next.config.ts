@@ -50,7 +50,6 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "flagcdn.com" },
     ],
   },
-  typedRoutes: false,
   async headers() {
     return [
       {
