@@ -546,7 +546,17 @@ BEGIN
 END;
 $$;
 
-ALTER TABLE IF EXISTS disputes ENABLE ROW LEVEL SECURITY;
+-- Only enable RLS if disputes is a real table (not a view)
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM pg_tables
+    WHERE schemaname = 'public' AND tablename = 'disputes'
+  ) THEN
+    EXECUTE 'ALTER TABLE disputes ENABLE ROW LEVEL SECURITY';
+  END IF;
+END;
+$$;
 
 -- ─── 28. ADMIN FINANCE TABLES ────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS pending_settlements (

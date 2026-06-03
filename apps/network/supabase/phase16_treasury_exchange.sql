@@ -199,6 +199,8 @@ CREATE INDEX IF NOT EXISTS idx_kyc_documents_user_id ON kyc_documents (user_id);
 CREATE INDEX IF NOT EXISTS idx_kyc_documents_status  ON kyc_documents (status);
 
 -- ── Disputes ──────────────────────────────────────────────────
+-- Drop view if it was created by an earlier migration (migration.sql compat path)
+DROP VIEW IF EXISTS disputes;
 CREATE TABLE IF NOT EXISTS disputes (
   id            UUID        DEFAULT gen_random_uuid() PRIMARY KEY,
   initiator_id  UUID        REFERENCES auth.users(id) ON DELETE SET NULL,
