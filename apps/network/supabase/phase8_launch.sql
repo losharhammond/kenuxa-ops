@@ -66,6 +66,24 @@ ALTER TABLE service_listings
 ALTER TABLE marketplace_listings
   ADD COLUMN IF NOT EXISTS image_url TEXT;
 
+-- ── DROP suppliers view — migration.sql creates it as a VIEW over businesses ──
+DROP VIEW IF EXISTS suppliers;
+CREATE TABLE IF NOT EXISTS suppliers (
+  id              UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
+  business_id     UUID        REFERENCES businesses(id) ON DELETE CASCADE,
+  name            TEXT        NOT NULL,
+  category        TEXT,
+  city            TEXT,
+  rating          NUMERIC(3,2) DEFAULT 0,
+  total_orders    INT         NOT NULL DEFAULT 0,
+  is_verified     BOOLEAN     NOT NULL DEFAULT false,
+  moq             NUMERIC(12,2),
+  lead_time_days  INT,
+  logo_url        TEXT,
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
 -- ── Add logo_url to suppliers ──────────────────────────────
 ALTER TABLE suppliers
   ADD COLUMN IF NOT EXISTS logo_url TEXT;
