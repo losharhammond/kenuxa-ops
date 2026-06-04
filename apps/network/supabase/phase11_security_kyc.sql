@@ -30,12 +30,50 @@ ALTER TABLE IF EXISTS kyc_documents
   ADD COLUMN IF NOT EXISTS rejection_reason  text;
 
 -- Unique constraint so upsert works
-ALTER TABLE IF EXISTS kyc_documents
-  DROP CONSTRAINT IF EXISTS kyc_documents_user_doc_side_unique;
+-- Handle both column names: doc_type (phase7/8/9) and document_type (phase16)
+DO $$
+BEGIN
+  -- Standardize: if only doc_type exists, add document_type as an alias
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema='public' AND table_name='kyc_documents' AND column_name='doc_type'
+  ) AND NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema='public' AND table_name='kyc_documents' AND column_name='document_type'
+  ) THEN
+    ALTER TABLE kyc_documents ADD COLUMN document_type TEXT;
+    UPDATE kyc_documents SET document_type = doc_type WHERE document_type IS NULL;
+  END IF;
+  
+  -- Ensure side column exists
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema='public' AND table_name='kyc_documents' AND column_name='side'
+  ) THEN
+    ALTER TABLE kyc_documents ADD COLUMN side TEXT DEFAULT 'front';
+  END IF;
 
-ALTER TABLE IF EXISTS kyc_documents
-  ADD CONSTRAINT kyc_documents_user_doc_side_unique
-  UNIQUE (user_id, document_type, side);
+  -- Drop old constraint if exists
+  ALTER TABLE kyc_documents DROP CONSTRAINT IF EXISTS kyc_documents_user_doc_side_unique;
+
+  -- Add constraint using whichever column name exists
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema='public' AND table_name='kyc_documents' AND column_name='document_type'
+  ) THEN
+    ALTER TABLE kyc_documents
+      ADD CONSTRAINT kyc_documents_user_doc_side_unique
+      UNIQUE (user_id, document_type, side);
+  ELSIF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema='public' AND table_name='kyc_documents' AND column_name='doc_type'
+  ) THEN
+    ALTER TABLE kyc_documents
+      ADD CONSTRAINT kyc_documents_user_doc_side_unique
+      UNIQUE (user_id, doc_type, side);
+  END IF;
+END;
+$$;
 
 -- Ensure subscriptions.updated_at column exists
 ALTER TABLE IF EXISTS subscriptions
