@@ -93,7 +93,8 @@ const DEFAULT_HOURS: BusinessHours[] = [
 
 export default function SettingsPage() {
   const supabase = createClient();
-  const { profile } = useAuth();
+  const { profile, role } = useAuth();
+  const isAdmin = role === "super_admin" || role === "country_admin";
   const [activeTab, setActiveTab] = useState<"general" | "security" | "kyc" | "roles" | "team" | "notifications" | "integrations" | "country">("general");
 
   // Multi-country / region
@@ -309,11 +310,11 @@ export default function SettingsPage() {
     { key: "general" as const,       label: "General" },
     { key: "security" as const,      label: "Security" },
     { key: "kyc" as const,           label: "ID Verification" },
-    { key: "roles" as const,         label: "Roles & RBAC" },
+    ...(isAdmin ? [{ key: "roles" as const,         label: "Roles & RBAC" }] : []),
     { key: "team" as const,          label: "Team" },
     { key: "notifications" as const, label: "Notifications" },
-    { key: "integrations" as const,  label: "Integrations" },
-    { key: "country" as const,       label: "Country & Currency" },
+    ...(isAdmin ? [{ key: "integrations" as const,  label: "Integrations" }] : []),
+    ...(isAdmin ? [{ key: "country" as const,       label: "Country & Currency" }] : []),
   ];
 
   return (

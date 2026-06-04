@@ -68,9 +68,33 @@ export function ImageUpload({
 
       setProgress(30);
 
-      const { error: uploadError } = await supabase.storage
-        .from(bucket)
-        .upload(name, file, { upsert: true, contentType: file.type });
+      let uploadError: any = null;
+      let uploadAttempts = 0;
+
+      // Try upload, and if bucket doesn't exist, initialize it
+      while (uploadAttempts < 2) {
+        const result = await supabase.storage
+          .from(bucket)
+          .upload(name, file, { upsert: true, contentType: file.type });
+
+        uploadError = result.error;
+
+        if (!uploadError) break;
+
+        // If bucket not found error, try to initialize buckets
+        if (uploadError.message?.includes("not found") && uploadAttempts === 0) {
+          try {
+            await fetch("/api/storage/init", { method: "POST" });
+            uploadAttempts++;
+            continue; // Retry upload
+          } catch {
+            // Continue to error handling
+            break;
+          }
+        }
+
+        break;
+      }
 
       if (uploadError) throw new Error(uploadError.message);
 
