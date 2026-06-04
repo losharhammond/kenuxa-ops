@@ -49,6 +49,19 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={inter.variable} suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                const theme = localStorage.getItem('theme');
+                const dark = theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches);
+                if (dark) document.documentElement.classList.add('dark');
+              } catch (e) {}
+            `,
+          }}
+        />
+      </head>
       <body className={inter.className}>
         <ThemeProvider>{children}</ThemeProvider>
       </body>
