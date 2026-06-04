@@ -55,6 +55,10 @@ CREATE INDEX IF NOT EXISTS idx_escrow_order    ON escrow_holds(order_id);
 CREATE INDEX IF NOT EXISTS idx_escrow_buyer    ON escrow_holds(buyer_id);
 CREATE INDEX IF NOT EXISTS idx_escrow_seller   ON escrow_holds(seller_id);
 
+ALTER TABLE IF EXISTS escrow_holds ADD COLUMN IF NOT EXISTS buyer_id     UUID REFERENCES auth.users(id) ON DELETE SET NULL;
+ALTER TABLE IF EXISTS escrow_holds ADD COLUMN IF NOT EXISTS seller_id    UUID REFERENCES auth.users(id) ON DELETE SET NULL;
+ALTER TABLE IF EXISTS escrow_holds ADD COLUMN IF NOT EXISTS buyer_name   TEXT;
+ALTER TABLE IF EXISTS escrow_holds ADD COLUMN IF NOT EXISTS seller_name  TEXT;
 ALTER TABLE escrow_holds ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "escrow_admin_all" ON escrow_holds;

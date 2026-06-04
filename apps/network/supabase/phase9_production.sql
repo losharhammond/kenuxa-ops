@@ -303,6 +303,9 @@ CREATE TABLE IF NOT EXISTS security_events (
   created_at  TIMESTAMPTZ DEFAULT now()
 );
 
+ALTER TABLE IF EXISTS platform_revenue ADD COLUMN IF NOT EXISTS status    TEXT NOT NULL DEFAULT 'settled' CHECK (status IN ('pending','settled','refunded'));
+ALTER TABLE IF EXISTS platform_revenue ADD COLUMN IF NOT EXISTS metadata  JSONB DEFAULT '{}'::jsonb;
+UPDATE platform_revenue SET revenue_type = source WHERE revenue_type IS NULL;
 -- ── Platform Fees (legacy alias to platform_revenue) ─────────
 -- platform_fees is queried by some admin pages — alias via view
 CREATE OR REPLACE VIEW platform_fees AS
@@ -393,6 +396,10 @@ DROP POLICY IF EXISTS "security_events_self" ON security_events;
 CREATE POLICY "security_events_self"    ON security_events     FOR SELECT USING (user_id = auth.uid());
 DROP POLICY IF EXISTS "paystack_transfers_self" ON paystack_transfers;
 CREATE POLICY "paystack_transfers_self" ON paystack_transfers  FOR SELECT USING (user_id = auth.uid());
+ALTER TABLE IF EXISTS escrow_holds ADD COLUMN IF NOT EXISTS buyer_id     UUID REFERENCES auth.users(id) ON DELETE SET NULL;
+ALTER TABLE IF EXISTS escrow_holds ADD COLUMN IF NOT EXISTS seller_id    UUID REFERENCES auth.users(id) ON DELETE SET NULL;
+ALTER TABLE IF EXISTS escrow_holds ADD COLUMN IF NOT EXISTS buyer_name   TEXT;
+ALTER TABLE IF EXISTS escrow_holds ADD COLUMN IF NOT EXISTS seller_name  TEXT;
 DROP POLICY IF EXISTS "escrow_buyer" ON escrow_holds;
 CREATE POLICY "escrow_buyer"            ON escrow_holds        FOR SELECT USING (buyer_id = auth.uid() OR seller_id = auth.uid());
 
