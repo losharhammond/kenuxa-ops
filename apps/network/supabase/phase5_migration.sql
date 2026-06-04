@@ -96,6 +96,18 @@ CREATE INDEX IF NOT EXISTS idx_identity_verif_status ON identity_verifications(s
 -- Adds user_id if wallets was created by schema.sql with owner_id instead.
 ALTER TABLE IF EXISTS wallets ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE;
 UPDATE wallets SET user_id = owner_id WHERE user_id IS NULL AND owner_id IS NOT NULL;
+DO $$
+BEGIN
+  -- Drop NOT NULL on owner_id if it exists (schema.sql originally had owner_id NOT NULL)
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema = 'public' AND table_name = 'wallets' AND column_name = 'owner_id'
+      AND is_nullable = 'NO'
+  ) THEN
+    ALTER TABLE wallets ALTER COLUMN owner_id DROP NOT NULL;
+  END IF;
+END;
+$$;
 -- Also add status column if missing
 ALTER TABLE IF EXISTS wallets ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'active';
 
