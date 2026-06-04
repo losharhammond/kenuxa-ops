@@ -88,6 +88,7 @@ CREATE POLICY "sl_owner_all" ON service_listings
 
 -- ── Ensure delivery_riders has user_id for auth linking ──────
 ALTER TABLE delivery_riders ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL;
+ALTER TABLE IF EXISTS delivery_riders ADD COLUMN IF NOT EXISTS user_id TEXT;
 CREATE INDEX IF NOT EXISTS idx_delivery_riders_user ON delivery_riders(user_id);
 
 -- ── Add missing column: freelancer_profiles.skills as text ───

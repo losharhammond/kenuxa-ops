@@ -599,6 +599,7 @@ BEGIN
 END;
 $$;
 -- Index for fast GRA status lookups
+ALTER TABLE IF EXISTS invoices ADD COLUMN IF NOT EXISTS gra_status TEXT;
 CREATE INDEX IF NOT EXISTS idx_invoices_gra_status ON invoices(gra_status) WHERE gra_status IS NOT NULL;
 
 -- ─── 71. SKILL PROFILES (Module 19 — Skills Marketplace) ───────────────────

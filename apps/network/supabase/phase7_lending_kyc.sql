@@ -24,10 +24,10 @@ create table if not exists loan_applications (
 );
 
 create index if not exists loan_applications_business_id_idx on loan_applications(business_id);
+ALTER TABLE IF EXISTS loan_applications ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL;
 create index if not exists loan_applications_user_id_idx     on loan_applications(user_id);
 create index if not exists loan_applications_status_idx      on loan_applications(status);
 
-ALTER TABLE IF EXISTS loan_applications ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL;
 alter table loan_applications enable row level security;
 
 -- Applicants can see their own applications
