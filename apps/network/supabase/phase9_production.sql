@@ -308,6 +308,8 @@ ALTER TABLE IF EXISTS platform_revenue ADD COLUMN IF NOT EXISTS metadata  JSONB 
 UPDATE platform_revenue SET revenue_type = source WHERE revenue_type IS NULL;
 -- ── Platform Fees (legacy alias to platform_revenue) ─────────
 -- platform_fees is queried by some admin pages — alias via view
+-- Drop table version if it was created by migration.sql
+DROP TABLE IF EXISTS platform_fees CASCADE;
 CREATE OR REPLACE VIEW platform_fees AS
   SELECT id, reference, revenue_type AS fee_type, amount, currency, user_id, status,
          metadata, created_at
