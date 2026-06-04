@@ -7,7 +7,13 @@
 -- ── Add image_url to service_listings ──────────────────────
 -- ── DROP VIEWS that migration.sql may have created as view compat aliases ──
 -- These must be real tables for ALTER TABLE / CREATE INDEX / RLS to work.
-DROP VIEW IF EXISTS service_listings;
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_views WHERE viewname = 'service_listings' AND schemaname = 'public') THEN
+    EXECUTE 'DROP VIEW service_listings CASCADE';
+  END IF;
+END;
+$$;
 CREATE TABLE IF NOT EXISTS service_listings (
   id            UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id       UUID        REFERENCES auth.users(id) ON DELETE CASCADE,
@@ -31,7 +37,13 @@ CREATE TABLE IF NOT EXISTS service_listings (
   updated_at    TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
-DROP VIEW IF EXISTS marketplace_listings;
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_views WHERE viewname = 'marketplace_listings' AND schemaname = 'public') THEN
+    EXECUTE 'DROP VIEW marketplace_listings CASCADE';
+  END IF;
+END;
+$$;
 CREATE TABLE IF NOT EXISTS marketplace_listings (
   id            UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
   business_id   UUID        REFERENCES businesses(id) ON DELETE SET NULL,
@@ -67,7 +79,13 @@ ALTER TABLE marketplace_listings
   ADD COLUMN IF NOT EXISTS image_url TEXT;
 
 -- ── DROP suppliers view — migration.sql creates it as a VIEW over businesses ──
-DROP VIEW IF EXISTS suppliers;
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_views WHERE viewname = 'suppliers' AND schemaname = 'public') THEN
+    EXECUTE 'DROP VIEW suppliers CASCADE';
+  END IF;
+END;
+$$;
 CREATE TABLE IF NOT EXISTS suppliers (
   id              UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
   business_id     UUID        REFERENCES businesses(id) ON DELETE CASCADE,

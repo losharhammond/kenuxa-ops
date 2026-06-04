@@ -363,6 +363,7 @@ ALTER TABLE IF EXISTS notifications ADD COLUMN IF NOT EXISTS category  TEXT NOT 
 UPDATE notifications SET read = is_read WHERE read IS DISTINCT FROM is_read AND is_read IS NOT NULL;
 
 CREATE INDEX IF NOT EXISTS idx_notifications_read             ON notifications(user_id, read);
+ALTER TABLE IF EXISTS audit_logs ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL;
 CREATE INDEX IF NOT EXISTS idx_audit_logs_user_id             ON audit_logs(user_id);
 CREATE INDEX IF NOT EXISTS idx_audit_logs_created_at          ON audit_logs(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_security_events_user_id        ON security_events(user_id);

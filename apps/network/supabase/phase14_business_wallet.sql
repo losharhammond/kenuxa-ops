@@ -40,7 +40,13 @@ CREATE POLICY "bm_member_view" ON business_members
 
 -- ── business_wallets ─────────────────────────────────────────
 -- One wallet per business — double-entry ledger, separate from personal
-DROP VIEW IF EXISTS business_wallets;
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_views WHERE viewname = 'business_wallets' AND schemaname = 'public') THEN
+    EXECUTE 'DROP VIEW business_wallets CASCADE';
+  END IF;
+END;
+$$;
 CREATE TABLE IF NOT EXISTS business_wallets (
   id           UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
   business_id  UUID        NOT NULL REFERENCES businesses(id) ON DELETE CASCADE UNIQUE,

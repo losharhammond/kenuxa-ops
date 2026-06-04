@@ -6,7 +6,13 @@
 
 -- ── marketplace_listings ─────────────────────────────────────
 -- Public product listings from any seller (B2C and B2B)
-DROP VIEW IF EXISTS marketplace_listings;
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_views WHERE viewname = 'marketplace_listings' AND schemaname = 'public') THEN
+    EXECUTE 'DROP VIEW marketplace_listings CASCADE';
+  END IF;
+END;
+$$;
 CREATE TABLE IF NOT EXISTS marketplace_listings (
   id            UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
   business_id   UUID        REFERENCES businesses(id) ON DELETE SET NULL,
@@ -50,7 +56,13 @@ CREATE POLICY "ml_seller_all" ON marketplace_listings
 
 -- ── service_listings ─────────────────────────────────────────
 -- Services offered by freelancers and businesses
-DROP VIEW IF EXISTS service_listings;
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_views WHERE viewname = 'service_listings' AND schemaname = 'public') THEN
+    EXECUTE 'DROP VIEW service_listings CASCADE';
+  END IF;
+END;
+$$;
 CREATE TABLE IF NOT EXISTS service_listings (
   id            UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id       UUID        REFERENCES auth.users(id) ON DELETE CASCADE,

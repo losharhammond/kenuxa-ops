@@ -179,7 +179,13 @@ CREATE INDEX IF NOT EXISTS idx_wallets_user_id ON wallets (user_id);
 CREATE INDEX IF NOT EXISTS idx_wallets_status  ON wallets (status);
 
 -- ── Business Wallets ──────────────────────────────────────────
-DROP VIEW IF EXISTS business_wallets;
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_views WHERE viewname = 'business_wallets' AND schemaname = 'public') THEN
+    EXECUTE 'DROP VIEW business_wallets CASCADE';
+  END IF;
+END;
+$$;
 CREATE TABLE IF NOT EXISTS business_wallets (
   id          UUID        DEFAULT gen_random_uuid() PRIMARY KEY,
   business_id UUID        NOT NULL UNIQUE,
@@ -270,7 +276,13 @@ CREATE INDEX IF NOT EXISTS idx_kyc_documents_status  ON kyc_documents (status);
 
 -- ── Disputes ──────────────────────────────────────────────────
 -- Drop view if it was created by an earlier migration (migration.sql compat path)
-DROP VIEW IF EXISTS disputes;
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_views WHERE viewname = 'disputes' AND schemaname = 'public') THEN
+    EXECUTE 'DROP VIEW disputes CASCADE';
+  END IF;
+END;
+$$;
 CREATE TABLE IF NOT EXISTS disputes (
   id            UUID        DEFAULT gen_random_uuid() PRIMARY KEY,
   initiator_id  UUID        REFERENCES auth.users(id) ON DELETE SET NULL,
