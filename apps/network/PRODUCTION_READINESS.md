@@ -416,7 +416,7 @@ git push origin master
 **Git Repository:** https://github.com/LosharHammond/KENUXA-OPS
 **Network Folder:** `/apps/network`
 **Vercel Deploy:** Ready
-**Support Email:** shailendra@procusghana.com
+**Support Email:** losharhammond@gmail.com
 
 ---
 

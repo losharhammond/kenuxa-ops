@@ -442,7 +442,7 @@ Read these in order:
 
 **Issues or Questions?**
 - GitHub Issues: Create issue in KENUXA-OPS repo
-- Email: shailendra@procusghana.com
+- Email: losharhammond@gmail.com
 - Supabase Dashboard: https://app.supabase.com
 
 **Important Links:**
