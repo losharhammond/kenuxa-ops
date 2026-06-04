@@ -33,6 +33,20 @@ ALTER TABLE IF EXISTS kenux_ledger ADD COLUMN IF NOT EXISTS reference    TEXT;
 ALTER TABLE IF EXISTS kenux_ledger ADD COLUMN IF NOT EXISTS metadata     JSONB DEFAULT '{}'::jsonb;
 
 -- ── wallet_credit: credit a user's wallet (double-entry) ─────
+-- ── DROP existing functions to allow return type changes ────────────────────
+DROP FUNCTION IF EXISTS wallet_credit(UUID, NUMERIC, TEXT, TEXT);
+DROP FUNCTION IF EXISTS wallet_credit(UUID, NUMERIC, TEXT);
+DROP FUNCTION IF EXISTS wallet_credit(uuid, numeric, text, text);
+DROP FUNCTION IF EXISTS wallet_credit(uuid, numeric, text);
+DROP FUNCTION IF EXISTS wallet_debit(UUID, NUMERIC, TEXT, TEXT);
+DROP FUNCTION IF EXISTS wallet_debit(UUID, NUMERIC, TEXT);
+DROP FUNCTION IF EXISTS wallet_debit(uuid, numeric, text, text);
+DROP FUNCTION IF EXISTS wallet_debit(uuid, numeric, text);
+DROP FUNCTION IF EXISTS kenux_credit(UUID, INT, TEXT);
+DROP FUNCTION IF EXISTS kenux_credit(uuid, int, text);
+DROP FUNCTION IF EXISTS kenux_debit(UUID, INT, TEXT);
+DROP FUNCTION IF EXISTS kenux_debit(uuid, int, text);
+
 CREATE OR REPLACE FUNCTION wallet_credit(
   p_user_id   UUID,
   p_amount    NUMERIC,

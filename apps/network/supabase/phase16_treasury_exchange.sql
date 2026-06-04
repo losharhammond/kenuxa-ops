@@ -387,6 +387,30 @@ CREATE INDEX IF NOT EXISTS idx_loan_applications_user_id ON loan_applications (u
 -- ── RPC Functions ─────────────────────────────────────────────
 
 -- wallet_credit: credit a user's personal GHS wallet
+-- ── DROP existing functions to allow return type changes ────────────────────
+DROP FUNCTION IF EXISTS wallet_credit(UUID, NUMERIC, TEXT, TEXT) CASCADE;
+DROP FUNCTION IF EXISTS wallet_credit(UUID, NUMERIC, TEXT) CASCADE;
+DROP FUNCTION IF EXISTS wallet_credit(uuid, numeric, text, text) CASCADE;
+DROP FUNCTION IF EXISTS wallet_credit(uuid, numeric, text) CASCADE;
+DROP FUNCTION IF EXISTS wallet_debit(UUID, NUMERIC, TEXT, TEXT) CASCADE;
+DROP FUNCTION IF EXISTS wallet_debit(UUID, NUMERIC, TEXT) CASCADE;
+DROP FUNCTION IF EXISTS wallet_debit(uuid, numeric, text, text) CASCADE;
+DROP FUNCTION IF EXISTS wallet_debit(uuid, numeric, text) CASCADE;
+DROP FUNCTION IF EXISTS kenux_credit(UUID, INTEGER, TEXT) CASCADE;
+DROP FUNCTION IF EXISTS kenux_credit(uuid, integer, text) CASCADE;
+DROP FUNCTION IF EXISTS kenux_debit(UUID, INTEGER, TEXT) CASCADE;
+DROP FUNCTION IF EXISTS kenux_debit(uuid, integer, text) CASCADE;
+DROP FUNCTION IF EXISTS wallet_transfer(UUID, UUID, NUMERIC, TEXT, TEXT, TEXT) CASCADE;
+DROP FUNCTION IF EXISTS wallet_transfer(uuid, uuid, numeric, text, text, text) CASCADE;
+DROP FUNCTION IF EXISTS business_wallet_credit(UUID, NUMERIC, TEXT, TEXT, TEXT, UUID) CASCADE;
+DROP FUNCTION IF EXISTS business_wallet_credit(uuid, numeric, text, text, text, uuid) CASCADE;
+DROP FUNCTION IF EXISTS business_wallet_credit(UUID, NUMERIC, TEXT) CASCADE;
+DROP FUNCTION IF EXISTS business_wallet_credit(uuid, numeric, text) CASCADE;
+DROP FUNCTION IF EXISTS business_wallet_debit(UUID, NUMERIC, TEXT, TEXT, TEXT, UUID) CASCADE;
+DROP FUNCTION IF EXISTS business_wallet_debit(uuid, numeric, text, text, text, uuid) CASCADE;
+DROP FUNCTION IF EXISTS business_wallet_debit(UUID, NUMERIC, TEXT) CASCADE;
+DROP FUNCTION IF EXISTS business_wallet_debit(uuid, numeric, text) CASCADE;
+
 CREATE OR REPLACE FUNCTION wallet_credit(
   p_user_id UUID,
   p_amount  NUMERIC,

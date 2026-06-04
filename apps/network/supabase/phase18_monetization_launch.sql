@@ -139,7 +139,7 @@ SELECT
   -- Businesses
   (SELECT COUNT(*) FROM businesses)                                       AS total_businesses,
   (SELECT COUNT(*) FROM businesses WHERE status = 'active')              AS active_businesses,
-  (SELECT COUNT(*) FROM businesses WHERE is_verified = false)            AS pending_verification,
+  (SELECT COUNT(*) FROM businesses WHERE verification_status = 'unverified') AS pending_verification,
   -- Economy
   (SELECT COALESCE(SUM(points), 0) FROM rewards_accounts)                AS kenux_in_circulation,
   (SELECT COALESCE(SUM(balance), 0) FROM wallets WHERE status = 'active') AS total_wallet_balance_ghs,
@@ -150,7 +150,7 @@ SELECT
    WHERE revenue_type = 'subscription'
    AND created_at >= date_trunc('month', now()))                         AS mrr_ghs,
   -- GMV
-  (SELECT COALESCE(SUM(total_amount), 0) FROM sales
+  (SELECT COALESCE(SUM(total), 0) FROM sales
    WHERE created_at >= now() - INTERVAL '24h')                           AS gmv_today,
   (SELECT COUNT(*) FROM sales WHERE created_at >= now() - INTERVAL '24h') AS transactions_today,
   -- KYC
