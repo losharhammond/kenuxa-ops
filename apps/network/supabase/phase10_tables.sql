@@ -87,6 +87,8 @@ CREATE TABLE IF NOT EXISTS payment_transactions (
   settled_at    timestamptz
 );
 
+ALTER TABLE IF EXISTS payment_transactions ADD COLUMN IF NOT EXISTS sender_id UUID REFERENCES auth.users(id) ON DELETE SET NULL;
+ALTER TABLE IF EXISTS payment_transactions ADD COLUMN IF NOT EXISTS recipient_id UUID REFERENCES auth.users(id) ON DELETE SET NULL;
 ALTER TABLE payment_transactions ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "payment_transactions_self" ON payment_transactions;
 CREATE POLICY "payment_transactions_self" ON payment_transactions FOR SELECT

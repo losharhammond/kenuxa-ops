@@ -175,6 +175,15 @@ CREATE TABLE IF NOT EXISTS supplier_profiles (
 );
 
 ALTER TABLE IF EXISTS supplier_profiles ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE;
+ALTER TABLE IF EXISTS supplier_profiles ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'active';
+ALTER TABLE IF EXISTS supplier_profiles ADD COLUMN IF NOT EXISTS name TEXT;
+ALTER TABLE IF EXISTS supplier_profiles ADD COLUMN IF NOT EXISTS city TEXT;
+ALTER TABLE IF EXISTS supplier_profiles ADD COLUMN IF NOT EXISTS rating NUMERIC(3,2) DEFAULT 0;
+ALTER TABLE IF EXISTS supplier_profiles ADD COLUMN IF NOT EXISTS total_orders INT NOT NULL DEFAULT 0;
+ALTER TABLE IF EXISTS supplier_profiles ADD COLUMN IF NOT EXISTS is_verified BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE IF EXISTS supplier_profiles ADD COLUMN IF NOT EXISTS moq NUMERIC(12,2);
+ALTER TABLE IF EXISTS supplier_profiles ADD COLUMN IF NOT EXISTS lead_time_days INT;
+ALTER TABLE IF EXISTS supplier_profiles ADD COLUMN IF NOT EXISTS logo_url TEXT;
 ALTER TABLE supplier_profiles ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Public can read supplier profiles" ON supplier_profiles;
 CREATE POLICY "Public can read supplier profiles" ON supplier_profiles FOR SELECT USING (true);
