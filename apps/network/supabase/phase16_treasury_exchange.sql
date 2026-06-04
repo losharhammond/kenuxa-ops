@@ -167,6 +167,7 @@ CREATE INDEX IF NOT EXISTS idx_wallets_user_id ON wallets (user_id);
 CREATE INDEX IF NOT EXISTS idx_wallets_status  ON wallets (status);
 
 -- ── Business Wallets ──────────────────────────────────────────
+DROP VIEW IF EXISTS business_wallets;
 CREATE TABLE IF NOT EXISTS business_wallets (
   id          UUID        DEFAULT gen_random_uuid() PRIMARY KEY,
   business_id UUID        NOT NULL UNIQUE,

@@ -5,6 +5,60 @@
 -- ============================================================
 
 -- ── Add image_url to service_listings ──────────────────────
+-- ── DROP VIEWS that migration.sql may have created as view compat aliases ──
+-- These must be real tables for ALTER TABLE / CREATE INDEX / RLS to work.
+DROP VIEW IF EXISTS service_listings;
+CREATE TABLE IF NOT EXISTS service_listings (
+  id            UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id       UUID        REFERENCES auth.users(id) ON DELETE CASCADE,
+  business_id   UUID        REFERENCES businesses(id) ON DELETE SET NULL,
+  name          TEXT        NOT NULL,
+  description   TEXT,
+  category      TEXT        NOT NULL DEFAULT 'general',
+  price         NUMERIC     NOT NULL DEFAULT 0 CHECK (price >= 0),
+  price_type    TEXT        NOT NULL DEFAULT 'fixed' CHECK (price_type IN ('fixed','hourly','quote')),
+  currency      TEXT        NOT NULL DEFAULT 'GHS',
+  image_url     TEXT,
+  location      TEXT,
+  turnaround    TEXT,
+  provider_name TEXT,
+  is_verified   BOOLEAN     NOT NULL DEFAULT false,
+  avg_rating    NUMERIC     CHECK (avg_rating BETWEEN 0 AND 5),
+  total_jobs    INTEGER     NOT NULL DEFAULT 0,
+  status        TEXT        NOT NULL DEFAULT 'active' CHECK (status IN ('active','paused','removed')),
+  view_count    INTEGER     NOT NULL DEFAULT 0,
+  created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+DROP VIEW IF EXISTS marketplace_listings;
+CREATE TABLE IF NOT EXISTS marketplace_listings (
+  id            UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
+  business_id   UUID        REFERENCES businesses(id) ON DELETE SET NULL,
+  seller_id     UUID        REFERENCES auth.users(id) ON DELETE CASCADE,
+  name          TEXT        NOT NULL,
+  description   TEXT,
+  category      TEXT        NOT NULL DEFAULT 'general',
+  price         NUMERIC     NOT NULL CHECK (price >= 0),
+  compare_price NUMERIC     CHECK (compare_price >= 0),
+  currency      TEXT        NOT NULL DEFAULT 'GHS',
+  image_url     TEXT,
+  images        JSONB       NOT NULL DEFAULT '[]',
+  condition     TEXT        NOT NULL DEFAULT 'new' CHECK (condition IN ('new','like_new','good','fair')),
+  stock_qty     INTEGER     NOT NULL DEFAULT 1 CHECK (stock_qty >= 0),
+  city          TEXT,
+  business_name TEXT,
+  is_verified   BOOLEAN     NOT NULL DEFAULT false,
+  avg_rating    NUMERIC     CHECK (avg_rating BETWEEN 0 AND 5),
+  total_sold    INTEGER     NOT NULL DEFAULT 0,
+  tags          TEXT[],
+  status        TEXT        NOT NULL DEFAULT 'active' CHECK (status IN ('active','sold','paused','removed')),
+  view_count    INTEGER     NOT NULL DEFAULT 0,
+  created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+
 ALTER TABLE service_listings
   ADD COLUMN IF NOT EXISTS image_url TEXT;
 
