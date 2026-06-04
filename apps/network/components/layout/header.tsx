@@ -7,6 +7,7 @@ import { useState, useRef } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 interface HeaderProps {
   title?: string;
@@ -54,11 +55,14 @@ export function Header({ title, subtitle, actions }: HeaderProps) {
 
         {actions}
 
+        {/* Theme Toggle */}
+        <ThemeToggle />
+
         {/* Notifications */}
-        <button className="relative w-9 h-9 flex items-center justify-center rounded-lg bg-[#111624] border border-white/7 hover:border-white/20 transition-colors text-[#64748b] hover:text-[#f1f5f9]">
+        <Link href="/dashboard/notifications" className="relative w-9 h-9 flex items-center justify-center rounded-lg bg-[#111624] border border-white/7 hover:border-white/20 transition-colors text-[#64748b] hover:text-[#f1f5f9]">
           <Bell size={15} />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#FF6524] rounded-full ring-2 ring-[#07080f]" />
-        </button>
+          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#FF6524] rounded-full ring-2 ring-[var(--bg)]" />
+        </Link>
 
         {/* User menu */}
         <div className="relative">

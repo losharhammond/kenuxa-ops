@@ -5,7 +5,7 @@
 /* ── KENUXA BUSINESS NETWORK — Design System ───────────────────────────────── */
 
 :root {
-  /* Surfaces */
+  /* Dark Mode (default) */
   --bg:           #07080f;
   --surface:      #0d0f1a;
   --panel:        #111624;
@@ -34,6 +34,38 @@
   --text:         #f1f5f9;
   --text-muted:   #64748b;
   --text-dim:     #374151;
+}
+
+/* Light Mode */
+html:not(.dark) {
+  --bg:           #f8fafc;
+  --surface:      #f1f5f9;
+  --panel:        #e2e8f0;
+  --panel-hover:  #cbd5e1;
+
+  /* Borders */
+  --border:       rgba(0, 0, 0, 0.07);
+  --border-hover: rgba(0, 0, 0, 0.14);
+  --border-active: rgba(255, 101, 36, 0.45);
+
+  /* Brand — NETWORK Orange */
+  --orange:       #FF6524;
+  --orange-light: #FF8B5E;
+  --orange-dim:   rgba(255, 101, 36, 0.1);
+  --orange-glow:  rgba(255, 101, 36, 0.2);
+
+  /* Accent Colors */
+  --emerald:      #10b981;
+  --emerald-dim:  rgba(16, 185, 129, 0.1);
+  --amber:        #f59e0b;
+  --blue:         #3b82f6;
+  --red:          #ef4444;
+  --violet:       #7c3aed;
+
+  /* Text */
+  --text:         #1e293b;
+  --text-muted:   #64748b;
+  --text-dim:     #94a3b8;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }

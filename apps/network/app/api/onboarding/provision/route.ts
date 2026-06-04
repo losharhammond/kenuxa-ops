@@ -134,6 +134,21 @@ export async function POST() {
     created_at: new Date().toISOString(),
   }, { onConflict: "id", ignoreDuplicates: true });
 
+  // Seed demo data for new users (make platform feel populated)
+  if (isFirstTime) {
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/seed/demo-data`, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
+          "Content-Type": "application/json",
+        },
+      });
+    } catch {
+      // Non-fatal — user can still use platform without demo data
+    }
+  }
+
   // Seed welcome activity feed event
   const welcomeActivityId = `welcome-activity-${user.id}`;
   await supabase.from("activity_feed").upsert({
