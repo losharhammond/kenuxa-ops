@@ -50,15 +50,17 @@ CREATE TABLE IF NOT EXISTS escrow_holds (
   notes        TEXT,
   created_at   TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+ALTER TABLE IF EXISTS escrow_holds ADD COLUMN IF NOT EXISTS order_id     UUID;
+ALTER TABLE IF EXISTS escrow_holds ADD COLUMN IF NOT EXISTS buyer_id     UUID REFERENCES auth.users(id) ON DELETE SET NULL;
+ALTER TABLE IF EXISTS escrow_holds ADD COLUMN IF NOT EXISTS seller_id    UUID REFERENCES auth.users(id) ON DELETE SET NULL;
+ALTER TABLE IF EXISTS escrow_holds ADD COLUMN IF NOT EXISTS buyer_name   TEXT;
+ALTER TABLE IF EXISTS escrow_holds ADD COLUMN IF NOT EXISTS seller_name  TEXT;
 CREATE INDEX IF NOT EXISTS idx_escrow_status   ON escrow_holds(status);
 CREATE INDEX IF NOT EXISTS idx_escrow_order    ON escrow_holds(order_id);
 CREATE INDEX IF NOT EXISTS idx_escrow_buyer    ON escrow_holds(buyer_id);
 CREATE INDEX IF NOT EXISTS idx_escrow_seller   ON escrow_holds(seller_id);
 
-ALTER TABLE IF EXISTS escrow_holds ADD COLUMN IF NOT EXISTS buyer_id     UUID REFERENCES auth.users(id) ON DELETE SET NULL;
-ALTER TABLE IF EXISTS escrow_holds ADD COLUMN IF NOT EXISTS seller_id    UUID REFERENCES auth.users(id) ON DELETE SET NULL;
-ALTER TABLE IF EXISTS escrow_holds ADD COLUMN IF NOT EXISTS buyer_name   TEXT;
-ALTER TABLE IF EXISTS escrow_holds ADD COLUMN IF NOT EXISTS seller_name  TEXT;
+
 ALTER TABLE escrow_holds ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "escrow_admin_all" ON escrow_holds;

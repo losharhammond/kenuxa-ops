@@ -287,6 +287,13 @@ CREATE TABLE IF NOT EXISTS disputes (
   updated_at    TIMESTAMPTZ DEFAULT now()
 );
 
+ALTER TABLE IF EXISTS disputes ADD COLUMN IF NOT EXISTS initiator_id  UUID REFERENCES auth.users(id) ON DELETE SET NULL;
+ALTER TABLE IF EXISTS disputes ADD COLUMN IF NOT EXISTS respondent_id UUID REFERENCES auth.users(id) ON DELETE SET NULL;
+ALTER TABLE IF EXISTS disputes ADD COLUMN IF NOT EXISTS subject       TEXT;
+ALTER TABLE IF EXISTS disputes ADD COLUMN IF NOT EXISTS description   TEXT;
+ALTER TABLE IF EXISTS disputes ADD COLUMN IF NOT EXISTS resolution    TEXT;
+ALTER TABLE IF EXISTS disputes ADD COLUMN IF NOT EXISTS resolved_by   UUID REFERENCES auth.users(id);
+ALTER TABLE IF EXISTS disputes ADD COLUMN IF NOT EXISTS resolved_at   TIMESTAMPTZ;
 CREATE INDEX IF NOT EXISTS idx_disputes_status     ON disputes (status);
 CREATE INDEX IF NOT EXISTS idx_disputes_initiator  ON disputes (initiator_id);
 
