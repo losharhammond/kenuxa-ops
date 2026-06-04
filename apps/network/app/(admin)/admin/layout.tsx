@@ -10,7 +10,7 @@ import {
   Activity, Landmark,
 } from "lucide-react";
 import { useAuth } from "@/lib/hooks/use-auth";
-import { isAdminRole } from "@/lib/rbac";
+import { isAdminEmail } from "@/lib/utils/admin";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
@@ -30,14 +30,16 @@ const ADMIN_NAV = [
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const { role, loading } = useAuth();
+  const { user, loading } = useAuth();
   const router = useRouter();
 
+  const isAdmin = user?.email ? isAdminEmail(user.email) : false;
+
   useEffect(() => {
-    if (!loading && !isAdminRole(role)) {
+    if (!loading && !isAdmin) {
       router.replace("/dashboard");
     }
-  }, [role, loading, router]);
+  }, [isAdmin, loading, router]);
 
   if (loading) {
     return (
@@ -50,7 +52,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     );
   }
 
-  if (!isAdminRole(role)) return null;
+  if (!isAdmin) return null;
 
   return (
     <div className="min-h-screen bg-[#07080f] flex">

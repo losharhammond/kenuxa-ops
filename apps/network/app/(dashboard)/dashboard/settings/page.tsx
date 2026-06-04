@@ -8,6 +8,7 @@ import { useEffect, useState, useCallback } from "react";
 import type { ReactNode } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/use-auth";
+import { isAdminEmail } from "@/lib/utils/admin";
 import { Loader2,
   Shield, Globe, Store, Building2, CreditCard, User, ShoppingBag,
   Package, Bike, Target, Briefcase, Landmark,
@@ -93,9 +94,16 @@ const DEFAULT_HOURS: BusinessHours[] = [
 
 export default function SettingsPage() {
   const supabase = createClient();
-  const { profile, role } = useAuth();
-  const isAdmin = role === "super_admin" || role === "country_admin";
+  const { profile, role, user } = useAuth();
+  const emailIsAdmin = user?.email ? isAdminEmail(user.email) : false;
+  const roleIsAdmin = role === "super_admin" || role === "country_admin";
+  const isAdmin = emailIsAdmin || roleIsAdmin;
   const [activeTab, setActiveTab] = useState<"general" | "security" | "kyc" | "roles" | "team" | "notifications" | "integrations" | "country">("general");
+
+  // Filter RBAC_ROLES: hide admin roles from non-admins
+  const visibleRoles = isAdmin
+    ? RBAC_ROLES
+    : RBAC_ROLES.filter((r) => !["super_admin", "country_admin"].includes(r.key));
 
   // Multi-country / region
   const [selectedCountry, setSelectedCountry] = useState<SupportedCountry | null>(null);
@@ -567,7 +575,7 @@ export default function SettingsPage() {
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {RBAC_ROLES.map((role) => (
+              {visibleRoles.map((role) => (
                 <Card key={role.key}>
                   <CardContent className="p-5">
                     <div className="flex items-start gap-3 mb-3">

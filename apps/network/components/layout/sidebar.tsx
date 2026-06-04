@@ -16,7 +16,8 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/lib/hooks/use-auth";
 import { useRoles } from "@/lib/hooks/use-roles";
-import { hasPermission, isAdminRole, type Permission, type Role } from "@/lib/rbac";
+import { hasPermission, type Permission, type Role } from "@/lib/rbac";
+import { isAdminEmail } from "@/lib/utils/admin";
 import { NotificationBell } from "@/components/layout/notification-bell";
 import { RoleSwitcher } from "@/components/ui/role-switcher";
 
@@ -219,8 +220,9 @@ const NAV_GROUPS: NavGroup[] = [
 
 export function Sidebar() {
   const pathname = usePathname();
-  const { role, profile } = useAuth();
+  const { role, profile, user } = useAuth();
   const { activeContext } = useRoles();
+  const isAdmin = user?.email ? isAdminEmail(user.email) : false;
 
   const currentRole: Role = (activeContext || role || "customer") as Role;
 
@@ -306,13 +308,13 @@ export function Sidebar() {
 
       {/* Bottom — Admin + Settings + Identity */}
       <div className="flex-shrink-0 p-3 border-t border-white/7 space-y-0.5">
-        {isAdminRole(currentRole) && (
+        {isAdmin && (
           <Link
             href="/admin"
             className={cn(
               "flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm transition-all",
               pathname.startsWith("/admin")
-                ? "bg-[rgba(255,101,36,0.12)] text-[#FF8B5E]"
+                ? "bg-[rgba(245,158,11,0.12)] text-[#F59E0B]"
                 : "text-[#F59E0B] hover:text-[#fbbf24] hover:bg-white/5"
             )}
           >
