@@ -66,6 +66,7 @@ export default function BusinessOnboardingPage() {
   };
 
   const handleStep2 = async () => {
+    if (!bizType) { setError("Business type is required. Please go back and select one."); return; }
     setLoading(true);
     setError("");
     try {
@@ -76,6 +77,7 @@ export default function BusinessOnboardingPage() {
         .insert({
           name,
           description,
+          type: bizType as any, // business_type ENUM
           category: bizType || category,
           phone: bizPhone || null,
           email: bizEmail || null,
