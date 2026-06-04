@@ -192,6 +192,7 @@ CREATE TABLE IF NOT EXISTS loan_repayments (
   created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+ALTER TABLE IF EXISTS loan_repayments ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE;
 ALTER TABLE loan_repayments ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS repayment_own_select ON loan_repayments;
@@ -257,6 +258,7 @@ CREATE POLICY revenue_admin_only ON platform_revenue
 -- ── Indexes for performance ────────────────────────────────
 CREATE INDEX IF NOT EXISTS idx_marketplace_listings_status_sold ON marketplace_listings(status, total_sold DESC);
 CREATE INDEX IF NOT EXISTS idx_service_listings_status_rating ON service_listings(status, avg_rating DESC);
+ALTER TABLE IF EXISTS wallet_transactions ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL;
 CREATE INDEX IF NOT EXISTS idx_wallet_transactions_user_created ON wallet_transactions(user_id, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_loan_applications_status ON loan_applications(status);
 CREATE INDEX IF NOT EXISTS idx_loan_applications_user ON loan_applications(user_id);
