@@ -157,6 +157,17 @@ CREATE TABLE IF NOT EXISTS subscriptions (
   updated_at                  TIMESTAMPTZ DEFAULT now()
 );
 
+-- ── PREREQUISITE: subscriptions columns (phase6 uses different column names) ─
+ALTER TABLE IF EXISTS subscriptions ADD COLUMN IF NOT EXISTS plan_code                  TEXT;
+ALTER TABLE IF EXISTS subscriptions ADD COLUMN IF NOT EXISTS plan_name                  TEXT;
+ALTER TABLE IF EXISTS subscriptions ADD COLUMN IF NOT EXISTS paystack_subscription_code TEXT;
+ALTER TABLE IF EXISTS subscriptions ADD COLUMN IF NOT EXISTS paystack_customer_code     TEXT;
+ALTER TABLE IF EXISTS subscriptions ADD COLUMN IF NOT EXISTS next_payment_date          TIMESTAMPTZ;
+-- Back-fill plan_code from plan (phase6 used 'plan' column)
+UPDATE subscriptions SET plan_code = plan WHERE plan_code IS NULL AND plan IS NOT NULL;
+UPDATE subscriptions SET paystack_subscription_code = paystack_sub_code
+  WHERE paystack_subscription_code IS NULL AND paystack_sub_code IS NOT NULL;
+
 CREATE INDEX IF NOT EXISTS idx_subscriptions_user_id    ON subscriptions (user_id);
 CREATE INDEX IF NOT EXISTS idx_subscriptions_status     ON subscriptions (status);
 CREATE INDEX IF NOT EXISTS idx_subscriptions_plan_code  ON subscriptions (plan_code);
