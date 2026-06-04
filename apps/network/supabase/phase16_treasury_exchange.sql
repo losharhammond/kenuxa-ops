@@ -338,6 +338,7 @@ CREATE TABLE IF NOT EXISTS loan_applications (
 );
 
 CREATE INDEX IF NOT EXISTS idx_loan_applications_status  ON loan_applications (status);
+ALTER TABLE IF EXISTS loan_applications ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL;
 CREATE INDEX IF NOT EXISTS idx_loan_applications_user_id ON loan_applications (user_id);
 
 -- ── RPC Functions ─────────────────────────────────────────────

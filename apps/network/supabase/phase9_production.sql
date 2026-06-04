@@ -331,6 +331,7 @@ CREATE INDEX IF NOT EXISTS idx_wallet_transactions_reference  ON wallet_transact
 CREATE INDEX IF NOT EXISTS idx_wallet_transactions_created_at ON wallet_transactions(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_platform_revenue_created_at    ON platform_revenue(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_platform_revenue_type          ON platform_revenue(revenue_type);
+ALTER TABLE IF EXISTS loan_applications ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL;
 CREATE INDEX IF NOT EXISTS idx_loan_applications_user_id      ON loan_applications(user_id);
 CREATE INDEX IF NOT EXISTS idx_loan_applications_status       ON loan_applications(status);
 CREATE INDEX IF NOT EXISTS idx_kyc_documents_user_id          ON kyc_documents(user_id);

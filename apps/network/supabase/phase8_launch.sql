@@ -76,6 +76,7 @@ CREATE TABLE IF NOT EXISTS loan_applications (
   updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+ALTER TABLE IF EXISTS loan_applications ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL;
 ALTER TABLE loan_applications ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS loan_own_select ON loan_applications;

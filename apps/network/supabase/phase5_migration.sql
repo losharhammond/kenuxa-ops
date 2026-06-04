@@ -174,6 +174,7 @@ CREATE TABLE IF NOT EXISTS supplier_profiles (
   created_at          TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+ALTER TABLE IF EXISTS supplier_profiles ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE;
 ALTER TABLE supplier_profiles ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Public can read supplier profiles" ON supplier_profiles;
 CREATE POLICY "Public can read supplier profiles" ON supplier_profiles FOR SELECT USING (true);
@@ -200,6 +201,10 @@ CREATE TABLE IF NOT EXISTS delivery_riders (
   created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+ALTER TABLE IF EXISTS delivery_riders ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL;
+ALTER TABLE IF EXISTS delivery_riders ADD COLUMN IF NOT EXISTS name TEXT;
+ALTER TABLE IF EXISTS delivery_riders ADD COLUMN IF NOT EXISTS phone TEXT;
+ALTER TABLE IF EXISTS delivery_riders ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'available';
 ALTER TABLE delivery_riders ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Users manage own rider profile" ON delivery_riders;
 CREATE POLICY "Users manage own rider profile" ON delivery_riders FOR ALL
