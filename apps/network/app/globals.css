@@ -159,7 +159,9 @@ input, textarea, select {
   font-size: 14px;
   width: 100%;
   outline: none;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, opacity 0.2s;
+  cursor: text;
+  pointer-events: auto !important;
 }
 
 input:focus, textarea:focus, select:focus {
@@ -167,6 +169,18 @@ input:focus, textarea:focus, select:focus {
   box-shadow: 0 0 0 3px var(--orange-dim);
 }
 
+input:disabled, textarea:disabled, select:disabled {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.04);
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 input::placeholder, textarea::placeholder {
   color: var(--text-muted);
+}
+
+select {
+  appearance: none;
+  cursor: pointer;
 }
